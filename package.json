@@ -1,0 +1,9 @@
+{
+  "name": "beagle.lt",
+  "private": true,
+  "description": "Trainer site served at https://beagle.lt/",
+  "scripts": {
+    "test": "node tests/math/test.js 2000",
+    "preview": "python -m http.server 8000 --directory site"
+  }
+}
