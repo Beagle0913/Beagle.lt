@@ -22,7 +22,7 @@ This project sets up the site and moves the maths trainer. It does not build a n
 1. `https://beagle.lt/` shows a home page that lists the trainers.
 2. `https://beagle.lt/math/` runs the maths trainer, behaving exactly as it does today.
 3. The old address `https://beagle0913.github.io/math-trainer/` sends visitors to the new one.
-4. Adding the next trainer means adding a folder and one entry in a list, without touching the home page or the bar code.
+4. Adding the next trainer means adding a folder, one entry in a list, and one static row on the home and 404 pages (so they work without JavaScript), without touching the list or bar code.
 5. A change that breaks the trainer's tests cannot reach visitors.
 
 ## Non-goals
@@ -116,13 +116,14 @@ Lithuanian by default, English one click away. Same typefaces as the trainer (IB
       kompleksiniai skaičiai, tikrinės reikšmės, ribos.
       Pagal VU GMC pratybas · LT / EN
  ─────────────────────────────────────────────────────────────
- Niekas nerenkama ir niekur nesiunčiama. Pažanga saugoma tik
- jūsų naršyklėje.                              Šaltinis: GitHub
+ Svetainėje nėra paskyrų, slapukų ar sekimo priemonių. Jūsų
+ atsakymai ir pažanga saugomi tik jūsų naršyklėje. Šriftai
+ įkeliami iš „Google Fonts“.                    Pirminis kodas
 ```
 
 - The rows come from `trainers.json`. Each entry has an id, a folder path, and a name, summary and short note in both languages. Only trainers that exist are listed.
 - With JavaScript off, the page still shows a plain link to each trainer.
-- The page says plainly that nothing is collected and that progress stays in the browser.
+- The page says plainly what the site does not have (accounts, cookies, trackers), that answers and progress stay in the browser, and that fonts are loaded from Google Fonts. It must not claim that nothing is sent anywhere: loading the fonts sends each visitor's IP address to Google.
 - The wording above is a starting point; the builder may polish it, in both languages.
 
 ### Top bar on trainer pages
@@ -260,3 +261,13 @@ Each of these is a proposal the owner can overrule.
 
 - The physics-chemistry trainer, and with it the question of which parts of the maths trainer become shared machinery.
 - Renaming or re-wording the maths trainer for a wider audience than the GMC course.
+- Hosting the two font families on the site itself, so that no request leaves beagle.lt at all. This is the owner's decision: it changes the policy's style and font sources and touches the trainer page.
+- Before a second trainer is listed: the trainer switcher in the top bar must not change page when a keyboard user steps through its options with the arrow keys.
+
+## Changes after the pre-publish review (2026-11-17)
+
+An independent review of the built site, before publishing, led to these changes to this document:
+
+- The privacy sentence was reworded. The first wording ("nothing is collected or sent anywhere") was not true while fonts load from Google Fonts, and its Lithuanian was ungrammatical.
+- Goal 4 now mentions the static rows on the home and 404 pages.
+- The English note for the maths trainer reads "Based on the VU GMC course exercises".
