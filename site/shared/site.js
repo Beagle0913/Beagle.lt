@@ -111,5 +111,101 @@
 
   if (typeof module === 'object' && module.exports) { module.exports = core; return; }
 
-  // Browser part goes below this line (added in a later task).
+  // ---- Browser part ----
+  // document.currentScript only exists while the script first runs, so read it now.
+  const ROOT = new URL('../', document.currentScript.src).href;
+  const byId = id => document.getElementById(id);
+  let trainers = [];
+
+  function el(tag, cls, text) {
+    const n = document.createElement(tag);
+    if (cls) n.className = cls;
+    if (text !== undefined) n.textContent = text;
+    return n;
+  }
+
+  // Reading window.localStorage itself can throw, so it is reached inside try.
+  function store() { try { return window.localStorage; } catch (e) { return null; } }
+
+  function loadTrainers() {
+    return fetch(new URL('trainers.json', ROOT).href)
+      .then(res => { if (!res.ok) throw new Error('HTTP ' + res.status); return res.json(); })
+      .then(data => { trainers = cleanTrainers(data); return trainers; })
+      .catch(() => []);
+  }
+
+  /* ---------- trainer page: the top bar ---------- */
+  function startBar(id) {
+    const home = el('a', 'sb-home', '← beagle.lt');
+    const nav = el('nav', 'sitebar');
+    nav.append(home);
+    const slot = byId('sitebar');
+    if (slot) slot.replaceWith(nav); else document.body.prepend(nav);
+    let select = null;
+
+    function draw() {
+      const lang = normLang(document.documentElement.lang);
+      const m = barModel(trainers, id, lang, ROOT);
+      nav.setAttribute('aria-label', m.label);
+      home.href = m.homeHref;
+      if (select) { select.remove(); select = null; }
+      if (!m.options.length) return;
+      select = el('select');
+      select.setAttribute('aria-label', m.choose);
+      for (const o of m.options) {
+        const opt = el('option', '', o.text);
+        opt.value = o.href;
+        opt.selected = o.current;
+        select.append(opt);
+      }
+      select.addEventListener('change', () => { location.href = select.value; });
+      nav.append(select);
+    }
+
+    draw();
+    new MutationObserver(draw).observe(document.documentElement, { attributes: true, attributeFilter: ['lang'] });
+    // Coming back from the back/forward cache must not leave another trainer selected.
+    window.addEventListener('pageshow', draw);
+    loadTrainers().then(draw);
+  }
+
+  /* ---------- home and 404 pages ---------- */
+  function drawList(lang) {
+    const list = byId('trainer-list');
+    if (!list || !trainers.length) return; // keep the static rows
+    const s = STR[lang];
+    list.replaceChildren(...trainers.map((t, i) => {
+      const a = el('a', 'row');
+      a.href = trainerUrl(t, ROOT);
+      a.append(el('span', 'no', String(i + 1).padStart(2, '0')), el('h2', 'name', pick(t.name, lang)),
+        el('span', 'open', s.open), el('p', 'sum', pick(t.summary, lang)), el('p', 'note', pick(t.note, lang)));
+      const li = el('li');
+      li.append(a);
+      return li;
+    }));
+  }
+
+  function applyLang(lang) {
+    const s = STR[lang];
+    document.documentElement.lang = lang;
+    if (s[document.body.dataset.title]) document.title = s[document.body.dataset.title];
+    for (const n of document.querySelectorAll('[data-i18n]')) {
+      if (s[n.dataset.i18n]) n.textContent = s[n.dataset.i18n];
+    }
+    const langs = byId('langs');
+    if (langs) langs.setAttribute('aria-label', s.lang_label);
+    for (const b of document.querySelectorAll('#langs button')) b.setAttribute('aria-pressed', String(b.dataset.lang === lang));
+    drawList(lang);
+  }
+
+  function startHome() {
+    applyLang(readLang(store()));
+    for (const b of document.querySelectorAll('#langs button')) {
+      b.addEventListener('click', () => { writeLang(store(), b.dataset.lang); applyLang(normLang(b.dataset.lang)); });
+    }
+    loadTrainers().then(() => applyLang(normLang(document.documentElement.lang)));
+  }
+
+  if (document.body.dataset.trainer) startBar(document.body.dataset.trainer);
+  else if (document.body.classList.contains('home')) startHome();
 })();

@@ -1,0 +1,17 @@
+{
+  "trainers": [
+    {
+      "id": "math",
+      "path": "math/",
+      "name": { "lt": "Matematika", "en": "Mathematics" },
+      "summary": {
+        "lt": "Koordinatės, vektoriai, matricos, determinantai ir tiesinių lygčių sistemos, kompleksiniai skaičiai, tikrinės reikšmės, ribos.",
+        "en": "Coordinates, vectors, matrices, determinants and linear systems, complex numbers, eigenvalues, limits."
+      },
+      "note": {
+        "lt": "Pagal VU GMC pratybas · LT / EN",
+        "en": "Follows the VU GMC pratybos · LT / EN"
+      }
+    }
+  ]
+}
