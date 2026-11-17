@@ -39,8 +39,14 @@ test('trainers.json lists only valid trainers that exist, wired to the bar', () 
 test('home and 404 pages work without the list loading', () => {
   const home = read(path.join(SITE, 'index.html')), nf = read(path.join(SITE, '404.html'));
   for (const t of data.trainers) {
+    for (const lang of ['summary', 'note']) assert.ok(home.includes(t[lang].lt) && nf.includes(t[lang].lt), lang + ' static text ' + t.id);
     assert.ok(home.includes(`href="${t.path}"`) && home.includes(t.name.lt), 'home link ' + t.id);
     assert.ok(nf.includes(`href="/${t.path}"`) && nf.includes(t.name.lt), '404 link ' + t.id);
+  }
+  for (const [name, html] of [['home', home], ['404', nf]]) {
+    const block = html.match(/<ol id="trainer-list">([^]*?)[<][/]ol>/);
+    assert.ok(block, name + ' list block');
+    assert.equal((block[1].match(/<li[ >]/g) || []).length, data.trainers.length, name + ' static rows');
   }
   assert.ok(nf.includes('href="/shared/site.css"') && nf.includes('src="/shared/site.js"'));
 });
@@ -56,4 +62,12 @@ test('every text key used on the pages exists in both languages', () => {
 test('nothing in site/ still points at the old site', () => {
   for (const f of walk(SITE).filter(f => /\.(html|js|css|json)$/.test(f)))
     assert.equal(/hub\/hub|hubbar|data-project|beagle0913\.github\.io|gmc-math-trainer/i.test(read(f)), false, f);
+});
+
+test('every trainer page is listed in trainers.json', () => {
+  const ids = data.trainers.map(t => t.id);
+  for (const f of pages) {
+    const m = read(f).match(/data-trainer="([^"]+)"/);
+    if (m) assert.ok(ids.includes(m[1]), 'not listed: ' + f);
+  }
 });

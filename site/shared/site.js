@@ -9,7 +9,7 @@
       heading: 'Treniruokliai',
       lede: 'Universitetinio lygio uždaviniai, sprendžiami žingsnis po žingsnio. Uždaviniai kaskart generuojami iš naujo, o kiekvienas žingsnis patikrinamas iškart.',
       open: 'Atverti →',
-      privacy: 'Niekas nerenkama ir niekur nesiunčiama. Pažanga saugoma tik jūsų naršyklėje.',
+      privacy: 'Svetainėje nėra paskyrų, slapukų ar sekimo priemonių. Jūsų atsakymai ir pažanga saugomi tik jūsų naršyklėje. Šriftai įkeliami iš „Google Fonts“.',
       source: 'Pirminis kodas',
       lang_label: 'Kalba',
       bar_label: 'Treniruokliai',
@@ -24,7 +24,7 @@
       heading: 'Trainers',
       lede: 'University-level problems, solved one step at a time. Problems are generated fresh every time, and each step is checked as soon as you enter it.',
       open: 'Open →',
-      privacy: 'Nothing is collected or sent anywhere. Your progress is kept only in your browser.',
+      privacy: 'This site has no accounts, cookies or trackers. Your answers and progress are kept only in your browser. Fonts are loaded from Google Fonts.',
       source: 'Source code',
       lang_label: 'Language',
       bar_label: 'Trainers',
@@ -136,7 +136,10 @@
 
   /* ---------- trainer page: the top bar ---------- */
   function startBar(id) {
-    const home = el('a', 'sb-home', '← beagle.lt');
+    const home = el('a', 'sb-home');
+    const arrow = el('span', '', '←');
+    arrow.setAttribute('aria-hidden', 'true');
+    home.append(arrow, ' beagle.lt');
     const nav = el('nav', 'sitebar');
     nav.append(home);
     const slot = byId('sitebar');

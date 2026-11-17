@@ -1,6 +1,6 @@
 # beagle.lt
 
-The source of https://beagle.lt/, a small static site that hosts trainers: interactive practice pages for university-level problems, one folder per trainer. Lithuanian is the default language, English is one click away. It is plain HTML, CSS and JavaScript served by GitHub Pages, with no build step and no dependencies. Nothing is collected from visitors and nothing is sent anywhere; progress stays in the browser.
+The source of https://beagle.lt/, a small static site that hosts trainers: interactive practice pages for university-level problems, one folder per trainer. Lithuanian is the default language, English is one click away. It is plain HTML, CSS and JavaScript served by GitHub Pages, with no build step and no dependencies. The site has no accounts, cookies or trackers, and progress stays in the visitor's browser; the only requests to other hosts are for fonts from Google Fonts.
 
 ## Layout
 

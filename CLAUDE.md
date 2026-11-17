@@ -25,4 +25,4 @@ Trainer site served at https://beagle.lt/. Plain HTML, CSS and JavaScript: no bu
 - A change to a maths generator is made in both languages (`gen*.js` and `lt*.js`).
 - Browser storage keys: `beagle-lang` for the site language, `beagle-<trainer id>-v1` for a trainer's progress.
 - List only trainers that exist. No "coming soon" entries.
-- Nothing is collected from visitors or sent anywhere.
+- The site collects nothing from visitors: no accounts, cookies, analytics or trackers. The only requests to other hosts are for fonts from Google Fonts.
