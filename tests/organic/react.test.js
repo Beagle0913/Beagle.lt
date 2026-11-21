@@ -32,6 +32,8 @@ const REQUIRED = [
   'yne.h2', 'yne.x2', 'yne.hx', 'yne.hydration', 'yne.cu', 'sear', 'side.br', 'side.ox',
   'sn2', 'sn1', 'elim', 'alc.hx', 'alc.ox', 'alc.na', 'williamson', 'ether.hi',
   'phenol.base', 'phenol.alkyl', 'phenol.acyl', 'phenol.br2', 'thiol.base', 'thiol.alkyl', 'thiol.disulfide',
+  'co.nabh4', 'co.hcn', 'co.hemiacetal', 'co.acetal', 'co.thioacetal', 'co.oxime', 'co.phenylhydrazone', 'co.tollens',
+  'co.cannizzaro', 'co.aldol', 'co.aldolcond', 'co.enols', 'co.iodoform',
   //@@REQUIRED
 ];
 
@@ -313,6 +315,86 @@ test('thiols: salts, mercaptides, sulfides, disulfides', () => {
   only(R('thiol.disulfide', ['NC(CS)C(=O)O']), 'NC(CSSCC(N)C(=O)O)C(=O)O');
   only(R('thiol.disulfide', ['OC(CS)CS']), 'OC1CSSC1');
   assert.ok(R('thiol.disulfide', ['SCCS']).none);
+});
+
+// ---------------------------------------------------------------- aldehydes and ketones
+
+test('co.nabh4 and co.hcn', () => {
+  only(R('co.nabh4', ['O=CCc1ccccc1']), 'OCCc1ccccc1');
+  only(R('co.nabh4', ['CC(C)=O']), 'CC(C)O');
+  only(R('co.nabh4', ['CC(=O)CC(=O)OCC']), 'CC(O)CC(=O)OCC');
+  assert.ok(R('co.nabh4', ['CC(=O)OCC']).none);
+  only(R('co.hcn', ['CC=O']), 'CC(O)C#N');
+  only(R('co.hcn', ['CC(C)=O']), 'CC(C)(O)C#N');
+  only(R('co.hcn', ['O=CCc1ccccc1']), 'N#CC(O)Cc1ccccc1');
+  expectProducts(R('co.hcn', ['O=CCCC(C)=O']), ['N#CC(O)CCC(C)=O', 'O=CCCC(C)(O)C#N'], ['N#CC(O)CCC(C)=O']);
+});
+
+test('hemiacetals, acetals and thioacetals', () => {
+  only(R('co.hemiacetal', ['CCC=O', 'CO']), 'CCC(O)OC');
+  only(R('co.hemiacetal', ['O=CCCCCO']), 'OC1CCCCO1');
+  only(R('co.hemiacetal', ['O=CCCCO']), 'OC1CCCO1');
+  assert.ok(R('co.hemiacetal', ['O=CCCCCCCCO']).none);
+  only(R('co.acetal', ['CCC=O', 'CO']), 'CCC(OC)OC');
+  only(R('co.acetal', ['CCC=O', 'CCO']), 'CCC(OCC)OCC');
+  only(R('co.acetal', ['CCCC(C)=O', 'OCCCO']), 'CCCC1(C)OCCCO1');
+  only(R('co.acetal', ['O=Cc1ccccc1', 'OCCO']), 'C1COC(O1)c1ccccc1');
+  only(R('co.acetal', ['CC(C)=O', 'OCCO']), 'CC1(C)OCCO1');
+  only(R('co.acetal', ['O=C1CCCCC1', 'OCCO']), 'C1CCC2(CC1)OCCO2');
+  only(R('co.thioacetal', ['O=C1CCCC1', 'CCS']), 'CCSC1(SCC)CCCC1');
+  only(R('co.thioacetal', ['O=C1CCCC1', 'SCCS']), 'C1CCC2(C1)SCCS2');
+  assert.ok(R('co.acetal', ['CCC(=O)OC', 'CO']).none);
+  assert.throws(() => react.run('co.acetal', ['CCC=O', 'OCCCCO']), (e) => /needs a mono-ol/.test(e.message));
+});
+
+test('oximes, phenylhydrazones, Tollens', () => {
+  only(R('co.oxime', ['CCC(C)=O']), 'CCC(C)=NO');
+  only(R('co.oxime', ['CC=O']), 'CC=NO');
+  only(R('co.phenylhydrazone', ['O=CCc1ccccc1']), 'C(=NNc1ccccc1)Cc1ccccc1');
+  const t = R('co.tollens', ['O=CCc1ccccc1']);
+  expectProducts(t, ['[O-]C(=O)Cc1ccccc1.[NH4+]', '[Ag]'], ['[O-]C(=O)Cc1ccccc1.[NH4+]']);
+  assert.strictEqual(t.products.find((p) => p.smi === canon('[Ag]')).by, true);
+  assert.ok(R('co.tollens', ['CC(C)=O']).none);
+  expectProducts(R('co.tollens', ['C=O']), ['O=C[O-].[NH4+]', '[Ag]'], ['O=C[O-].[NH4+]']);
+});
+
+test('co.cannizzaro: only aldehydes without alpha-H', () => {
+  expectProducts(R('co.cannizzaro', ['O=Cc1ccccc1']), ['OCc1ccccc1', '[O-]C(=O)c1ccccc1.[Na+]'], ['OCc1ccccc1', '[O-]C(=O)c1ccccc1.[Na+]']);
+  expectProducts(R('co.cannizzaro', ['C=O']), ['CO', 'O=C[O-].[Na+]'], ['CO', 'O=C[O-].[Na+]']);
+  only(R('co.cannizzaro', ['O=Cc1ccccc1C=O']), '[O-]C(=O)c1ccccc1CO.[Na+]');
+  expectProducts(R('co.cannizzaro', ['O=Cc1ccccc1'], { workup: true }), ['OCc1ccccc1', 'OC(=O)c1ccccc1'], ['OCc1ccccc1', 'OC(=O)c1ccccc1']);
+  assert.ok(R('co.cannizzaro', ['CCC=O']).none, 'has alpha-H');
+  assert.ok(R('co.cannizzaro', ['CC(C)=O']).none, 'ketone');
+});
+
+test('co.aldol and co.aldolcond', () => {
+  only(R('co.aldol', ['CCC=O']), 'CCC(O)C(C)C=O');
+  only(R('co.aldolcond', ['CCC=O']), 'CCC=C(C)C=O');
+  only(R('co.aldol', ['CC(C)=O']), 'CC(=O)CC(C)(C)O');
+  only(R('co.aldolcond', ['CC(C)=O']), 'CC(C)=CC(C)=O');
+  // crossed with a non-enolisable aldehyde: cinnamaldehyde is the selective product
+  const x = R('co.aldol', ['O=Cc1ccccc1', 'CC=O']);
+  expectProducts(x, ['O=CCC(O)c1ccccc1', 'CC(O)CC=O'], ['O=CCC(O)c1ccccc1']);
+  const y = R('co.aldolcond', ['CC=O', 'O=Cc1ccccc1']);
+  expectProducts(y, ['O=CC=Cc1ccccc1', 'CC=CC=O'], ['O=CC=Cc1ccccc1']);
+  assert.ok(R('co.aldolcond', ['CC(C)C=O']).products.length === 0 && R('co.aldolcond', ['CC(C)C=O']).none);
+  assert.ok(R('co.aldol', ['O=Cc1ccccc1']).none);
+  assert.strictEqual(R('co.aldol', ['CCC=O', 'CCCC=O']).products.length, 4);
+  assert.strictEqual(majorsOf(R('co.aldol', ['CCC=O', 'CCCC=O'])).length, 4);
+});
+
+test('co.enols and co.iodoform', () => {
+  expectProducts(R('co.enols', ['CC(=O)Cc1ccccc1']), ['CC(O)=Cc1ccccc1', 'C=C(O)Cc1ccccc1'], ['CC(O)=Cc1ccccc1']);
+  only(R('co.enols', ['CC(C)=O']), 'C=C(C)O');
+  expectProducts(R('co.enols', ['CC(=O)CC(C)=O']), ['CC(=O)C=C(C)O', 'C=C(O)CC(C)=O'], ['CC(=O)C=C(C)O']);
+  assert.ok(R('co.enols', ['O=Cc1ccccc1']).none);
+  expectProducts(R('co.iodoform', ['CC(C)=O']), ['CC(=O)[O-].[Na+]', 'IC(I)I'], ['CC(=O)[O-].[Na+]', 'IC(I)I']);
+  expectProducts(R('co.iodoform', ['CCC(C)=O']), ['CCC(=O)[O-].[Na+]', 'IC(I)I']);
+  expectProducts(R('co.iodoform', ['CCO']), ['O=C[O-].[Na+]', 'IC(I)I']);
+  expectProducts(R('co.iodoform', ['CC(O)CC']), ['CCC(=O)[O-].[Na+]', 'IC(I)I']);
+  expectProducts(R('co.iodoform', ['CC(=O)c1ccccc1']), ['[O-]C(=O)c1ccccc1.[Na+]', 'IC(I)I']);
+  assert.ok(R('co.iodoform', ['CCC(=O)CC']).none);
+  assert.ok(R('co.iodoform', ['CCCO']).none);
 });
 
 //@@TESTS

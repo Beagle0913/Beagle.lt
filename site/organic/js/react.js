@@ -1516,6 +1516,286 @@
     return none(T('Gaunamas polimerinis disulfidas.', 'A polymeric disulfide forms.'));
   });
 
+  // ------------------------------------------------------------------
+  // Aldehydes and ketones
+  // ------------------------------------------------------------------
+
+  const aldKet = (g) => carbonyls(g, ['aldehyde', 'ketone']);
+  const NOTE_NO_CO = T('Nėra aldehido ar ketono karbonilo.', 'There is no aldehyde or ketone carbonyl.');
+
+  // alpha carbons of carbonyl k: sp3 carbons with H
+  function alphas(g, k) {
+    return g.nbr(k.c).filter((a) => isC(g, a) && sp3C(g, a) && g.A[a].h > 0);
+  }
+
+  def('co.nabh4', 'Karbonilo redukcija NaBH4 (alkoholis)', 'Reduction of a carbonyl with NaBH4 (alcohol)', 'AN', null, (rs) => {
+    const g = rs[0].clone();
+    const ks = aldKet(g);
+    if (!ks.length) return none(T('NaBH4 redukuoja tik aldehidus ir ketonus (ne rūgštis, esterius, amidus).', 'NaBH4 reduces only aldehydes and ketones (not acids, esters, amides).'));
+    ks.forEach((k) => { g.bond(k.c, k.o, 1); g.A[k.o].h = 1; g.fillC(k.c); });
+    return new Out().add(g, true).note(T('Aldehidas → pirminis, ketonas → antrinis alkoholis.', 'Aldehyde → primary, ketone → secondary alcohol.')).result();
+  });
+
+  def('co.hcn', 'HCN jungimasis prie karbonilo (cianhidrinas)', 'Addition of HCN to a carbonyl (cyanohydrin)', 'AN', null, (rs) => {
+    const g = rs[0];
+    const ks = aldKet(g);
+    if (!ks.length) return none(NOTE_NO_CO);
+    const hasAld = ks.some((k) => k.type === 'aldehyde');
+    const out = new Out();
+    ks.forEach((k) => {
+      const ng = g.clone();
+      ng.bond(k.c, k.o, 1);
+      ng.A[k.o].h = 1;
+      graft(ng, k.c, 'C#N');
+      ng.fillC(k.c);
+      out.add(ng, !hasAld || k.type === 'aldehyde');
+    });
+    return out.note(T('Susidaro hidroksinitrilas (cianhidrinas); aldehidai reaktingesni už ketonus.', 'A hydroxynitrile (cyanohydrin) forms; aldehydes are more reactive than ketones.')).result();
+  });
+
+  // hemiacetal, acetal, thioacetal
+  function acetalRule(kind) {
+    return (rs) => {
+      const g = rs[0];
+      const ks = aldKet(g);
+      if (!ks.length) return none(NOTE_NO_CO);
+      const hasAld = ks.some((k) => k.type === 'aldehyde');
+      const out = new Out();
+      const sitesOf = (h) => (kind === 'thio' ? thiolS(h).map((x) => ({ n: x.s, c: x.c })) : nucSites(h).filter((x) => h.A[x.o].h === 1 && !ar(h, x.c)).map((x) => ({ n: x.o, c: x.c })));
+      if (rs.length === 1) {
+        if (kind !== 'hemi') return none(T('Reikia dviejų reagentų: karbonilo junginio ir alkoholio.', 'Two reactants are needed: a carbonyl compound and an alcohol.'));
+        ks.forEach((k) => sitesOf(g).forEach((s) => {
+          const p = g.path(k.c, s.c);
+          if (!p || p.length + 1 < 5 || p.length + 1 > 6) return;
+          const ng = g.clone();
+          ng.bond(k.c, k.o, 1);
+          ng.A[k.o].h = 1;
+          ng.A[s.n].h = 0;
+          ng.bond(k.c, s.n, 1);
+          ng.fillC(k.c);
+          out.add(ng, true);
+        }));
+        if (!out.list.length) return none(T('Ciklinis pusacetalis nesidaro (reikia 5–6 narių žiedo).', 'No cyclic hemiacetal forms (a 5- or 6-membered ring is needed).'));
+        return out.note(T('Hidroksialdehidas ciklizuojasi į ciklinį pusacetalį.', 'A hydroxy aldehyde cyclises to a cyclic hemiacetal.')).result();
+      }
+      const nu = rs[1];
+      const ns = sitesOf(nu);
+      if (!ns.length) return none(kind === 'thio' ? NOTE_NO_THIOL : T('Antrasis reagentas turi būti alkoholis.', 'The second reactant must be an alcohol.'));
+      ks.forEach((k) => {
+        const major = !hasAld || k.type === 'aldehyde';
+        if (kind === 'hemi') {
+          ns.forEach((s) => {
+            const ng = g.clone();
+            const off = ng.merge(nu);
+            ng.bond(k.c, k.o, 1);
+            ng.A[k.o].h = 1;
+            ng.A[s.n + off].h = 0;
+            ng.bond(k.c, s.n + off, 1);
+            ng.fillC(k.c);
+            out.add(ng, major);
+          });
+          return;
+        }
+        let cyc = false;
+        if (ns.length === 2) {
+          const p = nu.path(ns[0].c, ns[1].c);
+          if (p && p.length + 3 >= 5 && p.length + 3 <= 6) cyc = true;
+          else throw new Error('react: ' + (kind === 'thio' ? 'co.thioacetal' : 'co.acetal') + ' needs a mono-ol or a 1,2- or 1,3-diol (dithiol)');
+        } else if (ns.length > 2) throw new Error('react: too many OH/SH groups in the second reactant');
+        const ng = g.clone();
+        let off = ng.merge(nu);
+        const picks = [ns[0].n + off];
+        if (cyc) picks.push(ns[1].n + off);
+        else { off = ng.merge(nu); picks.push(ns[0].n + off); }
+        picks.forEach((n) => { ng.A[n].h = 0; ng.bond(k.c, n, 1); });
+        const fin = ng.without([k.o]);
+        fin.fillC(fin.map[k.c]);
+        out.add(fin, major);
+      });
+      return out.note(kind === 'hemi'
+        ? T('Pusacetalis (nestabilus, išskyrus ciklinius); rūgštinėje terpėje su pertekliumi alkoholio – acetalis.', 'A hemiacetal (unstable unless cyclic); with excess alcohol in acid it goes on to the acetal.')
+        : T('Acetalis susidaro rūgštinėje terpėje (grįžtamoji reakcija: hidrolizė rūgštyje); su diolu – ciklinis acetalis (karbonilo apsauga).', 'The acetal forms in acid (reversible: acid hydrolysis); with a diol a cyclic acetal forms (protecting the carbonyl).')).result();
+    };
+  }
+  def('co.hemiacetal', 'Aldehido ar ketono reakcija su alkoholiu (pusacetalis)', 'Aldehyde or ketone with an alcohol (hemiacetal)', 'AN', null, acetalRule('hemi'));
+  def('co.acetal', 'Aldehido ar ketono reakcija su alkoholiu rūgštinėje terpėje (acetalis)', 'Aldehyde or ketone with an alcohol in acid (acetal)', 'AN/SN1', null, acetalRule('acetal'));
+  def('co.thioacetal', 'Aldehido ar ketono reakcija su tioliu (tioacetalis)', 'Aldehyde or ketone with a thiol (thioacetal)', 'AN', null, acetalRule('thio'));
+
+  function condensation(rule, el, nuAtom) {
+    return (rs) => {
+      const g = rs[0].clone();
+      const ks = aldKet(g);
+      if (!ks.length) return none(NOTE_NO_CO);
+      ks.forEach((k) => {
+        g.A[k.o].el = 'N';
+        g.A[k.o].h = 0;
+        graft(g, k.o, nuAtom);
+      });
+      return new Out().add(g, true).note(T('Karbonilas virsta C=N grupe, atskyla vanduo.', 'The carbonyl becomes a C=N group with loss of water.')).result();
+    };
+  }
+  def('co.oxime', 'Karbonilo reakcija su hidroksilaminu (oksimas)', 'Carbonyl with hydroxylamine (oxime)', 'AN-E', null, condensation('co.oxime', 'O', 'O'));
+  def('co.phenylhydrazone', 'Karbonilo reakcija su fenilhidrazinu (fenilhidrazonas)', 'Carbonyl with phenylhydrazine (phenylhydrazone)', 'AN-E', null, condensation('co.phenylhydrazone', 'N', 'Nc1ccccc1'));
+
+  def('co.tollens', 'Aldehido oksidacija Tolenso reagentu (sidabro veidrodis)', 'Oxidation of an aldehyde with Tollens\' reagent (silver mirror)', null,
+    'silver [Ag] (the mirror), by: true', (rs) => {
+      const g = rs[0].clone();
+      const ks = carbonyls(g, ['aldehyde']);
+      if (!ks.length) return none(T('Ketonai Tolenso reagento neredukuoja.', 'Ketones do not reduce Tollens\' reagent.'));
+      ks.forEach((k) => {
+        g.A[k.c].h = 0;
+        g.bond(k.c, g.add('O', -1, 0), 1);
+        g.add('N', 1, 4);
+        g.fillC(k.c);
+      });
+      const out = new Out().add(g, true);
+      const ag = new Graph();
+      ag.add('Ag', 0, 0);
+      out.add(ag, false, true);
+      return out.note(T('Aldehidas virsta karboksirūgšties amonio druska (karboksilatu); išsiskiria sidabras (veidrodis).', 'The aldehyde becomes the ammonium salt of the acid (the carboxylate); silver is deposited (the mirror).')).result();
+    });
+
+  def('co.cannizzaro', 'Kanicaro reakcija (aldehidas be α-H, konc. NaOH)', 'Cannizzaro reaction (aldehyde without α-H, conc. NaOH)', null, null, (rs, o) => {
+    const g = rs[0];
+    const ks = carbonyls(g, ['aldehyde']);
+    if (!ks.length) return none(T('Kanicaro reakcijoje dalyvauja tik aldehidai.', 'Only aldehydes take part in the Cannizzaro reaction.'));
+    if (aldKet(g).some((k) => alphas(g, k).length)) return none(T('Aldehidas turi α-H: vyksta aldolinė reakcija, o ne Kanicaro.', 'The aldehyde has α-H: the aldol reaction competes, not Cannizzaro.'));
+    if (ks.length > 2) throw new Error('react: co.cannizzaro supports one or two CHO groups');
+    const reduce = (ng, k) => { ng.bond(k.c, k.o, 1); ng.A[k.o].h = 1; ng.fillC(k.c); };
+    const oxidise = (ng, k) => {
+      ng.A[k.c].h = 0;
+      if (o.workup) attachGroup(ng, k.c, 'OH'); else { ng.bond(k.c, ng.add('O', -1, 0), 1); ng.add('Na', 1, 0); }
+      ng.fillC(k.c);
+    };
+    const out = new Out();
+    if (ks.length === 1) {
+      const a = g.clone(); reduce(a, ks[0]); out.add(a, true);
+      const b = g.clone(); oxidise(b, ks[0]); out.add(b, true);
+    } else {
+      [[0, 1], [1, 0]].forEach((pr) => {
+        const ng = g.clone();
+        reduce(ng, ks[pr[0]]);
+        oxidise(ng, ks[pr[1]]);
+        out.add(ng, true);
+      });
+    }
+    return out.note(T('Dismutacija: viena aldehido molekulė redukuojasi į alkoholį, kita oksiduojasi į rūgštį (druską).', 'Disproportionation: one aldehyde molecule is reduced to the alcohol, another oxidised to the acid (its salt).')).result();
+  });
+
+  // aldol addition (and condensation) of aldehydes and ketones
+  function aldolProducts(rs, condense) {
+    const items = rs.length === 1 ? [rs[0], rs[0]] : [rs[0], rs[1]];
+    const enolizable = items.map((g) => aldKet(g).some((k) => alphas(g, k).length > 0));
+    const pool = rs.length === 1 ? [0] : [0, 1];
+    const res = [];
+    // two reactants, one of which cannot enolise: its carbonyl is the electrophile and that crossed product is the selective one
+    const fixed = rs.length === 2 && enolizable[0] !== enolizable[1] ? (enolizable[0] ? 1 : 0) : -1;
+    pool.forEach((i) => {
+      const gd = items[i];
+      aldKet(gd).forEach((kd) => alphas(gd, kd).forEach((a) => {
+        pool.forEach((j) => {
+          const ge = items[j];
+          const eks = aldKet(ge);
+          const alds = eks.filter((k) => k.type === 'aldehyde');
+          (alds.length ? alds : eks).forEach((ke) => {
+            const ng = gd.clone();
+            const off = ng.merge(ge);
+            const ec = ke.c + off;
+            const eo = ke.o + off;
+            ng.A[a].h -= 1;
+            ng.bond(a, ec, 1);
+            let out;
+            if (condense) {
+              if (ng.A[a].h < 1) return;
+              out = ng.without([eo]);
+              out.bond(out.map[a], out.map[ec], 2);
+              out.fillC(out.map[a]);
+              out.fillC(out.map[ec]);
+            } else {
+              ng.bond(ec, eo, 1);
+              ng.A[eo].h = 1;
+              ng.fillC(ec);
+              out = ng;
+            }
+            res.push({ g: out, major: fixed < 0 || j === fixed });
+          });
+        });
+      }));
+    });
+    return res;
+  }
+
+  function aldolRule(condense) {
+    return (rs) => {
+      const res = aldolProducts(rs, condense);
+      if (!res.length) {
+        return none(condense
+          ? T('Kondensacija negalima: aldolis neturi H prie α-C arba nėra enolizuojamo junginio.', 'No condensation: the aldol has no H on the α-carbon, or nothing can enolise.')
+          : T('Nėra α-vandenilio: aldolinė reakcija nevyksta.', 'There is no α-hydrogen: the aldol reaction cannot take place.'));
+      }
+      const out = new Out();
+      res.forEach((r) => out.add(r.g, r.major));
+      return out.note(condense
+        ? T('Kaitinant aldolis netenka vandens: gaunamas α,β-nesotusis karbonilo junginys.', 'On heating the aldol loses water: an α,β-unsaturated carbonyl compound forms.')
+        : T('Aldolinis jungimasis: enolatas atakuoja kito karbonilo anglį: β-hidroksikarbonilo junginys.', 'Aldol addition: the enolate attacks the carbonyl carbon of another molecule: a β-hydroxy carbonyl compound.')).result();
+    };
+  }
+  def('co.aldol', 'Aldolinis prisijungimas', 'Aldol addition', 'AN', null, aldolRule(false));
+  def('co.aldolcond', 'Aldolinė kondensacija', 'Aldol condensation', 'AN-E', null, aldolRule(true));
+
+  def('co.enols', 'Keto-enolinė tautomerija (enoliai)', 'Keto-enol tautomerism (enols)', null, null, (rs) => {
+    const g = rs[0];
+    const ks = aldKet(g);
+    if (!ks.length) return none(NOTE_NO_CO);
+    const out = new Out();
+    const list = [];
+    ks.forEach((k) => alphas(g, k).forEach((a) => {
+      const ng = g.clone();
+      ng.bond(k.c, a, 2);
+      ng.bond(k.c, k.o, 1);
+      ng.A[k.o].h = 1;
+      ng.fillC(k.c);
+      ng.fillC(a);
+      const conj = g.nbr(a).some((w) => w !== k.c && (ar(g, w) || g.nbr(w).some((u) => u !== a && g.ord(w, u) >= 2 && (g.el(u) === 'O' || isC(g, u)))));
+      list.push({ g: ng, score: (conj ? 2 : 0) + cNbrs(g, a).filter((w) => w !== k.c).length });
+    }));
+    if (!list.length) return none(T('Nėra α-vandenilio, enolis nesidaro.', 'There is no α-hydrogen, no enol forms.'));
+    const top = Math.max.apply(null, list.map((e) => e.score));
+    list.forEach((e) => out.add(e.g, e.score === top));
+    return out.note(T('Ketoforma vyrauja (> 99,9 %); enolis stabilesnis, kai konjuguotas arba esant 1,3-dikarbonilo junginiui.', 'The keto form dominates (> 99.9 %); the enol is more stable when conjugated or in a 1,3-dicarbonyl compound.')).result();
+  });
+
+  def('co.iodoform', 'Haloformo reakcija (I2, NaOH): jodoformas', 'Haloform reaction (I2, NaOH): iodoform', null, 'iodoform CHI3 (yellow precipitate) is listed with the carboxylate, both major', (rs) => {
+    const g = rs[0].clone();
+    const isMe = (m, c) => isC(g, m) && sp3C(g, m) && g.nbr(m).length === 1 && g.A[m].h === 3 && g.nbr(m)[0] === c;
+    let site = null;
+    aldKet(g).forEach((k) => {
+      if (site) return;
+      const m = g.nbr(k.c).find((w) => isMe(w, k.c));
+      if (m !== undefined) site = { c: k.c, m, o: k.o, alcohol: false };
+    });
+    if (!site) {
+      findAlcohols(g).forEach((a) => {
+        if (site || g.A[a.c].h < 1) return;
+        const m = g.nbr(a.c).find((w) => isMe(w, a.c));
+        if (m !== undefined) site = { c: a.c, m, o: a.o, alcohol: true };
+      });
+    }
+    if (!site) return none(T('Reikia CH3–C(=O)– ar CH3–CH(OH)– grupės.', 'A CH3-C(=O)- or CH3-CH(OH)- group is needed.'));
+    g.unbond(site.c, site.m);
+    if (site.alcohol) { g.bond(site.c, site.o, 2); g.A[site.o].h = 0; }
+    g.bond(site.c, g.add('O', -1, 0), 1);
+    g.add('Na', 1, 0);
+    g.fillC(site.c);
+    const parts = g.without([site.m]);
+    const out = new Out().add(parts, true);
+    const chi3 = new Graph();
+    const cc = chi3.add('C', 0, 1);
+    for (let i = 0; i < 3; i++) chi3.bond(cc, chi3.add('I', 0, 0), 1);
+    out.add(chi3, true);
+    return out.note(T('Geltonos jodoformo nuosėdos (CHI3) – metilketonų ir CH3CH(OH)– alkoholių atpažinimas; lieka karboksilatas.', 'Yellow iodoform (CHI3) precipitates: the test for methyl ketones and CH3CH(OH)- alcohols; the carboxylate remains.')).result();
+  });
+
   //@@RULES
 
   ORG.react = { run, RULES, wouldRearrange };
