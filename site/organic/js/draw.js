@@ -509,7 +509,7 @@
   // Analysis: labels, bond segments, quality
   // ------------------------------------------------------------------
 
-  function analyse(G, pos, opts, nodes) {
+  function analyse(G, pos, opts, nodes, withTexts) {
     const present = (w) => !!pos[w] && nodeSet[w] === true;
     const nodeSet = {};
     nodes.forEach((i) => { if (pos[i]) nodeSet[i] = true; });
@@ -633,6 +633,7 @@
         if (pos[k].x > bo.bx.x0 - 1 && pos[k].x < bo.bx.x1 + 1 && pos[k].y > bo.bx.y0 - 1 && pos[k].y < bo.bx.y1 + 1) labelClashes++;
       }
     }
+    if (withTexts && (opts.numbers || opts.deltas)) labelClashes += placeTexts(G, pos, opts, { lab, segs }, []).clashes;
     // a soft measure of crowding, for the search only
     let soft = 0;
     for (let a = 0; a < list.length; a++) {
@@ -653,7 +654,7 @@
     const G = buildGraph(mol, opts, extra);
     const nodes = [];
     for (let i = 0; i < Math.min(G.N, pos.length); i++) nodes.push(i);
-    return analyse(G, pos, opts, nodes).q;
+    return analyse(G, pos, opts, nodes, true).q;
   }
 
   // ------------------------------------------------------------------
@@ -1378,6 +1379,89 @@
     return node('text', { class: lab.cls, x: num(ax), y: num(y + 6), 'text-anchor': anchor }, kids);
   }
 
+  // ------------------------------------------------------------------
+  // Atom numbers and delta labels: the freest spot around each atom
+  // ------------------------------------------------------------------
+
+  function labelReach(l, th) {
+    if (!l) return 3;
+    const dx = Math.cos(th);
+    const dy = Math.sin(th);
+    let t = 0;
+    while (t < 30 && l.boxes.some((b) => l.x + dx * t > b.x0 && l.x + dx * t < b.x1 && l.y + dy * t > b.y0 && l.y + dy * t < b.y1)) t += 0.5;
+    return t;
+  }
+
+  function textRequests(G, opts) {
+    const mol = G.mol;
+    const out = [];
+    const nm = opts.numbers;
+    if (nm === 'all') mol.atoms.forEach((_, i) => out.push({ i, text: String(i + 1), cls: 'num' }));
+    else if (Array.isArray(nm)) nm.forEach((i) => { if (mol.atoms[i]) out.push({ i, text: String(i + 1), cls: 'num' }); });
+    else if (nm && typeof nm === 'object') Object.keys(nm).forEach((k) => { if (mol.atoms[+k]) out.push({ i: +k, text: String(nm[k]), cls: 'num' }); });
+    if (opts.deltas) {
+      Object.keys(opts.deltas).forEach((k) => {
+        if (mol.atoms[+k]) out.push({ i: +k, text: 'δ' + (opts.deltas[k] === '+' ? '+' : '−'), cls: 'delta' });
+      });
+    }
+    return out;
+  }
+
+  // Each label goes where it has the most room from bonds (double-bond lines included), labels,
+  // atoms and extra points (lone pair dots); closer to its atom when the room is the same.
+  function placeTexts(G, pos, opts, an, extraPts) {
+    const items = [];
+    let clashes = 0;
+    const boxes = [];
+    Object.keys(an.lab).forEach((k) => {
+      an.lab[k].boxes.forEach((b) => boxes.push(b));
+      if (an.lab[k].charge) boxes.push(an.lab[k].charge.box);
+    });
+    const pts = [];
+    for (let i = 0; i < G.N; i++) if (pos[i]) pts.push(pos[i]);
+    (extraPts || []).forEach((p) => pts.push(p));
+    const samples = [];
+    an.segs.forEach((sg) => {
+      const len = Math.hypot(sg.x2 - sg.x1, sg.y2 - sg.y1);
+      const n = Math.max(1, Math.ceil(len / 3));
+      const pad = 2.5 + (sg.b.order > 1 ? GAP * (sg.b.order - 1) / 2 + 1 : 0);
+      for (let k = 0; k <= n; k++) samples.push({ x: sg.x1 + ((sg.x2 - sg.x1) * k) / n, y: sg.y1 + ((sg.y2 - sg.y1) * k) / n, pad });
+    });
+    const rectPoint = (b, x, y) => Math.hypot(Math.max(b.x0 - x, 0, x - b.x1), Math.max(b.y0 - y, 0, y - b.y1));
+    const clearance = (b) => {
+      let m = 1e9;
+      samples.forEach((q) => { m = Math.min(m, rectPoint(b, q.x, q.y) - q.pad); });
+      pts.forEach((q) => { m = Math.min(m, rectPoint(b, q.x, q.y) - 2); });
+      boxes.forEach((c) => {
+        m = Math.min(m, Math.hypot(Math.max(0, c.x0 - b.x1, b.x0 - c.x1), Math.max(0, c.y0 - b.y1, b.y0 - c.y1)));
+      });
+      return m;
+    };
+    textRequests(G, opts).forEach((rq) => {
+      const w = Math.max(7, rq.text.length * 7.2);
+      const h = 10;
+      let best = null;
+      for (let a = 0; a < 24; a++) {
+        const th = -PI / 2 + (TAU * a) / 24 + PI / 24;
+        const half = Math.abs(Math.cos(th)) * w / 2 + Math.abs(Math.sin(th)) * h / 2;
+        const base = labelReach(an.lab[rq.i], th) + half;
+        for (const extra of [2, 5, 8, 11, 14, 17]) {
+          const r = base + extra;
+          const cx = pos[rq.i].x + Math.cos(th) * r;
+          const cy = pos[rq.i].y + Math.sin(th) * r;
+          const box = { x0: cx - w / 2, x1: cx + w / 2, y0: cy - h / 2, y1: cy + h / 2 };
+          const clear = clearance(box);
+          const score = Math.min(clear, 12) * 10 - extra * 0.8;
+          if (!best || score > best.score) best = { score, cx, cy, box, clear };
+        }
+      }
+      if (best.clear < 3) clashes++;
+      boxes.push(best.box);
+      items.push({ i: rq.i, text: rq.text, cls: rq.cls, x: best.cx, y: best.cy, w, box: best.box });
+    });
+    return { items, clashes };
+  }
+
   function buildSvg(G, pos, wedges, opts, view) {
     const mol = G.mol;
     const nodes = [];
@@ -1534,78 +1618,54 @@
       }
       return out;
     };
-    const reach = (i, th) => {
-      const l = lab[i];
-      if (!l) return 3;
-      const dx = Math.cos(th);
-      const dy = Math.sin(th);
-      let t = 0;
-      while (t < 30 && l.boxes.some((b) => l.x + dx * t > b.x0 && l.x + dx * t < b.x1 && l.y + dy * t > b.y0 && l.y + dy * t < b.y1)) t += 0.5;
-      return t;
-    };
-
-    // lone pairs
-    const lpTaken = {};
+    // lone pairs: the angles with the most room from bonds, the charge and each other
+    const lpPts = [];
     const lpList = opts.lonePairs === true ? mol.atoms.map((_, i) => i) : (Array.isArray(opts.lonePairs) ? opts.lonePairs : []);
     lpList.forEach((i) => {
       if (!mol.atoms[i]) return;
       const cnt = getChem().lonePairs(mol, i);
       if (!cnt) return;
-      const bl = blocked(i);
-      const taken = [];
-      for (let n = 0; n < cnt; n++) {
-        let pick = null;
-        for (let a = 0; a < 24; a++) {
-          const th = -PI / 2 + (TAU * a) / 24;
-          let clear = PI;
-          bl.concat(taken).forEach((b) => { clear = Math.min(clear, Math.abs(wrap(b - th))); });
-          // keep clear of the neighbouring atoms' labels as well
-          if (!pick || clear > pick.clear + 1e-6) pick = { th, clear };
+      const obst = blocked(i);
+      if (lab[i] && lab[i].hN > 0) {
+        const hs = lab[i].side === 'right' ? 0 : PI;
+        obst.push(hs - 0.45, hs + 0.45);
+      }
+      const grid = [];
+      for (let a = 0; a < 24; a++) grid.push(-PI / 2 + (TAU * a) / 24);
+      let bestSet = null;
+      const rec = (start, chosen) => {
+        if (chosen.length === cnt) {
+          let m = PI;
+          chosen.forEach((c, x) => {
+            obst.forEach((o) => { m = Math.min(m, Math.abs(wrap(o - c))); });
+            chosen.forEach((d, y) => { if (y > x) m = Math.min(m, Math.abs(wrap(d - c))); });
+          });
+          if (!bestSet || m > bestSet.m + 1e-9) bestSet = { m, set: chosen.slice() };
+          return;
         }
-        taken.push(pick.th);
-        const r = reach(i, pick.th) + 5.5;
-        const cx = pos[i].x + Math.cos(pick.th) * r;
-        const cy = pos[i].y + Math.sin(pick.th) * r;
-        const px = -Math.sin(pick.th) * 2.6;
-        const py = Math.cos(pick.th) * 2.6;
+        for (let g = start; g < grid.length; g++) { chosen.push(grid[g]); rec(g + 1, chosen); chosen.pop(); }
+      };
+      rec(0, []);
+      bestSet.set.forEach((th) => {
+        const r = labelReach(lab[i], th) + 5.5;
+        const cx = pos[i].x + Math.cos(th) * r;
+        const cy = pos[i].y + Math.sin(th) * r;
+        const px = -Math.sin(th) * 2.6;
+        const py = Math.cos(th) * 2.6;
+        lpPts.push({ x: cx + px, y: cy + py }, { x: cx - px, y: cy - py });
         grow(cx - 5, cy - 5, cx + 5, cy + 5);
         emit(items.lps, (dx, dy) => node('g', { class: 'lp' }, [
           node('circle', { cx: num(cx + px + dx), cy: num(cy + py + dy), r: 1.7 }),
           node('circle', { cx: num(cx - px + dx), cy: num(cy - py + dy), r: 1.7 }),
         ]));
-      }
-      lpTaken[i] = taken;
+      });
     });
 
     // numbers and delta labels
-    const textAt = (i, text, cls, extra) => {
-      const bl = blocked(i).concat(lpTaken[i] || []);
-      let pick = null;
-      for (let a = 0; a < 24; a++) {
-        const th = -PI / 2 + (TAU * a) / 24 + PI / 24;
-        let clear = PI;
-        bl.forEach((b) => { clear = Math.min(clear, Math.abs(wrap(b - th))); });
-        const bonus = Math.cos(th) > 0 ? 0.01 : 0;
-        if (!pick || clear + bonus > pick.clear + 1e-6) pick = { th, clear: clear + bonus };
-      }
-      const w = Math.max(8, text.length * 7.5);
-      const r = Math.max(reach(i, pick.th), 4) + (extra || 0) + Math.abs(Math.cos(pick.th)) * (w / 2) + Math.abs(Math.sin(pick.th)) * 6 + 3;
-      const cx = pos[i].x + Math.cos(pick.th) * r;
-      const cy = pos[i].y + Math.sin(pick.th) * r;
-      grow(cx - w / 2, cy - 8, cx + w / 2, cy + 6);
-      emit(items.nums, (dx, dy) => node('text', { class: cls, x: num(cx + dx), y: num(cy + 4.5 + dy), 'text-anchor': 'middle' }, [{ text }]));
-    };
-    if (opts.numbers) {
-      if (opts.numbers === 'all') mol.atoms.forEach((_, i) => textAt(i, String(i + 1), 'num'));
-      else if (Array.isArray(opts.numbers)) opts.numbers.forEach((i) => { if (mol.atoms[i]) textAt(i, String(i + 1), 'num'); });
-      else if (typeof opts.numbers === 'object') Object.keys(opts.numbers).forEach((k) => { if (mol.atoms[+k]) textAt(+k, String(opts.numbers[k]), 'num'); });
-    }
-    if (opts.deltas) {
-      Object.keys(opts.deltas).forEach((k) => {
-        if (!mol.atoms[+k]) return;
-        textAt(+k, 'δ' + (opts.deltas[k] === '+' ? '+' : '−'), 'delta');
-      });
-    }
+    placeTexts(G, pos, opts, an, lpPts).items.forEach((t) => {
+      grow(t.box.x0, t.box.y0, t.box.x1, t.box.y1);
+      emit(items.nums, (dx, dy) => node('text', { class: t.cls, x: num(t.x + dx), y: num(t.y + 4.5 + dy), 'text-anchor': 'middle' }, [{ text: t.text }]));
+    });
 
     // highlights
     const hl = opts.highlight;

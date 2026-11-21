@@ -424,3 +424,51 @@ test('toString escapes text and attributes', () => {
   const s = D.toString({ t: 'text', a: { title: 'a"b<c' }, c: [{ text: 'x<y&z' }] });
   assert.strictEqual(s, '<text title="a&quot;b&lt;c">x&lt;y&amp;z</text>');
 });
+
+// ---- atom numbers keep clear of the structure -----------------------------
+function segDist(p, a, b) {
+  const vx = b.x - a.x;
+  const vy = b.y - a.y;
+  const t = Math.max(0, Math.min(1, ((p.x - a.x) * vx + (p.y - a.y) * vy) / (vx * vx + vy * vy || 1)));
+  return Math.hypot(a.x + vx * t - p.x, a.y + vy * t - p.y);
+}
+
+test('numbers: every fixture drawn with numbers all still has quality zero', () => {
+  for (const smi of LINES) {
+    const mol = C.parse(smi);
+    const o = { numbers: 'all' };
+    const d = D.molecule(smi, o);
+    assert.deepEqual(P(D.quality(mol, d.atoms, o)), { overlaps: 0, crossings: 0, labelClashes: 0 }, smi);
+  }
+});
+
+test('numbers: labels keep 0.35 bond lengths from every bond (phenol, acetic acid, branched, rings)', () => {
+  for (const smi of ['Oc1ccccc1', 'CC(=O)O', 'CCC(C)C', 'CC(C)(C)CC(CC)CC', 'CC1=CCCCC1', 'CCc1cccc(C)c1']) {
+    const mol = C.parse(smi);
+    const d = D.molecule(smi, { numbers: 'all' });
+    const nums = find(d, 'num');
+    assert.strictEqual(nums.length, mol.atoms.length);
+    nums.forEach((n) => {
+      const c = { x: Number(n.a.x), y: Number(n.a.y) - 4.5 };
+      mol.bonds.forEach((b) => {
+        const dd = segDist(c, d.atoms[b.a], d.atoms[b.b]);
+        assert.ok(dd >= 14, smi + ' number ' + textOf(n) + ' is ' + dd.toFixed(1) + ' from bond ' + b.a + '-' + b.b);
+      });
+    });
+  }
+});
+
+test('lone pairs and a charge on one atom do not share a direction', () => {
+  const d = D.molecule('CC(=O)[O-]', { lonePairs: true });
+  assert.deepEqual(P(D.quality(C.parse('CC(=O)[O-]'), d.atoms, { lonePairs: true })), { overlaps: 0, crossings: 0, labelClashes: 0 });
+  const o = d.atoms[3];
+  const ch = find(d, 'charge')[0];
+  const ca = Math.atan2(Number(ch.a.y) - o.y, Number(ch.a.x) - o.x);
+  find(d, 'lp').forEach((g) => {
+    const cx = (Number(g.c[0].a.cx) + Number(g.c[1].a.cx)) / 2;
+    const cy = (Number(g.c[0].a.cy) + Number(g.c[1].a.cy)) / 2;
+    let da = Math.abs(Math.atan2(cy - o.y, cx - o.x) - ca);
+    if (da > Math.PI) da = 2 * Math.PI - da;
+    assert.ok(da > 0.7, 'lone pair ' + da.toFixed(2) + ' rad from the charge');
+  });
+});
