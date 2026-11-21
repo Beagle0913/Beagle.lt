@@ -30,6 +30,7 @@ function only(res, smi) { expectProducts(res, [smi], [smi]); }
 const REQUIRED = [
   'sr.halogenate', 'ae.hx', 'ae.h2o', 'ae.x2', 'ae.h2', 'ox.kmno4.mild', 'ox.kmno4.harsh', 'diene.hx',
   'yne.h2', 'yne.x2', 'yne.hx', 'yne.hydration', 'yne.cu', 'sear', 'side.br', 'side.ox',
+  'sn2', 'sn1', 'elim', 'alc.hx', 'alc.ox', 'alc.na', 'williamson', 'ether.hi',
   //@@REQUIRED
 ];
 
@@ -179,6 +180,100 @@ test('wouldRearrange: shifts to a more stable cation', () => {
   const no = ['C=CC', 'CC=C(C)C', 'CC(O)CC', 'CCCCO', 'CC(C)(C)O', 'CCCC=C', 'CC(Br)C', 'C1=CCCCC1'];
   yes.forEach((s) => assert.strictEqual(react.wouldRearrange(s), true, s));
   no.forEach((s) => assert.strictEqual(react.wouldRearrange(s), false, s));
+});
+
+// ---------------------------------------------------------------- halides and alcohols
+
+test('sn2: 1-bromopropane with the course nucleophiles', () => {
+  const cases = {
+    SH: 'CCCS', OH: 'CCCO', CN: 'CCCC#N', OC: 'CCCOC', 'C#CC': 'CCCC#CC', I: 'CCCI', OCC: 'CCCOCC', SC: 'CCCSC',
+    NH3: 'CCC[NH3+].[Br-]',
+  };
+  Object.keys(cases).forEach((nu) => only(R('sn2', ['CCCBr'], { nu }), cases[nu]));
+  assert.throws(() => react.run('sn2', ['CCCBr'], { nu: 'F' }), (e) => /needs nu/.test(e.message));
+});
+
+test('sn2: secondary halides with a strong base eliminate, tertiary only eliminate, aryl halides do not react', () => {
+  expectProducts(R('sn2', ['CC(C)Br'], { nu: 'OCC' }), ['C=CC', 'CC(C)OCC'], ['C=CC']);
+  expectProducts(R('sn2', ['CC(C)Br'], { nu: 'CN' }), ['CC(C)C#N', 'C=CC'], ['CC(C)C#N']);
+  only(R('sn2', ['CC(C)(C)Br'], { nu: 'OC' }), 'C=C(C)C');
+  assert.ok(R('sn2', ['Brc1ccccc1'], { nu: 'OH' }).none);
+  only(R('sn2', ['BrCc1ccccc1'], { nu: 'CN' }), 'N#CCc1ccccc1');
+});
+
+test('sn1: tertiary and allylic halides with a weak nucleophile', () => {
+  expectProducts(R('sn1', ['CC(C)(C)Br'], { nu: 'OH' }), ['CC(C)(C)O', 'C=C(C)C'], ['CC(C)(C)O']);
+  expectProducts(R('sn1', ['CC(C)(C)Cl'], { nu: 'OCC' }), ['CC(C)(C)OCC', 'C=C(C)C'], ['CC(C)(C)OCC']);
+  // 3-bromo-1-butene and 1-bromo-2-butene share one allylic cation
+  const a = R('sn1', ['CC(Br)C=C'], { nu: 'OH' });
+  const b = R('sn1', ['BrCC=CC'], { nu: 'OH' });
+  assert.deepStrictEqual(majorsOf(a), [canon('CC(O)C=C'), canon('CC=CCO')].sort());
+  assert.deepStrictEqual(majorsOf(a), majorsOf(b));
+  assert.ok(R('sn1', ['CCCBr'], { nu: 'OH' }).none);
+});
+
+test('elim: Zaitsev product predominates', () => {
+  expectProducts(R('elim', ['CCC(C)(C)Br'], { base: 'strong' }), ['CC=C(C)C', 'C=C(C)CC'], ['CC=C(C)C']);
+  expectProducts(R('elim', ['CC(Br)CC'], { base: 'strong' }), ['CC=CC', 'C=CCC'], ['CC=CC']);
+  expectProducts(R('elim', ['CCC(C)(O)CC'], { base: 'heat-acid' }), ['CCC(C)=CC', 'C=C(CC)CC'], ['CCC(C)=CC']);
+  expectProducts(R('elim', ['CC(O)CC'], { base: 'heat-acid' }), ['CC=CC', 'C=CCC'], ['CC=CC']);
+  expectProducts(R('elim', ['CC1(O)CCCCC1'], { base: 'heat-acid' }), ['CC1=CCCCC1', 'C=C1CCCCC1'], ['CC1=CCCCC1']);
+  const d = R('elim', ['CC1(O)CCCCC1C'], { base: 'heat-acid' });
+  assert.deepStrictEqual(majorsOf(d), [canon('CC1=C(C)CCCC1')]);
+  assert.strictEqual(d.products.length, 3);
+  assert.ok(R('elim', ['C'], {}).none);
+});
+
+test('alc.hx and alc.ox', () => {
+  only(R('alc.hx', ['CCCO'], { X: 'Br' }), 'CCCBr');
+  only(R('alc.hx', ['CC(C)(C)O'], { X: 'Cl' }), 'CC(C)(C)Cl');
+  only(R('alc.hx', ['CC1(O)CCCCC1'], { X: 'Br' }), 'CC1(Br)CCCCC1');
+  assert.deepStrictEqual(majorsOf(R('alc.hx', ['OCC=CC'], { X: 'Br' })), [canon('BrCC=CC'), canon('CC(Br)C=C')].sort());
+  only(R('alc.ox', ['CCCO'], { reagent: 'PCC' }), 'CCC=O');
+  only(R('alc.ox', ['CCCO'], { reagent: 'chromic' }), 'CCC(=O)O');
+  only(R('alc.ox', ['CC(C)O'], { reagent: 'PCC' }), 'CC(C)=O');
+  only(R('alc.ox', ['CC(C)O'], { reagent: 'chromic' }), 'CC(C)=O');
+  only(R('alc.ox', ['CC(C)(C)C1CCC(O)CC1'], { reagent: 'chromic' }), 'CC(C)(C)C1CCC(=O)CC1');
+  assert.ok(R('alc.ox', ['CC(C)(C)O'], { reagent: 'chromic' }).none);
+  only(R('alc.ox', ['CO'], { reagent: 'chromic' }), 'O=CO');
+  only(R('alc.ox', ['CO'], { reagent: 'PCC' }), 'C=O');
+  assert.throws(() => react.run('alc.ox', ['CCO'], {}), (e) => /needs reagent/.test(e.message));
+});
+
+test('alc.na gives the alkoxide and H2', () => {
+  const r = R('alc.na', ['CCO']);
+  expectProducts(r, ['CC[O-].[Na+]', '[H][H]'], ['CC[O-].[Na+]']);
+  assert.strictEqual(r.products.find((p) => p.smi === canon('[H][H]')).by, true);
+  expectProducts(R('alc.na', ['CCO'], { metal: 'K' }), ['CC[O-].[K+]', '[H][H]'], ['CC[O-].[K+]']);
+  assert.ok(R('alc.na', ['c1ccccc1']).none);
+});
+
+test('williamson: prefers the primary halide; intramolecular ring closure', () => {
+  expectProducts(R('williamson', ['COC(C)C']), ['CC(C)[O-].[Na+]', 'CI', 'C[O-].[Na+]', 'CC(C)I'], ['CC(C)[O-].[Na+]', 'CI']);
+  expectProducts(R('williamson', ['COC(C)(C)C']), ['CC(C)(C)[O-].[Na+]', 'CI'], ['CC(C)(C)[O-].[Na+]', 'CI']);
+  expectProducts(R('williamson', ['CCOc1ccccc1']), ['[O-]c1ccccc1.[Na+]', 'CCI'], ['[O-]c1ccccc1.[Na+]', 'CCI']);
+  const both = R('williamson', ['CCCOC']);
+  assert.strictEqual(majorsOf(both).length, 4);
+  assert.ok(R('williamson', ['CC(C)OC(C)C']).none);
+  only(R('williamson', ['CC(C)[O-]', 'CI']), 'COC(C)C');
+  only(R('williamson', ['[O-]c1ccccc1', 'CI']), 'COc1ccccc1');
+  only(R('williamson', ['CCO', 'CI']), 'CCOC');
+  expectProducts(R('williamson', ['C[O-]', 'CC(C)(C)Cl']), ['C=C(C)C'], ['C=C(C)C']);
+  expectProducts(R('williamson', ['CC[O-]', 'CC(C)Br']), ['C=CC', 'CCOC(C)C'], ['C=CC']);
+  only(R('williamson', ['ClCCCCO']), 'C1CCOC1');
+  assert.ok(R('williamson', ['ClCCCCCCCCO']).none);
+});
+
+test('ether.hi: SN1 at the tertiary side, SN2 at the less hindered carbon, cyclic and aryl ethers', () => {
+  expectProducts(R('ether.hi', ['COC(C)(C)C'], { eq: 1 }), ['CC(C)(C)I', 'CO', 'CI', 'CC(C)(C)O'], ['CC(C)(C)I', 'CO']);
+  expectProducts(R('ether.hi', ['COC(C)(C)C'], { eq: 2 }), ['CC(C)(C)I', 'CI'], ['CC(C)(C)I', 'CI']);
+  expectProducts(R('ether.hi', ['CCOC(C)C'], { eq: 1 }), ['CCI', 'CC(C)O', 'CC(C)I', 'CCO'], ['CCI', 'CC(C)O']);
+  expectProducts(R('ether.hi', ['CCOC(C)C'], { eq: 2 }), ['CCI', 'CC(C)I'], ['CCI', 'CC(C)I']);
+  only(R('ether.hi', ['C1CCOC1'], { eq: 1 }), 'OCCCCI');
+  only(R('ether.hi', ['C1CCOC1'], { eq: 2 }), 'ICCCCI');
+  expectProducts(R('ether.hi', ['COc1ccccc1'], { eq: 1 }), ['CI', 'Oc1ccccc1'], ['CI', 'Oc1ccccc1']);
+  expectProducts(R('ether.hi', ['CC(C)(C)OC1CCCCC1'], { eq: 1 }), ['CC(C)(C)I', 'OC1CCCCC1', 'IC1CCCCC1', 'CC(C)(C)O'], ['CC(C)(C)I', 'OC1CCCCC1']);
+  assert.ok(R('ether.hi', ['c1ccccc1Oc1ccccc1'], { eq: 1 }).none);
 });
 
 //@@TESTS
