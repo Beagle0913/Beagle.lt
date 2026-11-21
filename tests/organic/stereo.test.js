@@ -268,6 +268,34 @@ test('isomers: unstable structures are left out', () => {
   assert.ok(c4.indexOf(C.canonical(P('C=CC#C'))) >= 0); // vinylacetylene stays
 });
 
+test('isomers: aromatic OH is a phenol, nitrogen analogues of the unstable classes', () => {
+  const has = (list, smi) => list.indexOf(C.canonical(P(smi))) >= 0;
+  assert.deepEqual(plain(S.isomers('C6H6O', { rings: true, filter: 'phenol' })), [C.canonical(P('Oc1ccccc1'))]);
+  // C7H8O with a benzene ring: o-, m-, p-cresol, benzyl alcohol, anisole
+  const c7 = plain(S.isomers('C7H8O', { rings: true })).filter((smi) => {
+    const m = P(smi);
+    return C.rings(m).some((r) => r.length === 6 && C.isAromaticRing(m, r));
+  });
+  assert.equal(c7.length, 5);
+  ['Cc1ccccc1O', 'Cc1cccc(O)c1', 'Cc1ccc(O)cc1', 'OCc1ccccc1', 'COc1ccccc1'].forEach((smi) => assert.ok(has(c7, smi), smi));
+  // C2H5NO acyclic: acetamide, N-methylformamide, 2-aminoethanal, 2-hydroxyethanimine, methyl formimidate,
+  // nitrosoethane. Left out: imidic acids (CH3C(=NH)OH, CH3N=CHOH), enols and enamine-ols, oxime/N-O compounds, the hemiaminal CH2=NCH2OH.
+  const amide = plain(S.isomers('C2H5NO'));
+  assert.equal(amide.length, 6);
+  ['CC(N)=O', 'CNC=O', 'NCC=O', 'OCC=N', 'COC=N', 'CCN=O'].forEach((smi) => assert.ok(has(amide, smi), smi));
+  // C2H7NO: 2-aminoethanol and methoxymethanamine; 1-aminoethanol (hemiaminal) and all N-O compounds are left out
+  const ano = plain(S.isomers('C2H7NO'));
+  assert.equal(ano.length, 2);
+  ['NCCO', 'COCN'].forEach((smi) => assert.ok(has(ano, smi), smi));
+  // C2H8N2: ethane-1,2-diamine only (ethane-1,1-diamine, CH3NHCH2NH2 and the hydrazines are left out)
+  assert.deepEqual(plain(S.isomers('C2H8N2')), [C.canonical(P('NCCN'))]);
+  // aromatic N-N and N-O bonds stay: pyrazole and imidazole are both C3H4N2
+  const dz = plain(S.isomers('C3H4N2', { rings: true }));
+  assert.ok(has(dz, 'c1cc[nH]n1'));
+  assert.ok(has(dz, 'c1c[nH]cn1'));
+  assert.ok(has(plain(S.isomers('C3H3NO', { rings: true })), 'c1conc1') || has(plain(S.isomers('C3H3NO', { rings: true })), 'c1cnoc1'));
+});
+
 test('errors are thrown, not hidden', () => {
   assert.throws(() => S.isomers('C9H20'), (e) => /heavy atoms/.test(e.message));
 });

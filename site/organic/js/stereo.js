@@ -708,28 +708,36 @@
   }
 
   // A first-year course does not count these as stable compounds, so isomers() leaves them out:
-  //   enols and ynols (OH on a carbon of C=C or C#C), peroxides and every other single bond between two
-  //   heteroatoms or between a heteroatom and a halogen (N-O, N-N, O-O, N-Cl ...; oximes and hydrazines
-  //   are lost with them unless opts.heteroBonds is true), gem-diols and hemiacetals/hemiketals (a
-  //   saturated carbon with an OH and a second single-bonded O), and, in rings of fewer than 8 atoms,
-  //   triple bonds and cumulated double bonds.
+  //   - enols, ynols and imidic acids: an OH on a carbon that carries a non-aromatic C=C, C#C or C=N
+  //     (phenols are fine: the aromatic ring is not a C=C here);
+  //   - peroxides and every other non-aromatic single bond between two heteroatoms or between a heteroatom
+  //     and a halogen (N-O, N-N, O-O, N-Cl ...; so oximes and hydrazines go too, unless opts.heteroBonds is
+  //     true; aromatic rings such as pyrazole or isoxazole, azo N=N and nitroso N=O are kept);
+  //   - gem-diols, hemiacetals/hemiketals, hemiaminals, aminals and gem-diamines: a carbon with only single
+  //     bonds that has an OH together with another O or an N, or two N atoms;
+  //   - in rings of fewer than 8 atoms, triple bonds and cumulated double bonds.
   function unstable(mol, heteroBonds) {
     const A = mol.atoms;
     const isHetero = (i) => A[i].el !== 'C';
     const rs = chem.rings(mol).filter((r) => r.length < 8);
     const inRing = (a, b) => rs.some((r) => r.indexOf(a) >= 0 && r.indexOf(b) >= 0);
     for (const b of mol.bonds) {
-      if (!heteroBonds && isHetero(b.a) && isHetero(b.b)) return true;
+      if (!heteroBonds && isHetero(b.a) && isHetero(b.b) && b.order === 1) return true;
       if (b.order === 3 && inRing(b.a, b.b)) return true;
     }
     for (let i = 0; i < A.length; i++) {
-      const doubles = mol.nbr[i].filter((w) => mol.bondAt(i, w).kek === 2);
+      const doubles = mol.nbr[i].filter((w) => mol.bondAt(i, w).order === 2);
       if (doubles.length === 2 && doubles.every((w) => inRing(i, w))) return true;
       if (A[i].el !== 'C') continue;
-      const oxy = mol.nbr[i].filter((w) => A[w].el === 'O' && mol.bondAt(i, w).kek === 1);
+      const single = (w) => mol.bondAt(i, w).order === 1;
+      const oxy = mol.nbr[i].filter((w) => A[w].el === 'O' && single(w));
       const oh = oxy.filter((w) => A[w].h >= 1);
-      if (oh.length && mol.nbr[i].some((w) => A[w].el === 'C' && mol.bondAt(i, w).kek >= 2)) return true; // enol, ynol
-      if (oh.length && oxy.length >= 2 && mol.nbr[i].every((w) => mol.bondAt(i, w).kek === 1)) return true; // gem-diol, hemiacetal
+      const nitrogens = mol.nbr[i].filter((w) => A[w].el === 'N' && single(w)).length;
+      if (oh.length && mol.nbr[i].some((w) => (A[w].el === 'C' || A[w].el === 'N') && mol.bondAt(i, w).order >= 2 && mol.bondAt(i, w).order !== 1.5)) return true; // enol, ynol, imidic acid
+      if (mol.nbr[i].every(single)) {
+        if (oh.length && (oxy.length >= 2 || nitrogens >= 1)) return true; // gem-diol, hemiacetal, hemiaminal
+        if (nitrogens >= 2) return true; // aminal, gem-diamine
+      }
     }
     return false;
   }
