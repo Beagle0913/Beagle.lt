@@ -9,7 +9,10 @@ const canon = (s) => chem.canonical(chem.parse(s));
 
 // run a rule and return plain data
 function R(rule, reactants, opts) {
-  return load.plain(react.run(rule, reactants, opts || undefined));
+  const res = load.plain(react.run(rule, reactants, opts || undefined));
+  // a rule that lists by-products must say so in RULES[id].by
+  if (res.products.some((p) => p.by)) assert.ok(react.RULES[rule].by, rule + ' lists by-products but RULES[id].by is empty');
+  return res;
 }
 
 // the set of products must be exactly `want` (SMILES), and `majors` exactly the major ones
@@ -35,6 +38,7 @@ const REQUIRED = [
   'co.nabh4', 'co.hcn', 'co.hemiacetal', 'co.acetal', 'co.thioacetal', 'co.oxime', 'co.phenylhydrazone', 'co.tollens',
   'co.cannizzaro', 'co.aldol', 'co.aldolcond', 'co.enols', 'co.iodoform',
   'acid.ester', 'acid.salt', 'acid.socl2', 'acyl.nu', 'ester.hydrolysis', 'claisen', 'lactone', 'amine.protonate', 'amine.alkyl', 'amine.acyl', 'amine.hno2', 'diazo.sub', 'nitro.reduce',
+  'nitrile.hydrolysis', // not in the plan's list: needed after the Sandmeyer cyanation and for cyanohydrins
   //@@REQUIRED
 ];
 
@@ -432,6 +436,12 @@ test('acyl.nu: chlorides and anhydrides', () => {
   only(R('acyl.nu', ['O=C1OC(=O)c2ccccc12'], { nu: 'water' }), 'OC(=O)c1ccccc1C(=O)O');
 });
 
+test('DEET in two steps: SOCl2, then diethylamine', () => {
+  const chloride = R('acid.socl2', ['Cc1cccc(c1)C(=O)O']).products[0].smi;
+  const step2 = R('acyl.nu', [chloride, 'CCNCC'], { nu: 'amine' });
+  assert.deepStrictEqual(majorsOf(step2), [canon('CCN(CC)C(=O)c1cccc(C)c1')]);
+});
+
 test('amine.acyl: paracetamol, N is acylated before O', () => {
   expectProducts(R('amine.acyl', ['Nc1ccc(O)cc1', 'CC(=O)OC(C)=O']), ['CC(=O)Nc1ccc(O)cc1', 'CC(=O)O'], ['CC(=O)Nc1ccc(O)cc1']);
   only(R('amine.acyl', ['Nc1ccc(Br)cc1', 'CC(=O)Cl']), 'CC(=O)Nc1ccc(Br)cc1');
@@ -454,8 +464,10 @@ test('claisen and lactone', () => {
   expectProducts(R('claisen', ['CC(=O)OCC', 'CCOC(=O)c1ccccc1']), ['CC(=O)CC(=O)OCC', 'O=C(CC(=O)OCC)c1ccccc1'], ['CC(=O)CC(=O)OCC', 'O=C(CC(=O)OCC)c1ccccc1']);
   assert.ok(R('claisen', ['CCOC(=O)c1ccccc1']).none);
   assert.ok(R('claisen', ['CC(C)C(=O)OCC']).none);
+  assert.ok(R('claisen', ['CCOC(=O)CC(=O)OCC']).none, 'malonate is not a Claisen donor');
   only(R('lactone', ['OCCCCC(=O)O']), 'O=C1CCCCO1');
   only(R('lactone', ['OCCCC(=O)O']), 'O=C1CCCO1');
+  expectProducts(R('lactone', ['OCC(O)CCC(=O)O']), ['OCC1CCC(=O)O1', 'OC1CCC(=O)OC1'], ['OCC1CCC(=O)O1']);
   assert.ok(R('lactone', ['OCCC(=O)O']).none);
   assert.ok(R('lactone', ['OCCCCCCC(=O)O']).none);
 });
@@ -503,6 +515,19 @@ test('diazo.sub and nitro.reduce', () => {
   only(R('nitro.reduce', ['O=[N+]([O-])c1cccc([N+](=O)[O-])c1']), 'Nc1cccc(N)c1');
   only(R('nitro.reduce', ['CC(C)(C)c1ccc(cc1)[N+](=O)[O-]']), 'CC(C)(C)c1ccc(N)cc1');
   assert.ok(R('nitro.reduce', ['CCN']).none);
+});
+
+test('nitrile.hydrolysis, and the seminar 7 task 8 chain from p-toluidine', () => {
+  only(R('nitrile.hydrolysis', ['N#Cc1ccccc1']), 'OC(=O)c1ccccc1');
+  only(R('nitrile.hydrolysis', ['CC(O)C#N']), 'CC(O)C(=O)O');
+  assert.ok(R('nitrile.hydrolysis', ['CCC']).none);
+  const dz = R('amine.hno2', ['Cc1ccc(N)cc1']).products[0].smi;
+  const nitrile = majorsOf(R('diazo.sub', [dz], { with: 'CuCN' }))[0];
+  assert.strictEqual(nitrile, canon('Cc1ccc(C#N)cc1'));
+  const acid = R('nitrile.hydrolysis', [nitrile]).products[0].smi;
+  assert.strictEqual(acid, canon('Cc1ccc(C(=O)O)cc1'));
+  // the acid is a meta director, the methyl an ortho/para director: methyl decides
+  same(R('sear', [acid], { E: 'Br' }), ['Cc1ccc(C(=O)O)cc1Br']);
 });
 
 //@@TESTS

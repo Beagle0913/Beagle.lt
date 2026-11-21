@@ -1961,6 +1961,7 @@
       carbonyls(gd, ['ester']).forEach((kd) => {
         const a = kd.r;
         if (a < 0 || !sp3C(gd, a) || gd.A[a].h < 2) return; // the product needs an acidic H left on the alpha carbon
+        if (ewgAt(gd, a, kd.c)) return; // already a doubly activated CH2 (malonate type): alkylation chemistry, not Claisen
         pool.forEach((j) => {
           carbonyls(items[j], ['ester']).forEach((ke) => {
             const ng = gd.clone();
@@ -1968,6 +1969,7 @@
             ng.A[a].h -= 1;
             ng.bond(a, ke.c + off, 1);
             ng.unbond(ke.c + off, ke.x + off);
+            if (ng.reach(a)[ke.x + off]) ng.A[ke.x + off].h = 1; // ring-opening of a lactone: the alkoxide end becomes OH
             out.add(ng.parts(a)[0], true);
           });
         });
@@ -1983,14 +1985,17 @@
     if (!ks.length) return none(NOTE_NO_ACID);
     const al = findAlcohols(g);
     const out = new Out();
+    const cand = [];
     ks.forEach((k) => al.forEach((a) => {
       const p = g.path(k.c, a.c);
       if (!p || p.length + 1 < 5 || p.length + 1 > 6) return;
       const ng = g.clone();
       ng.A[a.o].h = 0;
       ng.bond(k.c, a.o, 1);
-      out.add(ng.without([k.x]), true);
+      cand.push({ g: ng.without([k.x]), size: p.length + 1 });
     }));
+    const best = cand.length ? Math.min.apply(null, cand.map((c) => c.size)) : 0;
+    cand.forEach((c) => out.add(c.g, c.size === best)); // the five-membered γ-lactone forms in preference to the δ-lactone
     if (!out.list.length) return none(T('Laktonas nesidaro (stabilūs γ- ir δ-laktonai, t. y. 5–6 narių žiedas).', 'No lactone forms (γ- and δ-lactones, 5- or 6-membered rings, are the stable ones).'));
     return out.note(T('Vidumolekulinis esterinimas rūgštinėje terpėje.', 'Intramolecular esterification in acid.')).result();
   });
@@ -2132,6 +2137,25 @@
       ng.A[x.n].h = 2;
     });
     return new Out().add(ng.without(drops), true).note(T('Fe, Sn arba H2/Pd redukuoja ArNO2 į ArNH2 (rūgštyje – amonio druska, po šarmo – laisvas aminas).', 'Fe, Sn or H2/Pd reduce ArNO2 to ArNH2 (an ammonium salt in acid, the free amine after alkali).')).result();
+  });
+
+  // not in the plan's list: the course needs it after the Sandmeyer cyanation and for cyanohydrins (L13 p24, S7.8, S7.11)
+  def('nitrile.hydrolysis', 'Nitrilų hidrolizė (H2O, H+, t)', 'Hydrolysis of nitriles (H2O, H+, heat)', 'AN-E', null, (rs) => {
+    const g = rs[0].clone();
+    let did = 0;
+    for (let c = 0; c < g.n(); c++) {
+      if (!isC(g, c)) continue;
+      const n = g.nbr(c).find((j) => g.el(j) === 'N' && g.ord(c, j) === 3);
+      if (n === undefined) continue;
+      did++;
+      g.A[n].el = 'O';
+      g.A[n].h = 0;
+      g.bond(c, n, 2);
+      attachGroup(g, c, 'OH');
+      g.fillC(c);
+    }
+    if (!did) return none(T('Nėra nitrilo grupės.', 'There is no nitrile group.'));
+    return new Out().add(g, true).note(T('Nitrilas hidrolizuojasi rūgštyje iki karboksirūgšties (ir NH4+).', 'A nitrile is hydrolysed in acid to the carboxylic acid (and NH4+).')).result();
   });
 
   //@@RULES
