@@ -34,6 +34,7 @@ const REQUIRED = [
   'phenol.base', 'phenol.alkyl', 'phenol.acyl', 'phenol.br2', 'thiol.base', 'thiol.alkyl', 'thiol.disulfide',
   'co.nabh4', 'co.hcn', 'co.hemiacetal', 'co.acetal', 'co.thioacetal', 'co.oxime', 'co.phenylhydrazone', 'co.tollens',
   'co.cannizzaro', 'co.aldol', 'co.aldolcond', 'co.enols', 'co.iodoform',
+  'acid.ester', 'acid.salt', 'acid.socl2', 'acyl.nu', 'ester.hydrolysis', 'claisen', 'lactone', 'amine.protonate', 'amine.alkyl', 'amine.acyl', 'amine.hno2', 'diazo.sub', 'nitro.reduce',
   //@@REQUIRED
 ];
 
@@ -395,6 +396,113 @@ test('co.enols and co.iodoform', () => {
   expectProducts(R('co.iodoform', ['CC(=O)c1ccccc1']), ['[O-]C(=O)c1ccccc1.[Na+]', 'IC(I)I']);
   assert.ok(R('co.iodoform', ['CCC(=O)CC']).none);
   assert.ok(R('co.iodoform', ['CCCO']).none);
+});
+
+// ---------------------------------------------------------------- acids and derivatives
+
+test('acid.ester, acid.salt, acid.socl2', () => {
+  only(R('acid.ester', ['OC(=O)c1ccccc1', 'CCO']), 'CCOC(=O)c1ccccc1');
+  only(R('acid.ester', ['CC(=O)O', 'CC(C)CCO']), 'CC(=O)OCCC(C)C');
+  only(R('acid.ester', ['OC(=O)c1ccccc1O', 'CCO']), 'CCOC(=O)c1ccccc1O');
+  only(R('acid.ester', ['OC(=O)CC(=O)O', 'CO']), 'COC(=O)CC(=O)OC');
+  assert.ok(R('acid.ester', ['CCC=O', 'CCO']).none);
+  assert.ok(R('acid.ester', ['CC(=O)O', 'c1ccccc1']).none);
+  only(R('acid.salt', ['O=CO'], { M: 'K' }), 'O=C[O-].[K+]');
+  only(R('acid.salt', ['CC(=O)O']), 'CC(=O)[O-].[Na+]');
+  only(R('acid.salt', ['OC(=O)CC(=O)O']), '[O-]C(=O)CC(=O)[O-].[Na+].[Na+]');
+  only(R('acid.socl2', ['Cc1cccc(c1)C(=O)O']), 'Cc1cccc(c1)C(=O)Cl');
+  assert.ok(R('acid.socl2', ['CCO']).none);
+});
+
+test('acyl.nu: chlorides and anhydrides', () => {
+  only(R('acyl.nu', ['CC(=O)Cl'], { nu: 'water' }), 'CC(=O)O');
+  only(R('acyl.nu', ['CC(=O)OC(C)=O'], { nu: 'water' }), 'CC(=O)O');
+  expectProducts(R('acyl.nu', ['CC(=O)Cl'], { nu: 'ammonia' }), ['NC(C)=O', '[NH4+].[Cl-]'], ['NC(C)=O']);
+  expectProducts(R('acyl.nu', ['CC(=O)Cl', 'CCO'], { nu: 'alcohol' }), ['CC(=O)OCC'], ['CC(=O)OCC']);
+  // 3-methylbenzoic acid + SOCl2, then diethylamine: DEET
+  const deet = R('acyl.nu', ['Cc1cccc(c1)C(=O)Cl', 'CCNCC'], { nu: 'amine' });
+  expectProducts(deet, ['CCN(CC)C(=O)c1cccc(C)c1', 'CC[NH2+]CC.[Cl-]'], ['CCN(CC)C(=O)c1cccc(C)c1']);
+  assert.strictEqual(deet.products.find((p) => p.smi === canon('CC[NH2+]CC.[Cl-]')).by, true);
+  const an = R('acyl.nu', ['CC(=O)OC(C)=O', 'CN'], { nu: 'amine' });
+  expectProducts(an, ['CNC(C)=O', 'CC(=O)O'], ['CNC(C)=O']);
+  assert.ok(R('acyl.nu', ['CC(=O)Cl', 'CN(C)C'], { nu: 'amine' }).none);
+  assert.ok(R('acyl.nu', ['CC(=O)OC', 'CCO'], { nu: 'alcohol' }).none);
+  assert.throws(() => react.run('acyl.nu', ['CC(=O)Cl'], { nu: 'x' }), (e) => /needs nu/.test(e.message));
+  // phthalic anhydride + water
+  only(R('acyl.nu', ['O=C1OC(=O)c2ccccc12'], { nu: 'water' }), 'OC(=O)c1ccccc1C(=O)O');
+});
+
+test('amine.acyl: paracetamol, N is acylated before O', () => {
+  expectProducts(R('amine.acyl', ['Nc1ccc(O)cc1', 'CC(=O)OC(C)=O']), ['CC(=O)Nc1ccc(O)cc1', 'CC(=O)O'], ['CC(=O)Nc1ccc(O)cc1']);
+  only(R('amine.acyl', ['Nc1ccc(Br)cc1', 'CC(=O)Cl']), 'CC(=O)Nc1ccc(Br)cc1');
+  assert.ok(R('amine.acyl', ['CCO', 'CC(=O)Cl']).none);
+});
+
+test('ester.hydrolysis', () => {
+  expectProducts(R('ester.hydrolysis', ['CC(=O)OC'], { medium: 'base' }), ['CC(=O)[O-].[Na+]', 'CO'], ['CC(=O)[O-].[Na+]', 'CO']);
+  expectProducts(R('ester.hydrolysis', ['CC(=O)OC'], { medium: 'acid' }), ['CC(=O)O', 'CO']);
+  only(R('ester.hydrolysis', ['O=C1CCCCO1'], { medium: 'base' }), 'OCCCCC(=O)[O-].[Na+]');
+  only(R('ester.hydrolysis', ['O=C1CCCCO1'], { medium: 'acid' }), 'OCCCCC(=O)O');
+  expectProducts(R('ester.hydrolysis', ['CCCC(=O)OCC'], { medium: 'acid' }), ['CCCC(=O)O', 'CCO']);
+  assert.ok(R('ester.hydrolysis', ['CC(=O)O'], { medium: 'acid' }).none);
+  assert.throws(() => react.run('ester.hydrolysis', ['CC(=O)OC'], {}), (e) => /needs medium/.test(e.message));
+});
+
+test('claisen and lactone', () => {
+  only(R('claisen', ['CCCC(=O)OCC']), 'CCCC(=O)C(CC)C(=O)OCC');
+  only(R('claisen', ['CC(=O)OCC']), 'CC(=O)CC(=O)OCC');
+  expectProducts(R('claisen', ['CC(=O)OCC', 'CCOC(=O)c1ccccc1']), ['CC(=O)CC(=O)OCC', 'O=C(CC(=O)OCC)c1ccccc1'], ['CC(=O)CC(=O)OCC', 'O=C(CC(=O)OCC)c1ccccc1']);
+  assert.ok(R('claisen', ['CCOC(=O)c1ccccc1']).none);
+  assert.ok(R('claisen', ['CC(C)C(=O)OCC']).none);
+  only(R('lactone', ['OCCCCC(=O)O']), 'O=C1CCCCO1');
+  only(R('lactone', ['OCCCC(=O)O']), 'O=C1CCCO1');
+  assert.ok(R('lactone', ['OCCC(=O)O']).none);
+  assert.ok(R('lactone', ['OCCCCCCC(=O)O']).none);
+});
+
+test('amine.protonate and amine.alkyl', () => {
+  only(R('amine.protonate', ['CC(C)NC'], { X: 'Cl' }), 'CC(C)[NH2+]C.[Cl-]');
+  only(R('amine.protonate', ['Nc1ccccc1']), '[NH3+]c1ccccc1.[Cl-]');
+  only(R('amine.protonate', ['CN1CCCC1c1cccnc1']), 'C[NH+]1CCCC1c1cccnc1.[Cl-]');
+  only(R('amine.protonate', ['CN1CCCC1c1cccnc1'], { eq: 2 }), 'C[NH+]1CCCC1c1ccc[nH+]c1.[Cl-].[Cl-]');
+  assert.ok(R('amine.protonate', ['CC(=O)N']).none);
+  only(R('amine.alkyl', ['CC(C)NC', 'CCBr']), 'CC[NH+](C)C(C)C.[Br-]');
+  only(R('amine.alkyl', ['Nc1ccc(Br)cc1', 'CI'], { excess: true }), 'C[N+](C)(C)c1ccc(Br)cc1.[I-]');
+  only(R('amine.alkyl', ['CN(C)C', 'CI']), 'C[N+](C)(C)C.[I-]');
+  assert.ok(R('amine.alkyl', ['CC(C)NC', 'CC(C)Br']).none);
+});
+
+test('amine.hno2: N2 only from primary aliphatic amines (seminar 7, task 7)', () => {
+  const has = (smi) => R('amine.hno2', [smi]).products.some((p) => p.by && p.smi === canon('N#N'));
+  assert.strictEqual(has('CCN(C)CCCC'), false);
+  assert.strictEqual(has('NC1CCCCC1'), true);
+  assert.strictEqual(has('Nc1ccccc1'), false);
+  assert.strictEqual(has('CCCNC'), false);
+  assert.strictEqual(has('c1ccc(Nc2ccccc2)cc1'), false);
+  expectProducts(R('amine.hno2', ['CCCN']), ['CCCO', 'N#N'], ['CCCO']);
+  only(R('amine.hno2', ['Nc1ccccc1']), '[N+](#N)c1ccccc1.[Cl-]');
+  only(R('amine.hno2', ['CCCNC']), 'CCCN(C)N=O');
+  only(R('amine.hno2', ['c1ccc(Nc2ccccc2)cc1']), 'O=NN(c1ccccc1)c1ccccc1');
+  only(R('amine.hno2', ['CN(C)c1ccccc1']), 'CN(C)c1ccc(N=O)cc1');
+  assert.ok(R('amine.hno2', ['CCN(CC)CC']).none);
+});
+
+test('diazo.sub and nitro.reduce', () => {
+  const d = 'c1ccccc1[N+]#N.[Cl-]';
+  expectProducts(R('diazo.sub', [d], { with: 'CuCN' }), ['N#Cc1ccccc1', 'N#N'], ['N#Cc1ccccc1']);
+  same(R('diazo.sub', [d], { with: 'CuCl' }), ['Clc1ccccc1']);
+  same(R('diazo.sub', [d], { with: 'CuBr' }), ['Brc1ccccc1']);
+  same(R('diazo.sub', [d], { with: 'H2O' }), ['Oc1ccccc1']);
+  same(R('diazo.sub', [d], { with: 'KI' }), ['Ic1ccccc1']);
+  assert.ok(R('diazo.sub', ['CC'], { with: 'CuCl' }).none);
+  assert.throws(() => react.run('diazo.sub', [d], { with: 'x' }), (e) => /needs with/.test(e.message));
+  // aniline -> diazonium -> benzonitrile, as in seminar 7
+  const dz = R('amine.hno2', ['Nc1ccccc1']).products[0].smi;
+  same(R('diazo.sub', [dz], { with: 'CuCN' }), ['N#Cc1ccccc1']);
+  only(R('nitro.reduce', ['c1ccc(cc1)[N+](=O)[O-]']), 'Nc1ccccc1');
+  only(R('nitro.reduce', ['O=[N+]([O-])c1cccc([N+](=O)[O-])c1']), 'Nc1cccc(N)c1');
+  only(R('nitro.reduce', ['CC(C)(C)c1ccc(cc1)[N+](=O)[O-]']), 'CC(C)(C)c1ccc(N)cc1');
+  assert.ok(R('nitro.reduce', ['CCN']).none);
 });
 
 //@@TESTS

@@ -1796,6 +1796,344 @@
     return out.note(T('Geltonos jodoformo nuosėdos (CHI3) – metilketonų ir CH3CH(OH)– alkoholių atpažinimas; lieka karboksilatas.', 'Yellow iodoform (CHI3) precipitates: the test for methyl ketones and CH3CH(OH)- alcohols; the carboxylate remains.')).result();
   });
 
+  // ------------------------------------------------------------------
+  // Carboxylic acids and their derivatives
+  // ------------------------------------------------------------------
+
+  // give every carboxylate / alkoxide-type anion of a component its counter ion
+  function withCounterIons(c, metal) {
+    const neg = c.A.filter((a) => a.charge === -1 && a.el !== 'Cl' && a.el !== 'Br' && a.el !== 'I').length;
+    for (let i = 0; i < neg; i++) c.add(metal, 1, 0);
+    return c;
+  }
+
+  const NOTE_NO_ACID = T('Nėra karboksirūgšties grupės.', 'There is no carboxylic acid group.');
+  const NOTE_ONLY_ACYL = T('Su šiuo reagentu reaguoja tik rūgščių chloridai ir anhidridai (esteriai ir amidai – hidrolizės reakcija).', 'Only acyl chlorides and anhydrides react like this (esters and amides are hydrolysed instead).');
+
+  def('acid.ester', 'Esterinimas (rūgštis + alkoholis, H+)', 'Esterification (acid + alcohol, H+)', 'AN-E', null, (rs) => {
+    need(rs, 2, 'acid.ester');
+    const g = rs[0];
+    const ks = carbonyls(g, ['acid']);
+    if (!ks.length) return none(NOTE_NO_ACID);
+    const ns = nucSites(rs[1]).filter((s) => rs[1].A[s.o].h === 1 && !ar(rs[1], s.c));
+    if (!ns.length) return none(T('Antrasis reagentas turi būti alkoholis.', 'The second reactant must be an alcohol.'));
+    const out = new Out();
+    ns.forEach((s) => {
+      const ng = g.clone();
+      const drops = [];
+      ks.forEach((k) => {
+        const off = ng.merge(rs[1]);
+        ng.A[s.o + off].h = 0;
+        ng.bond(k.c, s.o + off, 1);
+        drops.push(k.x);
+      });
+      out.add(ng.without(drops), true);
+    });
+    return out.note(T('Grįžtamoji reakcija, katalizuojama rūgšties; vanduo atskyla iš rūgšties OH ir alkoholio H.', 'A reversible reaction catalysed by acid; water leaves from the acid OH and the alcohol H.')).result();
+  });
+
+  def('acid.salt', 'Karboksirūgšties reakcija su baze (druska)', 'Carboxylic acid with a base (salt)', null, null, (rs, o) => {
+    const metal = o.M === 'K' ? 'K' : 'Na';
+    const g = rs[0].clone();
+    const ks = carbonyls(g, ['acid']);
+    if (!ks.length) return none(NOTE_NO_ACID);
+    ks.forEach((k) => { g.A[k.x].h = 0; g.A[k.x].charge = -1; g.add(metal, 1, 0); });
+    return new Out().add(g, true).note(T('Rūgšties ir bazės reakcija: karboksilato druska.', 'Acid-base reaction: the carboxylate salt.')).result();
+  });
+
+  def('acid.socl2', 'Rūgšties chloridų sintezė (SOCl2)', 'Making acyl chlorides (SOCl2)', 'AN-E', null, (rs) => {
+    const g = rs[0];
+    const ks = carbonyls(g, ['acid']);
+    if (!ks.length) return none(NOTE_NO_ACID);
+    const ng = g.clone();
+    ks.forEach((k) => { ng.A[k.x].el = 'Cl'; ng.A[k.x].h = 0; });
+    return new Out().add(ng, true).note(T('Rūgšties OH pakeičiamas Cl (SO2 ir HCl išsiskiria).', 'The acid OH is replaced by Cl (SO2 and HCl are released).')).result();
+  });
+
+  // amines for acylation, alkylation and HNO2: neutral N with only C neighbours (not amide, not aromatic ring N)
+  function amineN(g) {
+    const out = [];
+    g.A.forEach((a, n) => {
+      if (a.el !== 'N' || a.charge !== 0 || a.ar) return;
+      const nb = g.nbr(n);
+      if (!nb.every((j) => isC(g, j) && g.ord(n, j) === 1)) return;
+      if (nb.some((j) => dbl(g, j, 'O') >= 0 || dbl(g, j, 'N') >= 0 || g.nbr(j).some((u) => g.el(u) === 'N' && g.ord(j, u) === 3))) return;
+      if (nb.length + a.h !== 3) return;
+      out.push({ n, k: nb.length, aromatic: nb.some((j) => ar(g, j)) });
+    });
+    return out;
+  }
+
+  // acylation of an amine or ammonia, or of water or an alcohol
+  function acylRule(nuKind, swap, salt) {
+    return (rs) => {
+      let acyl = rs[0];
+      let nu = rs[1];
+      if (swap && rs.length > 1 && !acylDonors(rs[0]).length) { acyl = rs[1]; nu = rs[0]; }
+      if (nuKind !== 'water' && nuKind !== 'ammonia') need(rs, 2, 'acyl.nu');
+      const ks = acylDonors(acyl);
+      if (!ks.length) return none(NOTE_ONLY_ACYL);
+      const out = new Out();
+      ks.forEach((k) => {
+        if (nuKind === 'water') {
+          const ng = acyl.clone();
+          if (k.type === 'acylhalide') { ng.A[k.x].el = 'O'; ng.A[k.x].h = 1; } else {
+            ng.unbond(k.c, k.x);
+            ng.A[k.x].h = 1;
+            attachGroup(ng, k.c, 'OH');
+          }
+          ng.split().forEach((c) => out.add(c, true));
+          return;
+        }
+        let sites;
+        let gn = nu;
+        if (nuKind === 'ammonia') {
+          gn = new Graph();
+          gn.add('N', 0, 3);
+          sites = [{ n: 0 }];
+        } else if (nuKind === 'alcohol') {
+          sites = nucSites(nu).filter((s) => nu.A[s.o].h === 1 && !ar(nu, s.c)).map((s) => ({ n: s.o }));
+        } else {
+          const am = amineN(nu).filter((a) => a.k <= 2);
+          const aliph = am.filter((a) => !a.aromatic);
+          sites = (aliph.length ? aliph : am).map((a) => ({ n: a.n }));
+        }
+        if (!sites.length) return;
+        sites.forEach((s) => {
+          const r = acylate(gn, s.n, acyl, k);
+          out.add(r.main, true);
+          if (r.by) out.add(r.by, false, true);
+          if (salt && k.type === 'acylhalide' && (nuKind === 'amine' || nuKind === 'ammonia')) {
+            // the second equivalent of the amine takes up the HCl
+            const sg = gn.clone();
+            sg.A[s.n].charge = 1;
+            sg.A[s.n].h += 1;
+            sg.add(acyl.el(k.x), -1, 0);
+            out.add(sg, false, true);
+          }
+        });
+      });
+      if (!out.list.length) {
+        return none(nuKind === 'amine'
+          ? T('Tretiniai aminai neturi N–H: amidas nesusidaro.', 'Tertiary amines have no N-H: no amide forms.')
+          : T('Nėra tinkamo nukleofilo.', 'There is no suitable nucleophile.'));
+      }
+      return out.note(T('Nukleofilinis acilo pakeitimas: nukleofilas pakeičia Cl (ar karboksilatą); NH3 ir aminų reikia 2 ekv. (antras suriša HCl).', 'Nucleophilic acyl substitution: the nucleophile replaces Cl (or the carboxylate); NH3 and amines are needed in 2 equivalents (the second takes up HCl).')).result();
+    };
+  }
+
+  def('acyl.nu', 'Nukleofilinis acilo pakeitimas (rūgščių chloridai, anhidridai)', 'Nucleophilic acyl substitution (acyl chlorides, anhydrides)', 'AN-E',
+    'amine hydrochloride or NH4Cl (acyl chloride), or the acid (anhydride), by: true', (rs, o, raw) => {
+      const nu = o.nu;
+      if (['water', 'alcohol', 'amine', 'ammonia'].indexOf(nu) < 0) throw new Error('react: acyl.nu needs nu water, alcohol, amine or ammonia');
+      return acylRule(nu, false, true)(rs, o, raw);
+    });
+
+  def('amine.acyl', 'Amino acilinimas (amidas)', 'Acylation of an amine (amide)', 'AN-E', 'the acid released from an anhydride, by: true', (rs, o, raw) => {
+    need(rs, 2, 'amine.acyl');
+    return acylRule('amine', true, false)(rs, o, raw);
+  });
+
+  def('ester.hydrolysis', 'Esterių hidrolizė', 'Hydrolysis of esters', 'AN-E', null, (rs, o) => {
+    const medium = o.medium;
+    if (medium !== 'acid' && medium !== 'base') throw new Error('react: ester.hydrolysis needs medium acid or base');
+    const g = rs[0].clone();
+    const ks = carbonyls(g, ['ester']);
+    if (!ks.length) return none(T('Nėra esterio grupės.', 'There is no ester group.'));
+    ks.forEach((k) => {
+      g.unbond(k.c, k.x);
+      g.A[k.x].h += 1;
+      if (medium === 'acid') attachGroup(g, k.c, 'OH'); else g.bond(k.c, g.add('O', -1, 0), 1);
+    });
+    const out = new Out();
+    g.split().forEach((c) => out.add(medium === 'base' ? withCounterIons(c, 'Na') : c, true));
+    return out.note(medium === 'acid'
+      ? T('Rūgštinė hidrolizė: grįžtamoji, gaunama karboksirūgštis ir alkoholis.', 'Acid hydrolysis: reversible, gives the carboxylic acid and the alcohol.')
+      : T('Šarminė hidrolizė (muilinimas): negrįžtama, gaunamas karboksilatas ir alkoholis.', 'Base hydrolysis (saponification): irreversible, gives the carboxylate and the alcohol.')).result();
+  });
+
+  def('claisen', 'Klaizeno kondensacija (β-ketoesteris)', 'Claisen condensation (β-keto ester)', 'AN-E', null, (rs) => {
+    const items = rs.length === 1 ? [rs[0], rs[0]] : [rs[0], rs[1]];
+    const pool = rs.length === 1 ? [0] : [0, 1];
+    const out = new Out();
+    pool.forEach((i) => {
+      const gd = items[i];
+      carbonyls(gd, ['ester']).forEach((kd) => {
+        const a = kd.r;
+        if (a < 0 || !sp3C(gd, a) || gd.A[a].h < 2) return; // the product needs an acidic H left on the alpha carbon
+        pool.forEach((j) => {
+          carbonyls(items[j], ['ester']).forEach((ke) => {
+            const ng = gd.clone();
+            const off = ng.merge(items[j]);
+            ng.A[a].h -= 1;
+            ng.bond(a, ke.c + off, 1);
+            ng.unbond(ke.c + off, ke.x + off);
+            out.add(ng.parts(a)[0], true);
+          });
+        });
+      });
+    });
+    if (!out.list.length) return none(T('Reikia esterio su bent dviem H prie α-C.', 'An ester with at least two H on the α-carbon is needed.'));
+    return out.note(T('Dviejų esterių kondensacija: vienas (enolatas) atakuoja kito karbonilą, atskyla alkoholis; mišinys, kai abu gali enolizuotis.', 'Condensation of two esters: one (as enolate) attacks the carbonyl of the other, an alcohol is lost; a mixture when both can enolise.')).result();
+  });
+
+  def('lactone', 'Hidroksirūgšties ciklizacija (laktonas)', 'Cyclisation of a hydroxy acid (lactone)', 'AN-E', null, (rs) => {
+    const g = rs[0];
+    const ks = carbonyls(g, ['acid']);
+    if (!ks.length) return none(NOTE_NO_ACID);
+    const al = findAlcohols(g);
+    const out = new Out();
+    ks.forEach((k) => al.forEach((a) => {
+      const p = g.path(k.c, a.c);
+      if (!p || p.length + 1 < 5 || p.length + 1 > 6) return;
+      const ng = g.clone();
+      ng.A[a.o].h = 0;
+      ng.bond(k.c, a.o, 1);
+      out.add(ng.without([k.x]), true);
+    }));
+    if (!out.list.length) return none(T('Laktonas nesidaro (stabilūs γ- ir δ-laktonai, t. y. 5–6 narių žiedas).', 'No lactone forms (γ- and δ-lactones, 5- or 6-membered rings, are the stable ones).'));
+    return out.note(T('Vidumolekulinis esterinimas rūgštinėje terpėje.', 'Intramolecular esterification in acid.')).result();
+  });
+
+  // ------------------------------------------------------------------
+  // Amines, diazonium salts, nitro compounds
+  // ------------------------------------------------------------------
+
+  def('amine.protonate', 'Amino reakcija su rūgštimi (amonio druska)', 'Amine with an acid (ammonium salt)', null, null, (rs, o) => {
+    const X = o.X && HAL[o.X] ? o.X : 'Cl';
+    const g = rs[0];
+    const sites = [];
+    amineN(g).forEach((a) => sites.push({ n: a.n, rank: a.aromatic ? 2 : 3 }));
+    g.A.forEach((a, n) => { if (a.el === 'N' && a.ar && a.h === 0 && a.charge === 0 && g.nbr(n).length === 2) sites.push({ n, rank: 2.5 }); });
+    if (!sites.length) return none(T('Nėra bazinio azoto atomo.', 'There is no basic nitrogen atom.'));
+    sites.sort((x, y) => (y.rank - x.rank) || (x.n - y.n));
+    const eq = o.eq === 'all' ? sites.length : Math.max(1, Math.min(o.eq || 1, sites.length));
+    const out = new Out();
+    const protonate = (list) => {
+      const ng = g.clone();
+      list.forEach((s) => { ng.A[s.n].charge = 1; ng.A[s.n].h += 1; ng.add(X, -1, 0); });
+      return ng;
+    };
+    if (eq === 1) sites.filter((s) => s.rank === sites[0].rank).forEach((s) => out.add(protonate([s]), true));
+    else out.add(protonate(sites.slice(0, eq)), true);
+    return out.note(T('Bazingiausias N protonuojamas: alifatinis aminas > aromatinis aminas ≈ piridino N; amidai nebazingi.', 'The most basic N is protonated: aliphatic amine > aromatic amine ≈ pyridine N; amides are not basic.')).result();
+  });
+
+  def('amine.alkyl', 'Amino alkilinimas (SN2)', 'Alkylation of an amine (SN2)', 'SN2', null, (rs, o) => {
+    need(rs, 2, 'amine.alkyl');
+    const am = amineN(rs[0]);
+    if (!am.length) return none(T('Pirmasis reagentas turi būti aminas.', 'The first reactant must be an amine.'));
+    const hs = findHalides(rs[1]);
+    if (!hs.length || cNbrs(rs[1], hs[0].c).length > 1) return none(T('Reikia metilo ar pirminio halogenalkano (SN2).', 'A methyl or primary alkyl halide is needed (SN2).'));
+    const aliph = am.filter((a) => !a.aromatic);
+    const sites = aliph.length ? aliph : am;
+    const out = new Out();
+    sites.forEach((s) => {
+      const g = rs[0].clone();
+      const times = o.excess ? g.A[s.n].h + 1 : 1;
+      let xel = null;
+      for (let i = 0; i < times; i++) {
+        const off = g.merge(rs[1]);
+        g.bond(s.n, hs[0].c + off, 1);
+        xel = g.el(hs[0].x + off);
+        g.A[hs[0].x + off].el = '_drop';
+      }
+      const drops = [];
+      g.A.forEach((a, i) => { if (a.el === '_drop') drops.push(i); });
+      g.A[s.n].charge = 1;
+      if (o.excess) g.A[s.n].h = 0;
+      const fin = g.without(drops);
+      fin.add(xel, -1, 0);
+      out.add(fin, true);
+    });
+    return out.note(o.excess
+      ? T('Su halogenalkano pertekliumi alkilinama iki ketvirtinės amonio druskos.', 'With excess alkyl halide the amine is alkylated all the way to the quaternary ammonium salt.')
+      : T('Aminas – nukleofilas: gaunama amonio druska (toliau alkilinasi, mišinys).', 'The amine acts as a nucleophile: the ammonium salt forms (it can be alkylated further).')).result();
+  });
+
+  def('amine.hno2', 'Aminų reakcija su HNO2 (NaNO2/HCl)', 'Amines with HNO2 (NaNO2/HCl)', null, 'N2 (primary aliphatic amines), by: true', (rs) => {
+    const g = rs[0];
+    const am = amineN(g);
+    if (!am.length) return none(T('Nėra amino grupės.', 'There is no amino group.'));
+    const out = new Out();
+    am.forEach((a) => {
+      const ng = g.clone();
+      if (a.k === 1 && !a.aromatic) {
+        ng.A[a.n].el = 'O';
+        ng.A[a.n].h = 1;
+        out.add(ng, true);
+        const n2 = new Graph();
+        n2.bond(n2.add('N', 0, 0), n2.add('N', 0, 0), 3);
+        out.add(n2, false, true);
+      } else if (a.k === 1) {
+        ng.A[a.n].charge = 1;
+        ng.A[a.n].h = 0;
+        ng.bond(a.n, ng.add('N', 0, 0), 3);
+        ng.add('Cl', -1, 0);
+        out.add(ng, true);
+      } else if (a.k === 2) {
+        ng.A[a.n].h = 0;
+        const n2 = ng.add('N', 0, 0);
+        ng.bond(a.n, n2, 1);
+        ng.bond(n2, ng.add('O', 0, 0), 2);
+        out.add(ng, true);
+      } else if (a.aromatic) {
+        const ipso = g.nbr(a.n).find((j) => ar(g, j));
+        const ring = aromRings(g).find((r) => r.indexOf(ipso) >= 0);
+        if (!ring || ring.length !== 6) return;
+        const i = ring.indexOf(ipso);
+        const p = [3, 1, 5].map((d) => ring[(i + d) % 6]).find((x) => g.A[x].h > 0);
+        if (p === undefined) return;
+        ng.A[p].h -= 1;
+        graft(ng, p, 'N=O');
+        out.add(ng, true);
+      }
+    });
+    if (!out.list.length) return none(T('Tretiniai alifatiniai aminai su HNO2 tik sudaro druską (nitrozinimo produkto nėra).', 'Tertiary aliphatic amines only form a salt with HNO2 (no nitrosation product).'));
+    return out.note(T('Pirminis alifatinis: alkoholis + N2; pirminis aromatinis (0–5 °C): diazonio druska; antrinis: N-nitrozoaminas; tretinis aromatinis: p-nitrozo darinys; tretinis alifatinis: nereaguoja.', 'Primary aliphatic: alcohol + N2; primary aromatic (0-5 °C): diazonium salt; secondary: N-nitrosamine; tertiary aromatic: p-nitroso compound; tertiary aliphatic: no reaction.')).result();
+  });
+
+  def('diazo.sub', 'Diazonio druskos pakeitimas (Zandmeierio ir kt.)', 'Replacement of the diazonium group (Sandmeyer and others)', null, 'N2 (always evolved), by: true', (rs, o) => {
+    const map = { CuCl: 'Cl', CuBr: 'Br', CuCN: 'CN', H2O: 'OH', KI: 'I' };
+    const w = o.with;
+    if (!map[w]) throw new Error('react: diazo.sub needs with = CuCl, CuBr, CuCN, H2O or KI');
+    const g = rs[0];
+    const dz = [];
+    g.A.forEach((a, n) => {
+      if (a.el !== 'N' || a.charge !== 1) return;
+      const t = g.nbr(n).find((j) => g.el(j) === 'N' && g.ord(n, j) === 3);
+      const c = g.nbr(n).find((j) => isC(g, j) && ar(g, j));
+      if (t !== undefined && c !== undefined) dz.push({ n, t, c });
+    });
+    if (!dz.length) return none(T('Nėra diazonio grupės.', 'There is no diazonium group.'));
+    const ng = g.without(dz.reduce((l, d) => l.concat([d.n, d.t]), []));
+    dz.forEach((d) => graft(ng, ng.map[d.c], FRAG[map[w]]));
+    const out = new Out().add(ng, true);
+    const n2 = new Graph();
+    n2.bond(n2.add('N', 0, 0), n2.add('N', 0, 0), 3);
+    out.add(n2, false, true);
+    return out.note(T('Diazonio grupė pakeičiama Cl, Br, CN (Cu(I)), OH (H2O, šildant) arba I (KI); išsiskiria N2.', 'The diazonium group is replaced by Cl, Br, CN (Cu(I)), OH (H2O, heat) or I (KI); N2 is evolved.')).result();
+  });
+
+  def('nitro.reduce', 'Nitrogrupės redukcija (Fe/H3O+)', 'Reduction of a nitro group (Fe/H3O+)', null, null, (rs) => {
+    const g = rs[0];
+    const ns = [];
+    g.A.forEach((a, n) => {
+      if (a.el !== 'N') return;
+      const os = g.nbr(n).filter((j) => g.el(j) === 'O');
+      if (os.length === 2 && g.nbr(n).length === 3) ns.push({ n, os });
+    });
+    if (!ns.length) return none(T('Nėra nitrogrupės.', 'There is no nitro group.'));
+    const ng = g.clone();
+    const drops = [];
+    ns.forEach((x) => {
+      x.os.forEach((o) => { ng.unbond(x.n, o); drops.push(o); });
+      ng.A[x.n].charge = 0;
+      ng.A[x.n].h = 2;
+    });
+    return new Out().add(ng.without(drops), true).note(T('Fe, Sn arba H2/Pd redukuoja ArNO2 į ArNH2 (rūgštyje – amonio druska, po šarmo – laisvas aminas).', 'Fe, Sn or H2/Pd reduce ArNO2 to ArNH2 (an ammonium salt in acid, the free amine after alkali).')).result();
+  });
+
   //@@RULES
 
   ORG.react = { run, RULES, wouldRearrange };
