@@ -107,7 +107,62 @@
     };
   }
 
-  const core = { LANG_KEY, STR, normLang, readLang, writeLang, pick, validTrainer, trainerUrl, cleanTrainers, barModel };
+  // The trainer switcher is a disclosure: a button that shows or hides a list of plain links.
+  // Nothing navigates except activating a link. Returns null when there is nothing to switch to.
+  // All text goes on the page as textContent and every href comes from barModel.
+  function createSwitcher(doc, model) {
+    if (!model.options.length) return null;
+    const current = model.options.find(o => o.current);
+    const others = model.options.filter(o => !o.current);
+    if (!others.length) return null;
+    const make = (tag, cls, text) => {
+      const n = doc.createElement(tag);
+      if (cls) n.className = cls;
+      if (text !== undefined) n.textContent = text;
+      return n;
+    };
+    const root = make('div', 'sb-switch');
+    const button = make('button', 'sb-button');
+    button.type = 'button';
+    const name = current ? current.text : model.choose;
+    button.append(make('span', 'sb-current', name));
+    const caret = make('span', 'sb-caret', '▾');
+    caret.setAttribute('aria-hidden', 'true');
+    button.append(caret);
+    button.setAttribute('aria-label', model.choose + ': ' + name);
+    button.setAttribute('aria-expanded', 'false');
+    button.setAttribute('aria-controls', 'sb-menu');
+    const list = make('ul', 'sb-list');
+    list.id = 'sb-menu';
+    list.hidden = true;
+    for (const o of others) {
+      const a = make('a', '', o.text);
+      a.href = o.href;
+      const li = make('li');
+      li.append(a);
+      list.append(li);
+    }
+    root.append(button, list);
+
+    function setOpen(open) {
+      list.hidden = !open;
+      button.setAttribute('aria-expanded', String(open));
+    }
+    button.addEventListener('click', () => setOpen(list.hidden));
+    root.addEventListener('keydown', e => {
+      if (e.key !== 'Escape' || list.hidden) return;
+      setOpen(false);
+      button.focus();
+    });
+    root.addEventListener('focusout', e => {
+      if (e.relatedTarget && !root.contains(e.relatedTarget)) setOpen(false);
+    });
+    const outside = e => { if (!root.contains(e.target)) setOpen(false); };
+    doc.addEventListener('click', outside);
+    return { root, button, list, setOpen, destroy() { doc.removeEventListener('click', outside); } };
+  }
+
+  const core = { LANG_KEY, STR, normLang, readLang, writeLang, pick, validTrainer, trainerUrl, cleanTrainers, barModel, createSwitcher };
 
   if (typeof module === 'object' && module.exports) { module.exports = core; return; }
 
@@ -144,25 +199,16 @@
     nav.append(home);
     const slot = byId('sitebar');
     if (slot) slot.replaceWith(nav); else document.body.prepend(nav);
-    let select = null;
+    let switcher = null;
 
     function draw() {
       const lang = normLang(document.documentElement.lang);
       const m = barModel(trainers, id, lang, ROOT);
       nav.setAttribute('aria-label', m.label);
       home.href = m.homeHref;
-      if (select) { select.remove(); select = null; }
-      if (!m.options.length) return;
-      select = el('select');
-      select.setAttribute('aria-label', m.choose);
-      for (const o of m.options) {
-        const opt = el('option', '', o.text);
-        opt.value = o.href;
-        opt.selected = o.current;
-        select.append(opt);
-      }
-      select.addEventListener('change', () => { location.href = select.value; });
-      nav.append(select);
+      if (switcher) { switcher.destroy(); switcher.root.remove(); switcher = null; }
+      switcher = createSwitcher(document, m);
+      if (switcher) nav.append(switcher.root);
     }
 
     draw();

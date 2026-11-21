@@ -76,3 +76,104 @@ test('every interface text exists in both languages', () => {
   assert.equal(core.STR.lt.heading, 'Treniruokliai');
   assert.equal(core.STR.en.heading, 'Trainers');
 });
+
+// ---- the switcher disclosure, built on a tiny stand-in for the DOM ----
+function fakeDoc() {
+  const listeners = {};
+  const make = tag => {
+    const n = { tag, children: [], attrs: {}, hidden: false, className: '', textContent: '', handlers: {}, focused: 0 };
+    n.setAttribute = (k, v) => { n.attrs[k] = String(v); };
+    n.getAttribute = k => (k in n.attrs ? n.attrs[k] : null);
+    n.append = (...c) => { for (const x of c) { if (typeof x !== 'string') x.parent = n; n.children.push(x); } };
+    n.addEventListener = (t, f) => { (n.handlers[t] = n.handlers[t] || []).push(f); };
+    n.fire = (t, e) => { for (const f of n.handlers[t] || []) f(e || {}); };
+    n.contains = x => { for (let c = x; c; c = c.parent) if (c === n) return true; return false; };
+    n.focus = () => { n.focused++; };
+    n.remove = () => {};
+    return n;
+  };
+  return {
+    createElement: make,
+    addEventListener: (t, f) => { (listeners[t] = listeners[t] || []).push(f); },
+    removeEventListener: (t, f) => { listeners[t] = (listeners[t] || []).filter(x => x !== f); },
+    fire: (t, e) => { for (const f of listeners[t] || []) f(e || {}); },
+    count: t => (listeners[t] || []).length
+  };
+}
+const find = (n, tag, out = []) => { if (n.tag === tag) out.push(n); for (const c of n.children) if (typeof c !== 'string') find(c, tag, out); return out; };
+const twoModel = () => core.barModel([math, physics], 'math', 'en', ROOT);
+
+test('with two trainers the bar offers a disclosure button and a hidden list of links, never a select', () => {
+  const doc = fakeDoc();
+  const sw = core.createSwitcher(doc, twoModel());
+  assert.equal(find(sw.root, 'select').length, 0);
+  const button = find(sw.root, 'button')[0];
+  assert.equal(button, sw.button);
+  assert.equal(button.getAttribute('aria-expanded'), 'false');
+  assert.ok(button.getAttribute('aria-controls'));
+  assert.equal(sw.list.id, button.getAttribute('aria-controls'));
+  assert.equal(sw.list.hidden, true);
+  const links = find(sw.list, 'a');
+  assert.deepEqual(links.map(a => a.href), ['https://beagle.lt/physics/']);
+  assert.deepEqual(links.map(a => a.textContent), ['Physics']);
+  assert.ok(find(sw.root, 'button').every(b => b === button));
+  assert.ok(button.children.some(c => c.textContent === 'Mathematics') || button.textContent.includes('Mathematics'));
+});
+
+test('the current trainer is on the button and not in the list; links come from the model only', () => {
+  const m = core.barModel([math, physics, { ...math, id: 'evil', path: 'https://evil.example/', name: { lt: 'X', en: 'Evil' } }], 'physics', 'en', ROOT);
+  const sw = core.createSwitcher(fakeDoc(), m);
+  const hrefs = find(sw.list, 'a').map(a => a.href);
+  assert.deepEqual(hrefs, ['https://beagle.lt/math/', ROOT]);
+  assert.ok(!find(sw.list, 'a').some(a => a.textContent === 'Physics'));
+  assert.ok(hrefs.every(h => h.startsWith(ROOT)));
+});
+
+test('with one trainer there is no switcher', () => {
+  assert.equal(core.createSwitcher(fakeDoc(), core.barModel([math], 'math', 'en', ROOT)), null);
+  assert.equal(core.createSwitcher(fakeDoc(), core.barModel([], 'math', 'en', ROOT)), null);
+});
+
+test('the button toggles the list; Escape closes it and returns focus to the button; a click outside closes it', () => {
+  const doc = fakeDoc();
+  const sw = core.createSwitcher(doc, twoModel());
+  sw.button.fire('click');
+  assert.equal(sw.button.getAttribute('aria-expanded'), 'true');
+  assert.equal(sw.list.hidden, false);
+  sw.button.fire('click');
+  assert.equal(sw.button.getAttribute('aria-expanded'), 'false');
+  assert.equal(sw.list.hidden, true);
+
+  sw.button.fire('click');
+  let prevented = 0;
+  const before = sw.button.focused;
+  sw.root.fire('keydown', { key: 'Escape', preventDefault() { prevented++; } });
+  assert.equal(sw.list.hidden, true);
+  assert.equal(sw.button.getAttribute('aria-expanded'), 'false');
+  assert.equal(sw.button.focused, before + 1);
+
+  sw.button.fire('click');
+  doc.fire('click', { target: sw.button });
+  assert.equal(sw.list.hidden, false, 'a click inside stays open');
+  doc.fire('click', { target: doc.createElement('p') });
+  assert.equal(sw.list.hidden, true);
+});
+
+test('stepping through the list does not navigate; only activating a link does', () => {
+  const sw = core.createSwitcher(fakeDoc(), twoModel());
+  sw.button.fire('click');
+  // no handler on the list or links turns focus or arrow keys into navigation
+  for (const n of [sw.root, sw.list, sw.button, ...find(sw.list, 'a')]) {
+    assert.equal((n.handlers.change || []).length, 0);
+    assert.equal((n.handlers.focus || []).length, 0);
+  }
+  assert.equal(find(sw.list, 'a')[0].href, 'https://beagle.lt/physics/');
+});
+
+test('destroy removes the document listener', () => {
+  const doc = fakeDoc();
+  const sw = core.createSwitcher(doc, twoModel());
+  assert.equal(doc.count('click'), 1);
+  sw.destroy();
+  assert.equal(doc.count('click'), 0);
+});
