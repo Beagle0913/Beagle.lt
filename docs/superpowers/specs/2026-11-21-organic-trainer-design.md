@@ -301,6 +301,10 @@ All work happens on the branch `organic-trainer`. When the build is reviewed and
 - A trainer on beagle.lt for this course.
 - It should teach and train everything in the provided documents.
 - Build it with subagents, using every capability available.
+- **Release Part II first** (2026-11-21): a first pull request with the foundations and units 6–16, so it can be live before the 21 December midterm; units 1–5 and the labs follow in a second release. Only finished units are ever listed: `units.js` marks each unit `ready`, and the trainer shows only ready units.
+- **Lectures 14–16:** the owner adds each slide PDF to the folder as it is posted; these units are built from the real slides, last. If a unit's slides are not there when the rest of Part II is ready, Part II ships without that unit and it follows in its own pull request.
+- **Course textbook:** agents may download V. Jakubkienė, *Organinė chemija* (2009), from the chgf.vu.lt link in the course information, as a reference for terms and facts. It stays outside the repo and is never published or quoted at length.
+- **RDKit:** agents may install RDKit (Python, from PyPI) on this machine to cross-check the engine. Only reference answers are saved, as fixture files under `tests/organic/fixtures/`; `npm test` stays free of dependencies.
 
 ## The planner's calls
 

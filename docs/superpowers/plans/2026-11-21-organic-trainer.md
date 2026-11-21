@@ -155,6 +155,17 @@ Load order everywhere: `chem.js, stereo.js, draw.js, views.js, name.js, react.js
 - [ ] **Step 4: Run** the test and `npm test` — PASS; the whole file under 5 s.
 - [ ] **Step 5: Commit** — "Organic trainer: stereochemistry and isomers".
 
+### Task 2b: RDKit reference answers
+
+**Files:** Create `tools/organic/reference.py`, `tools/organic/reference-molecules.txt`, `tests/organic/fixtures/reference.json`, `tests/organic/reference.test.js`.
+**Interfaces:** Consumes `ORG.chem`, `ORG.stereo` (Task 2; the stereo parts of the test switch on once `stereo.js` exists — skip them with `t.skip` while it does not). Produces `reference.json`: `[{smi, formula, aromaticAtoms: number[], centres: number[], cip: {[atomIdx]: 'R'|'S'}, ez: [[a, b, 'E'|'Z']], canonical: string}]`, and `reference.py --check <file>` for later tasks (content molecules).
+
+- [ ] **Step 1:** `python -m pip install --user rdkit` (owner approved, 2026-11-21). Record the RDKit version in `reference.py`'s header comment.
+- [ ] **Step 2:** `reference-molecules.txt`: at least 300 SMILES — every molecule in Tasks 1–6's test lists, the drawer's hard set, and a broad sample of the course's compound classes (each principal group, substituted benzenes, heterocycles, amino acids, sugars in open-chain form, every stereo case of the stereo tests, 50 random stereocentres made by `withConfig` once Task 2 exists).
+- [ ] **Step 3:** `reference.py` (run with `python -I tools/organic/reference.py`) writes `reference.json`: molecular formula (Hill), aromatic atoms (RDKit default model — record where it legitimately differs from the course's Hückel teaching, e.g. exocyclic C=O rings, as `"aromaticNote"`), stereocentres (`FindMolChiralCenters(includeUnassigned=True, useLegacyImplementation=False)`), CIP labels from the new labeler (`rdCIPLabeler.AssignCIPLabels`), E/Z labels, and RDKit canonical SMILES. Atom indices are SMILES order, same as ours.
+- [ ] **Step 4:** `reference.test.js`: for every entry, our formula equals RDKit's; our stereocentres and CIP labels equal RDKit's; our E/Z equal RDKit's; two entries are `same()` in our engine exactly when their RDKit canonical SMILES are equal (check all pairs with the same formula); aromatic atoms equal unless the entry has an `aromaticNote`. Every disagreement is either a bug to report (do not change `chem.js`/`stereo.js` yourself — list it in your report with the molecule and both answers) or a documented model difference in `aromaticNote`.
+- [ ] **Step 5:** Run `node --test tests/organic/reference.test.js` and `npm test`; commit the four files — "Organic trainer: RDKit reference answers for the engine".
+
 ### Task 3: Molecule drawer (`draw.js`)
 
 **Files:** Create `site/organic/js/draw.js`, `tests/organic/draw.test.js`, `tests/organic/fixtures/molecules.txt` (one SMILES per line: every molecule named in the spec's tests plus the hard set below).
@@ -316,6 +327,14 @@ Lab units: notes on the method (purpose, principle, apparatus, procedure in orde
 - [ ] For each group A–K: a fresh reviewer (not the author) reads the sources and the unit files, renders them in the playground, and reports findings in four classes: wrong chemistry, wrong or unnatural Lithuanian, wrong or unnatural English, weak problems (no real decision, implausible options, "why" that does not teach), plus any copied text and any uncovered task. A Sonnet agent fixes every finding; the reviewer re-checks.
 - [ ] Write `site/organic/README.md` (what the trainer covers, files, how a unit is written — pointing to `tools/organic/AUTHORING.md` — and the test command).
 - [ ] Commit fixes per unit.
+
+### Releases (owner's decision, 2026-11-21)
+
+- **Release 1 (before 21 Dec):** Phases 1–2, units u06–u13, and u14–u16 whose slides are in the folder; labs and u01–u05 are `ready: false`. Task 15 runs for this release first.
+- **Follow-ups:** each of u14–u16 that missed release 1, as its own pull request when its slides arrive.
+- **Release 2:** u01–u05 and l1–l6; Task 15 again.
+
+`units.js` keeps all 22 units with a `ready` flag; only ready units are shown, and `content.test.js` requires a unit file for every ready unit and `ready: true` for every unit file present.
 
 ### Task 15: Integration check and pull request
 
