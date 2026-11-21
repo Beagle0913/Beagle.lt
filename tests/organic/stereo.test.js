@@ -115,10 +115,17 @@ test('stereocentres', () => {
   assert.deepEqual(plain(S.stereocentres(P('c1ccccc1C'))), []);
 });
 
-test('stereocentres in rings: ligands equal by constitution but different by path', () => {
-  // 1,4-dimethylcyclohexane: C1 and C4 are the stereogenic (cis/trans) carbons.
-  assert.deepEqual(plain(S.stereocentres(P('CC1CCC(C)CC1'))), [1, 4]);
-  assert.deepEqual(plain(S.stereocentres(P('CC1CCCCC1'))), []); // methylcyclohexane
+test('stereocentres means four constitutionally different substituents (the course definition)', () => {
+  // Ring carbons whose two ring paths are equivalent give cis/trans isomers but are not chiral centres.
+  const none = ['CC1CCC(C)CC1', 'OC1CCC(C)CC1', 'OC1CCC(O)CC1', 'CC1CC(C)C1', 'C1CCC2CCCCC2C1', 'C1CC2CCC1C2', 'CC1CC(C)CC(C)C1', 'CC1CCCCC1'];
+  none.forEach((smi) => assert.deepEqual(plain(S.stereocentres(P(smi))), [], smi));
+  // 1,3-dimethylcyclohexane: C1 and C3 differ (one ring path is longer than the other): both are centres.
+  assert.deepEqual(plain(S.stereocentres(P('CC1CCCC(C)C1'))), [1, 5]);
+  // pentane-2,4-diol: two centres; the middle CH2 is not one. Pentane-2,3,4-triol: C3 has two equal branches, so only C2 and C4.
+  assert.deepEqual(plain(S.stereocentres(P('CC(O)CC(C)O'))), [1, 4]);
+  assert.deepEqual(plain(S.stereocentres(P('CC(O)C(O)C(O)C'))), [1, 5]);
+  // a carbon whose two branches differ only by E/Z geometry is not a chiral centre either
+  assert.deepEqual(plain(S.stereocentres(P('CC=CC(O)C=CC'))), []);
 });
 
 test('stereoBonds', () => {
@@ -242,6 +249,29 @@ test('isomers: results are canonical SMILES of the right formula, distinct', () 
   assert.equal(S.isomers('C7H16').length, 9);
 });
 
+test('isomers: unstable structures are left out', () => {
+  // C3H6O2, acyclic, textbook count: propanoic acid, methyl acetate, ethyl formate, 2-hydroxypropanal,
+  // 3-hydroxypropanal, hydroxyacetone, methoxyacetaldehyde. Left out: enols, hemiacetals, peroxides, gem-diols.
+  const list = plain(S.isomers('C3H6O2'));
+  assert.equal(list.length, 7);
+  ['CCC(=O)O', 'CC(=O)OC', 'CCOC=O', 'CC(O)C=O', 'OCCC=O', 'CC(=O)CO', 'COCC=O'].forEach((smi) => {
+    assert.ok(list.indexOf(C.canonical(P(smi))) >= 0, smi);
+  });
+  // C3H6O any: no enols
+  assert.equal(S.isomers('C3H6O', { rings: true }).length, 7); // propanal, acetone, allyl alcohol, methyl vinyl ether, oxirane, oxetane, cyclopropanol
+  assert.equal(S.isomers('C2H6O2').length, 1); // ethylene glycol; dimethyl peroxide and 1,1-ethanediol are left out
+  // rings of fewer than 8 atoms have no triple bonds and no cumulated double bonds
+  const c4 = plain(S.isomers('C4H4', { rings: true }));
+  assert.ok(c4.indexOf(C.canonical(P('C1#CCC1'))) < 0); // cyclobutyne
+  assert.ok(c4.indexOf(C.canonical(P('C1=C=CC1'))) < 0); // 1,2-cyclobutadiene
+  assert.ok(c4.indexOf(C.canonical(P('C1=CC=C1'))) >= 0); // cyclobutadiene stays
+  assert.ok(c4.indexOf(C.canonical(P('C=CC#C'))) >= 0); // vinylacetylene stays
+});
+
+test('errors are thrown, not hidden', () => {
+  assert.throws(() => S.isomers('C9H20'), (e) => /heavy atoms/.test(e.message));
+});
+
 test('isomers: seven heavy atoms are fast', () => {
   const t = Date.now();
   assert.equal(S.isomers('C7H16').length, 9);
@@ -260,7 +290,39 @@ test('ring cases where the canonical form of the engine is not enough', () => {
   assert.equal(S.isChiral(P('C[C@H]1CCC[C@@H](C)C1')), false);
   assert.equal(S.isChiral(P('C[C@H]1CCC[C@H](C)C1')), true);
   assert.equal(S.isMeso(P('C[C@H]1CCC[C@@H](C)C1')), true);
-  assert.equal(S.isMeso(P('C[C@H]1C[C@@H](C)C[C@@H](C)C1')), true); // all-cis 1,3,5
+});
+
+test('isMeso needs achirality and at least two chiral centres', () => {
+  assert.equal(S.isMeso(P('C[C@H]1CCC[C@@H](C)C1')), true); // cis-1,3-dimethylcyclohexane
+  assert.equal(S.isMeso(P('O[C@H](C(=O)O)[C@@H](O)C(=O)O')), true); // meso-tartaric acid
+  assert.equal(S.isMeso(P('C[C@H](Br)[C@H](Br)C')), true); // meso-2,3-dibromobutane (2S,3R)
+  // achiral cis/trans ring isomers without two chiral centres are not meso
+  ['C[C@H]1CC[C@@H](C)CC1', 'C[C@H]1CC[C@H](C)CC1', 'C[C@H]1CC[C@H](O)CC1', 'C[C@H]1C[C@H](C)C1',
+    'C[C@H]1C[C@@H](C)C[C@@H](C)C1', 'C[C@H]1C[C@H](C)C[C@H](C)C1'].forEach((smi) => {
+    assert.equal(S.isMeso(P(smi)), false, smi);
+    assert.equal(S.isChiral(P(smi)), false, smi);
+  });
+  assert.equal(S.isMeso(P('C1CCC2CCCCC2C1')), false); // decalin
+  assert.equal(S.isMeso(P('OC1CCC(C)CC1')), false);
+  // unspecified: no form of 1,4-dimethylcyclohexane is meso in the course sense
+  assert.equal(S.isMeso(P('CC1CCC(C)CC1')), false);
+});
+
+test('stereoisomer counts do not depend on how the molecule is written', () => {
+  ['CC(O)C(O)C(O)C', 'CC(O)C(O)C(C)O', 'OC(C)C(O)C(O)C', 'C(C)(O)C(O)C(C)O', 'OC(C(C)O)C(C)O', 'C(O)(C)C(C(C)O)O'].forEach((smi) => {
+    assert.equal(S.stereoisomers(P(smi)).length, 4, smi); // two enantiomers' worth: (2R,4R), (2S,4S), and the meso r and s forms
+  });
+  // centres that are stereogenic only through E/Z branches: EE, ZZ and the enantiomeric E,Z pair
+  assert.equal(S.stereoisomers(P('CC=CC(O)C=CC')).length, 4);
+  assert.equal(S.stereoisomers(P('CC=CC(C)C=CC')).length, 4);
+});
+
+test('bridged bicycles count only the geometrically possible isomers', () => {
+  const n = (smi) => S.stereoisomers(P(smi)).length;
+  assert.equal(n('CC12CCC(CC1=O)C2(C)C'), 2); // camphor: the bridgeheads are tied to each other
+  assert.equal(n('CC1=CCC2CC1C2(C)C'), 2); // alpha-pinene
+  assert.equal(n('CC12CCC(CC1O)C2(C)C'), 4); // borneol / isoborneol: 2 bridgehead choices x CHOH
+  assert.equal(n('C1CC2CCC1C2'), 1); // norbornane
 });
 
 test('isomers: alkenes and rings, larger formulas', () => {

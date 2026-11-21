@@ -223,7 +223,7 @@
     const used = new Array(n).fill(false);
     const out = [];
     (function go(k) {
-      if (out.length >= 5000) return;
+      if (out.length > 5000) throw new Error('stereo: too many symmetry operations in this molecule');
       if (k === n) { out.push(sig.slice()); return; }
       const v = order[k];
       for (let w = 0; w < n; w++) {
@@ -309,24 +309,18 @@
     return { sure, tied };
   }
 
+  // The chiral centres of the course: carbons with four substituents that differ in constitution.
+  // (Ring carbons whose two ring paths are equivalent, like C1 of 1,4-dimethylcyclohexane, and carbons
+  // made stereogenic only by the configuration of their branches are not counted here; the
+  // enumeration of stereoisomers still takes them into account.)
   function stereocentres(mol) {
     mol = M(mol);
-    const { sure, tied } = tetraCandidates(mol);
-    const found = new Set(sure);
-    if (tied.length) {
-      const all = sure.concat(tied).sort((x, y) => x - y);
-      const ops = symmetry(mol, all, []);
-      [0, 1].forEach((pattern) => {
-        const v = all.map((c, k) => (pattern === 1 ? k % 2 : 0));
-        const base = keyOf(ops, v);
-        tied.forEach((c) => {
-          const w = v.slice();
-          w[all.indexOf(c)] ^= 1;
-          if (keyOf(ops, w) !== base) found.add(c);
-        });
-      });
-    }
-    return Array.from(found).sort((x, y) => x - y);
+    return tetraCandidates(mol).sure.slice().sort((x, y) => x - y);
+  }
+
+  function allCandidates(mol) {
+    const c = tetraCandidates(mol);
+    return c.sure.concat(c.tied).sort((x, y) => x - y);
   }
 
   function inSmallRing(mol, a, b, rs) {
@@ -492,7 +486,7 @@
       m.atoms[c].ord = refOrd(m, c);
       m.atoms[c].chiral = v[k] ? '@@' : '@';
     });
-    if (!writeBonds(m, dbs, v.slice(cent.length))) return null;
+    if (!writeBonds(m, dbs, v.slice(cent.length))) throw new Error('stereo: cannot write the double bond marks of this molecule');
     return chem.canonical(m, { stereo: true });
   }
 
@@ -512,9 +506,47 @@
     return v;
   }
 
+  // Bridged small bicycles (norbornane, pinane): the two bridgeheads cannot have the "trans" relative
+  // configuration, the third bridge must lie on one face of the ring through the two other bridges.
+  // Found as pairs of SSSR rings (both up to 7 members) sharing a path of 3 or more atoms.
+  function bridgePairs(mol, cent) {
+    const rs = chem.rings(mol);
+    const out = [];
+    for (let i = 0; i < rs.length; i++) {
+      for (let j = i + 1; j < rs.length; j++) {
+        if (rs[i].length > 7 || rs[j].length > 7) continue;
+        const shared = rs[i].filter((x) => rs[j].indexOf(x) >= 0);
+        if (shared.length < 3) continue;
+        const ends = shared.filter((x) => mol.nbr[x].filter((w) => shared.indexOf(w) >= 0).length === 1);
+        if (ends.length !== 2 || cent.indexOf(ends[0]) < 0 || cent.indexOf(ends[1]) < 0) continue;
+        const third = ends.map((e) => mol.nbr[e].filter((w) => rs[j].indexOf(w) >= 0 && rs[i].indexOf(w) < 0));
+        if (third[0].length !== 1 || third[1].length !== 1) continue;
+        out.push({ ring: rs[i], a: ends[0], b: ends[1], sa: third[0][0], sb: third[1][0] });
+      }
+    }
+    return out;
+  }
+
+  function bridgesPossible(mol, cent, bridges, v) {
+    const m = cloneMol(mol);
+    cent.forEach((c, k) => { m.atoms[c].ord = refOrd(m, c); m.atoms[c].chiral = v[k] ? '@@' : '@'; });
+    const face = (ring, e, s) => {
+      const k = ring.indexOf(e);
+      const prev = ring[(k + ring.length - 1) % ring.length];
+      const next = ring[(k + 1) % ring.length];
+      const a = m.atoms[e];
+      const rest = a.ord.find((x) => x !== prev && x !== next && x !== s);
+      const par = permParity(a.ord, [prev, next, s, rest]);
+      return par ? (a.chiral === '@' ? '@@' : '@') : a.chiral;
+    };
+    return bridges.every((br) => face(br.ring, br.a, br.sa) === face(br.ring, br.b, br.sb));
+  }
+
   // Every distinct stereoisomer (up to symmetry), consistent with the marks already in the SMILES when useSpec is true.
   function enumerate(mol, useSpec) {
-    const cent = stereocentres(mol);
+    const cent = allCandidates(mol);
+    const sureCount = stereocentres(mol).length;
+    const bridges = bridgePairs(mol, cent);
     const dbs = stereoBonds(mol);
     const n = cent.length + dbs.length;
     const ops = symmetry(mol, cent, dbs);
@@ -525,11 +557,12 @@
     for (let mask = 0; mask < (1 << free.length); mask++) {
       const v = spec.slice();
       free.forEach((k, j) => { v[k] = (mask >> j) & 1; });
+      if (bridges.length && !bridgesPossible(mol, cent, bridges, v)) continue;
       const key = keyOf(ops, v);
       if (seen.has(key)) continue;
       const mirror = v.map((x, k) => (k < cent.length ? x ^ 1 : x));
       const chiral = cent.length > 0 && keyOf(ops, mirror) !== key;
-      seen.set(key, { v, chiral, meso: cent.length >= 2 && !chiral });
+      seen.set(key, { v, chiral, meso: sureCount >= 2 && !chiral });
     }
     return { cent, dbs, list: Array.from(seen.values()) };
   }
@@ -540,7 +573,7 @@
     const out = [];
     e.list.forEach((r) => {
       const s = realise(mol, e.cent, e.dbs, r.v);
-      if (s !== null && out.indexOf(s) < 0) out.push(s);
+      if (out.indexOf(s) < 0) out.push(s);
     });
     return out;
   }
@@ -674,6 +707,33 @@
     return emit(0);
   }
 
+  // A first-year course does not count these as stable compounds, so isomers() leaves them out:
+  //   enols and ynols (OH on a carbon of C=C or C#C), peroxides and every other single bond between two
+  //   heteroatoms or between a heteroatom and a halogen (N-O, N-N, O-O, N-Cl ...; oximes and hydrazines
+  //   are lost with them unless opts.heteroBonds is true), gem-diols and hemiacetals/hemiketals (a
+  //   saturated carbon with an OH and a second single-bonded O), and, in rings of fewer than 8 atoms,
+  //   triple bonds and cumulated double bonds.
+  function unstable(mol, heteroBonds) {
+    const A = mol.atoms;
+    const isHetero = (i) => A[i].el !== 'C';
+    const rs = chem.rings(mol).filter((r) => r.length < 8);
+    const inRing = (a, b) => rs.some((r) => r.indexOf(a) >= 0 && r.indexOf(b) >= 0);
+    for (const b of mol.bonds) {
+      if (!heteroBonds && isHetero(b.a) && isHetero(b.b)) return true;
+      if (b.order === 3 && inRing(b.a, b.b)) return true;
+    }
+    for (let i = 0; i < A.length; i++) {
+      const doubles = mol.nbr[i].filter((w) => mol.bondAt(i, w).kek === 2);
+      if (doubles.length === 2 && doubles.every((w) => inRing(i, w))) return true;
+      if (A[i].el !== 'C') continue;
+      const oxy = mol.nbr[i].filter((w) => A[w].el === 'O' && mol.bondAt(i, w).kek === 1);
+      const oh = oxy.filter((w) => A[w].h >= 1);
+      if (oh.length && mol.nbr[i].some((w) => A[w].el === 'C' && mol.bondAt(i, w).kek >= 2)) return true; // enol, ynol
+      if (oh.length && oxy.length >= 2 && mol.nbr[i].every((w) => mol.bondAt(i, w).kek === 1)) return true; // gem-diol, hemiacetal
+    }
+    return false;
+  }
+
   function isomers(formula, opts) {
     opts = opts || {};
     const filter = opts.filter || 'any';
@@ -751,6 +811,7 @@
       if (st.bonds !== bondTotal) return;
       const mol = chem.parse(graphSmiles(st.el, st.bo));
       if (mol.atoms.some((a) => a.h < 0)) return;
+      if (unstable(mol, !!opts.heteroBonds)) return;
       const key = chem.canonical(mol);
       if (out.has(key)) return;
       if (filter !== 'any' && !chem.groups(mol).some((g) => g.type === filter)) return;

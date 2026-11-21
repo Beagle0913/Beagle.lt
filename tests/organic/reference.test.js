@@ -202,7 +202,7 @@ for (const e of buggy) {
   bugGroups.get(base).push(e);
 }
 for (const [base, list] of bugGroups) {
-  test(base + ' (' + list[0].knownBug + ')', { todo: list[0].knownBug }, () => {
+  const check = () => {
     const probs = [];
     for (const e of list) {
       for (const prop of Object.keys(checks)) {
@@ -222,6 +222,12 @@ for (const [base, list] of bugGroups) {
         if (C.same(parsed(e), parsed(o), { stereo: false }) !== wantF) probs.push('flat same(' + e.smi + ', ' + o.smi + ') should be ' + wantF);
       }
     }
+    return probs;
+  };
+  const probs = check();
+  // Still broken: a todo test (visible, never red). Fixed: a real failing test that says so.
+  test(base + ' (' + list[0].knownBug + ')', probs.length ? { todo: list[0].knownBug } : {}, () => {
+    assert.ok(probs.length > 0, 'fixed: remove from KNOWN_BUGS in tools/organic/reference.py (' + base + ')');
     assert.strictEqual(probs.length, 0, probs.join('; '));
   });
 }

@@ -373,16 +373,7 @@
 "formula": "C8H8",
 "charge": 0,
 "aromaticAtoms": [],
-"centres": [
-0,
-1,
-2,
-3,
-4,
-5,
-6,
-7
-],
+"centres": [],
 "cip": {},
 "pseudo": {},
 "ez": [],
@@ -395,12 +386,7 @@
 "formula": "C10H16",
 "charge": 0,
 "aromaticAtoms": [],
-"centres": [
-1,
-3,
-5,
-7
-],
+"centres": [],
 "cip": {},
 "pseudo": {},
 "ez": [],
@@ -413,10 +399,7 @@
 "formula": "C7H12",
 "charge": 0,
 "aromaticAtoms": [],
-"centres": [
-2,
-5
-],
+"centres": [],
 "cip": {},
 "pseudo": {},
 "ez": [],
@@ -2957,10 +2940,7 @@
 "formula": "C10H18",
 "charge": 0,
 "aromaticAtoms": [],
-"centres": [
-3,
-8
-],
+"centres": [],
 "cip": {},
 "pseudo": {},
 "ez": [],
@@ -2972,10 +2952,7 @@
 "formula": "C6H10",
 "charge": 0,
 "aromaticAtoms": [],
-"centres": [
-2,
-4
-],
+"centres": [],
 "cip": {},
 "pseudo": {},
 "ez": [],
@@ -2987,10 +2964,7 @@
 "formula": "C8H14",
 "charge": 0,
 "aromaticAtoms": [],
-"centres": [
-2,
-5
-],
+"centres": [],
 "cip": {},
 "pseudo": {},
 "ez": [],
@@ -3081,10 +3055,7 @@
 "formula": "C7H8",
 "charge": 0,
 "aromaticAtoms": [],
-"centres": [
-2,
-5
-],
+"centres": [],
 "cip": {},
 "pseudo": {},
 "ez": [],
@@ -8549,15 +8520,13 @@
 "aromaticAtoms": [],
 "centres": [
 1,
-3,
 5
 ],
 "cip": {},
 "pseudo": {},
 "ez": [],
 "canonical": "CC(O)C(O)C(C)O",
-"flat": "CC(O)C(O)C(C)O",
-"knownBug": "stereocentres: r/s (pseudoasymmetric) centres missed and centres with two identical homochiral branches added, and the answer changes with the way the SMILES is written"
+"flat": "CC(O)C(O)C(C)O"
 },
 {
 "smi": "C[C@H](O)[C@@H](O)[C@H](C)O",
@@ -8584,7 +8553,6 @@
 "aromaticAtoms": [],
 "centres": [
 1,
-3,
 5
 ],
 "cip": {
@@ -8596,8 +8564,7 @@
 },
 "ez": [],
 "canonical": "C[C@H](O)[C@H](O)[C@@H](C)O",
-"flat": "CC(O)C(O)C(C)O",
-"knownBug": "stereocentres: r/s (pseudoasymmetric) centres missed and centres with two identical homochiral branches added, and the answer changes with the way the SMILES is written"
+"flat": "CC(O)C(O)C(C)O"
 },
 {
 "smi": "C[C@H](O)[C@H](O)[C@H](C)O",
@@ -8615,8 +8582,7 @@
 "pseudo": {},
 "ez": [],
 "canonical": "C[C@H](O)C(O)[C@H](C)O",
-"flat": "CC(O)C(O)C(C)O",
-"knownBug": "stereocentres: r/s (pseudoasymmetric) centres missed and centres with two identical homochiral branches added, and the answer changes with the way the SMILES is written"
+"flat": "CC(O)C(O)C(C)O"
 },
 {
 "smi": "C[C@@H](O)[C@H](O)[C@@H](C)O",
@@ -8742,8 +8708,7 @@
 "pseudo": {},
 "ez": [],
 "canonical": "O=C(O)[C@H](O)C(O)[C@@H](O)C(=O)O",
-"flat": "O=C(O)C(O)C(O)C(O)C(=O)O",
-"knownBug": "stereocentres: r/s (pseudoasymmetric) centres missed and centres with two identical homochiral branches added, and the answer changes with the way the SMILES is written"
+"flat": "O=C(O)C(O)C(O)C(O)C(=O)O"
 },
 {
 "smi": "OC(=O)[C@H](O)[C@H](O)[C@H](O)C(=O)O",
@@ -8752,7 +8717,6 @@
 "aromaticAtoms": [],
 "centres": [
 3,
-5,
 7
 ],
 "cip": {
@@ -8764,8 +8728,7 @@
 },
 "ez": [],
 "canonical": "O=C(O)[C@@H](O)[C@@H](O)[C@@H](O)C(=O)O",
-"flat": "O=C(O)C(O)C(O)C(O)C(=O)O",
-"knownBug": "stereocentres: r/s (pseudoasymmetric) centres missed and centres with two identical homochiral branches added, and the answer changes with the way the SMILES is written"
+"flat": "O=C(O)C(O)C(O)C(O)C(=O)O"
 },
 {
 "smi": "OC(=O)[C@H](O)[C@@H](O)[C@H](O)C(=O)O",
@@ -8774,7 +8737,6 @@
 "aromaticAtoms": [],
 "centres": [
 3,
-5,
 7
 ],
 "cip": {
@@ -8786,8 +8748,7 @@
 },
 "ez": [],
 "canonical": "O=C(O)[C@@H](O)[C@H](O)[C@@H](O)C(=O)O",
-"flat": "O=C(O)C(O)C(O)C(O)C(=O)O",
-"knownBug": "stereocentres: r/s (pseudoasymmetric) centres missed and centres with two identical homochiral branches added, and the answer changes with the way the SMILES is written"
+"flat": "O=C(O)C(O)C(O)C(O)C(=O)O"
 },
 {
 "smi": "OC[C@H](O)[C@H](O)[C@H](O)CO",
@@ -8796,7 +8757,6 @@
 "aromaticAtoms": [],
 "centres": [
 2,
-4,
 6
 ],
 "cip": {
@@ -8817,7 +8777,6 @@
 "aromaticAtoms": [],
 "centres": [
 2,
-4,
 6
 ],
 "cip": {
@@ -8829,8 +8788,7 @@
 },
 "ez": [],
 "canonical": "OC[C@@H](O)[C@H](O)[C@@H](O)CO",
-"flat": "OCC(O)C(O)C(O)CO",
-"knownBug": "stereocentres: r/s (pseudoasymmetric) centres missed and centres with two identical homochiral branches added, and the answer changes with the way the SMILES is written"
+"flat": "OCC(O)C(O)C(O)CO"
 },
 {
 "smi": "CC(C)[C@H](C)[C@@H](C)C(C)C",
@@ -8866,8 +8824,7 @@
 "pseudo": {},
 "ez": [],
 "canonical": "CC([C@H](C)Cl)[C@H](C)Cl",
-"flat": "CC(Cl)C(C)C(C)Cl",
-"knownBug": "stereocentres: r/s (pseudoasymmetric) centres missed and centres with two identical homochiral branches added, and the answer changes with the way the SMILES is written"
+"flat": "CC(Cl)C(C)C(C)Cl"
 },
 {
 "smi": "C[C@H](Cl)[C@H](C)[C@H](C)Cl",
@@ -8912,7 +8869,6 @@
 "aromaticAtoms": [],
 "centres": [
 1,
-3,
 5
 ],
 "cip": {
@@ -8924,8 +8880,7 @@
 },
 "ez": [],
 "canonical": "C[C@@H]([C@H](C)Cl)[C@@H](C)Cl",
-"flat": "CC(Cl)C(C)C(C)Cl",
-"knownBug": "stereocentres: r/s (pseudoasymmetric) centres missed and centres with two identical homochiral branches added, and the answer changes with the way the SMILES is written"
+"flat": "CC(Cl)C(C)C(C)Cl"
 },
 {
 "smi": "C[C@@H](Cl)[C@H](C)[C@@H](C)Cl",
@@ -8943,8 +8898,7 @@
 "pseudo": {},
 "ez": [],
 "canonical": "CC([C@@H](C)Cl)[C@@H](C)Cl",
-"flat": "CC(Cl)C(C)C(C)Cl",
-"knownBug": "stereocentres: r/s (pseudoasymmetric) centres missed and centres with two identical homochiral branches added, and the answer changes with the way the SMILES is written"
+"flat": "CC(Cl)C(C)C(C)Cl"
 },
 {
 "smi": "C[C@H](O)[C@H](O)[C@H](O)[C@H](C)O",
@@ -9615,10 +9569,7 @@
 "formula": "C8H16",
 "charge": 0,
 "aromaticAtoms": [],
-"centres": [
-1,
-4
-],
+"centres": [],
 "cip": {},
 "pseudo": {
 "1": "s",
@@ -9633,10 +9584,7 @@
 "formula": "C8H16",
 "charge": 0,
 "aromaticAtoms": [],
-"centres": [
-1,
-4
-],
+"centres": [],
 "cip": {},
 "pseudo": {
 "1": "r",
@@ -9651,10 +9599,7 @@
 "formula": "C7H14O",
 "charge": 0,
 "aromaticAtoms": [],
-"centres": [
-1,
-4
-],
+"centres": [],
 "cip": {},
 "pseudo": {
 "1": "r",
@@ -9669,10 +9614,7 @@
 "formula": "C7H14O",
 "charge": 0,
 "aromaticAtoms": [],
-"centres": [
-1,
-4
-],
+"centres": [],
 "cip": {},
 "pseudo": {
 "1": "s",
@@ -9822,10 +9764,7 @@
 "formula": "C8H16",
 "charge": 0,
 "aromaticAtoms": [],
-"centres": [
-1,
-4
-],
+"centres": [],
 "cip": {},
 "pseudo": {},
 "ez": [],
@@ -9852,10 +9791,7 @@
 "formula": "C7H14O",
 "charge": 0,
 "aromaticAtoms": [],
-"centres": [
-1,
-4
-],
+"centres": [],
 "cip": {},
 "pseudo": {},
 "ez": [],
@@ -10064,10 +10000,7 @@
 "formula": "C10H18",
 "charge": 0,
 "aromaticAtoms": [],
-"centres": [
-3,
-8
-],
+"centres": [],
 "cip": {},
 "pseudo": {
 "3": "r",
@@ -10082,10 +10015,7 @@
 "formula": "C7H12",
 "charge": 0,
 "aromaticAtoms": [],
-"centres": [
-2,
-5
-],
+"centres": [],
 "cip": {},
 "pseudo": {
 "2": "s",
@@ -10205,14 +10135,7 @@
 "formula": "C6H12O6",
 "charge": 0,
 "aromaticAtoms": [],
-"centres": [
-1,
-2,
-4,
-6,
-8,
-10
-],
+"centres": [],
 "cip": {
 "1": "R",
 "2": "S",
@@ -10224,22 +10147,14 @@
 "pseudo": {},
 "ez": [],
 "canonical": "O[C@H]1[C@H](O)[C@H](O)[C@@H](O)[C@@H](O)[C@H]1O",
-"flat": "OC1C(O)C(O)C(O)C(O)C1O",
-"knownBug": "cip: ring stereocentres whose ligands differ only through the ring come out null; RDKit gives R/S"
+"flat": "OC1C(O)C(O)C(O)C(O)C1O"
 },
 {
 "smi": "O[C@H]1[C@H](O)[C@@H](O)[C@H](O)[C@@H](O)[C@@H]1O",
 "formula": "C6H12O6",
 "charge": 0,
 "aromaticAtoms": [],
-"centres": [
-1,
-2,
-4,
-6,
-8,
-10
-],
+"centres": [],
 "cip": {},
 "pseudo": {
 "1": "r",
@@ -10258,14 +10173,7 @@
 "formula": "C6H12O6",
 "charge": 0,
 "aromaticAtoms": [],
-"centres": [
-1,
-2,
-4,
-6,
-8,
-10
-],
+"centres": [],
 "cip": {
 "1": "S",
 "2": "R",
@@ -10277,8 +10185,7 @@
 "pseudo": {},
 "ez": [],
 "canonical": "O[C@H]1[C@H](O)[C@@H](O)[C@H](O)[C@H](O)[C@H]1O",
-"flat": "OC1C(O)C(O)C(O)C(O)C1O",
-"knownBug": "cip: ring stereocentres whose ligands differ only through the ring come out null; RDKit gives R/S"
+"flat": "OC1C(O)C(O)C(O)C(O)C1O"
 },
 {
 "smi": "C1CC1[C@H](C)O",
@@ -10461,10 +10368,7 @@
 "formula": "C10H20O",
 "charge": 0,
 "aromaticAtoms": [],
-"centres": [
-1,
-4
-],
+"centres": [],
 "cip": {},
 "pseudo": {
 "1": "s",
@@ -10515,14 +10419,7 @@
 "formula": "C12H24",
 "charge": 0,
 "aromaticAtoms": [],
-"centres": [
-1,
-2,
-4,
-6,
-8,
-10
-],
+"centres": [],
 "cip": {
 "1": "S",
 "2": "S",
@@ -10535,22 +10432,14 @@
 },
 "ez": [],
 "canonical": "C[C@H]1[C@@H](C)[C@@H](C)[C@@H](C)[C@@H](C)[C@@H]1C",
-"flat": "CC1C(C)C(C)C(C)C(C)C1C",
-"knownBug": "cip: ring stereocentres whose ligands differ only through the ring come out null; RDKit gives R/S"
+"flat": "CC1C(C)C(C)C(C)C(C)C1C"
 },
 {
 "smi": "C[C@H]1[C@H](C)[C@H](C)[C@H](C)[C@H](C)[C@H]1C",
 "formula": "C12H24",
 "charge": 0,
 "aromaticAtoms": [],
-"centres": [
-1,
-2,
-4,
-6,
-8,
-10
-],
+"centres": [],
 "cip": {
 "1": "R",
 "2": "S",
@@ -10562,8 +10451,7 @@
 "pseudo": {},
 "ez": [],
 "canonical": "C[C@H]1[C@H](C)[C@H](C)[C@@H](C)[C@@H](C)[C@H]1C",
-"flat": "CC1C(C)C(C)C(C)C(C)C1C",
-"knownBug": "cip: ring stereocentres whose ligands differ only through the ring come out null; RDKit gives R/S"
+"flat": "CC1C(C)C(C)C(C)C(C)C1C"
 },
 {
 "smi": "C[C@@H]1[C@H](C)C[C@@H](C)C[C@H]1C",
@@ -10571,9 +10459,7 @@
 "charge": 0,
 "aromaticAtoms": [],
 "centres": [
-1,
 2,
-5,
 8
 ],
 "cip": {
@@ -10584,9 +10470,8 @@
 },
 "pseudo": {},
 "ez": [],
-"canonical": "C[C@H]1C[C@@H](C)[C@H](C)[C@H](C)C1",
-"flat": "CC1CC(C)C(C)C(C)C1",
-"knownBug": "cip: ring stereocentres whose ligands differ only through the ring come out null; RDKit gives R/S"
+"canonical": "C[C@@H]1C[C@H](C)C[C@@H](C)[C@H]1C",
+"flat": "CC1CC(C)C(C)C(C)C1"
 },
 {
 "smi": "C[C@H]1CC[C@@H](C)[C@@H](C)[C@@H]1C",
@@ -10615,57 +10500,42 @@
 "formula": "C9H18",
 "charge": 0,
 "aromaticAtoms": [],
-"centres": [
-1,
-3,
-6
-],
+"centres": [],
 "cip": {},
 "pseudo": {
 "6": "r"
 },
 "ez": [],
 "canonical": "C[C@H]1C[C@H](C)C[C@@H](C)C1",
-"flat": "CC1CC(C)CC(C)C1",
-"knownBug": "stereocentres (stereo.js): the ring centres are reported as 2 of 3 (the canonical()/same() part is fixed and tested in chem.test.js)"
+"flat": "CC1CC(C)CC(C)C1"
 },
 {
 "smi": "C[C@H]1C[C@H](C)C[C@H](C)C1",
 "formula": "C9H18",
 "charge": 0,
 "aromaticAtoms": [],
-"centres": [
-1,
-3,
-6
-],
+"centres": [],
 "cip": {},
 "pseudo": {
 "1": "r"
 },
 "ez": [],
 "canonical": "C[C@H]1C[C@H](C)C[C@@H](C)C1",
-"flat": "CC1CC(C)CC(C)C1",
-"knownBug": "stereocentres (stereo.js): the ring centres are reported as 2 of 3 (the canonical()/same() part is fixed and tested in chem.test.js)"
+"flat": "CC1CC(C)CC(C)C1"
 },
 {
 "smi": "C[C@H]1C[C@@H](C)C[C@H](C)C1",
 "formula": "C9H18",
 "charge": 0,
 "aromaticAtoms": [],
-"centres": [
-1,
-3,
-6
-],
+"centres": [],
 "cip": {},
 "pseudo": {
 "6": "r"
 },
 "ez": [],
 "canonical": "C[C@H]1C[C@H](C)C[C@@H](C)C1",
-"flat": "CC1CC(C)CC(C)C1",
-"knownBug": "stereocentres (stereo.js): the ring centres are reported as 2 of 3 (the canonical()/same() part is fixed and tested in chem.test.js)"
+"flat": "CC1CC(C)CC(C)C1"
 },
 {
 "smi": "CC/C=C/C",
@@ -13676,9 +13546,7 @@
 "formula": "C8H14",
 "charge": 0,
 "aromaticAtoms": [],
-"centres": [
-3
-],
+"centres": [],
 "cip": {
 "3": "R"
 },
@@ -13696,8 +13564,7 @@
 ]
 ],
 "canonical": "C/C=C\\[C@H](C)/C=C/C",
-"flat": "CC=CC(C)C=CC",
-"knownBug": "centre whose two branches differ only by E/Z geometry is missed (RDKit: centre, R/S)"
+"flat": "CC=CC(C)C=CC"
 },
 {
 "smi": "C/C=C/[C@H](C)C",
@@ -13984,10 +13851,7 @@
 "formula": "C10H18",
 "charge": 0,
 "aromaticAtoms": [],
-"centres": [
-1,
-4
-],
+"centres": [],
 "cip": {},
 "pseudo": {
 "1": "r",
@@ -14008,10 +13872,7 @@
 "formula": "C10H18",
 "charge": 0,
 "aromaticAtoms": [],
-"centres": [
-1,
-4
-],
+"centres": [],
 "cip": {},
 "pseudo": {
 "1": "r",
@@ -14032,10 +13893,7 @@
 "formula": "C10H18",
 "charge": 0,
 "aromaticAtoms": [],
-"centres": [
-1,
-4
-],
+"centres": [],
 "cip": {},
 "pseudo": {
 "1": "s",
@@ -14056,10 +13914,7 @@
 "formula": "C10H18",
 "charge": 0,
 "aromaticAtoms": [],
-"centres": [
-1,
-4
-],
+"centres": [],
 "cip": {},
 "pseudo": {
 "1": "s",
@@ -15860,9 +15715,7 @@
 "formula": "AlH4Li",
 "charge": 0,
 "aromaticAtoms": [],
-"centres": [
-0
-],
+"centres": [],
 "cip": {},
 "pseudo": {},
 "ez": [],
@@ -18214,16 +18067,7 @@
 "formula": "C8H8",
 "charge": 0,
 "aromaticAtoms": [],
-"centres": [
-0,
-1,
-2,
-3,
-4,
-5,
-6,
-7
-],
+"centres": [],
 "cip": {},
 "pseudo": {},
 "ez": [],
@@ -18237,16 +18081,7 @@
 "formula": "C8H8",
 "charge": 0,
 "aromaticAtoms": [],
-"centres": [
-0,
-1,
-2,
-3,
-4,
-5,
-6,
-7
-],
+"centres": [],
 "cip": {},
 "pseudo": {},
 "ez": [],
@@ -18260,12 +18095,7 @@
 "formula": "C10H16",
 "charge": 0,
 "aromaticAtoms": [],
-"centres": [
-1,
-3,
-5,
-7
-],
+"centres": [],
 "cip": {},
 "pseudo": {},
 "ez": [],
@@ -18279,10 +18109,7 @@
 "formula": "C7H12",
 "charge": 0,
 "aromaticAtoms": [],
-"centres": [
-1,
-4
-],
+"centres": [],
 "cip": {},
 "pseudo": {},
 "ez": [],
@@ -20886,10 +20713,7 @@
 "formula": "C10H18",
 "charge": 0,
 "aromaticAtoms": [],
-"centres": [
-0,
-5
-],
+"centres": [],
 "cip": {},
 "pseudo": {},
 "ez": [],
@@ -20902,10 +20726,7 @@
 "formula": "C6H10",
 "charge": 0,
 "aromaticAtoms": [],
-"centres": [
-0,
-2
-],
+"centres": [],
 "cip": {},
 "pseudo": {},
 "ez": [],
@@ -20918,10 +20739,7 @@
 "formula": "C8H14",
 "charge": 0,
 "aromaticAtoms": [],
-"centres": [
-1,
-4
-],
+"centres": [],
 "cip": {},
 "pseudo": {},
 "ez": [],
@@ -21035,10 +20853,7 @@
 "formula": "C7H8",
 "charge": 0,
 "aromaticAtoms": [],
-"centres": [
-1,
-4
-],
+"centres": [],
 "cip": {},
 "pseudo": {},
 "ez": [],
@@ -29332,7 +29147,6 @@
 "aromaticAtoms": [],
 "centres": [
 1,
-3,
 5
 ],
 "cip": {},
@@ -29340,8 +29154,7 @@
 "ez": [],
 "canonical": "CC(O)C(O)C(C)O",
 "flat": "CC(O)C(O)C(C)O",
-"variantOf": "CC(O)C(O)C(C)O",
-"knownBug": "stereocentres: r/s (pseudoasymmetric) centres missed and centres with two identical homochiral branches added, and the answer changes with the way the SMILES is written"
+"variantOf": "CC(O)C(O)C(C)O"
 },
 {
 "smi": "[C@@H](C)(O)C(O)[C@H](C)O",
@@ -29387,7 +29200,6 @@
 "charge": 0,
 "aromaticAtoms": [],
 "centres": [
-1,
 2,
 5
 ],
@@ -29401,8 +29213,7 @@
 "ez": [],
 "canonical": "C[C@H](O)[C@H](O)[C@@H](C)O",
 "flat": "CC(O)C(O)C(C)O",
-"variantOf": "C[C@H](O)[C@H](O)[C@@H](C)O",
-"knownBug": "stereocentres: r/s (pseudoasymmetric) centres missed and centres with two identical homochiral branches added, and the answer changes with the way the SMILES is written"
+"variantOf": "C[C@H](O)[C@H](O)[C@@H](C)O"
 },
 {
 "smi": "C([C@H](C)O)(O)[C@H](C)O",
@@ -29421,8 +29232,7 @@
 "ez": [],
 "canonical": "C[C@H](O)C(O)[C@H](C)O",
 "flat": "CC(O)C(O)C(C)O",
-"variantOf": "C[C@H](O)[C@H](O)[C@H](C)O",
-"knownBug": "stereocentres: r/s (pseudoasymmetric) centres missed and centres with two identical homochiral branches added, and the answer changes with the way the SMILES is written"
+"variantOf": "C[C@H](O)[C@H](O)[C@H](C)O"
 },
 {
 "smi": "O[C@H](C)C([C@H](O)C)O",
@@ -29612,8 +29422,7 @@
 "ez": [],
 "canonical": "O=C(O)[C@H](O)C(O)[C@@H](O)C(=O)O",
 "flat": "O=C(O)C(O)C(O)C(O)C(=O)O",
-"variantOf": "OC(=O)[C@H](O)[C@H](O)[C@@H](O)C(=O)O",
-"knownBug": "stereocentres: r/s (pseudoasymmetric) centres missed and centres with two identical homochiral branches added, and the answer changes with the way the SMILES is written"
+"variantOf": "OC(=O)[C@H](O)[C@H](O)[C@@H](O)C(=O)O"
 },
 {
 "smi": "O=C(O)[C@H](O)C(O)[C@@H](O)C(=O)O",
@@ -29632,8 +29441,7 @@
 "ez": [],
 "canonical": "O=C(O)[C@H](O)C(O)[C@@H](O)C(=O)O",
 "flat": "O=C(O)C(O)C(O)C(O)C(=O)O",
-"variantOf": "OC(=O)[C@H](O)[C@H](O)[C@@H](O)C(=O)O",
-"knownBug": "stereocentres: r/s (pseudoasymmetric) centres missed and centres with two identical homochiral branches added, and the answer changes with the way the SMILES is written"
+"variantOf": "OC(=O)[C@H](O)[C@H](O)[C@@H](O)C(=O)O"
 },
 {
 "smi": "[C@H](O)(C(O)=O)[C@H](O)[C@H](O)C(=O)O",
@@ -29642,7 +29450,6 @@
 "aromaticAtoms": [],
 "centres": [
 0,
-5,
 7
 ],
 "cip": {
@@ -29655,8 +29462,7 @@
 "ez": [],
 "canonical": "O=C(O)[C@@H](O)[C@@H](O)[C@@H](O)C(=O)O",
 "flat": "O=C(O)C(O)C(O)C(O)C(=O)O",
-"variantOf": "OC(=O)[C@H](O)[C@H](O)[C@H](O)C(=O)O",
-"knownBug": "stereocentres: r/s (pseudoasymmetric) centres missed and centres with two identical homochiral branches added, and the answer changes with the way the SMILES is written"
+"variantOf": "OC(=O)[C@H](O)[C@H](O)[C@H](O)C(=O)O"
 },
 {
 "smi": "O=C(O)[C@@H](O)[C@@H](O)[C@@H](O)C(=O)O",
@@ -29665,7 +29471,6 @@
 "aromaticAtoms": [],
 "centres": [
 3,
-5,
 7
 ],
 "cip": {
@@ -29678,8 +29483,7 @@
 "ez": [],
 "canonical": "O=C(O)[C@@H](O)[C@@H](O)[C@@H](O)C(=O)O",
 "flat": "O=C(O)C(O)C(O)C(O)C(=O)O",
-"variantOf": "OC(=O)[C@H](O)[C@H](O)[C@H](O)C(=O)O",
-"knownBug": "stereocentres: r/s (pseudoasymmetric) centres missed and centres with two identical homochiral branches added, and the answer changes with the way the SMILES is written"
+"variantOf": "OC(=O)[C@H](O)[C@H](O)[C@H](O)C(=O)O"
 },
 {
 "smi": "O=C(O)[C@H]([C@@H]([C@@H](O)C(=O)O)O)O",
@@ -29688,7 +29492,6 @@
 "aromaticAtoms": [],
 "centres": [
 3,
-4,
 5
 ],
 "cip": {
@@ -29701,8 +29504,7 @@
 "ez": [],
 "canonical": "O=C(O)[C@@H](O)[C@H](O)[C@@H](O)C(=O)O",
 "flat": "O=C(O)C(O)C(O)C(O)C(=O)O",
-"variantOf": "OC(=O)[C@H](O)[C@@H](O)[C@H](O)C(=O)O",
-"knownBug": "stereocentres: r/s (pseudoasymmetric) centres missed and centres with two identical homochiral branches added, and the answer changes with the way the SMILES is written"
+"variantOf": "OC(=O)[C@H](O)[C@@H](O)[C@H](O)C(=O)O"
 },
 {
 "smi": "O=C(O)[C@@H](O)[C@H](O)[C@@H](O)C(=O)O",
@@ -29711,7 +29513,6 @@
 "aromaticAtoms": [],
 "centres": [
 3,
-5,
 7
 ],
 "cip": {
@@ -29724,8 +29525,7 @@
 "ez": [],
 "canonical": "O=C(O)[C@@H](O)[C@H](O)[C@@H](O)C(=O)O",
 "flat": "O=C(O)C(O)C(O)C(O)C(=O)O",
-"variantOf": "OC(=O)[C@H](O)[C@@H](O)[C@H](O)C(=O)O",
-"knownBug": "stereocentres: r/s (pseudoasymmetric) centres missed and centres with two identical homochiral branches added, and the answer changes with the way the SMILES is written"
+"variantOf": "OC(=O)[C@H](O)[C@@H](O)[C@H](O)C(=O)O"
 },
 {
 "smi": "OC[C@@H](O)[C@@H](O)[C@@H](O)CO",
@@ -29734,7 +29534,6 @@
 "aromaticAtoms": [],
 "centres": [
 2,
-4,
 6
 ],
 "cip": {
@@ -29756,7 +29555,6 @@
 "aromaticAtoms": [],
 "centres": [
 2,
-4,
 5
 ],
 "cip": {
@@ -29769,8 +29567,7 @@
 "ez": [],
 "canonical": "OC[C@@H](O)[C@H](O)[C@@H](O)CO",
 "flat": "OCC(O)C(O)C(O)CO",
-"variantOf": "OC[C@H](O)[C@@H](O)[C@H](O)CO",
-"knownBug": "stereocentres: r/s (pseudoasymmetric) centres missed and centres with two identical homochiral branches added, and the answer changes with the way the SMILES is written"
+"variantOf": "OC[C@H](O)[C@@H](O)[C@H](O)CO"
 },
 {
 "smi": "OC[C@@H](O)[C@H](O)[C@@H](O)CO",
@@ -29779,7 +29576,6 @@
 "aromaticAtoms": [],
 "centres": [
 2,
-4,
 6
 ],
 "cip": {
@@ -29792,8 +29588,7 @@
 "ez": [],
 "canonical": "OC[C@@H](O)[C@H](O)[C@@H](O)CO",
 "flat": "OCC(O)C(O)C(O)CO",
-"variantOf": "OC[C@H](O)[C@@H](O)[C@H](O)CO",
-"knownBug": "stereocentres: r/s (pseudoasymmetric) centres missed and centres with two identical homochiral branches added, and the answer changes with the way the SMILES is written"
+"variantOf": "OC[C@H](O)[C@@H](O)[C@H](O)CO"
 },
 {
 "smi": "C(C)(C)[C@H](C)[C@H](C(C)C)C",
@@ -29831,8 +29626,7 @@
 "ez": [],
 "canonical": "CC([C@H](C)Cl)[C@H](C)Cl",
 "flat": "CC(Cl)C(C)C(C)Cl",
-"variantOf": "C[C@H]([C@H](C)Cl)[C@H](C)Cl",
-"knownBug": "stereocentres: r/s (pseudoasymmetric) centres missed and centres with two identical homochiral branches added, and the answer changes with the way the SMILES is written"
+"variantOf": "C[C@H]([C@H](C)Cl)[C@H](C)Cl"
 },
 {
 "smi": "CC([C@H](C)Cl)[C@H](C)Cl",
@@ -29851,8 +29645,7 @@
 "ez": [],
 "canonical": "CC([C@H](C)Cl)[C@H](C)Cl",
 "flat": "CC(Cl)C(C)C(C)Cl",
-"variantOf": "C[C@H]([C@H](C)Cl)[C@H](C)Cl",
-"knownBug": "stereocentres: r/s (pseudoasymmetric) centres missed and centres with two identical homochiral branches added, and the answer changes with the way the SMILES is written"
+"variantOf": "C[C@H]([C@H](C)Cl)[C@H](C)Cl"
 },
 {
 "smi": "[C@H](C)(C(C)[C@@H](Cl)C)Cl",
@@ -29879,7 +29672,6 @@
 "charge": 0,
 "aromaticAtoms": [],
 "centres": [
-0,
 1,
 4
 ],
@@ -29893,8 +29685,7 @@
 "ez": [],
 "canonical": "C[C@@H]([C@H](C)Cl)[C@@H](C)Cl",
 "flat": "CC(Cl)C(C)C(C)Cl",
-"variantOf": "C[C@H](Cl)[C@H](C)[C@@H](C)Cl",
-"knownBug": "stereocentres: r/s (pseudoasymmetric) centres missed and centres with two identical homochiral branches added, and the answer changes with the way the SMILES is written"
+"variantOf": "C[C@H](Cl)[C@H](C)[C@@H](C)Cl"
 },
 {
 "smi": "C[C@@H]([C@H](C)Cl)[C@@H](C)Cl",
@@ -29902,7 +29693,6 @@
 "charge": 0,
 "aromaticAtoms": [],
 "centres": [
-1,
 2,
 5
 ],
@@ -29916,8 +29706,7 @@
 "ez": [],
 "canonical": "C[C@@H]([C@H](C)Cl)[C@@H](C)Cl",
 "flat": "CC(Cl)C(C)C(C)Cl",
-"variantOf": "C[C@H](Cl)[C@H](C)[C@@H](C)Cl",
-"knownBug": "stereocentres: r/s (pseudoasymmetric) centres missed and centres with two identical homochiral branches added, and the answer changes with the way the SMILES is written"
+"variantOf": "C[C@H](Cl)[C@H](C)[C@@H](C)Cl"
 },
 {
 "smi": "Cl[C@@H](C(C)[C@@H](C)Cl)C",
@@ -29936,8 +29725,7 @@
 "ez": [],
 "canonical": "CC([C@@H](C)Cl)[C@@H](C)Cl",
 "flat": "CC(Cl)C(C)C(C)Cl",
-"variantOf": "C[C@@H](Cl)[C@H](C)[C@@H](C)Cl",
-"knownBug": "stereocentres: r/s (pseudoasymmetric) centres missed and centres with two identical homochiral branches added, and the answer changes with the way the SMILES is written"
+"variantOf": "C[C@@H](Cl)[C@H](C)[C@@H](C)Cl"
 },
 {
 "smi": "CC([C@@H](C)Cl)[C@@H](C)Cl",
@@ -29956,8 +29744,7 @@
 "ez": [],
 "canonical": "CC([C@@H](C)Cl)[C@@H](C)Cl",
 "flat": "CC(Cl)C(C)C(C)Cl",
-"variantOf": "C[C@@H](Cl)[C@H](C)[C@@H](C)Cl",
-"knownBug": "stereocentres: r/s (pseudoasymmetric) centres missed and centres with two identical homochiral branches added, and the answer changes with the way the SMILES is written"
+"variantOf": "C[C@@H](Cl)[C@H](C)[C@@H](C)Cl"
 },
 {
 "smi": "[C@H](C)([C@@H](O)[C@@H](O)[C@H](C)O)O",
@@ -30856,10 +30643,7 @@
 "formula": "C8H16",
 "charge": 0,
 "aromaticAtoms": [],
-"centres": [
-1,
-5
-],
+"centres": [],
 "cip": {},
 "pseudo": {
 "1": "s",
@@ -30875,10 +30659,7 @@
 "formula": "C8H16",
 "charge": 0,
 "aromaticAtoms": [],
-"centres": [
-1,
-4
-],
+"centres": [],
 "cip": {},
 "pseudo": {
 "1": "r",
@@ -30894,10 +30675,7 @@
 "formula": "C7H14O",
 "charge": 0,
 "aromaticAtoms": [],
-"centres": [
-0,
-3
-],
+"centres": [],
 "cip": {},
 "pseudo": {
 "0": "r",
@@ -30913,10 +30691,7 @@
 "formula": "C7H14O",
 "charge": 0,
 "aromaticAtoms": [],
-"centres": [
-1,
-4
-],
+"centres": [],
 "cip": {},
 "pseudo": {
 "1": "s",
@@ -31027,10 +30802,7 @@
 "formula": "C8H16",
 "charge": 0,
 "aromaticAtoms": [],
-"centres": [
-1,
-5
-],
+"centres": [],
 "cip": {},
 "pseudo": {},
 "ez": [],
@@ -31059,10 +30831,7 @@
 "formula": "C7H14O",
 "charge": 0,
 "aromaticAtoms": [],
-"centres": [
-1,
-4
-],
+"centres": [],
 "cip": {},
 "pseudo": {},
 "ez": [],
@@ -31267,10 +31036,7 @@
 "formula": "C7H12",
 "charge": 0,
 "aromaticAtoms": [],
-"centres": [
-1,
-4
-],
+"centres": [],
 "cip": {},
 "pseudo": {
 "1": "s",
@@ -31489,14 +31255,7 @@
 "formula": "C6H12O6",
 "charge": 0,
 "aromaticAtoms": [],
-"centres": [
-0,
-2,
-3,
-4,
-6,
-8
-],
+"centres": [],
 "cip": {
 "0": "S",
 "2": "R",
@@ -31509,22 +31268,14 @@
 "ez": [],
 "canonical": "O[C@H]1[C@H](O)[C@H](O)[C@@H](O)[C@@H](O)[C@H]1O",
 "flat": "OC1C(O)C(O)C(O)C(O)C1O",
-"variantOf": "O[C@H]1[C@H](O)[C@H](O)[C@H](O)[C@H](O)[C@H]1O",
-"knownBug": "cip: ring stereocentres whose ligands differ only through the ring come out null; RDKit gives R/S"
+"variantOf": "O[C@H]1[C@H](O)[C@H](O)[C@H](O)[C@H](O)[C@H]1O"
 },
 {
 "smi": "O[C@H]1[C@H](O)[C@H](O)[C@@H](O)[C@@H](O)[C@H]1O",
 "formula": "C6H12O6",
 "charge": 0,
 "aromaticAtoms": [],
-"centres": [
-1,
-2,
-4,
-6,
-8,
-10
-],
+"centres": [],
 "cip": {
 "1": "S",
 "2": "R",
@@ -31537,22 +31288,14 @@
 "ez": [],
 "canonical": "O[C@H]1[C@H](O)[C@H](O)[C@@H](O)[C@@H](O)[C@H]1O",
 "flat": "OC1C(O)C(O)C(O)C(O)C1O",
-"variantOf": "O[C@H]1[C@H](O)[C@H](O)[C@H](O)[C@H](O)[C@H]1O",
-"knownBug": "cip: ring stereocentres whose ligands differ only through the ring come out null; RDKit gives R/S"
+"variantOf": "O[C@H]1[C@H](O)[C@H](O)[C@H](O)[C@H](O)[C@H]1O"
 },
 {
 "smi": "[C@H]1([C@@H](O)[C@@H]([C@@H](O)[C@H](O)[C@H]1O)O)O",
 "formula": "C6H12O6",
 "charge": 0,
 "aromaticAtoms": [],
-"centres": [
-0,
-1,
-3,
-4,
-6,
-8
-],
+"centres": [],
 "cip": {},
 "pseudo": {
 "0": "r",
@@ -31572,14 +31315,7 @@
 "formula": "C6H12O6",
 "charge": 0,
 "aromaticAtoms": [],
-"centres": [
-1,
-2,
-4,
-5,
-6,
-8
-],
+"centres": [],
 "cip": {
 "1": "R",
 "2": "R",
@@ -31592,22 +31328,14 @@
 "ez": [],
 "canonical": "O[C@H]1[C@H](O)[C@@H](O)[C@H](O)[C@H](O)[C@H]1O",
 "flat": "OC1C(O)C(O)C(O)C(O)C1O",
-"variantOf": "O[C@H]1[C@@H](O)[C@H](O)[C@@H](O)[C@H](O)[C@@H]1O",
-"knownBug": "cip: ring stereocentres whose ligands differ only through the ring come out null; RDKit gives R/S"
+"variantOf": "O[C@H]1[C@@H](O)[C@H](O)[C@@H](O)[C@H](O)[C@@H]1O"
 },
 {
 "smi": "O[C@H]1[C@H](O)[C@@H](O)[C@H](O)[C@H](O)[C@H]1O",
 "formula": "C6H12O6",
 "charge": 0,
 "aromaticAtoms": [],
-"centres": [
-1,
-2,
-4,
-6,
-8,
-10
-],
+"centres": [],
 "cip": {
 "1": "R",
 "2": "R",
@@ -31620,8 +31348,7 @@
 "ez": [],
 "canonical": "O[C@H]1[C@H](O)[C@@H](O)[C@H](O)[C@H](O)[C@H]1O",
 "flat": "OC1C(O)C(O)C(O)C(O)C1O",
-"variantOf": "O[C@H]1[C@@H](O)[C@H](O)[C@@H](O)[C@H](O)[C@@H]1O",
-"knownBug": "cip: ring stereocentres whose ligands differ only through the ring come out null; RDKit gives R/S"
+"variantOf": "O[C@H]1[C@@H](O)[C@H](O)[C@@H](O)[C@H](O)[C@@H]1O"
 },
 {
 "smi": "C[C@H](O)C1CC1",
@@ -31915,10 +31642,7 @@
 "formula": "C10H20O",
 "charge": 0,
 "aromaticAtoms": [],
-"centres": [
-3,
-6
-],
+"centres": [],
 "cip": {},
 "pseudo": {
 "3": "s",
@@ -31934,10 +31658,7 @@
 "formula": "C10H20O",
 "charge": 0,
 "aromaticAtoms": [],
-"centres": [
-4,
-7
-],
+"centres": [],
 "cip": {},
 "pseudo": {
 "4": "s",
@@ -32010,14 +31731,7 @@
 "formula": "C12H24",
 "charge": 0,
 "aromaticAtoms": [],
-"centres": [
-1,
-2,
-3,
-4,
-5,
-7
-],
+"centres": [],
 "cip": {
 "1": "S",
 "3": "R",
@@ -32031,22 +31745,14 @@
 "ez": [],
 "canonical": "C[C@H]1[C@@H](C)[C@@H](C)[C@@H](C)[C@@H](C)[C@@H]1C",
 "flat": "CC1C(C)C(C)C(C)C(C)C1C",
-"variantOf": "C[C@@H]1[C@H](C)[C@H](C)[C@H](C)[C@H](C)[C@H]1C",
-"knownBug": "cip: ring stereocentres whose ligands differ only through the ring come out null; RDKit gives R/S"
+"variantOf": "C[C@@H]1[C@H](C)[C@H](C)[C@H](C)[C@H](C)[C@H]1C"
 },
 {
 "smi": "C[C@H]1[C@@H](C)[C@@H](C)[C@@H](C)[C@@H](C)[C@@H]1C",
 "formula": "C12H24",
 "charge": 0,
 "aromaticAtoms": [],
-"centres": [
-1,
-2,
-4,
-6,
-8,
-10
-],
+"centres": [],
 "cip": {
 "1": "R",
 "2": "R",
@@ -32060,22 +31766,14 @@
 "ez": [],
 "canonical": "C[C@H]1[C@@H](C)[C@@H](C)[C@@H](C)[C@@H](C)[C@@H]1C",
 "flat": "CC1C(C)C(C)C(C)C(C)C1C",
-"variantOf": "C[C@@H]1[C@H](C)[C@H](C)[C@H](C)[C@H](C)[C@H]1C",
-"knownBug": "cip: ring stereocentres whose ligands differ only through the ring come out null; RDKit gives R/S"
+"variantOf": "C[C@@H]1[C@H](C)[C@H](C)[C@H](C)[C@H](C)[C@H]1C"
 },
 {
 "smi": "C[C@H]1[C@@H](C)[C@H](C)[C@H](C)[C@H]([C@H]1C)C",
 "formula": "C12H24",
 "charge": 0,
 "aromaticAtoms": [],
-"centres": [
-1,
-2,
-4,
-6,
-8,
-9
-],
+"centres": [],
 "cip": {
 "1": "S",
 "2": "S",
@@ -32088,22 +31786,14 @@
 "ez": [],
 "canonical": "C[C@H]1[C@H](C)[C@H](C)[C@@H](C)[C@@H](C)[C@H]1C",
 "flat": "CC1C(C)C(C)C(C)C(C)C1C",
-"variantOf": "C[C@H]1[C@H](C)[C@H](C)[C@H](C)[C@H](C)[C@H]1C",
-"knownBug": "cip: ring stereocentres whose ligands differ only through the ring come out null; RDKit gives R/S"
+"variantOf": "C[C@H]1[C@H](C)[C@H](C)[C@H](C)[C@H](C)[C@H]1C"
 },
 {
 "smi": "C[C@H]1[C@H](C)[C@H](C)[C@@H](C)[C@@H](C)[C@H]1C",
 "formula": "C12H24",
 "charge": 0,
 "aromaticAtoms": [],
-"centres": [
-1,
-2,
-4,
-6,
-8,
-10
-],
+"centres": [],
 "cip": {
 "1": "S",
 "2": "R",
@@ -32116,8 +31806,7 @@
 "ez": [],
 "canonical": "C[C@H]1[C@H](C)[C@H](C)[C@@H](C)[C@@H](C)[C@H]1C",
 "flat": "CC1C(C)C(C)C(C)C(C)C1C",
-"variantOf": "C[C@H]1[C@H](C)[C@H](C)[C@H](C)[C@H](C)[C@H]1C",
-"knownBug": "cip: ring stereocentres whose ligands differ only through the ring come out null; RDKit gives R/S"
+"variantOf": "C[C@H]1[C@H](C)[C@H](C)[C@H](C)[C@H](C)[C@H]1C"
 },
 {
 "smi": "[C@@H]1([C@H](C)[C@H](C)C[C@H](C1)C)C",
@@ -32126,9 +31815,7 @@
 "aromaticAtoms": [],
 "centres": [
 0,
-1,
-3,
-6
+3
 ],
 "cip": {
 "0": "R",
@@ -32138,10 +31825,9 @@
 },
 "pseudo": {},
 "ez": [],
-"canonical": "C[C@H]1C[C@@H](C)[C@H](C)[C@H](C)C1",
+"canonical": "C[C@@H]1C[C@H](C)C[C@@H](C)[C@H]1C",
 "flat": "CC1CC(C)C(C)C(C)C1",
-"variantOf": "C[C@@H]1[C@H](C)C[C@@H](C)C[C@H]1C",
-"knownBug": "cip: ring stereocentres whose ligands differ only through the ring come out null; RDKit gives R/S"
+"variantOf": "C[C@@H]1[C@H](C)C[C@@H](C)C[C@H]1C"
 },
 {
 "smi": "C[C@@H]1C[C@H](C)C[C@@H](C)[C@H]1C",
@@ -32150,9 +31836,7 @@
 "aromaticAtoms": [],
 "centres": [
 1,
-3,
-6,
-8
+6
 ],
 "cip": {
 "1": "R",
@@ -32162,10 +31846,9 @@
 },
 "pseudo": {},
 "ez": [],
-"canonical": "C[C@H]1C[C@@H](C)[C@H](C)[C@H](C)C1",
+"canonical": "C[C@@H]1C[C@H](C)C[C@@H](C)[C@H]1C",
 "flat": "CC1CC(C)C(C)C(C)C1",
-"variantOf": "C[C@@H]1[C@H](C)C[C@@H](C)C[C@H]1C",
-"knownBug": "cip: ring stereocentres whose ligands differ only through the ring come out null; RDKit gives R/S"
+"variantOf": "C[C@@H]1[C@H](C)C[C@@H](C)C[C@H]1C"
 },
 {
 "smi": "C[C@@H]1[C@H](CC[C@H]([C@H]1C)C)C",
@@ -32218,11 +31901,7 @@
 "formula": "C9H18",
 "charge": 0,
 "aromaticAtoms": [],
-"centres": [
-1,
-3,
-5
-],
+"centres": [],
 "cip": {},
 "pseudo": {
 "1": "r"
@@ -32230,19 +31909,14 @@
 "ez": [],
 "canonical": "C[C@H]1C[C@H](C)C[C@@H](C)C1",
 "flat": "CC1CC(C)CC(C)C1",
-"variantOf": "C[C@@H]1C[C@H](C)C[C@@H](C)C1",
-"knownBug": "stereocentres (stereo.js): the ring centres are reported as 2 of 3 (the canonical()/same() part is fixed and tested in chem.test.js)"
+"variantOf": "C[C@@H]1C[C@H](C)C[C@@H](C)C1"
 },
 {
 "smi": "C[C@H]1C[C@H](C)C[C@@H](C)C1",
 "formula": "C9H18",
 "charge": 0,
 "aromaticAtoms": [],
-"centres": [
-1,
-3,
-6
-],
+"centres": [],
 "cip": {},
 "pseudo": {
 "3": "r"
@@ -32250,19 +31924,14 @@
 "ez": [],
 "canonical": "C[C@H]1C[C@H](C)C[C@@H](C)C1",
 "flat": "CC1CC(C)CC(C)C1",
-"variantOf": "C[C@@H]1C[C@H](C)C[C@@H](C)C1",
-"knownBug": "stereocentres (stereo.js): the ring centres are reported as 2 of 3 (the canonical()/same() part is fixed and tested in chem.test.js)"
+"variantOf": "C[C@@H]1C[C@H](C)C[C@@H](C)C1"
 },
 {
 "smi": "C1[C@H](C)C[C@@H](C)C[C@H]1C",
 "formula": "C9H18",
 "charge": 0,
 "aromaticAtoms": [],
-"centres": [
-1,
-4,
-7
-],
+"centres": [],
 "cip": {},
 "pseudo": {
 "1": "r"
@@ -32270,19 +31939,14 @@
 "ez": [],
 "canonical": "C[C@H]1C[C@H](C)C[C@@H](C)C1",
 "flat": "CC1CC(C)CC(C)C1",
-"variantOf": "C[C@H]1C[C@H](C)C[C@H](C)C1",
-"knownBug": "stereocentres (stereo.js): the ring centres are reported as 2 of 3 (the canonical()/same() part is fixed and tested in chem.test.js)"
+"variantOf": "C[C@H]1C[C@H](C)C[C@H](C)C1"
 },
 {
 "smi": "[C@H]1(C[C@@H](C)C[C@@H](C)C1)C",
 "formula": "C9H18",
 "charge": 0,
 "aromaticAtoms": [],
-"centres": [
-0,
-2,
-5
-],
+"centres": [],
 "cip": {},
 "pseudo": {
 "0": "r"
@@ -32290,8 +31954,7 @@
 "ez": [],
 "canonical": "C[C@H]1C[C@H](C)C[C@@H](C)C1",
 "flat": "CC1CC(C)CC(C)C1",
-"variantOf": "C[C@H]1C[C@@H](C)C[C@H](C)C1",
-"knownBug": "stereocentres (stereo.js): the ring centres are reported as 2 of 3 (the canonical()/same() part is fixed and tested in chem.test.js)"
+"variantOf": "C[C@H]1C[C@@H](C)C[C@H](C)C1"
 },
 {
 "smi": "C(/C)=C\\CC",
@@ -36173,9 +35836,7 @@
 "formula": "C8H14",
 "charge": 0,
 "aromaticAtoms": [],
-"centres": [
-1
-],
+"centres": [],
 "cip": {
 "1": "R"
 },
@@ -36194,17 +35855,14 @@
 ],
 "canonical": "C/C=C\\[C@H](C)/C=C/C",
 "flat": "CC=CC(C)C=CC",
-"variantOf": "C/C=C/[C@@H](C)/C=C\\C",
-"knownBug": "centre whose two branches differ only by E/Z geometry is missed (RDKit: centre, R/S)"
+"variantOf": "C/C=C/[C@@H](C)/C=C\\C"
 },
 {
 "smi": "C/C=C\\[C@H](C)/C=C/C",
 "formula": "C8H14",
 "charge": 0,
 "aromaticAtoms": [],
-"centres": [
-3
-],
+"centres": [],
 "cip": {
 "3": "R"
 },
@@ -36223,8 +35881,7 @@
 ],
 "canonical": "C/C=C\\[C@H](C)/C=C/C",
 "flat": "CC=CC(C)C=CC",
-"variantOf": "C/C=C/[C@@H](C)/C=C\\C",
-"knownBug": "centre whose two branches differ only by E/Z geometry is missed (RDKit: centre, R/S)"
+"variantOf": "C/C=C/[C@@H](C)/C=C\\C"
 },
 {
 "smi": "[C@@H](/C=C/C)(C)CC",
@@ -36579,10 +36236,7 @@
 "formula": "C10H18",
 "charge": 0,
 "aromaticAtoms": [],
-"centres": [
-1,
-4
-],
+"centres": [],
 "cip": {},
 "pseudo": {
 "1": "r",
@@ -36604,10 +36258,7 @@
 "formula": "C10H18",
 "charge": 0,
 "aromaticAtoms": [],
-"centres": [
-3,
-6
-],
+"centres": [],
 "cip": {},
 "pseudo": {
 "3": "r",
@@ -36629,10 +36280,7 @@
 "formula": "C10H18",
 "charge": 0,
 "aromaticAtoms": [],
-"centres": [
-0,
-4
-],
+"centres": [],
 "cip": {},
 "pseudo": {
 "0": "r",
@@ -36654,10 +36302,7 @@
 "formula": "C10H18",
 "charge": 0,
 "aromaticAtoms": [],
-"centres": [
-3,
-6
-],
+"centres": [],
 "cip": {},
 "pseudo": {
 "3": "r",
@@ -36679,10 +36324,7 @@
 "formula": "C10H18",
 "charge": 0,
 "aromaticAtoms": [],
-"centres": [
-2,
-8
-],
+"centres": [],
 "cip": {},
 "pseudo": {
 "2": "s",
@@ -36704,10 +36346,7 @@
 "formula": "C10H18",
 "charge": 0,
 "aromaticAtoms": [],
-"centres": [
-3,
-6
-],
+"centres": [],
 "cip": {},
 "pseudo": {
 "3": "s",
@@ -36729,10 +36368,7 @@
 "formula": "C10H18",
 "charge": 0,
 "aromaticAtoms": [],
-"centres": [
-1,
-7
-],
+"centres": [],
 "cip": {},
 "pseudo": {
 "1": "s",
@@ -36754,10 +36390,7 @@
 "formula": "C10H18",
 "charge": 0,
 "aromaticAtoms": [],
-"centres": [
-3,
-6
-],
+"centres": [],
 "cip": {},
 "pseudo": {
 "3": "s",
