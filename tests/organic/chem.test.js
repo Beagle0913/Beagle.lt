@@ -1,6 +1,7 @@
 'use strict';
 const test = require('node:test');
 const assert = require('node:assert');
+const vm = require('node:vm');
 const load = require('./load.js');
 
 const ORG = load(['chem.js']);
@@ -13,8 +14,9 @@ const hs = (s) => P(m(s).atoms.map((a) => a.h));
 
 test('the engine loads without a window or a document', () => {
   assert.ok(C, 'ORG.chem exists');
-  assert.strictEqual(typeof window, 'undefined');
-  assert.strictEqual(typeof document, 'undefined');
+  const ctx = load.context(['chem.js']); // what the engine itself can see
+  assert.strictEqual(vm.runInContext('typeof window + "," + typeof document + "," + typeof require', ctx), 'undefined,undefined,undefined');
+  assert.strictEqual(vm.runInContext('typeof ORG.chem.parse', ctx), 'function');
 });
 
 test('parse errors throw', () => {
@@ -70,7 +72,7 @@ test('formulas', () => {
 test('aromatic input is kekulised for the H count', () => {
   assert.deepEqual(hs('c1cc[nH]c1'), [1, 1, 1, 1, 1]); // pyrrole: four CH and NH
   assert.deepEqual(hs('c1ccncc1'), [1, 1, 1, 0, 1, 1]); // pyridine: N has no H
-  assert.deepEqual(hs('c1ccc2ccccc2c1'), [1, 1, 1, 0, 1, 1, 1, 1, 0, 1].map((x, i) => (i === 3 || i === 8 ? 0 : 1)));
+  assert.deepEqual(hs('c1ccc2ccccc2c1'), [1, 1, 1, 0, 1, 1, 1, 1, 0, 1]);
   assert.deepEqual(hs('c1ccoc1'), [1, 1, 1, 0, 1]); // furan: O has no H
   assert.deepEqual(hs('Cn1cccc1'), [3, 0, 1, 1, 1, 1]); // N-methylpyrrole: N has three bonds and no H
   assert.deepEqual(hs('O=c1cccc[nH]1'), [0, 0, 1, 1, 1, 1, 1]); // 2-pyridone: O, C=O carbon, four ring CH and NH
@@ -101,7 +103,7 @@ test('hybridization', () => {
   const h = (s) => P(m(s).atoms.map((a, i) => C.hybridization(m(s), i)));
   assert.deepEqual(h('C=CC#N'), ['sp2', 'sp2', 'sp', 'sp']);
   assert.strictEqual(C.hybridization(m('CC(=O)O'), 1), 'sp2');
-  assert.deepEqual(h('CC(=O)O'), ['sp3', 'sp2', 'sp2', 'sp3']);
+  assert.deepEqual(h('CC(=O)O'), ['sp3', 'sp2', 'sp2', 'sp2']); // acid OH oxygen: its lone pair is in a p orbital, conjugated with C=O
   assert.deepEqual(h('C=C=C'), ['sp2', 'sp', 'sp2']);
   assert.deepEqual(h('C#C'), ['sp', 'sp']);
   assert.deepEqual(h('c1ccccc1'), ['sp2', 'sp2', 'sp2', 'sp2', 'sp2', 'sp2']);
@@ -110,6 +112,30 @@ test('hybridization', () => {
   assert.deepEqual(h('C[CH2+]'), ['sp3', 'sp2']); // carbocation: three sigma bonds, empty p
   assert.deepEqual(h('CCl'), ['sp3', null]); // halogens have no hybridization here
   assert.deepEqual(h('CS(=O)(=O)C'), ['sp3', 'sp3', 'sp2', 'sp2', 'sp3']); // sulfone S: four sigma bonds, tetrahedral
+});
+
+test('hybridization: steric number, and lone pairs next to a pi system', () => {
+  const hy = (s, i) => C.hybridization(m(s), i);
+  assert.strictEqual(hy('CC(N)=O', 2), 'sp2'); // acetamide N
+  assert.strictEqual(hy('Nc1ccccc1', 0), 'sp2'); // aniline N
+  assert.strictEqual(hy('CN', 1), 'sp3'); // methylamine N
+  assert.strictEqual(hy('CCO', 2), 'sp3'); // ethanol O
+  assert.strictEqual(hy('Oc1ccccc1', 0), 'sp2'); // phenol O
+  assert.strictEqual(hy('CC(=O)OC', 3), 'sp2'); // ester alkoxy O
+  assert.strictEqual(hy('C=CN', 2), 'sp2'); // enamine N
+  assert.strictEqual(hy('C[S](C)=O', 1), 'sp3'); // DMSO S: 3 sigma + 1 lone pair
+  assert.strictEqual(hy('C[S](C)=O', 3), 'sp2'); // DMSO O
+  assert.strictEqual(hy('[CH3+]', 0), 'sp2');
+  assert.strictEqual(hy('[CH3]', 0), 'sp2'); // methyl radical: three sigma bonds
+  assert.strictEqual(hy('[CH3-]', 0), 'sp3'); // carbanion: 3 sigma + 1 lone pair
+  assert.strictEqual(hy('[CH2-]C=O', 0), 'sp2'); // enolate carbon: lone pair conjugated
+  assert.strictEqual(hy('c1ccoc1', 3), 'sp2'); // furan O
+  assert.strictEqual(hy('c1ccncc1', 3), 'sp2'); // pyridine N
+  assert.strictEqual(hy('FB(F)F', 1), 'sp2'); // BF3
+  assert.strictEqual(hy('CC#N', 2), 'sp');
+  assert.strictEqual(hy('C[NH3+]', 1), 'sp3');
+  assert.strictEqual(hy('CS(N)(=O)=O', 1), 'sp3'); // sulfonyl S is tetrahedral and not a pi partner
+  assert.strictEqual(hy('CS(N)(=O)=O', 2), 'sp3'); // sulfonamide N next to a sulfonyl S: no pi partner
 });
 
 test('bondCounts: sigma and pi, hydrogens included', () => {
@@ -194,6 +220,13 @@ test('conjugated systems', () => {
   assert.ok(systems.some((s) => s.includes(1) && s.includes(2)), 'C=O carbon and its O share a system');
   assert.ok(systems.every((s) => !s.includes(0)), 'sp3 CH3 is in no system');
   assert.deepEqual(P(C.conjugated(m('C=C[CH2+]'))), [[0, 1, 2]]); // allyl cation: charged centre joins
+  assert.deepEqual(P(C.conjugated(m('[CH2+]C=C'))), [[0, 1, 2]]);
+  assert.deepEqual(P(C.conjugated(m('[CH2]C=C'))), [[0, 1, 2]]); // allyl radical
+  assert.deepEqual(P(C.conjugated(m('C=C=C'))), [[0, 1], [1, 2]]); // allene: the two pi bonds are orthogonal
+  assert.deepEqual(P(C.conjugated(m('C=C=CC=C'))), [[0, 1], [1, 2, 3, 4]]); // penta-1,2,4-triene
+  assert.deepEqual(P(C.conjugated(m('O=C=O'))), [[0, 1], [1, 2]]); // CO2: no conjugation across the central C
+  assert.deepEqual(P(C.conjugated(m('C=C=O'))), [[0, 1], [1, 2]]); // ketene
+  assert.deepEqual(P(C.conjugated(m('C=CC(=O)C=C'))), [[0, 1, 2, 3, 4, 5]]);
   assert.deepEqual(P(C.conjugated(m('C=COC'))), [[0, 1, 2]]); // enol ether: O lone pair joins the C=C, CH3 does not
   assert.deepEqual(P(C.conjugated(m('CCO'))), []);
   assert.deepEqual(P(C.conjugated(m('c1ccccc1'))), [[0, 1, 2, 3, 4, 5]]);
@@ -319,6 +352,15 @@ test('groups and compoundClass', () => {
   assert.deepEqual(types('CC(=O)Cl'), ['acylhalide']);
   assert.deepEqual(types('CCBr'), ['halide']);
   assert.deepEqual(types('Clc1ccccc1'), ['arene', 'halide']);
+  assert.strictEqual(C.compoundClass(m('Clc1ccccc1')), 'halide'); // characteristic groups outrank the ring
+  assert.strictEqual(C.compoundClass(m('ClCc1ccccc1')), 'halide'); // benzyl chloride
+  assert.strictEqual(C.compoundClass(m('COc1ccccc1')), 'ether'); // anisole
+  assert.strictEqual(C.compoundClass(m('C=CCl')), 'halide');
+  assert.strictEqual(C.compoundClass(m('O=[N+]([O-])c1ccccc1')), 'nitro');
+  assert.strictEqual(C.compoundClass(m('CSc1ccccc1')), 'sulfide');
+  assert.strictEqual(C.compoundClass(m('OC(=O)CS(=O)(=O)O')), 'acid'); // carboxylic acid outranks sulfonic acid
+  assert.strictEqual(C.compoundClass(m('OC(=O)c1ccc(cc1)S(=O)(=O)O')), 'acid');
+  assert.strictEqual(C.compoundClass(m('CS(=O)(=O)O')), 'sulfonic');
   assert.deepEqual(types('COC'), ['ether']);
   assert.deepEqual(types('CSC'), ['sulfide']);
   assert.deepEqual(types('CS'), ['thiol']);
@@ -430,4 +472,70 @@ test('bracket atoms: charges, isotopes, classes and metals', () => {
   assert.strictEqual(m('[nH]1cccc1').atoms[0].aromatic, true);
   assert.ok(C.same('[CH4]', 'C'));
   assert.ok(!C.same('[13CH4]', 'C'));
+});
+
+test('trimethylcyclohexane and other C3-symmetric rings: tags that look droppable one at a time', () => {
+  const combos = (tpl) => {
+    const out = [];
+    for (let k = 0; k < 8; k++) {
+      let i = 0;
+      out.push(tpl.replace(/@@?/g, () => ((k >> i++) & 1 ? '@@' : '@')));
+    }
+    return out;
+  };
+  const distinct = (tpl) => new Set(combos(tpl).map((s) => C.canonical(m(s), { stereo: true })));
+  // 1,3,5-trisubstituted cyclohexane: all-cis and cis,cis,trans are the only two diastereomers
+  assert.strictEqual(distinct('C[C@H]1C[C@H](C)C[C@H](C)C1').size, 2);
+  assert.strictEqual(distinct('O[C@H]1C[C@H](O)C[C@H](O)C1').size, 2);
+  assert.strictEqual(distinct('C[C@H]1[C@H](C)[C@H]1C').size, 2); // 1,2,3-trimethylcyclopropane
+  assert.ok(C.same('C[C@H]1C[C@H](C)C[C@@H](C)C1', 'C[C@H]1C[C@@H](C)C[C@H](C)C1', { stereo: true }));
+  assert.ok(C.same('C[C@H](C)O', 'CC(C)O', { stereo: true })); // a lone tag on a plain isopropyl is still dropped
+  assert.ok(C.same('C[C@H]1CCCCC1', 'CC1CCCCC1', { stereo: true }));
+  assert.ok(!C.same('C[C@H]1CC[C@H](C)CC1', 'C[C@H]1CC[C@@H](C)CC1', { stereo: true })); // cis vs trans 1,4
+});
+
+test('nitro written two ways is one compound', () => {
+  assert.ok(C.same('O=N(=O)c1ccccc1', '[O-][N+](=O)c1ccccc1'));
+  assert.ok(C.same('CN(=O)=O', 'C[N+](=O)[O-]'));
+  assert.deepEqual(types('CN(=O)=O'), ['nitro']);
+  assert.strictEqual(C.formulaString(m('CN(=O)=O')), 'CH3NO2');
+  assert.strictEqual(m('CN(=O)=O').atoms[1].charge, 1);
+});
+
+test('groups do not depend on the Kekule or aromatic spelling', () => {
+  const pairs = [['Nc1ccccn1', 'NC1=NC=CC=C1'], ['Nc1ncnc2[nH]cnc12', 'NC1=C2NC=NC2=NC=N1'], ['Oc1ccccc1', 'OC1=CC=CC=C1'],
+    ['CC(=O)Nc1ccccc1', 'CC(=O)NC1=CC=CC=C1']];
+  for (const [a, b] of pairs) {
+    assert.deepEqual(types(a), types(b), a + ' / ' + b);
+    assert.strictEqual(C.compoundClass(m(a)), C.compoundClass(m(b)), a + ' / ' + b);
+  }
+  assert.deepEqual(types('Nc1ccccn1'), ['amine1', 'arene']);
+  let seed = 99;
+  const rand = () => { seed = (seed * 1103515245 + 12345) & 0x7fffffff; return seed / 0x7fffffff; };
+  for (const s of ['Nc1ccccn1', 'Nc1ncnc2[nH]cnc12', 'CC(=O)Nc1ccc(O)cc1', 'CC(=O)Oc1ccccc1C(=O)O', 'Cn1cnc2c1c(=O)n(C)c(=O)n2C']) {
+    const ref = JSON.stringify(types(s));
+    for (let k = 0; k < 6; k++) {
+      const w = shuffledSmiles(m(s), rand);
+      assert.strictEqual(JSON.stringify(types(w)), ref, s + ' written as ' + w);
+    }
+  }
+});
+
+test('parse refuses too many bonds', () => {
+  for (const bad of ['CC(C)(C)(C)C', 'CO(C)C', 'FC(F)(F)(F)F', 'ClC=Cl', 'C(=O)(=O)=O', 'B(F)(F)(F)F', '[CH5]', 'C(C)(C)(C)(C)[H]']) {
+    assert.throws(() => C.parse(bad), (e) => /^SMILES/.test(e.message), bad);
+  }
+  for (const ok of ['CS(=O)(=O)C', 'CP(=O)(O)O', 'CN(=O)=O', '[NH4+]', 'C[N+](C)(C)C', '[CH3-]', '[O-][Cl+3]([O-])([O-])[O-]', 'FS(F)(F)(F)(F)F']) {
+    assert.doesNotThrow(() => C.parse(ok), ok);
+  }
+});
+
+test('unsaturation is null for ions and radicals', () => {
+  assert.strictEqual(C.unsaturation(m('CC(=O)[O-]')), null);
+  assert.strictEqual(C.unsaturation(m('[NH4+]')), null);
+  assert.strictEqual(C.unsaturation(m('[CH3]')), null);
+  assert.strictEqual(C.unsaturation(m('CC(=O)[O-].[Na+]')), null);
+  assert.strictEqual(C.unsaturation(m('CCO')), 0);
+  assert.strictEqual(C.unsaturation(m('C[N+](=O)[O-]')), 1); // net neutral: nitro methane CH3NO2, (2+2+1-3)/2
+  assert.strictEqual(C.unsaturation(m('c1ccccc1')), 4);
 });

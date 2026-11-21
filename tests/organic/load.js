@@ -44,6 +44,9 @@ load.unit = function (file) {
   return found;
 };
 
+// the vm context itself, for tests that inspect what the engine can see
+load.context = context;
+
 load.plain = (x) => JSON.parse(JSON.stringify(x));
 
 module.exports = load;

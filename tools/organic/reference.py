@@ -53,10 +53,11 @@ def hill(mol):
 # Engine bugs found by comparing with RDKit (see the report of task 2b). An entry carrying one is
 # left out of the property tests and reported as todo by reference.test.js. Variants of the
 # molecule inherit it. Keyed by the SMILES written in reference-molecules.txt.
-_TMCH = 'canonical()/same() differ between spellings of one 1,3,5-trimethylcyclohexane stereoisomer'
 _PSEUDO = ('stereocentres: r/s (pseudoasymmetric) centres missed and centres with two identical homochiral '
            'branches added, and the answer changes with the way the SMILES is written')
 _RINGCIP = 'cip: ring stereocentres whose ligands differ only through the ring come out null; RDKit gives R/S'
+_TMCH = 'stereocentres (stereo.js): the ring centres are reported as 2 of 3 (the canonical()/same() part is fixed and tested in chem.test.js)'
+
 KNOWN_BUGS = {
     'C[C@@H]1C[C@H](C)C[C@@H](C)C1': _TMCH,
     'C[C@H]1C[C@H](C)C[C@H](C)C1': _TMCH,

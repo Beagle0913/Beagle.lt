@@ -308,6 +308,30 @@
       a.h = fillH(a.el, sum);
     });
 
+    // valence safety net: reaction rules build SMILES at run time
+    atoms.forEach((a, i) => {
+      let sum = 0;
+      nbr[i].forEach((j) => { sum += bondBetween(bonds, i, j).kek; });
+      const vals = DEFAULT_VALENCE[a.el];
+      const bad = (!a.bracket && vals && sum > vals[vals.length - 1]) || (a.el === 'C' && a.charge === 0 && sum + a.h > 4);
+      if (bad) throw new Error('SMILES: too many bonds on ' + a.el + ' (atom ' + i + ') in "' + smi + '"');
+    });
+
+    // neutral N with two =O: the nitro group: [N+](=O)[O-]
+    atoms.forEach((a, i) => {
+      if (a.el !== 'N' || a.charge !== 0 || a.arom || a.h !== 0 || nbr[i].length !== 3) return;
+      const os = nbr[i].filter((j) => atoms[j].el === 'O' && atoms[j].charge === 0 && nbr[j].length === 1 && atoms[j].h === 0 &&
+        bondBetween(bonds, i, j).kek === 2);
+      if (os.length !== 2) return;
+      const b = bondBetween(bonds, i, os[1]);
+      b.order = 1;
+      b.kek = 1;
+      atoms[os[1]].charge = -1;
+      atoms[os[1]].bracket = true;
+      a.charge = 1;
+      a.bracket = true;
+    });
+
     // fold terminal [H] atoms into the H count of their neighbour
     const fold = {};
     atoms.forEach((a, i) => {
@@ -575,8 +599,15 @@
     return s;
   }
 
+  // Degrees of unsaturation from the formula. null for ions and radicals (not taught with the formula).
   function unsaturation(mol) {
-    const f = formula(M(mol));
+    mol = M(mol);
+    const net = {};
+    mol.atoms.forEach((a, i) => {
+      net[a.comp] = (net[a.comp] || 0) + a.charge * 10 + unpaired(mol, i);
+    });
+    if (Object.keys(net).some((k) => net[k] !== 0)) return null;
+    const f = formula(mol);
     let x = 0;
     Object.keys(f).forEach((e) => { if (HALOGEN[e] || ALKALI[e]) x += f[e]; });
     return (2 * (f.C || 0) + 2 + (f.N || 0) + (f.P || 0) - (f.H || 0) - x) / 2;
@@ -590,24 +621,40 @@
     return Math.min(c, 4);
   }
 
+  // an atom with a multiple bond or in an aromatic ring (sulfonyl S and phosphoryl P do not count)
+  function isPiAtom(mol, i) {
+    const a = mol.atoms[i];
+    if ((a.el === 'S' || a.el === 'P') && mol.nbr[i].length + a.h >= 4) return false;
+    if (a.aromatic) return true;
+    return mol.nbr[i].some((j) => mol.bondAt(i, j).kek >= 2);
+  }
+
+  // unpaired electrons on an atom (0 or 1), from valence electrons
+  function unpaired(mol, i) {
+    const a = mol.atoms[i];
+    const ve = VALENCE_E[a.el];
+    if (ve === undefined) return 0;
+    const e = ve - a.charge - kekSum(mol, i) - a.h;
+    return e > 0 ? e % 2 : 0;
+  }
+
+  // Steric number = sigma partners + lone pairs (4 sp3, 3 sp2, 2 sp). A lone pair on N, O, S or a
+  // carbanion that sits next to a pi system is in a p orbital, so that atom is sp2.
   function hybridization(mol, i) {
     mol = M(mol);
     const a = mol.atoms[i];
     if (!HYBRID_EL[a.el]) return null;
-    let doubles = 0;
-    let triples = 0;
-    mol.nbr[i].forEach((j) => {
-      const k = mol.bondAt(i, j).kek;
-      if (k === 2) doubles++; else if (k === 3) triples++;
-    });
     const sigma = mol.nbr[i].length + a.h;
-    if (triples > 0) return 'sp';
-    if (doubles >= 2 && sigma === 2) return 'sp';
-    if (doubles >= 1 && sigma >= 4) return 'sp3'; // sulfone S, phosphate P
-    if (doubles >= 1 || a.aromatic) return 'sp2';
-    if (a.el === 'C' && a.charge === 1 && sigma === 3) return 'sp2';
-    if (a.el === 'B' && a.charge === 0 && sigma === 3) return 'sp2';
-    return 'sp3';
+    const lp = lonePairs(mol, i);
+    const sn = sigma + lp;
+    if (sn >= 4) {
+      const donor = lp > 0 && sigma <= 3 && (a.el === 'N' || a.el === 'O' || a.el === 'S' || (a.el === 'C' && a.charge < 0));
+      if (donor && !mol.nbr[i].some((j) => mol.bondAt(i, j).kek >= 2) && mol.nbr[i].some((j) => isPiAtom(mol, j))) return 'sp2';
+      return 'sp3';
+    }
+    if (sn === 3) return 'sp2';
+    if (sn === 2) return 'sp';
+    return null;
   }
 
   function bondCounts(mol) {
@@ -632,46 +679,68 @@
   // Conjugation
   // ------------------------------------------------------------------
 
+  // Conjugated systems are built from pi bonds (aromatic bonds count as pi bonds). Two pi bonds join
+  // when they share an atom, when a sigma bond links them, or when a donor (lone pair, charge or
+  // radical) sits next to both. Two pi bonds of one cumulated atom (allene, CO2) are orthogonal.
   function conjugated(mol) {
     mol = M(mol);
     const n = mol.atoms.length;
-    const isPi = [];
-    const isP = [];
-    for (let i = 0; i < n; i++) {
-      const a = mol.atoms[i];
-      const sigma = mol.nbr[i].length + a.h;
-      let multi = false;
-      mol.nbr[i].forEach((j) => { if (mol.bondAt(i, j).kek >= 2) multi = true; });
-      const hyper = (a.el === 'S' || a.el === 'P') && sigma >= 4;
-      isPi.push(multi && !hyper);
-      let donor = false;
-      if (!multi) {
-        if (lonePairs(mol, i) > 0 && (a.el === 'N' || a.el === 'O' || a.el === 'S' || a.el === 'P' || a.el === 'Se' || HALOGEN[a.el] || (a.el === 'C' && a.charge < 0))) donor = true;
-        if (a.el === 'C' && a.charge > 0 && sigma === 3) donor = true;
-        if (a.el === 'B' && a.charge === 0 && sigma === 3) donor = true;
-      }
-      isP.push(donor);
-    }
-    const parent = [];
-    for (let i = 0; i < n; i++) parent.push(i);
-    const find = (x) => { while (parent[x] !== x) { parent[x] = parent[parent[x]]; x = parent[x]; } return x; };
-    const linked = new Array(n).fill(false);
+    const hyper = (i) => (mol.atoms[i].el === 'S' || mol.atoms[i].el === 'P') && mol.nbr[i].length + mol.atoms[i].h >= 4;
+    const nodes = [];
+    const nodesAt = [];
+    for (let i = 0; i < n; i++) nodesAt.push([]);
+    const doubles = new Array(n).fill(0);
     mol.bonds.forEach((b) => {
-      const x = b.a;
-      const y = b.b;
-      if ((isPi[x] && isPi[y]) || (isPi[x] && isP[y]) || (isP[x] && isPi[y])) {
-        parent[find(x)] = find(y);
-        linked[x] = true;
-        linked[y] = true;
+      if (b.order >= 2) { doubles[b.a]++; doubles[b.b]++; }
+      if ((b.order === 1.5 || b.kek >= 2) && !hyper(b.a) && !hyper(b.b)) {
+        nodesAt[b.a].push(nodes.length);
+        nodesAt[b.b].push(nodes.length);
+        nodes.push([b.a, b.b]);
       }
     });
-    const groups = {};
+    const donors = [];
     for (let i = 0; i < n; i++) {
-      if (!linked[i]) continue;
-      const r = find(i);
-      (groups[r] = groups[r] || []).push(i);
+      if (nodesAt[i].length) continue;
+      const a = mol.atoms[i];
+      const sigma = mol.nbr[i].length + a.h;
+      let d = false;
+      if (lonePairs(mol, i) > 0 && (a.el === 'N' || a.el === 'O' || a.el === 'S' || a.el === 'P' || a.el === 'Se' || HALOGEN[a.el] || (a.el === 'C' && a.charge < 0))) d = true;
+      if (a.el === 'C' && a.charge > 0 && sigma === 3) d = true;
+      if (a.el === 'B' && a.charge === 0 && sigma === 3) d = true;
+      if ((a.el === 'C' || a.el === 'N' || a.el === 'O') && unpaired(mol, i)) d = true;
+      if (d) donors.push(i);
     }
-    return Object.keys(groups).map((k) => groups[k]).sort((p, q) => p[0] - q[0]);
+    const total = nodes.length + donors.length;
+    const parent = [];
+    for (let i = 0; i < total; i++) parent.push(i);
+    const find = (x) => { while (parent[x] !== x) { parent[x] = parent[parent[x]]; x = parent[x]; } return x; };
+    const join = (x, y) => { parent[find(x)] = find(y); };
+    for (let i = 0; i < n; i++) {
+      if (doubles[i] >= 2) continue;
+      for (let k = 1; k < nodesAt[i].length; k++) join(nodesAt[i][0], nodesAt[i][k]);
+    }
+    mol.bonds.forEach((b) => {
+      if (b.order !== 1) return;
+      if (nodesAt[b.a].length && nodesAt[b.b].length) join(nodesAt[b.a][0], nodesAt[b.b][0]);
+    });
+    donors.forEach((d, k) => {
+      mol.nbr[d].forEach((j) => nodesAt[j].forEach((id) => join(nodes.length + k, id)));
+    });
+    const sets = {};
+    nodes.forEach((nd, id) => {
+      const r = find(id);
+      sets[r] = sets[r] || new Set();
+      nd.forEach((x) => sets[r].add(x));
+    });
+    donors.forEach((d, k) => {
+      const r = find(nodes.length + k);
+      if (sets[r]) sets[r].add(d);
+    });
+    return Object.keys(sets).map((k) => Array.from(sets[k]).sort((p, q) => p - q))
+      .sort((p, q) => {
+        for (let k = 0; k < Math.min(p.length, q.length); k++) if (p[k] !== q[k]) return p[k] - q[k];
+        return p.length - q.length;
+      });
   }
 
   // ------------------------------------------------------------------
@@ -995,17 +1064,39 @@
       });
       const dbs = doubleBondInfo(mol, first.base).filter((d) => comp.indexOf(d.a) >= 0);
       let res = canonicalComponent(mol, comp, true, tags, dbs).string;
-      tied.forEach((v) => {
+      // Decide every drop against the full tag set, never one after another (a partly specified ring can
+      // be chiral although the molecule is not). A centre is non-stereogenic if flipping its tag gives the
+      // same molecule and either its tied branches are separate (pentane-2,3,4-triol: the branches are
+      // identical, so the middle centre is not a centre) or, when they are joined through a ring, nothing
+      // else in the ring system carries a tag or a stereo double bond (methylcyclohexane).
+      const marked = {};
+      dbs.forEach((d) => { marked[d.a] = true; marked[d.b] = true; });
+      const mayDrop = (v) => {
+        const a = mol.atoms[v];
+        const cl = a.ord.filter((x) => x >= 0).map((x) => first.base[x]);
+        const tiedNbrs = a.ord.filter((x) => x >= 0 && cl.filter((c) => c === first.base[x]).length > 1);
+        const seen = { [v]: true, [tiedNbrs[0]]: true };
+        const q = [tiedNbrs[0]];
+        let others = false;
+        while (q.length) {
+          const x = q.pop();
+          if ((tags[x] && x !== v) || marked[x]) others = true;
+          mol.nbr[x].forEach((w) => { if (!seen[w]) { seen[w] = true; q.push(w); } });
+        }
+        const joined = tiedNbrs.slice(1).some((x) => seen[x]);
+        return !joined || !others;
+      };
+      const drop = tied.filter((v) => {
+        if (!mayDrop(v)) return false;
         const flipped = Object.assign({}, tags);
         flipped[v] = tags[v] === '@' ? '@@' : '@';
-        const other = canonicalComponent(mol, comp, true, flipped, dbs).string;
-        if (other === res) {
-          const dropped = Object.assign({}, tags);
-          delete dropped[v];
-          tags = dropped;
-          res = canonicalComponent(mol, comp, true, tags, dbs).string;
-        }
+        return canonicalComponent(mol, comp, true, flipped, dbs).string === res;
       });
+      if (drop.length) {
+        tags = Object.assign({}, tags);
+        drop.forEach((v) => { delete tags[v]; });
+        res = canonicalComponent(mol, comp, true, tags, dbs).string;
+      }
       return res;
     });
     return parts.sort().join('.');
@@ -1019,9 +1110,9 @@
   // Functional groups
   // ------------------------------------------------------------------
 
-  const SENIORITY = ['sulfonic', 'acid', 'carboxylate', 'anhydride', 'ester', 'acylhalide', 'amide', 'nitrile',
+  const SENIORITY = ['acid', 'carboxylate', 'sulfonic', 'anhydride', 'ester', 'acylhalide', 'amide', 'nitrile',
     'aldehyde', 'ketone', 'phenol', 'alcohol', 'thiol', 'amine1', 'amine2', 'amine3', 'ammonium', 'nitro',
-    'alkene', 'alkyne', 'arene', 'halide', 'ether', 'sulfide'];
+    'halide', 'ether', 'sulfide', 'alkene', 'alkyne', 'arene'];
 
   function groups(mol) {
     mol = M(mol);
@@ -1104,7 +1195,7 @@
         const allC = heavy.every((j) => el(j) === 'C');
         const single = heavy.every((j) => ord(i, j) === 1);
         if (a.charge === 0 && single && allC && heavy.length >= 1 && heavy.length + a.h === 3 &&
-          !heavy.some((j) => isCarbonyl(j) || N[j].some((k) => k !== i && el(k) === 'N' && ord(j, k) >= 2))) {
+          !heavy.some((j) => isCarbonyl(j) || N[j].some((k) => k !== i && el(k) === 'N' && mol.bondAt(j, k).order >= 2))) {
           add('amine' + heavy.length, [i]);
         } else if (a.charge === 1 && single && allC && heavy.length + a.h === 4) {
           add('ammonium', [i]);
@@ -1117,12 +1208,6 @@
           }
         }
       }
-    }
-    // N(=O)=O written without charges
-    for (let i = 0; i < A.length; i++) {
-      if (el(i) !== 'N' || A[i].charge !== 0 || A[i].aromatic) continue;
-      const os = N[i].filter((j) => el(j) === 'O' && ord(i, j) === 2);
-      if (os.length === 2 && N[i].length === 3 && N[i].some((j) => el(j) === 'C')) add('nitro', [i, os[0], os[1]]);
     }
     // aromatic rings
     sssr(mol).forEach((r) => { if (isAromaticRing(mol, r)) add('arene', r.slice().sort((x, y) => x - y)); });
