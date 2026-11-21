@@ -37,7 +37,7 @@
       examNote: 'Užuominų nėra. Kiekvienas žingsnis tikrinamas vieną kartą, sprendimus pamatysite pabaigoje.', examLoading: 'Renkami uždaviniai…', examFewer: n => `Kai kurių skyrių (${n}) nepavyko įkelti, todėl uždavinių mažiau.`, examNone: 'Egzamino uždavinių sudaryti nepavyko: skyriai dar neparengti arba neįkelti.',
       nextProblem: 'Kitas uždavinys', seeResult: 'Rezultatas', result: 'Rezultatas', scoreOf: (s, m) => `${dec(s)} iš ${dec(m)} balų`,
       passMt2: 'Antram tarpiniam egzaminui išlaikyti reikia ne mažiau kaip 1,7 balo.', passYes: 'Šio bandymo rezultato pakanka.', passNo: 'Šio bandymo rezultato nepakanka.',
-      perProblem: 'Uždaviniai ir sprendimai', stepsRight: (a, b) => `${a} iš ${b} žingsnių`, newTry: 'Naujas bandymas', toReview: 'Klaidos', gotRight: 'teisingai', gotWrong: 'neteisingai', lost: 'Nepavyko sudaryti uždavinio.',
+      perProblem: 'Uždaviniai ir sprendimai', stepsRight: (a, b) => `${a} iš ${b} žingsnių`, newTry: 'Naujas bandymas', toReview: 'Klaidos', gotRight: 'teisingai', gotWrong: 'neteisingai', lost: 'Nepavyko sudaryti uždavinio.', preparing: 'Skyriai dar ruošiami.', molLabel: 'Molekulės struktūra',
       reviewHead: 'Klaidos', reviewEmpty: 'Klaidų sąrašas tuolaik tuščias. Neteisingai išspręsti uždaviniai atsiras čia.', reviewLeft: n => `Liko uždavinių: ${n}`, reviewDone: n => n ? `Peržiūra baigta. Sąraše dar liko: ${n}.` : 'Peržiūra baigta. Klaidų sąrašas tuščias.', nextMissed: 'Kitas uždavinys',
       noscript: 'Šiam treniruokliui reikia „JavaScript“.'
     },
@@ -59,7 +59,7 @@
       examNote: 'No hints. Each step is checked once, and the solutions are shown at the end.', examLoading: 'Choosing problems…', examFewer: n => `${n} unit(s) could not be loaded, so there are fewer problems.`, examNone: 'No exam problems could be made: the units are not ready or could not be loaded.',
       nextProblem: 'Next problem', seeResult: 'Result', result: 'Result', scoreOf: (s, m) => `${dec(s)} out of ${dec(m)} points`,
       passMt2: 'Midterm 2 needs at least 1.7 points to pass.', passYes: 'This attempt is enough.', passNo: 'This attempt is not enough.',
-      perProblem: 'Problems and solutions', stepsRight: (a, b) => `${a} of ${b} steps`, newTry: 'New attempt', toReview: 'Mistakes', gotRight: 'right', gotWrong: 'wrong', lost: 'Could not make a problem.',
+      perProblem: 'Problems and solutions', stepsRight: (a, b) => `${a} of ${b} steps`, newTry: 'New attempt', toReview: 'Mistakes', gotRight: 'right', gotWrong: 'wrong', lost: 'Could not make a problem.', preparing: 'The units are still being prepared.', molLabel: 'Molecule structure',
       reviewHead: 'Mistakes', reviewEmpty: 'The list of mistakes is empty. Problems you get wrong will appear here.', reviewLeft: n => `Left in this round: ${n}`, reviewDone: n => n ? `Review finished. Still on the list: ${n}.` : 'Review finished. The list of mistakes is empty.', nextMissed: 'Next problem',
       noscript: 'This trainer needs JavaScript.'
     }
@@ -83,7 +83,7 @@
   const rand = () => Math.floor(Math.random() * 2147483647);
   const link = (href, text, cls) => { const a = el('a', cls, text); a.setAttribute('href', href); return a; };
   const button = (text, cls, fn) => { const b = el('button', cls, text); b.type = 'button'; if (fn) b.addEventListener('click', fn); return b; };
-  const unitOfType = id => ORG.UNITS.find(u => id.startsWith(u.id + '.'));
+  const unitOfType = id => ORG.readyUnits().find(u => id.startsWith(u.id + '.')) || null;
   const isInt = Number.isInteger;
 
   /* ---------- molecules and drawings ---------- */
@@ -108,7 +108,7 @@
   function molNode(mol, extra) {
     const r = drawing(mol, extra);
     const box = el('span', 'molbox');
-    if (r) { box.append(r.svg); box.setAttribute('role', 'img'); box.setAttribute('aria-label', plain(mol.name) || mol.smi); return box; }
+    if (r) { box.append(r.svg); box.setAttribute('role', 'img'); box.setAttribute('aria-label', plain(mol.name) || S.molLabel); return box; }
     const c = el('code', 'smi', mol.smi);
     box.append(c);
     return box;
@@ -240,8 +240,8 @@
     const parts = (location.hash || '').replace(/^#\/?/, '').split('/').filter(Boolean).map(p => { try { return decodeURIComponent(p); } catch (e) { return p; } });
     if (!parts.length) return { view: 'home', key: 'home' };
     if (parts[0] === 'review') return { view: 'review', key: 'review' };
-    if (parts[0] === 'exam' && P.EXAMS[parts[1]]) return { view: 'exam', exam: parts[1], key: 'exam:' + parts[1] };
-    const unit = ORG.UNITS.find(u => u.id === parts[0]);
+    if (parts[0] === 'exam' && P.EXAMS[parts[1]] && ORG.examUnits(parts[1]).length) return { view: 'exam', exam: parts[1], key: 'exam:' + parts[1] };
+    const unit = ORG.readyUnit(parts[0]);
     if (unit) {
       if (!parts[1]) return { view: 'unit', unit, tab: 'learn', key: 'u:' + unit.id };
       if (parts[1] === 'practice') return { view: 'unit', unit, tab: 'practice', key: 'u:' + unit.id };
@@ -274,18 +274,21 @@
 
   /* ---------- home ---------- */
   function renderHome() {
-    const queue = P.reviewQueue(prog);
+    const queue = P.reviewQueue(prog).filter(r => unitOfType(r.type));
+    const exams = ['mt1', 'mt2', 'exam'].filter(k => ORG.examUnits(k).length);
+    if (!ORG.readyUnits().length) { app.append(el('p', 'plain', S.preparing)); doc.title = S.title; return; }
     const box = el('section', 'examsbox');
     box.append(el('h2', 'boxtitle', S.examBox));
     const row = el('div', 'examrow');
-    row.append(link('#/exam/mt1', S.mt1, 'btn'), link('#/exam/mt2', S.mt2, 'btn'), link('#/exam/exam', S.exam, 'btn'), link('#/review', S.reviewBtn(queue.length), 'btn' + (queue.length ? ' warn' : '')));
+    for (const k of exams) row.append(link('#/exam/' + k, S[k], 'btn'));
+    row.append(link('#/review', S.reviewBtn(queue.length), 'btn' + (queue.length ? ' warn' : '')));
     box.append(row);
     app.append(box);
-    for (const part of ORG.PARTS) {
+    for (const part of ORG.readyParts()) {
       const sec = el('section', 'group');
       sec.append(richEl('h2', 'grouptitle', part.title));
       const ol = el('ol', 'ulist');
-      for (const u of ORG.UNITS.filter(x => x.part === part.part)) {
+      for (const u of ORG.readyUnits().filter(x => x.part === part.part)) {
         const c = P.unitCounts(prog, ORG.units[u.id] || u);
         const li = el('li');
         const a = link('#/' + u.id, '', 'urow');
@@ -413,9 +416,9 @@
   function makePlay(mode, unit, type, seed, extra) {
     let problem;
     try { problem = CK.makeProblem(type, seed); } catch (e) { return null; }
-    if (!problem || !Array.isArray(problem.steps) || !problem.steps.length) return null;
-    const p = Object.assign({ mode, unit, type, seed, problem, k: 0, steps: [], finished: false, firstTry: true, hinted: false, focus: 'title' }, extra || {});
-    p.steps.push(newSt(p, 0));
+    if (!problem || CK.validateProblem(problem).length) return null;
+    let p;
+    try { p = Object.assign({ mode, unit, type, seed, problem, k: 0, steps: [], finished: false, firstTry: true, hinted: false, focus: 'title' }, extra || {}); p.steps.push(newSt(p, 0)); } catch (e) { return null; }
     return p;
   }
   const hasEntry = (step, e) => {
@@ -491,6 +494,7 @@
         if (step.kind === 'formula') i.placeholder = S.typeFormula;
         i.value = st.entry || '';
         if (cls) i.classList.add(cls);
+        if (st.bad) i.classList.add('bad');
         if (locked) i.disabled = true;
         i.addEventListener('input', () => { st.entry = i.value; i.classList.remove('bad'); edited(); });
         w.append(i);
@@ -581,6 +585,9 @@
     return [S.right, 'yes'];
   }
   function renderSheet(p, host, hooks) {
+    try { renderSheetUnsafe(p, host, hooks); } catch (e) { clear(host); host.append(lostBox()); }
+  }
+  function renderSheetUnsafe(p, host, hooks) {
     clear(host);
     const prob = p.problem;
     const sheet = el('div', 'sheet');
@@ -723,7 +730,7 @@
     return rand();
   }
   function freshPlay(mode, unit, type, last, extra) {
-    for (let tries = 0; tries < 6; tries++) {
+    for (let tries = 0; tries < 5; tries++) {
       const p = makePlay(mode, unit, type, pickSeed(type, last), extra);
       if (p) return p;
     }
@@ -751,7 +758,7 @@
       if (!sess) { sess = { key: route.key }; sess.play = freshPlay('practice', u, type, null, {}); }
       sess.mount = () => { if (!sess.play) { clear(host); host.append(lostBox()); return; } renderSheet(sess.play, host, playHooks(sess.play, host, extra)); };
       sess.mount();
-    }, () => { if (!alive(my)) return; clear(host); host.append(unavailable(() => render())); });
+    }, () => { if (!alive(my)) return; clear(host); host.append(unavailable(() => render())); }).catch(() => { if (alive(my)) { clear(host); host.append(lostBox()); } });
   }
   function renderMix(my) {
     const u = route.unit;
@@ -774,7 +781,7 @@
       if (!sess) { sess = { key: route.key, last: null }; sess.play = nextPlay(); }
       sess.mount = () => { if (!sess.play) { clear(host); host.append(lostBox()); return; } renderSheet(sess.play, host, playHooks(sess.play, host, extra)); };
       sess.mount();
-    }, () => { if (!alive(my)) return; clear(host); host.append(unavailable(() => render())); });
+    }, () => { if (!alive(my)) return; clear(host); host.append(unavailable(() => render())); }).catch(() => { if (alive(my)) { clear(host); host.append(lostBox()); } });
   }
 
   /* ---- review of missed problems */
@@ -784,7 +791,7 @@
     const host = el('div', 'playhost'); app.append(host);
     doc.title = S.reviewHead + ' – ' + S.title;
     if (!sess) {
-      const list = P.reviewQueue(prog);
+      const list = P.reviewQueue(prog).filter(r => unitOfType(r.type));
       if (!list.length) { host.append(el('p', 'plain', S.reviewEmpty), link('#/', S.home, 'btn')); return; }
       sess = { key: route.key, list, i: 0, play: null };
     }
@@ -794,7 +801,7 @@
       clear(host); host.append(el('p', 'loading', S.loading));
       const ref = s.list[s.i], un = unitOfType(ref.type);
       const skip = () => { s.i++; show(); };
-      if (!un) { P.forget(prog, ref); saveProg(); return skip(); }
+      if (!un) return skip();
       getUnit(un.id).then(unit => {
         if (!alive(my) || sess !== s) return;
         const type = unit.types.find(t => t.id === ref.type);
@@ -802,7 +809,7 @@
         s.play = makePlay('review', un, type, ref.seed, { ref });
         if (!s.play) { P.forget(prog, ref); saveProg(); return skip(); }
         s.mount();
-      }, () => { if (!alive(my) || sess !== s) return; clear(host); host.append(unavailable(skip)); });
+      }, () => { if (!alive(my) || sess !== s) return; clear(host); host.append(unavailable(skip)); }).catch(() => { if (alive(my)) { clear(host); host.append(lostBox()); } });
     };
     sess.mount = () => {
       const s = sess; if (!s.play) return show();
@@ -826,7 +833,7 @@
     doc.title = S.examHead[kind] + ' – ' + S.title;
     const build = () => {
       clear(host); host.append(el('p', 'loading', S.examLoading));
-      const units = ORG.UNITS.filter(u => u.exams.includes(kind));
+      const units = ORG.examUnits(kind);
       Promise.all(units.map(u => getUnit(u.id).then(x => x, () => null))).then(loaded => {
         if (!alive(my)) return;
         const items = [];
@@ -839,7 +846,7 @@
             if (taken >= 2) break;
             const seed = pickSeed(type, null);
             let ok = false;
-            try { const pr = CK.makeProblem(type, seed); ok = pr && Array.isArray(pr.steps) && pr.steps.length > 0; } catch (e) { ok = false; }
+            try { ok = CK.validateProblem(CK.makeProblem(type, seed)).length === 0; } catch (e) { ok = false; }
             if (ok) { items.push({ unit: units[i], type, seed }); taken++; }
           }
         });
@@ -847,7 +854,7 @@
         sess = { key: route.key, kind, items: chosen, i: 0, plays: [], failed, play: null, done: false };
         if (!chosen.length) { clear(host); host.append(el('div', 'notice', S.examNone), link('#/', S.home, 'btn')); sess.none = true; return; }
         startItem(); mount();
-      });
+      }).catch(() => { if (alive(my)) { clear(host); host.append(lostBox()); } });
     };
     const startItem = () => { const s = sess, it = s.items[s.i]; s.play = makePlay('exam', it.unit, it.type, it.seed, { index: s.i }); if (!s.play) { s.plays[s.i] = { type: it.type, unit: it.unit, right: 0, steps: 1, lost: true }; } };
     const mount = () => {

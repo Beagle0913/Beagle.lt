@@ -47,7 +47,7 @@ test('markup: plain text, stray symbols and hostile input stay text', () => {
 
 test('normName: spaces, dashes, capitals and letters', () => {
   for (const s of ['2 metil 2 butenas', '2–metil–2–butenas', '2-Metil-2-Butenas', ' 2 - metil - 2 - butenas ', '2−metil−2−butenas'])
-    assert.equal(C.normName(s).key, '2-metil-2-butenas', s);
+    assert.equal(C.normName(s).key, C.normName('2-metil-2-butenas').key, s);
   const a = C.normName('pentano rugstis'), b = C.normName('pentano rūgštis');
   assert.equal(a.folded, b.folded);
   assert.notEqual(a.key, b.key);
@@ -286,4 +286,53 @@ test('units list: 22 units in three parts', () => {
     assert.ok(Array.isArray(u.sources) && u.sources.length > 0, u.id);
   }
   assert.equal(new Set(L.map(u => u.title.lt)).size, 22);
+});
+
+test('normName: separators never matter, letters and locants do', () => {
+  const same = list => { const k = C.normName(list[0]).key; for (const x of list) assert.equal(C.normName(x).key, k, x); };
+  same(['N metil etanaminas', 'N-metiletanaminas', 'N–metil–etanaminas', 'n - metil etanaminas', 'N-Metil-Etanaminas']);
+  same(['(E)-2-butenas', '(E) 2 butenas', 'E-2-butenas', '(E)–2–butenas', 'e 2 butenas']);
+  same(['(2R,3S)-2,3-dibrombutanas', '(2R, 3S) 2,3 dibrombutanas', '2R,3S-2,3-dibrombutanas']);
+  assert.notEqual(C.normName('N-metiletanaminas').key, C.normName('2-metiletanaminas').key);
+  assert.notEqual(C.normName('(E)-2-butenas').key, C.normName('(Z)-2-butenas').key);
+  assert.notEqual(C.normName('2,3-dimetilbutanas').key, C.normName('2,4-dimetilbutanas').key);
+  assert.notEqual(C.normName('2-butenas').key, C.normName('1-butenas').key);
+  const na = { prompt: { lt: 'a', en: 'a' }, kind: 'name', hint: { lt: 'h', en: 'h' }, solution: { lt: 's', en: 's' }, answer: { lt: ['N-metiletanaminas', '(E)-but-2-enas'], en: ['x'] } };
+  assert.equal(C.checkStep(na, 'N metil etanaminas', 'lt').ok, true);
+  assert.equal(C.checkStep(na, 'E but 2 enas', 'lt').ok, true);
+  assert.equal(C.checkStep(na, '2 metil etanaminas', 'lt').ok, false);
+});
+
+test('validateProblem and a generator that returns a broken problem', () => {
+  const good = C.makeProblem(unitA.types[1], 4);
+  assert.deepEqual(plain(C.validateProblem(good)), []);
+  const bank = clone(unitA.types[0].bank[0]);
+  assert.deepEqual(plain(C.validateProblem(bank)), []);
+  bank.steps[0].answer = 9;
+  assert.equal(C.validateProblem(bank).length, 1);
+  assert.ok(C.validateProblem(null).length >= 1);
+  assert.ok(C.validateProblem({ q: [], steps: [] }).length >= 1);
+  const broken = { id: 'u01.broken', title: { lt: 'a', en: 'a' }, mirrors: [], gen: () => ({ q: [{ p: 'only a string' }], steps: [{ kind: 'number' }] }) };
+  const throwing = { id: 'u01.throws', title: { lt: 'a', en: 'a' }, mirrors: [], gen: () => { throw new Error('boom'); } };
+  assert.ok(C.validateProblem(C.makeProblem(broken, 1)).length > 0);
+  assert.throws(() => C.makeProblem(throwing, 1));
+});
+
+test('only ready units are listed', () => {
+  assert.equal(ORG.UNITS.every(u => u.ready === false), true, 'nothing is released yet');
+  assert.equal(ORG.readyUnits().length, 0);
+  assert.equal(ORG.readyParts().length, 0);
+  assert.equal(ORG.examUnits('mt2').length, 0);
+  assert.equal(ORG.readyUnit('u07'), null);
+  const set = (id, v) => { ORG.UNITS.find(u => u.id === id).ready = v; };
+  try {
+    set('u07', true); set('l2', true);
+    assert.deepEqual(plain(ORG.readyUnits().map(u => u.id)), ['u07', 'l2']);
+    assert.deepEqual(plain(ORG.readyParts().map(p => p.part)), [2, 3]);
+    assert.deepEqual(plain(ORG.examUnits('mt2').map(u => u.id)), ['u07']);
+    assert.deepEqual(plain(ORG.examUnits('exam').map(u => u.id)), ['u07']);
+    assert.equal(ORG.examUnits('mt1').length, 0);
+    assert.equal(ORG.readyUnit('u07').id, 'u07');
+    assert.equal(ORG.readyUnit('u06'), null);
+  } finally { set('u07', false); set('l2', false); }
 });

@@ -75,14 +75,12 @@
   /* ---------- names ---------- */
   const FOLD = { 'ą': 'a', 'č': 'c', 'ę': 'e', 'ė': 'e', 'į': 'i', 'š': 's', 'ų': 'u', 'ū': 'u', 'ž': 'z' };
   const fold = s => s.replace(/[ąčęėįšųūž]/g, c => FOLD[c]).normalize('NFD').replace(/[̀-ͯ]/g, '');
-  // key: case, spaces, dash variants, commas and brackets ignored. folded: the same without Lithuanian letters.
+  // key: lower case, with spaces, dashes and brackets removed (letters, digits and commas stay). folded: the same without Lithuanian letters.
   function normName(s) {
     let x = (typeof s === 'string' ? s : '').normalize('NFC').toLowerCase();
-    x = x.replace(/[‐-―−﹘﹣－­]/g, '-').replace(/[  -​\t\n\r]/g, ' ');
-    x = x.replace(/[()\[\]{}]/g, '');
-    x = x.replace(/\s*([-,;])\s*/g, (m, c) => c === ';' ? ',' : c);
-    x = x.replace(/(\d)\s+/g, '$1-').replace(/\s+(\d)/g, '-$1');
-    x = x.replace(/\s+/g, '').replace(/-{2,}/g, '-').replace(/^[-,]+|[-,]+$/g, '');
+    // every separator (spaces, any dash or minus, brackets) is dropped on both sides, so "N metil", "N-metil" and "(E)-2-" compare equal
+    x = x.replace(/[‐-―−﹘﹣－­]/g, '').replace(/[-()\[\]{}'\s  -​]/g, '');
+    x = x.replace(/;/g, ',').replace(/,{2,}/g, ',').replace(/^,+|,+$/g, '');
     return { key: x, folded: fold(x) };
   }
   check.normName = normName;
@@ -408,6 +406,12 @@
     return errs;
   }
   check.validateUnit = validateUnit;
+  // Structural check of one problem (a generated one before it is shown): the same rules as for a bank problem.
+  check.validateProblem = function (p) {
+    if (!isObj(p)) return ['problem: not an object'];
+    const stub = { id: 'x', notes: [{ id: 'a', title: { lt: 'a', en: 'a' }, blocks: [] }], summary: [], types: [{ id: 'x.t', title: { lt: 'a', en: 'a' }, mirrors: [], bank: [Object.assign({}, p, { id: 'x.t.1' })] }], coverage: {} };
+    try { return validateUnit(stub); } catch (e) { return ['problem: ' + e.message]; }
+  };
 
   /* ---------- random numbers and problems ---------- */
   function rng(seed) {

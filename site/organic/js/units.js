@@ -3,8 +3,8 @@
   'use strict';
   const T = (lt, en) => ({ lt, en });
   const MT1 = ['mt1', 'exam'], MT2 = ['mt2', 'exam'];
-  const row = (n, part, lt, en, exams, sources) => ({ id: 'u' + String(n).padStart(2, '0'), n: String(n), part, file: 'units/u' + String(n).padStart(2, '0') + '.js', title: T(lt, en), exams, sources });
-  const lab = (n, lt, en) => ({ id: 'l' + n, n: 'L' + n, part: 3, file: 'units/l' + n + '.js', title: T(lt, en), exams: [], sources: ['LW' + n] });
+  const row = (n, part, lt, en, exams, sources) => ({ id: 'u' + String(n).padStart(2, '0'), n: String(n), part, file: 'units/u' + String(n).padStart(2, '0') + '.js', title: T(lt, en), exams, sources, ready: false });
+  const lab = (n, lt, en) => ({ id: 'l' + n, n: 'L' + n, part: 3, file: 'units/l' + n + '.js', title: T(lt, en), exams: [], sources: ['LW' + n], ready: false });
 
   ORG.UNITS = [
     row(1, 1, 'Formulės, klasifikavimas ir nomenklatūra', 'Formulas, classification and nomenclature', MT1, ['L1', 'S1']),
@@ -30,6 +30,12 @@
     lab(5, 'Maleino rūgšties izomerizacija', 'Isomerisation of maleic acid'),
     lab(6, 'Funkcinių grupių reakcijos', 'Reactions of functional groups')
   ];
+
+  // The trainer is released in stages: only units marked ready are shown anywhere (a content task flips its own unit to true).
+  ORG.readyUnits = () => ORG.UNITS.filter(u => u.ready === true);
+  ORG.readyUnit = id => ORG.UNITS.find(u => u.id === id && u.ready === true) || null;
+  ORG.readyParts = () => ORG.PARTS.filter(pt => ORG.readyUnits().some(u => u.part === pt.part));
+  ORG.examUnits = kind => ORG.readyUnits().filter(u => u.exams.includes(kind));
 
   // Exam parts and their titles (the home page lists the units in these groups).
   ORG.PARTS = [
