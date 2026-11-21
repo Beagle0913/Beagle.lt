@@ -31,6 +31,7 @@ const REQUIRED = [
   'sr.halogenate', 'ae.hx', 'ae.h2o', 'ae.x2', 'ae.h2', 'ox.kmno4.mild', 'ox.kmno4.harsh', 'diene.hx',
   'yne.h2', 'yne.x2', 'yne.hx', 'yne.hydration', 'yne.cu', 'sear', 'side.br', 'side.ox',
   'sn2', 'sn1', 'elim', 'alc.hx', 'alc.ox', 'alc.na', 'williamson', 'ether.hi',
+  'phenol.base', 'phenol.alkyl', 'phenol.acyl', 'phenol.br2', 'thiol.base', 'thiol.alkyl', 'thiol.disulfide',
   //@@REQUIRED
 ];
 
@@ -274,6 +275,44 @@ test('ether.hi: SN1 at the tertiary side, SN2 at the less hindered carbon, cycli
   expectProducts(R('ether.hi', ['COc1ccccc1'], { eq: 1 }), ['CI', 'Oc1ccccc1'], ['CI', 'Oc1ccccc1']);
   expectProducts(R('ether.hi', ['CC(C)(C)OC1CCCCC1'], { eq: 1 }), ['CC(C)(C)I', 'OC1CCCCC1', 'IC1CCCCC1', 'CC(C)(C)O'], ['CC(C)(C)I', 'OC1CCCCC1']);
   assert.ok(R('ether.hi', ['c1ccccc1Oc1ccccc1'], { eq: 1 }).none);
+});
+
+// ---------------------------------------------------------------- phenols and thiols
+
+test('phenol.base, phenol.alkyl, phenol.acyl: only the phenolic OH reacts', () => {
+  only(R('phenol.base', ['Oc1ccccc1']), '[O-]c1ccccc1.[Na+]');
+  only(R('phenol.base', ['Oc1ccc([N+](=O)[O-])cc1'], { metal: 'K' }), '[O-]c1ccc([N+](=O)[O-])cc1.[K+]');
+  only(R('phenol.base', ['OCCc1ccc(O)cc1']), 'OCCc1ccc([O-])cc1.[Na+]');
+  assert.ok(R('phenol.base', ['CCO']).none);
+  only(R('phenol.alkyl', ['Oc1ccc([N+](=O)[O-])cc1', 'CI']), 'COc1ccc([N+](=O)[O-])cc1');
+  only(R('phenol.alkyl', ['OCCc1ccc(O)cc1', 'CI']), 'OCCc1ccc(OC)cc1');
+  only(R('phenol.alkyl', ['[O-]c1ccccc1.[Na+]', 'CCBr']), 'CCOc1ccccc1');
+  assert.ok(R('phenol.alkyl', ['Oc1ccccc1', 'CC(C)Br']).none);
+  only(R('phenol.acyl', ['Oc1ccc([N+](=O)[O-])cc1', 'CC(=O)Cl']), 'CC(=O)Oc1ccc([N+](=O)[O-])cc1');
+  const asp = R('phenol.acyl', ['OC(=O)c1ccccc1O', 'CC(=O)OC(C)=O']);
+  expectProducts(asp, ['CC(=O)Oc1ccccc1C(=O)O', 'CC(=O)O'], ['CC(=O)Oc1ccccc1C(=O)O']);
+  assert.strictEqual(asp.products.find((p) => p.smi === canon('CC(=O)O')).by, true);
+});
+
+test('phenol.br2: all free ortho and para positions', () => {
+  only(R('phenol.br2', ['Oc1ccccc1']), 'Oc1c(Br)cc(Br)cc1Br');
+  only(R('phenol.br2', ['Oc1ccc([N+](=O)[O-])cc1']), 'Oc1c(Br)cc([N+](=O)[O-])cc1Br');
+  assert.ok(R('phenol.br2', ['Oc1c(Br)cc(Br)cc1Br']).none);
+});
+
+test('thiols: salts, mercaptides, sulfides, disulfides', () => {
+  only(R('thiol.base', ['CCS']), 'CC[S-].[Na+]');
+  only(R('thiol.base', ['CC(O)CC(C)S'], { metal: 'K' }), 'CC(O)CC(C)[S-].[K+]');
+  only(R('thiol.base', ['CCS'], { metal: 'Hg' }), 'CCS[Hg]SCC');
+  only(R('thiol.base', ['CS'], { metal: 'Pb' }), 'CS[Pb]SC');
+  only(R('thiol.base', ['OC(CS)CS'], { metal: 'Hg' }), 'OC1CS[Hg]SC1');
+  assert.ok(R('thiol.base', ['CCO']).none);
+  only(R('thiol.alkyl', ['CC(O)CC(C)S', 'CCBr']), 'CC(O)CC(C)SCC');
+  only(R('thiol.alkyl', ['Sc1ccccc1', 'CI']), 'CSc1ccccc1');
+  only(R('thiol.disulfide', ['CCS']), 'CCSSCC');
+  only(R('thiol.disulfide', ['NC(CS)C(=O)O']), 'NC(CSSCC(N)C(=O)O)C(=O)O');
+  only(R('thiol.disulfide', ['OC(CS)CS']), 'OC1CSSC1');
+  assert.ok(R('thiol.disulfide', ['SCCS']).none);
 });
 
 //@@TESTS

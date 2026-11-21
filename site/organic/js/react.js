@@ -146,6 +146,25 @@
       return out.reverse();
     }
 
+    // atoms reachable from i
+    reach(i) {
+      const seen = {};
+      seen[i] = true;
+      const q = [i];
+      for (let h = 0; h < q.length; h++) this.N[q[h]].forEach((w) => { if (!seen[w]) { seen[w] = true; q.push(w); } });
+      return seen;
+    }
+
+    // [part containing atom i, the rest] as two graphs (the rest may be empty)
+    parts(i) {
+      const seen = this.reach(i);
+      const out = [];
+      for (let k = 0; k < this.A.length; k++) if (!seen[k]) out.push(k);
+      const inn = [];
+      for (let k = 0; k < this.A.length; k++) if (seen[k]) inn.push(k);
+      return [this.without(out), out.length ? this.without(inn) : null];
+    }
+
     smiles() {
       const n = this.A.length;
       const idx = new Array(n).fill(-1);
@@ -1290,6 +1309,211 @@
     });
     if (!any) return none(T('Diarileteriai su HI neskyla.', 'Diaryl ethers are not cleaved by HI.'));
     return out.note(T('Jei gali susidaryti stabilus karbokatijonas (tretinis, alilo, benzilo) – SN1: halogenidas prie šios dalies; kitaip SN2: halogenidas prie mažiau užstoto C. Arilo C–O ryšys neskyla (gaunamas fenolis).', 'If a stable cation can form (tertiary, allylic, benzylic) the cleavage is SN1 and the halide ends up on that part; otherwise SN2 and the halide ends up on the less hindered carbon. An aryl C-O bond is not cleaved (a phenol results).')).result();
+  });
+
+  // ------------------------------------------------------------------
+  // Shared steps: alkylation and acylation of a nucleophilic atom
+  // ------------------------------------------------------------------
+
+  function deprotonate(g, i) {
+    if (g.A[i].charge < 0) g.A[i].charge += 1; else g.A[i].h -= 1;
+  }
+
+  // nucleophile atom of gNu bonded to the first alkyl-halide carbon of gHal (SN2); returns a new graph
+  function alkylateAt(gNu, nu, gHal, hs) {
+    const ng = gNu.clone();
+    const off = ng.merge(gHal);
+    deprotonate(ng, nu);
+    ng.bond(nu, hs.c + off, 1);
+    return ng.without([hs.x + off]);
+  }
+
+  // acyl donors (acyl chloride or anhydride) of a graph: one entry per acyl group
+  function acylDonors(g) { return carbonyls(g, ['acylhalide', 'anhydride']); }
+
+  // acylate atom nu of gNu with the acyl group k of gAc: {main, by} (by = the acid of an anhydride)
+  function acylate(gNu, nu, gAc, k) {
+    const g = gNu.clone();
+    const off = g.merge(gAc);
+    const c = k.c + off;
+    const x = k.x + off;
+    deprotonate(g, nu);
+    g.bond(nu, c, 1);
+    if (k.type === 'acylhalide') return { main: g.without([x]), by: null };
+    g.unbond(c, x);
+    g.A[x].h = 1;
+    const p = g.parts(nu);
+    return { main: p[0], by: p[1] };
+  }
+
+  // ------------------------------------------------------------------
+  // Phenols and thiols
+  // ------------------------------------------------------------------
+
+  function phenolO(g) {
+    const out = [];
+    g.A.forEach((a, o) => {
+      if (a.el !== 'O' || g.nbr(o).length !== 1 || !((a.h === 1 && a.charge === 0) || (a.h === 0 && a.charge === -1))) return;
+      const c = g.nbr(o)[0];
+      if (isC(g, c) && ar(g, c)) out.push({ c, o });
+    });
+    return out;
+  }
+
+  const NOTE_NO_PHENOL = T('Nėra fenolio OH grupės.', 'There is no phenolic OH group.');
+  const NOTE_NO_THIOL = T('Nėra tiolio SH grupės.', 'There is no thiol SH group.');
+
+  def('phenol.base', 'Fenolio reakcija su šarmu (fenolatas)', 'Phenol with a base (phenoxide)', null, null, (rs, o) => {
+    const metal = o.metal === 'K' ? 'K' : 'Na';
+    const g = rs[0].clone();
+    const ph = findPhenols(g);
+    if (!ph.length) return none(NOTE_NO_PHENOL);
+    ph.forEach((p) => { g.A[p.o].h = 0; g.A[p.o].charge = -1; g.add(metal, 1, 0); });
+    return new Out().add(g, true).note(T('Fenoliai, skirtingai nei alkoholiai, reaguoja su šarmais.', 'Phenols, unlike alcohols, react with alkalis.')).result();
+  });
+
+  def('phenol.alkyl', 'Fenolato alkilinimas (aril-alkileteris)', 'Alkylation of a phenoxide (aryl alkyl ether)', 'SN2', null, (rs) => {
+    need(rs, 2, 'phenol.alkyl');
+    const ph = phenolO(rs[0]);
+    if (!ph.length) return none(NOTE_NO_PHENOL);
+    const hs = findHalides(rs[1]);
+    if (!hs.length || cNbrs(rs[1], hs[0].c).length > 1) return none(T('Reikia metilo ar pirminio halogenalkano (SN2).', 'A methyl or primary alkyl halide is needed (SN2).'));
+    let g = rs[0];
+    for (let i = 0; i < ph.length; i++) {
+      const site = phenolO(g)[0];
+      if (!site) break;
+      g = alkylateAt(g, site.o, rs[1], hs[0]);
+    }
+    return new Out().add(g, true).note(T('Fenolatas + halogenalkanas → aril-alkileteris (alkoholio OH nereaguoja su NaOH).', 'Phenoxide + alkyl halide → aryl alkyl ether (an alcohol OH does not react with NaOH).')).result();
+  });
+
+  def('phenol.acyl', 'Fenolio acilinimas (fenolio esteris)', 'Acylation of a phenol (phenyl ester)', null, 'the acid released from an anhydride, by: true', (rs) => {
+    need(rs, 2, 'phenol.acyl');
+    if (!phenolO(rs[0]).length) return none(NOTE_NO_PHENOL);
+    const ks = acylDonors(rs[1]);
+    if (!ks.length) return none(T('Reikia rūgšties chlorido ar anhidrido.', 'An acyl chloride or anhydride is needed.'));
+    const out = new Out();
+    ks.forEach((k) => {
+      let g = rs[0];
+      let by = null;
+      const n = phenolO(g).length;
+      for (let i = 0; i < n; i++) {
+        const site = phenolO(g)[0];
+        if (!site) break;
+        const r = acylate(g, site.o, rs[1], k);
+        g = r.main;
+        by = r.by;
+      }
+      out.add(g, true);
+      if (by) out.add(by, false, true);
+    });
+    return out.note(T('Fenolis (ar fenolatas) su acilchloridu ar anhidridu duoda esterį (pvz., aspirino sintezė).', 'A phenol (or phenoxide) with an acyl chloride or anhydride gives an ester (aspirin synthesis, for example).')).result();
+  });
+
+  def('phenol.br2', 'Fenolio brominimas bromo vandeniu', 'Bromination of phenol with bromine water', 'SEAr', null, (rs) => {
+    const g = rs[0].clone();
+    const ph = findPhenols(g);
+    if (!ph.length) return none(NOTE_NO_PHENOL);
+    const rings = aromRings(g);
+    let did = 0;
+    ph.forEach((p) => {
+      const ring = rings.find((r) => r.indexOf(p.c) >= 0);
+      if (!ring || ring.length !== 6) return;
+      const i = ring.indexOf(p.c);
+      [1, 3, 5].forEach((d) => {
+        const a = ring[(i + d) % 6];
+        if (g.A[a].h > 0) { g.A[a].h -= 1; graft(g, a, FRAG.Br); did++; }
+      });
+    });
+    if (!did) return none(T('Visos o- ir p- padėtys užimtos.', 'All ortho and para positions are taken.'));
+    return new Out().add(g, true).note(T('Aktyvuotas žiedas bromuojamas be katalizatoriaus visose o- ir p- padėtyse: baltos 2,4,6-tribromfenolio nuosėdos.', 'The activated ring is brominated without a catalyst in all o and p positions: white 2,4,6-tribromophenol precipitates.')).result();
+  });
+
+  function thiolS(g) {
+    const out = [];
+    g.A.forEach((a, s) => {
+      if (a.el !== 'S' || g.nbr(s).length !== 1 || !((a.h === 1 && a.charge === 0) || (a.h === 0 && a.charge === -1))) return;
+      const c = g.nbr(s)[0];
+      if (isC(g, c) && dbl(g, c, 'O') < 0) out.push({ c, s });
+    });
+    return out;
+  }
+
+  def('thiol.base', 'Tiolio rūgštinės savybės (tioliatas, merkaptidas)', 'Acidic properties of a thiol (thiolate, mercaptide)', null, null, (rs, o) => {
+    const metal = o.metal || 'Na';
+    const g0 = rs[0];
+    const th = findThiols(g0);
+    if (!th.length) return none(NOTE_NO_THIOL);
+    const out = new Out();
+    if (metal === 'Na' || metal === 'K') {
+      const g = g0.clone();
+      th.forEach((t) => { g.A[t.s].h = 0; g.A[t.s].charge = -1; g.add(metal, 1, 0); });
+      return out.add(g, true).note(T('Tioliai, stipresnės rūgštys už alkoholius, reaguoja su šarmais.', 'Thiols, stronger acids than alcohols, react with alkalis.')).result();
+    }
+    if (metal !== 'Hg' && metal !== 'Pb') throw new Error('react: thiol.base metal must be Na, K, Hg or Pb');
+    if (th.length === 1) {
+      const g = g0.clone();
+      const m = g.add(metal, 0, 0);
+      const off = g.merge(g0);
+      g.A[th[0].s].h = 0;
+      g.A[th[0].s + off].h = 0;
+      g.bond(th[0].s, m, 1);
+      g.bond(th[0].s + off, m, 1);
+      return out.add(g, true).note(T('Sunkiųjų metalų (Hg, Pb) tioliatai: tiolių nuodai.', 'Heavy-metal (Hg, Pb) mercaptides: the "thiol poisons".')).result();
+    }
+    if (th.length === 2) {
+      const g = g0.clone();
+      const m = g.add(metal, 0, 0);
+      th.forEach((t) => { g.A[t.s].h = 0; g.bond(t.s, m, 1); });
+      return out.add(g, true).note(T('Ditiolis sudaro chelatą su sunkiuoju metalu.', 'A dithiol forms a chelate with the heavy metal.')).result();
+    }
+    throw new Error('react: thiol.base with Hg or Pb supports one or two SH groups');
+  });
+
+  def('thiol.alkyl', 'Tioliato alkilinimas (sulfidas)', 'Alkylation of a thiolate (sulfide)', 'SN2', null, (rs) => {
+    need(rs, 2, 'thiol.alkyl');
+    const th = thiolS(rs[0]);
+    if (!th.length) return none(NOTE_NO_THIOL);
+    const hs = findHalides(rs[1]);
+    if (!hs.length) return none(T('Arilhalogenidai ir vinilhalogenidai SN2 nereaguoja.', 'Aryl and vinyl halides do not react by SN2.'));
+    const k = cNbrs(rs[1], hs[0].c).length;
+    const out = new Out();
+    if (k >= 3) {
+      addElim(out, rs[1], hs[0].c, hs[0].x, false);
+      return out.note(T('Tretinis halogenalkanas tik eliminuojasi.', 'A tertiary halide only eliminates.')).result();
+    }
+    let g = rs[0];
+    for (let i = 0; i < th.length; i++) {
+      const site = thiolS(g)[0];
+      if (!site) break;
+      g = alkylateAt(g, site.s, rs[1], hs[0]);
+    }
+    return out.add(g, true).note(T('Tioliatas yra puikus nukleofilas ir silpna bazė: SN2 duoda sulfidą.', 'A thiolate is an excellent nucleophile and a weak base: SN2 gives the sulfide.')).result();
+  });
+
+  def('thiol.disulfide', 'Tiolių oksidacija (disulfidas)', 'Oxidation of thiols (disulfide)', null, null, (rs) => {
+    const g0 = rs[0];
+    const th = findThiols(g0);
+    if (!th.length) return none(NOTE_NO_THIOL);
+    if (th.length === 1) {
+      const g = g0.clone();
+      const off = g.merge(g0);
+      g.A[th[0].s].h = 0;
+      g.A[th[0].s + off].h = 0;
+      g.bond(th[0].s, th[0].s + off, 1);
+      return new Out().add(g, true).note(T('2 RSH → R–S–S–R (I2/NaOH, Br2, FeCl3, H2O2); Zn/CH3COOH atkuria tiolį.', '2 RSH → R-S-S-R (I2/NaOH, Br2, FeCl3, H2O2); Zn/CH3COOH regenerates the thiol.')).result();
+    }
+    if (th.length === 2) {
+      const p = g0.path(th[0].s, th[1].s);
+      if (p && p.length >= 5 && p.length <= 6) {
+        const g = g0.clone();
+        g.A[th[0].s].h = 0;
+        g.A[th[1].s].h = 0;
+        g.bond(th[0].s, th[1].s, 1);
+        return new Out().add(g, true).note(T('Ditiolis (S…S per 3–4 C) sudaro ciklinį disulfidą.', 'A dithiol (S…S across 3-4 carbons) forms a cyclic disulfide.')).result();
+      }
+    }
+    return none(T('Gaunamas polimerinis disulfidas.', 'A polymeric disulfide forms.'));
   });
 
   //@@RULES
