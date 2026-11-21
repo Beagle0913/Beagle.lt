@@ -71,3 +71,46 @@ test('every trainer page is listed in trainers.json', () => {
     if (m) assert.ok(ids.includes(m[1]), 'not listed: ' + f);
   }
 });
+
+test('the organic chemistry trainer is listed and its page follows the contract', () => {
+  const t = data.trainers.find(x => x.id === 'organic');
+  assert.ok(t, 'organic is in trainers.json');
+  assert.equal(t.path, 'organic/');
+  assert.deepEqual(t.name, { lt: 'Organinė chemija', en: 'Organic chemistry' });
+  assert.equal(t.summary.lt, 'Nomenklatūra, cheminis ryšys, rūgštys ir bazės, izomerija, angliavandeniliai, halogenalkanai, alkoholiai, karbonilo junginiai, aminai, heterociklai ir laboratoriniai darbai.');
+  assert.equal(t.summary.en, 'Nomenclature, chemical bonding, acids and bases, isomerism, hydrocarbons, haloalkanes, alcohols, carbonyl compounds, amines, heterocycles and laboratory work.');
+  assert.deepEqual(t.note, { lt: 'Pagal VU GMC Organinės chemijos kursą · LT / EN', en: 'Based on the VU GMC Organic Chemistry course · LT / EN' });
+  const row = (html, prefix) => {
+    const m = html.match(new RegExp(`<li>\\s*<a class="row" href="${prefix}organic/">[^]*?</li>`));
+    assert.ok(m, 'static row with href ' + prefix + 'organic/');
+    return m[0];
+  };
+  for (const [name, html, prefix] of [['home', read(path.join(SITE, 'index.html')), ''], ['404', read(path.join(SITE, '404.html')), '/']]) {
+    const r = row(html, prefix);
+    assert.match(r, /<span class="no">02<\/span>/, name);
+    assert.ok(r.includes('<h2 class="name">Organinė chemija</h2>'), name);
+    assert.ok(r.includes('<span class="open" data-i18n="open">Atverti →</span>'), name);
+    assert.ok(r.includes(`<p class="sum">${t.summary.lt}</p>`) && r.includes(`<p class="note">${t.note.lt}</p>`), name);
+    assert.ok(html.indexOf(`href="${prefix}math/"`) < html.indexOf(`href="${prefix}organic/"`), name + ' order');
+  }
+  const page = read(path.join(SITE, 'organic', 'index.html'));
+  assert.ok(page.includes('<html lang="lt">'));
+  assert.ok(page.includes('<body data-trainer="organic">'));
+  assert.match(page, /<body[^>]*>\s*<div id="sitebar"><\/div>/, 'the bar is the first element of the body');
+  const links = [...page.matchAll(/<(?:link|script)[^>]*?(?:href|src)="([^"]+)"/g)].map(m => m[1]);
+  assert.ok(links.includes('../shared/site.css') && links.includes('../shared/site.js'));
+  const order = ['chem', 'stereo', 'draw', 'views', 'name', 'react', 'units', 'check', 'progress', 'ui'].map(n => `js/${n}.js`);
+  assert.deepEqual(links.filter(l => l.startsWith('js/')), order, 'scripts in the load order');
+  assert.ok(links.includes('trainer.css'));
+  assert.equal(/\sstyle\s*=/i.test(page), false, 'no style attributes');
+});
+
+test('the organic trainer source never builds HTML from strings and never styles by attribute', () => {
+  const dir = path.join(SITE, 'organic');
+  for (const f of walk(dir).filter(f => /\.(js|html)$/.test(f))) {
+    const src = read(f);
+    assert.equal(/innerHTML|outerHTML|insertAdjacentHTML|document\.write/.test(src), false, 'html from strings: ' + f);
+    assert.equal(/setAttribute\(\s*['"]style['"]/.test(src), false, 'style attribute: ' + f);
+    assert.equal(/\beval\s*\(|new Function\s*\(/.test(src), false, 'eval: ' + f);
+  }
+});
