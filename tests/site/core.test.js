@@ -145,9 +145,8 @@ test('the button toggles the list; Escape closes it and returns focus to the but
   assert.equal(sw.list.hidden, true);
 
   sw.button.fire('click');
-  let prevented = 0;
   const before = sw.button.focused;
-  sw.root.fire('keydown', { key: 'Escape', preventDefault() { prevented++; } });
+  sw.root.fire('keydown', { key: 'Escape' });
   assert.equal(sw.list.hidden, true);
   assert.equal(sw.button.getAttribute('aria-expanded'), 'false');
   assert.equal(sw.button.focused, before + 1);
@@ -160,14 +159,26 @@ test('the button toggles the list; Escape closes it and returns focus to the but
 });
 
 test('stepping through the list does not navigate; only activating a link does', () => {
-  const sw = core.createSwitcher(fakeDoc(), twoModel());
-  sw.button.fire('click');
-  // no handler on the list or links turns focus or arrow keys into navigation
+  const doc = fakeDoc();
+  const sw = core.createSwitcher(doc, twoModel());
+  let navigated = 0;
+  const loc = { href: 'https://beagle.lt/math/' };
   for (const n of [sw.root, sw.list, sw.button, ...find(sw.list, 'a')]) {
-    assert.equal((n.handlers.change || []).length, 0);
-    assert.equal((n.handlers.focus || []).length, 0);
+    n.assign = () => { navigated++; };
+    n.submit = () => { navigated++; };
   }
-  assert.equal(find(sw.list, 'a')[0].href, 'https://beagle.lt/physics/');
+  sw.button.fire('click');
+  const link = find(sw.list, 'a')[0];
+  const before = link.href;
+  for (const [type, e] of [['focus', {}], ['focusin', { target: link }], ['keydown', { key: 'ArrowDown' }],
+    ['keydown', { key: 'Tab' }], ['keyup', { key: 'Tab' }], ['keydown', { key: 'ArrowUp' }], ['change', { target: link }]]) {
+    for (const n of [link, sw.list, sw.root, sw.button]) n.fire(type, e);
+    doc.fire(type, e);
+  }
+  assert.equal(navigated, 0);
+  assert.equal(loc.href, 'https://beagle.lt/math/');
+  assert.equal(link.href, before);
+  assert.equal(sw.list.hidden, false, 'stepping leaves the list open');
 });
 
 test('destroy removes the document listener', () => {
