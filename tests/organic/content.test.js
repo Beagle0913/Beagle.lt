@@ -659,7 +659,7 @@ test('validator: name steps and molecule captions are checked against the namer'
   u = fresh(); bankOf(u).steps[6].answer = { lt: ['pentanas'], en: ['pentane'], extra: { en: ['pentan'] } };
   only(u, /answer\.extra needs a src/);
   u = fresh(); bankOf(u).steps[6].answer = { lt: ['pentanas'], en: ['pentane'], extra: { en: ['pentan'], src: 'L1 p3' } };
-  const rx = run(u); assert.deepEqual(rx.errors, []); assert.match(rx.stats.extras[0], /en "pentan" for CCCCC \(L1 p3\)/);
+  const rx = run(u); assert.deepEqual(rx.errors, []); assert.match(rx.stats.extras[0], /en "pentan" \(L1 p3\)/);
   u = fresh(); bankOf(u).q[1] = { mol: { smi: 'CCCCC', name: T('butanas', 'butane') } };
   only(u, /problem u01\.bank\.1, q: molecule name: name of CCCCC is wrong/);
   u = fresh(); bankOf(u).steps[6].answer = { smi: 'c1ccncc1' };
