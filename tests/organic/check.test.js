@@ -346,3 +346,21 @@ test('normName: primes are part of the name', () => {
   assert.notEqual(k("N,N'-dimetil"), k("N,N''-dimetil"));
   assert.equal(k('N,N″-dimetil'), k("N,N''-dimetil"));
 });
+
+test('checkStep: answer.extra names are accepted too', () => {
+  const sm = step('name', { answer: { smi: 'CCCCC', extra: { lt: ['n-pentanas'], en: ['n-pentane'], src: 'T p13' } } });
+  assert.equal(C.checkStep(sm, 'n-pentanas', 'lt').ok, true);
+  assert.equal(C.checkStep(sm, 'N pentane', 'en').ok, true);
+  assert.equal(C.checkStep(sm, 'butanas', 'lt').ok, false);
+  ORG.name = { name: (smi, o) => ({ name: o.lang === 'lt' ? 'pentanas' : 'pentane', alts: [] }) };
+  try {
+    assert.equal(C.checkStep(sm, 'pentanas', 'lt').ok, true);
+    assert.equal(C.checkStep(sm, 'n-pentanas', 'lt').ok, true);
+    assert.equal(C.answerEntry(sm, 'lt'), 'pentanas', 'the first name stays the main one');
+  } finally { delete ORG.name; }
+  const wr = step('name', { answer: { lt: ['pentanas'], en: ['pentane'], extra: { lt: ['n-pentanas'], en: ['n-pentane'] } } });
+  assert.equal(C.checkStep(wr, 'n-pentanas', 'lt').ok, true);
+  assert.equal(C.checkStep(wr, 'n-pentane', 'en').ok, true);
+  assert.equal(C.checkStep(wr, 'n-pentane', 'lt').ok, false);
+  assert.equal(C.answerEntry(wr, 'lt'), 'pentanas');
+});

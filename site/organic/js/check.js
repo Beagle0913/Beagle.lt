@@ -174,6 +174,9 @@
         if (r) list = list.concat([r.name], r.alts || []);
       } catch (e) { /* the namer could not name it: only the written names count */ }
     }
+    // names the author lists as also right (extra) count for the learner; the first name stays the main one
+    const ex = a.extra && a.extra[lang];
+    if (Array.isArray(ex)) list = list.concat(ex); else if (typeof ex === 'string') list.push(ex);
     return list.filter(x => typeof x === 'string' && x);
   }
 
