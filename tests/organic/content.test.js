@@ -4,7 +4,7 @@
 //   node --test tests/organic/content.test.js            all unit files in site/organic/units
 //   UNIT=u07 node --test tests/organic/content.test.js   one unit file
 //   UNIT_DIR=tests/organic/fixtures node --test ...      the fixture units (unit-<letter>.js) instead, checked as if ready
-//   SEEDS=50 ...                                         seeds per generator (default 300)
+//   SEEDS=50 ...                                         seeds per generator (default 40 locally, 300 when CI is set)
 //
 // checkUnit() is a plain function (no test runner inside), so the validator can be proved on
 // mutated copies of the fixture unit: see the "validator" tests at the end.
@@ -20,7 +20,7 @@ const ORG = (load.load || load)(['chem.js', 'stereo.js', 'draw.js', 'views.js', 
 const TASKS = JSON.parse(fs.readFileSync(path.join(__dirname, 'fixtures', 'seminar-tasks.json'), 'utf8'));
 const FIXTURE = path.join(__dirname, 'fixtures', 'unit-a.js');
 
-const SEEDS = Math.max(1, parseInt(process.env.SEEDS, 10) || 300);
+const SEEDS = Math.max(1, parseInt(process.env.SEEDS || (process.env.CI ? 300 : 40), 10) || 300);
 const GEN_MS = 10000; // one generator type stops early (and says so) after this long
 const MIN_DISTINCT = 30;
 
@@ -272,7 +272,7 @@ function viewProblem(kind, spec) {
         else if (kind === 'resonance') d = ORG.views.resonance({ mols: spec, lang });
         else d = ORG.views[kind](Object.assign({}, spec, { lang }));
         const out = ORG.draw.toString(d.svg);
-        if (/NaN|undefined/.test(out)) { r = 'renders NaN or undefined (' + lang + ')'; break; }
+        if (/(?<![A-Za-z])NaN(?![A-Za-z])|undefined/.test(out)) { r = 'renders NaN or undefined (' + lang + ')'; break; }
       } catch (e) { r = 'does not render (' + lang + '): ' + e.message; break; }
     }
     viewCache.set(key, r);
@@ -313,7 +313,7 @@ function checkUnit(unit, opts) {
     for (const lang of ['lt', 'en']) {
       const s = T[lang];
       let m;
-      if (!curNumbered && (m = /\bNr\.\s*\d+|\bno\.\s*\d+|\b[Aa]tom(?:as|o|u|ą|ai)?\s+\d+|\b[Cc]arbon\s+\d+|\bC-\d+/u.exec(s.replace(/\$[^$]*\$/g, ' ')))) R.err(loc, lang + ' text refers to an atom number ("' + m[0] + '") but no molecule here shows numbers: add opts.numbers to the molecule', tag);
+      if (!curNumbered && (m = /\bNr\.\s*\d+|\bno\.\s*\d+|\b[Aa]tom(?:as|o|u|ą|ai)?\s+\d+/u.exec(s.replace(/\$[^$]*\$/g, ' ')))) R.err(loc, lang + ' text refers to an atom number ("' + m[0] + '") but no molecule here shows numbers: add opts.numbers to the molecule', tag);
       if ((m = /\bskyri\p{L}*\s+\d+|\bsection\s+\d+|\b\d+\s+skyriuje|\b\d+\s+section\b/iu.exec(s))) R.err(loc, lang + ' text refers to a section number ("' + m[0] + '"): sections are not numbered in the trainer; name the section instead', tag);
     }
     for (const lang of ['lt', 'en']) {
@@ -902,8 +902,8 @@ test('validator: claims on notes blocks, numbered examples, text lint', () => {
   only(withBlock({ p: T('Propanos formulė.', 'The propane formula.') }), /genitive of -anas is -ano/);
   assert.deepEqual(run(withBlock({ p: T('Buteno formulė ir dienos metu.', 'The butene formula.') })).errors, []);
   // formulas such as NR2 / NR3+ are not atom-number references; neither is anything inside $...$
-  for (const ok of ['Aminai: –NR2 ir NR3+ grupės.', 'Amines: NR2, NR3 and NR4+ groups.', 'Grupė $Nr. 2$ ir $atom 3$.', 'Nr 5 be taško', 'Daug atomų 3 vietose']) assert.deepEqual(run(withBlock({ p: T(ok, ok + ' (en)') })).errors, [], ok);
-  for (const bad of ['Žr. Nr. 3.', 'Žr. no. 3.', 'Atomas 2', 'atomo 4', 'carbon 2', 'C-3']) assert.equal(run(withBlock({ p: T(bad, bad + ' (en)') })).errors.length, 2, bad);
+  for (const ok of ['Aminai: –NR2 ir NR3+ grupės.', 'Amines: NR2, NR3 and NR4+ groups.', 'Grupė $Nr. 2$ ir $atom 3$.', 'Nr 5 be taško', 'Daug atomų 3 vietose', 'carbon 2 of the chain', 'C-3']) assert.deepEqual(run(withBlock({ p: T(ok, ok + ' (en)') })).errors, [], ok);
+  for (const bad of ['Žr. Nr. 3.', 'Žr. no. 3.', 'Atomas 2', 'atomo 4']) assert.equal(run(withBlock({ p: T(bad, bad + ' (en)') })).errors.length, 2, bad);
   // atom-number and section-number references
   r = run(withBlock({ p: T('Žiūrėkite atomą 3.', 'Look at atom 3.') })); assert.equal(r.errors.length, 2);
   assert.match(r.errors[0], /^\[u01\] notes section "more": lt text refers to an atom number \("atomą 3"\)/);

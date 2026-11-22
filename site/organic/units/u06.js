@@ -228,6 +228,12 @@
         note: t('Du alkilradikalai sudaro $C-C$ ryšį.', 'Two alkyl radicals form a $C-C$ bond.')
       }];
     }
+    // a condensed drawing hides atoms the arrows point at: draw the molecules of a mechanism in full
+    if (mech) mech[0].scheme.items = mech[0].scheme.items.map(it => {
+      if (!it.opts || !it.opts.condensed) return it;
+      const o = Object.assign({}, it.opts); delete o.condensed;
+      return Object.assign({}, it, { opts: o });
+    });
     const PH = [t('iniciacija (grandinės pradžia)', 'initiation (start of the chain)'), t('grandinės augimas', 'propagation (chain growth)'), t('grandinės nutrūkimas', 'termination (end of the chain)')];
     const solutionStep1 = [{
       p: t('Suskaičiuokite radikalus abiejose rodyklės pusėse: iniciacijoje jų atsiranda, augimo reakcijoje jų skaičius nesikeičia (vienas sunaudojamas, kitas susidaro), nutrūkimo reakcijoje radikalų nelieka.',
