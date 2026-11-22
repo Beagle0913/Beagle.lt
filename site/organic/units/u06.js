@@ -94,14 +94,17 @@
   }
   // the carbon-class word of a radical rank
   const RAD = {
-    5: t('benzilo (arba alilo) tipo radikalas', 'benzylic (or allylic) radical'),
+    5: t('benziltipo (arba aliltipo) radikalas', 'benzylic (or allylic) radical'),
     3: t('tretinis radikalas', 'tertiary radical'),
     2: t('antrinis radikalas', 'secondary radical'),
     1: t('pirminis radikalas', 'primary radical'),
     0: t('metilradikalas', 'methyl radical')
   };
-  const RADC = {
-    5: t('benzilo tipo', 'benzylic'), 3: t('tretinio', 'tertiary'), 2: t('antrinio', 'secondary'), 1: t('pirminio', 'primary'), 0: t('metilo', 'methyl')
+  const RADC = {   // accusative, after "stabiliausią (...) radikalą"
+    5: t('benziltipo', 'benzylic'), 3: t('tretinį', 'tertiary'), 2: t('antrinį', 'secondary'), 1: t('pirminį', 'primary'), 0: t('metil-', 'methyl')
+  };
+  const RADH = {   // for "... vandeniliai"
+    5: t('benziltipo', 'benzylic'), 3: t('tretiniai', 'tertiary'), 2: t('antriniai', 'secondary'), 1: t('pirminiai', 'primary'), 0: t('metilo', 'methyl')
   };
 
   // the alkanes (and alkylbenzenes for the benzylic case) the generators draw from
@@ -109,11 +112,12 @@
     'CCCC', 'CC(C)C',
     'CCCCC', 'CC(C)CC', 'CC(C)(C)C',
     'CCCCCC', 'CC(C)CCC', 'CCC(C)CC', 'CC(C)(C)CC', 'CC(C)C(C)C',
-    'CCCCCCC', 'CC(C)CCCC', 'CCC(C)CCC', 'CC(C)C(C)CC', 'CC(C)CC(C)C', 'CCC(CC)CC', 'CC(C)(C)CCC', 'CC(C)(C)C(C)C',
-    'CC(C)CC(C)(C)C', 'CC(C)C(C)C(C)C', 'CC(C)CCC(C)C', 'CC(C)(C)C(C)(C)C', 'CCC(C)(C)CC',
-    'C1CCC1', 'C1CCCC1', 'C1CCCCC1', 'C1CCCCCC1',
+    'CCCCCCC', 'CC(C)CCCC', 'CCC(C)CCC', 'CC(C)C(C)CC', 'CC(C)CC(C)C', 'CCC(CC)CC', 'CC(C)(C)CCC', 'CC(C)(C)C(C)C', 'CCC(C)(C)CC',
+    'CC(C)CC(C)(C)C', 'CC(C)C(C)C(C)C', 'CC(C)CCC(C)C', 'CC(C)(C)C(C)(C)C',
+    'CCCCCCCC', 'CC(C)CCCCC', 'CCC(C)(C)CCC', 'CC(C)(C)CC(C)(C)C', 'CC(C)CCC(C)(C)C',
+    'C1CCCC1', 'C1CCCCC1', 'C1CCCCCC1', 'C1CCCCCCC1',
     'CC1CCCC1', 'CC1CCCCC1', 'CCC1CCCC1', 'CCC1CCCCC1', 'CC(C)C1CCCCC1', 'CC1CCC(C)CC1', 'CC1CCCC(C)C1', 'CC1(C)CCCCC1',
-    'CC1CCC(C)(C)CC1', 'CC(C)C1CCCC1', 'CC1CCCC1C', 'CC1CCC1', 'CC1CC1', 'CCC1CC1', 'CC1CC1C', 'CC(C)C1CC1', 'CC1(C)CCC1', 'CCC1CCC1',
+    'CC1CCC(C)(C)CC1', 'CC(C)C1CCCC1', 'CC1CCCC1C', 'CC1CCCCCC1', 'CCC1CCCCCC1',
     'CCc1ccccc1', 'CC(C)c1ccccc1', 'CCCc1ccccc1', 'CCC(C)c1ccccc1'
   ];
   // radicals for the ordering type: one exemplar group per class
@@ -127,10 +131,9 @@
   };
 
   const hv = (X) => ({ arrow: '→', above: f(X + '2, hν') });
-  const fmt = (x) => t(String(x).replace('.', ','), String(x));
   const sitesText = (c) => c.sites.map(i => i + 1).join(', ');
   const formulaOf = (ctx, s) => ctx.chem.formulaString(ctx.chem.parse(s));
-  // isomeric alkanes of the pool (same molecular formula, other skeleton)
+  // isomeric hydrocarbons of the pool (same molecular formula, other skeleton)
   function partners(ctx, smi) {
     const F = formulaOf(ctx, smi);
     return POOL.filter(s => s !== smi && formulaOf(ctx, s) === F);
@@ -143,7 +146,19 @@
     }
     return null;
   }
-  const sp = (smi, opts) => (opts ? { smi, opts } : (smi.length <= 4 && /^(CC?|C(Cl|Br))$/.test(smi) ? { smi, opts: { condensed: true } } : { smi }));
+  const sp = (smi, opts) => (opts ? { smi, opts } : (/^(CC?|C(Cl|Br)|C\[CH2\])$/.test(smi) ? { smi, opts: { condensed: true } } : { smi }));
+  // is the chirality of the products well defined? (substrate without stereoisomers; no product with an achiral stereoisomer)
+  function chiralityClear(ctx, smi, a) {
+    const { stereo } = ctx;
+    if (stereo.stereoisomers(smi).length > 1) return false;
+    return !a.classes.some(c => stereo.isChiral(c.prod) && stereo.stereoisomers(c.prod).some(s => !stereo.isChiral(s)));
+  }
+  const RATES = { Cl: { 1: 1, 2: 4, 3: 5 }, Br: { 1: 1, 2: 80, 3: 1600 } };
+  const rateNote = (X) => {
+    const r = RATES[X];
+    return t('santykinis vieno vandenilio atomo reaktingumas: pirminis ' + r[1] + ', antrinis ' + r[2] + ', tretinis ' + r[3] + ', supaprastintas modelis',
+      'relative reactivity of one hydrogen: primary ' + r[1] + ', secondary ' + r[2] + ', tertiary ' + r[3] + ', a simplified model');
+  };
 
   /* ---------- generator: classify an elementary step of the chain ---------- */
   // RH alkane, R its radical, r the radical atom, RX the halide, RR the dimer, h the atom whose hydrogen is drawn
@@ -153,7 +168,8 @@
     { RH: 'CCC', R: 'C[CH]C', r: 1, RX: (X) => 'CC(C)' + X, RR: 'CC(C)C(C)C', draw: false },
     { RH: 'CC(C)C', R: 'C[C](C)C', r: 1, RX: (X) => 'CC(C)(C)' + X, RR: 'CC(C)(C)C(C)(C)C', draw: false },
     { RH: 'CCCC', R: 'CC[CH]C', r: 2, RX: (X) => 'CCC(C)' + X, RR: 'CCC(C)C(C)CC', draw: false },
-    { RH: 'C1CCCCC1', R: '[CH]1CCCCC1', r: 0, RX: (X) => X + 'C1CCCCC1', RR: 'C1CCC(CC1)C1CCCCC1', draw: false }
+    { RH: 'C1CCCCC1', R: '[CH]1CCCCC1', r: 0, RX: (X) => X + 'C1CCCCC1', RR: 'C1CCC(CC1)C1CCCCC1', draw: false },
+    { RH: 'CC1CCCC1', R: 'C[C]1CCCC1', r: 1, RX: (X) => 'CC1(' + X + ')CCCC1', RR: 'CC1(CCCC1)C1(C)CCCC1', draw: false }
   ];
   const STEPKIND = ['init', 'term1', 'prop1', 'prop2', 'term2', 'term3', 'prop1', 'prop2', 'term2', 'term3'];
 
@@ -164,48 +180,49 @@
     const kind = ctx.pick(STEPKIND);
     const XX = X + X, Xr = '[' + X + ']', HX = X, RX = ch.RX(X);
     const nR = chem.parse(ch.R).atoms.length;
-    let items, species, rad, mech = null, phase;
+    let items, mech = null, phase;
     if (kind === 'init') {
-      items = [sp(XX), hv(X), sp(Xr), { plus: true }, sp(Xr)];
-      species = [XX, Xr]; rad = [1]; phase = 0;
+      items = [sp(XX), { arrow: '→', above: f('hν') }, sp(Xr), { plus: true }, sp(Xr)];
+      phase = 0;
       mech = [{
         scheme: { items }, arrows: [{ from: { m: 0, b: [0, 1] }, to: { m: 0, a: 0 }, half: true }, { from: { m: 0, b: [0, 1] }, to: { m: 0, a: 1 }, half: true }],
         note: t('Šviesa suskaido $' + X + '-' + X + '$ ryšį: kiekvienas atomas pasiima po vieną elektroną.', 'Light splits the $' + X + '-' + X + '$ bond: each atom takes one electron.')
       }];
     } else if (kind === 'term1') {
       items = [sp(Xr + '.' + Xr), { arrow: '→' }, sp(XX)];
-      species = [Xr, XX]; rad = [0]; phase = 2;
+      phase = 2;
       mech = [{
         scheme: { items }, arrows: [{ from: { m: 0, a: 0 }, to: { m: 0, mid: [0, 1] }, half: true }, { from: { m: 0, a: 1 }, to: { m: 0, mid: [0, 1] }, half: true }],
         note: t('Du radikalai sudaro $' + X + '-' + X + '$ ryšį.', 'Two radicals form the $' + X + '-' + X + '$ bond.')
       }];
     } else if (kind === 'prop1') {
       items = [sp(Xr), { plus: true }, sp(ch.RH), { arrow: '→' }, sp(HX), { plus: true }, sp(ch.R)];
-      species = [Xr, ch.RH, HX, ch.R]; rad = [0, 3]; phase = 1;
+      phase = 1;
       if (ch.draw) {
         const its = items.slice(); its[2] = sp(ch.RH, { allH: true });
+        const hb = { m: 1, b: [ch.h, 'H' + ch.h] };
         mech = [{
-          scheme: { items: its }, arrows: [{ from: { m: 0, a: 0 }, to: { m: 1, a: 'H' + ch.h }, half: true }, { from: { m: 1, b: [ch.h, 'H' + ch.h] }, to: { m: 1, a: ch.h }, half: true }],
-          note: t('Halogeno radikalas pasiima vandenilį su vienu elektronu, o antras $C-H$ elektronas lieka anglies atomui.', 'The halogen radical takes the hydrogen with one electron, and the other $C-H$ electron stays on carbon.')
+          scheme: { items: its }, arrows: [{ from: { m: 0, a: 0 }, to: { m: 1, a: 'H' + ch.h }, half: true }, { from: hb, to: { m: 1, a: 'H' + ch.h }, half: true }, { from: hb, to: { m: 1, a: ch.h }, half: true }],
+          note: t('Halogeno radikalo elektronas ir vienas $C-H$ elektronas sudaro $H-' + X + '$ ryšį, o antras $C-H$ elektronas lieka anglies atomui.', 'The electron of the halogen radical and one $C-H$ electron form the $H-' + X + '$ bond, and the other $C-H$ electron stays on carbon.')
         }];
       }
     } else if (kind === 'prop2') {
       items = [sp(ch.R), { plus: true }, sp(XX), { arrow: '→' }, sp(RX), { plus: true }, sp(Xr)];
-      species = [ch.R, XX, RX, Xr]; rad = [0, 3]; phase = 1;
+      phase = 1;
       mech = [{
-        scheme: { items }, arrows: [{ from: { m: 0, a: ch.r }, to: { m: 1, a: 0 }, half: true }, { from: { m: 1, b: [0, 1] }, to: { m: 1, a: 1 }, half: true }],
-        note: t('Radikalo elektronas sudaro ryšį su vienu halogeno atomu, o vienas $' + X + '-' + X + '$ elektronas pereina kitam atomui.', 'The radical electron bonds to one halogen atom, and one $' + X + '-' + X + '$ electron goes to the other atom.')
+        scheme: { items }, arrows: [{ from: { m: 0, a: ch.r }, to: { m: 1, a: 0 }, half: true }, { from: { m: 1, b: [0, 1] }, to: { m: 1, a: 0 }, half: true }, { from: { m: 1, b: [0, 1] }, to: { m: 1, a: 1 }, half: true }],
+        note: t('Radikalo elektronas ir vienas $' + X + '-' + X + '$ elektronas sudaro naują $C-' + X + '$ ryšį, o kitas $' + X + '-' + X + '$ elektronas lieka išeinančiam halogeno atomui.', 'The radical electron and one $' + X + '-' + X + '$ electron form the new $C-' + X + '$ bond, and the other $' + X + '-' + X + '$ electron stays on the leaving halogen atom.')
       }];
     } else if (kind === 'term2') {
       items = [sp(ch.R + '.' + Xr), { arrow: '→' }, sp(RX)];
-      species = [ch.R, Xr, RX]; rad = [0, 1]; phase = 2;
+      phase = 2;
       mech = [{
         scheme: { items }, arrows: [{ from: { m: 0, a: ch.r }, to: { m: 0, mid: [ch.r, nR] }, half: true }, { from: { m: 0, a: nR }, to: { m: 0, mid: [ch.r, nR] }, half: true }],
         note: t('Alkilradikalas ir halogeno radikalas sudaro $C-' + X + '$ ryšį.', 'An alkyl radical and a halogen radical form a $C-' + X + '$ bond.')
       }];
     } else {
       items = [sp(ch.R + '.' + ch.R), { arrow: '→' }, sp(ch.RR)];
-      species = [ch.R, ch.RR]; rad = [0]; phase = 2;
+      phase = 2;
       mech = [{
         scheme: { items }, arrows: [{ from: { m: 0, a: ch.r }, to: { m: 0, mid: [ch.r, nR + ch.r] }, half: true }, { from: { m: 0, a: nR + ch.r }, to: { m: 0, mid: [ch.r, nR + ch.r] }, half: true }],
         note: t('Du alkilradikalai sudaro $C-C$ ryšį.', 'Two alkyl radicals form a $C-C$ bond.')
@@ -213,29 +230,50 @@
     }
     const PH = [t('iniciacija (grandinės pradžia)', 'initiation (start of the chain)'), t('grandinės augimas', 'propagation (chain growth)'), t('grandinės nutrūkimas', 'termination (end of the chain)')];
     const solutionStep1 = [{
-      p: t('Suskaičiuokite radikalus abiejose rodyklės pusėse: iniciacijoje jų atsiranda, augimo stadijoje jų skaičius nesikeičia (vienas sunaudojamas, kitas susidaro), nutrūkimo stadijoje radikalų nelieka.',
-        'Count the radicals on both sides of the arrow: in initiation they appear, in propagation their number stays the same (one is used up, another forms), in termination none is left.')
+      p: t('Suskaičiuokite radikalus abiejose rodyklės pusėse: iniciacijoje jų atsiranda, augimo reakcijoje jų skaičius nesikeičia (vienas sunaudojamas, kitas susidaro), nutrūkimo reakcijoje radikalų nelieka.',
+        'Count the radicals on both sides of the arrow: in initiation they appear, in a propagation step their number stays the same (one is used up, another forms), in termination none is left.')
     }].concat(mech ? [{ mech }] : []);
-    const steps = [
-      {
-        prompt: t('Kuriai grandininės reakcijos stadijai priklauso ši elementarioji reakcija?', 'Which stage of the chain reaction does this elementary step belong to?'),
-        kind: 'choice', options: PH.map(x => ({ text: x })), answer: phase,
-        hint: t('Palyginkite radikalų skaičių prieš rodyklę ir už jos.', 'Compare the number of radicals before and after the arrow.'),
-        solution: solutionStep1
-      },
-      {
-        prompt: t('Pažymėkite visas dalelės, kurios šioje stadijoje yra radikalai.', 'Pick every species in this step that is a radical.'),
-        kind: 'multi', options: species.map(s => ({ mol: { smi: s } })), answer: rad,
-        hint: t('Radikalas turi nesuporuotą elektroną, kuris piešiamas kaip taškas.', 'A radical has an unpaired electron, drawn as a dot.'),
-        solution: t('Radikalai pažymėti tašku. Molekulės, kuriose visi elektronai suporuoti (alkanas, $' + XX + '$, halogenalkanas, $H' + X + '$), radikalais nėra.',
-          'Radicals carry a dot. Molecules in which all electrons are paired (alkane, $' + XX + '$, haloalkane, $H' + X + '$) are not radicals.')
-      }
-    ];
+    const steps = [{
+      prompt: t('Kuriai grandininės reakcijos stadijai priklauso ši elementarioji reakcija?', 'Which stage of the chain reaction does this elementary step belong to?'),
+      kind: 'choice', options: PH.map(x => ({ text: x })), answer: phase,
+      hint: t('Palyginkite radikalų skaičių prieš rodyklę ir už jos.', 'Compare the number of radicals before and after the arrow.'),
+      solution: solutionStep1
+    }];
+    if (phase < 2) {
+      const nextRH = [sp(Xr), { plus: true }, sp(ch.RH), { arrow: '→' }, sp(HX), { plus: true }, sp(ch.R)];
+      const nextRX = [sp(ch.R), { plus: true }, sp(XX), { arrow: '→' }, sp(RX), { plus: true }, sp(Xr)];
+      const wrong = [
+        [sp(ch.R), { plus: true }, sp(HX), { arrow: '→' }, sp(ch.RH), { plus: true }, sp(Xr)],
+        [sp(ch.R), { plus: true }, sp(ch.R), { arrow: '→' }, sp(ch.RR)],
+        [sp(Xr), { plus: true }, sp(ch.RH), { arrow: '→' }, sp(RX), { plus: true }, sp('[H]')]
+      ];
+      steps.push({
+        prompt: t('Kuri elementarioji reakcija vyks po šios, tęsiant grandinę?', 'Which elementary step follows this one when the chain goes on?'),
+        kind: 'choice', options: [kind === 'prop1' ? nextRX : nextRH].concat(wrong).map(its => ({ scheme: { items: its } })), answer: 0,
+        hint: t('Augimo reakcijos eina viena po kitos: ką tik atsiradęs radikalas reaguoja su kita molekule ir sukuria naują radikalą.', 'Propagation steps follow one another: the radical that has just appeared reacts with another molecule and makes a new radical.'),
+        solution: t('Augimo reakcijos sudaro ciklą. ' + (kind === 'prop1' ? 'Alkilradikalas atplėšia halogeno atomą nuo $' + XX + '$ ir atsinaujina $' + X + '•$.' : 'Halogeno radikalas atplėšia vandenilį nuo alkano ir susidaro alkilradikalas.') + ' Atvirkštinė reakcija, radikalų susijungimas ar $H•$ susidarymas čia netinka.',
+          'The propagation steps form a cycle. ' + (kind === 'prop1' ? 'The alkyl radical takes a halogen atom from $' + XX + '$ and $' + X + '•$ is regenerated.' : 'The halogen radical removes a hydrogen from the alkane and an alkyl radical forms.') + ' The reverse step, a combination of radicals or the formation of $H•$ does not fit.')
+      });
+    } else {
+      steps.push({
+        prompt: t('Kodėl po šios reakcijos grandinė nutrūksta?', 'Why does the chain stop after this step?'),
+        kind: 'choice',
+        options: [
+          { text: t('Radikalai sunaudojami: neliko dalelės, kuri galėtų atplėšti vandenilį.', 'The radicals are used up: no species is left that could remove a hydrogen.') },
+          { text: t('Išseko šviesa, todėl iniciacija nebevyksta.', 'The light has run out, so initiation no longer takes place.') },
+          { text: t('Susidarė produktas, kuris nereaguoja su halogenu.', 'A product formed that does not react with the halogen.') },
+          { text: t('Radikalų skaičius padidėjo ir reakcija sustojo.', 'The number of radicals grew and the reaction stopped.') }
+        ],
+        answer: 0,
+        hint: t('Pagalvokite, kokių dalelių reikia kitai augimo reakcijai.', 'Think about which species the next propagation step needs.'),
+        solution: t('Du radikalai susijungė į molekulę, o be radikalų augimo reakcijos negali vykti. Šviesa tik pradeda grandinę.', 'Two radicals combined into a molecule, and without radicals the propagation steps cannot run. Light only starts the chain.')
+      });
+    }
     return {
       q: [{ p: t('Pateikta viena alkano halogeninimo grandininės reakcijos elementarioji reakcija.', 'One elementary step of the chain halogenation of an alkane is given.') }, { scheme: { items } }],
       steps,
-      why: t('Grandininę reakciją sudaro trys dalys. Radikalų skaičius parodo, kuri iš jų eina: iniciacijoje jų daugėja, augime jų skaičius nesikeičia (radikalas „perduodamas“), o nutrūkime jų mažėja.',
-        'A chain reaction has three parts. The number of radicals shows which one it is: it grows in initiation, stays the same in propagation (the radical is passed on) and falls in termination.'),
+      why: t('Grandininę reakciją sudaro trys stadijos. Radikalų skaičius parodo, kuri iš jų vyksta: iniciacijoje jų daugėja, augime jų skaičius nesikeičia (radikalas „perduodamas“), o nutrūkime jų mažėja.',
+        'A chain reaction has three stages. The number of radicals shows which one is running: it grows in initiation, stays the same in propagation (the radical is passed on) and falls in termination.'),
       src: 'L6 p7'
     };
   }
@@ -244,16 +282,18 @@
   function genCount(rng, ctx) {
     const { stereo } = ctx;
     const pk = pickAnalysed(ctx, 'Cl', () => true);
-    if (!pk) throw new Error('u06.count: no usable alkane');
+    if (!pk) throw new Error('u06.count: no usable hydrocarbon');
     const { smi, a } = pk;
     const cl = a.classes;
+    const n = cl.length;
     const big = cl.slice().sort((x, y) => y.sites.length - x.sites.length)[0];
     const chiral = cl.filter(c => stereo.isChiral(c.prod));
     const steps = [{
-      prompt: t('Kiek skirtingų (konstitucinių izomerų) monochlorintų produktų gali susidaryti?', 'How many different (constitutional isomer) monochloro products can form?'),
-      kind: 'number', answer: { value: cl.length, tol: 0 }, mol: { smi },
+      prompt: t('Kiek skirtingų (konstitucijos izomerų) monochlorintų produktų gali susidaryti?', 'How many constitutionally different monochloro products can form?'),
+      kind: 'number', answer: { value: n, tol: 0 }, mol: { smi },
       hint: t('Sugrupuokite vandenilius pagal simetriją: kiekviena ekvivalentinių vandenilių grupė duoda vieną produktą.', 'Group the hydrogens by symmetry: each group of equivalent hydrogens gives one product.'),
-      solution: [{ p: t('Yra ' + cl.length + ' ekvivalentinių vandenilių grupių, todėl susidaro ' + cl.length + ' izomerai:', 'There are ' + cl.length + ' groups of equivalent hydrogens, so ' + cl.length + ' isomers form:') },
+      solution: [{ p: n === 1 ? t('Yra viena ekvivalentinių vandenilių grupė, todėl susidaro vienas izomeras:', 'There is one group of equivalent hydrogens, so one isomer forms:')
+        : t('Yra ' + n + ' ekvivalentinių vandenilių grupės, todėl susidaro ' + n + ' izomerai:', 'There are ' + n + ' groups of equivalent hydrogens, so ' + n + ' isomers form:') },
         { mol: cl.map(c => ({ smi: c.prod })) }]
     }];
     if (big.sites.length >= 2) {
@@ -264,67 +304,72 @@
         solution: t('Atomai Nr. ' + sitesText(big) + ' yra simetriškai ekvivalentiški, todėl jų pakeitimas duoda tą patį produktą.', 'Carbons no. ' + sitesText(big) + ' are equivalent by symmetry, so replacing their hydrogens gives the same product.')
       });
     }
-    steps.push({
-      prompt: t('Kiek iš šių monochlorintų izomerų yra chiralinių?', 'How many of these monochloro isomers are chiral?'),
-      kind: 'number', answer: { value: chiral.length, tol: 0 },
-      hint: t('Ieškokite anglies atomo su keturiais skirtingais pakaitais.', 'Look for a carbon with four different substituents.'),
-      solution: chiral.length
-        ? [{ p: t('Chiralinis centras yra šiuose produktuose (susidaro racematai):', 'These products have a chiral centre (racemates form):') }, { mol: chiral.map(c => ({ smi: c.prod })) }]
-        : t('Nė viename produkte nėra anglies atomo su keturiais skirtingais pakaitais.', 'No product has a carbon with four different substituents.')
-    });
+    if (chiralityClear(ctx, smi, a)) {
+      steps.push({
+        prompt: t('Kiek iš šių monochlorintų izomerų yra chiralinių?', 'How many of these monochloro isomers are chiral?'),
+        kind: 'number', answer: { value: chiral.length, tol: 0 },
+        hint: t('Patikrinkite kiekvieną produkto anglies atomą, ne tik tą, prie kurio prisijungė chloras: ar kuris nors turi keturis skirtingus pakaitus?', 'Check every carbon of each product, not only the one that took the chlorine: does any of them carry four different groups?'),
+        solution: chiral.length
+          ? [{ p: t('Chiralinį centrą turi šie produktai (jis gali būti ir ne prie chloro):', 'These products have a chiral centre (it need not be at the chlorine):') }, { mol: chiral.map(c => ({ smi: c.prod })) }]
+          : t('Nė viename produkte nėra anglies atomo su keturiais skirtingais pakaitais.', 'No product has a carbon with four different substituents.')
+      });
+    }
     return {
-      q: [{ p: t('Alkanas chloruojamas radikaliniu būdu, kol susidaro monochlorinti produktai.', 'An alkane is chlorinated by the radical route until the monochloro products form.') },
+      q: [{ p: t('Angliavandenilis monochlorinamas radikaliniu būdu.', 'A hydrocarbon undergoes radical monochlorination.') },
         { scheme: { items: [sp(smi), hv('Cl')] } }],
       steps,
-      why: t('Produktų skaičių lemia ekvivalentinių vandenilių grupių skaičius: chloras beveik nesirenka, todėl kiekviena grupė duoda savo izomerą. Chiralinis produktas atsiranda, kai pakeistas atomas gauna keturis skirtingus pakaitus.',
-        'The number of products is set by the number of groups of equivalent hydrogens: chlorine hardly chooses, so every group gives its own isomer. A chiral product forms when the substituted carbon ends up with four different groups.'),
+      why: t('Produktų skaičių lemia ekvivalentinių vandenilių grupių skaičius: chloras beveik nesirenka, todėl kiekviena grupė duoda savo izomerą. Chiralinį centrą turi produktas, kuriame yra anglies atomas su keturiais skirtingais pakaitais.',
+        'The number of products is set by the number of groups of equivalent hydrogens: chlorine hardly chooses, so every group gives its own isomer. A product is chiral when it has a carbon with four different groups.'),
       src: 'S4.1'
     };
   }
 
-  /* ---------- generator: all monochloro products (multi) and which are chiral ---------- */
+  /* ---------- generator: chlorination products: which radical, which is the largest, which are chiral ---------- */
   function genChlor(rng, ctx) {
     const { stereo } = ctx;
-    const pk = pickAnalysed(ctx, 'Cl', (a, smi) => a.classes.length >= 2 && a.classes.length <= 5 && partners(ctx, smi).length >= 1);
-    if (!pk) throw new Error('u06.chlor: no usable alkane');
+    const pk = pickAnalysed(ctx, 'Cl', (a) => a.classes.length >= 2 && a.classes.length <= 5 && new Set(a.classes.map(c => c.rad)).size >= 2);
+    if (!pk) throw new Error('u06.chlor: no usable hydrocarbon');
     const { smi, a } = pk;
-    const right = a.classes.map(c => c.prod);
-    const seen = new Set(right.map(s => canon(ctx, s)));
-    const cand = [];
-    ctx.shuffle(partners(ctx, smi)).forEach(p => {
-      const b = analyse(ctx, p, 'Cl');
-      if (b) ctx.shuffle(b.classes).forEach(c => cand.push(c.prod));
-    });
-    const wrong = [];
-    for (const s of cand) {
-      if (wrong.length === 2) break;
-      if (seen.has(canon(ctx, s))) continue;
-      seen.add(canon(ctx, s)); wrong.push(s);
-    }
-    if (!wrong.length) throw new Error('u06.chlor: no wrong options');
-    const options = right.concat(wrong).map(s => ({ mol: { smi: s } }));
-    const chiral = a.classes.map((c, i) => (stereo.isChiral(c.prod) ? i : -1)).filter(i => i >= 0);
+    const cl = a.classes;
+    const types = Array.from(new Set(cl.map(c => c.rad))).sort((x, y) => y - x);
     const steps = [{
-      prompt: t('Pažymėkite visus monochlorintus produktus, kurie susidaro.', 'Pick every monochloro product that forms.'),
-      kind: 'multi', options, answer: right.map((s, i) => i),
-      hint: t('Kiekviena ekvivalentinių vandenilių grupė duoda vieną produktą. Chloro atomas neperkelia anglies skeleto.', 'Each group of equivalent hydrogens gives one product. The chlorine atom does not rearrange the carbon skeleton.'),
-      solution: [{ p: t('Chloras beveik nesirenka, todėl susidaro visi ' + right.length + ' izomerai. Likusieji produktai turi kitokį anglies skeletą ir negalėtų susidaryti iš šio alkano.', 'Chlorine hardly chooses, so all ' + right.length + ' isomers form. The other structures have a different carbon skeleton and cannot come from this alkane.') },
-        { mol: right.map(s => ({ smi: s })) }]
+      prompt: t('Kiekvieną monochlorintą produktą priskirkite radikalui, iš kurio jis susidaro.', 'Match each monochloro product with the radical it comes from.'),
+      kind: 'match',
+      answer: { left: cl.map(c => ({ mol: { smi: c.prod } })), right: types.map(r => ({ text: RAD[r] })), pairs: cl.map(c => types.indexOf(c.rad)) },
+      hint: t('Produkte raskite anglies atomą su chloru ir suskaičiuokite jo anglies kaimynus.', 'In each product find the carbon bearing chlorine and count its carbon neighbours.'),
+      solution: t('Chloras jungiasi ten, kur buvo radikalas. Radikalo tipą nusako anglies kaimynų skaičius: vienas – pirminis, du – antrinis, trys – tretinis.', 'Chlorine bonds where the radical was. The type of the radical is given by the number of carbon neighbours: one is primary, two secondary, three tertiary.')
     }];
-    if (chiral.length) {
-      steps.push({
-        prompt: t('Kurie iš susidariusių produktų yra chiralinės molekulės?', 'Which of the products that form are chiral molecules?'),
-        kind: 'multi', options: right.map(s => ({ mol: { smi: s } })), answer: chiral,
-        hint: t('Chiralinė molekulė turi anglies atomą su keturiais skirtingais pakaitais.', 'A chiral molecule has a carbon with four different substituents.'),
-        solution: t('Chiralinį centrą turi tik tie produktai, kuriuose chloras (ar kita grupė) pakeičia atomą, gaunantį keturis skirtingus pakaitus. Tarpinis radikalas plokščias, todėl chloras jungiasi iš abiejų pusių ir susidaro racematas.',
-          'Only the products in which the substituted carbon gets four different groups have a chiral centre. The intermediate radical is planar, so chlorine bonds from both sides and a racemate forms.')
-      });
+    if (cl.every(c => c.rad >= 1 && c.rad <= 3)) {
+      const w = cl.map(c => c.nH * RATES.Cl[c.rad]);
+      const mx = Math.max.apply(null, w);
+      if (w.filter(x => x === mx).length === 1) {
+        const k = w.indexOf(mx);
+        steps.push({
+          prompt: t('Kurio monochlorido susidaro daugiausia (' + rateNote('Cl').lt + ')?', 'Which monochloride forms in the largest amount (' + rateNote('Cl').en + ')?'),
+          kind: 'choice', options: cl.map(c => ({ mol: { smi: c.prod } })), answer: k,
+          hint: t('Produkto kiekis proporcingas vandenilių skaičiui, padaugintam iš vieno vandenilio reaktingumo.', 'The amount of a product is proportional to the number of hydrogens times the reactivity of one hydrogen.'),
+          solution: [{ p: t('Skaičiuojame vandenilių skaičių × reaktingumas kiekvienai grupei:', 'For each group we compute number of hydrogens × reactivity:') },
+            { list: cl.map((c, i) => t(RADH[c.rad].lt + ' vandeniliai: ' + c.nH + ' × ' + RATES.Cl[c.rad] + ' = ' + w[i], c.nH + ' × ' + RATES.Cl[c.rad] + ' = ' + w[i] + ' (' + RADH[c.rad].en + ' hydrogens)')) }]
+        });
+      }
+    }
+    if (chiralityClear(ctx, smi, a)) {
+      const chiral = cl.map((c, i) => (stereo.isChiral(c.prod) ? i : -1)).filter(i => i >= 0);
+      if (chiral.length) {
+        steps.push({
+          prompt: t('Kurie iš šių produktų yra chiralinės molekulės?', 'Which of these products are chiral molecules?'),
+          kind: 'multi', options: cl.map(c => ({ mol: { smi: c.prod } })), answer: chiral,
+          hint: t('Patikrinkite kiekvieną produkto anglies atomą, ne tik tą, prie kurio prisijungė chloras.', 'Check every carbon of each product, not only the one that took the chlorine.'),
+          solution: t('Chiralinis produktas turi bent vieną anglies atomą su keturiais skirtingais pakaitais. Tai gali būti pats pakeistas atomas (2-chlorbutanas) arba kitas atomas, kurio pakaitai po chlorinimo tapo skirtingi (1-chlor-2-metilbutano atomas Nr. 2). Tarpinis radikalas plokščias, todėl naujas chiralinis centras susidaro kaip racematas.',
+            'A chiral product has at least one carbon with four different groups. It can be the substituted carbon itself (2-chlorobutane) or another carbon whose groups became different after chlorination (carbon 2 of 1-chloro-2-methylbutane). The intermediate radical is planar, so a new chiral centre forms as a racemate.')
+        });
+      }
     }
     return {
-      q: [{ p: t('Alkanas reaguoja su chloru apšvietus.', 'An alkane reacts with chlorine in light.') }, { scheme: { items: [sp(smi), hv('Cl')] } }],
+      q: [{ p: t('Angliavandenilis reaguoja su chloru apšvietus.', 'A hydrocarbon reacts with chlorine in light.') }, { scheme: { items: [sp(smi), hv('Cl')] } }],
       steps,
-      why: t('Chlorinant gaunamas visų monochlorintų izomerų mišinys, nes chloro radikalas beveik nesirenka. Anglies skeletas nekinta, todėl kitų alkanų izomerų dariniai čia nesusidaro.',
-        'Chlorination gives a mixture of all monochloro isomers, because the chlorine radical hardly chooses. The carbon skeleton does not change, so derivatives of other isomeric alkanes do not form.'),
+      why: t('Chlorinant gaunamas visų monochlorintų izomerų mišinys, nes chloro radikalas beveik nesirenka. Kiekvienas produktas atitinka vieną radikalą, o jo kiekis priklauso ir nuo vandenilių skaičiaus, ir nuo radikalo tipo.',
+        'Chlorination gives a mixture of all monochloro isomers, because the chlorine radical hardly chooses. Each product corresponds to one radical, and its amount depends on both the number of hydrogens and the type of radical.'),
       src: 'S4.1'
     };
   }
@@ -332,7 +377,7 @@
   /* ---------- generator: Br2, hv: the site, the radical, the main product ---------- */
   function genBrom(rng, ctx) {
     const pk = pickAnalysed(ctx, 'Br', (a) => a.classes.length >= 2 && a.classes.some(c => !c.major));
-    if (!pk) throw new Error('u06.brom: no usable alkane');
+    if (!pk) throw new Error('u06.brom: no usable hydrocarbon');
     const { smi, a } = pk;
     const majors = a.classes.filter(c => c.major), others = a.classes.filter(c => !c.major);
     const tie = majors.length > 1;
@@ -341,18 +386,21 @@
     const radOpts = majors.concat(take).map(c => ({ mol: { smi: radicalOf(ctx.chem, smi, c.rep) } }));
     const prodOpts = majors.concat(take).map(c => ({ mol: { smi: c.prod } }));
     const allSites = [].concat.apply([], majors.map(c => c.sites)).sort((x, y) => x - y);
+    const many = allSites.length > 1;
+    const lab = allSites.map(i => i + 1).join(', ');
     const idx = majors.map((c, i) => i);
     const steps = [{
-      prompt: tie ? t('Bakstelėkite visus anglies atomus, kurių vandenilį $Br•$ atplėšia greičiausiai.', 'Tap every carbon whose hydrogen $Br•$ abstracts fastest.')
+      prompt: many ? t('Bakstelėkite visus anglies atomus, kurių vandenilį $Br•$ atplėšia greičiausiai (ir simetriškai ekvivalentiškus).', 'Tap every carbon whose hydrogen $Br•$ abstracts fastest (equivalent carbons too).')
         : t('Bakstelėkite anglies atomą, kurio vandenilį $Br•$ atplėšia greičiausiai.', 'Tap the carbon whose hydrogen $Br•$ abstracts fastest.'),
       kind: 'atoms', mol: { smi, opts: { numbers: 'all' } }, answer: allSites,
       hint: t('Palyginkite, koks alkilradikalas susidarytų atplėšus vandenilį nuo kiekvieno atomo.', 'Compare the alkyl radical that would form when the hydrogen is removed from each carbon.'),
-      solution: t('Atomo (-ų) Nr. ' + allSites.map(i => i + 1).join(', ') + ' vandenilis atplėšiamas, nes susidaro stabiliausias radikalas: ' + (tie ? '' : '') + RAD[best].lt + '.',
-        'The hydrogen of carbon(s) no. ' + allSites.map(i => i + 1).join(', ') + ' is removed, because the most stable radical forms: ' + RAD[best].en + '.')
+      solution: many
+        ? t('Vandenilis greičiausiai atplėšiamas nuo atomų Nr. ' + lab + ': jie duoda vienodą, stabiliausią radikalą – ' + RAD[best].lt + '.', 'The hydrogen is removed fastest from carbons no. ' + lab + ': they give the same, most stable radical, a ' + RAD[best].en + '.')
+        : t('Vandenilis greičiausiai atplėšiamas nuo atomo Nr. ' + lab + ': susidaro stabiliausias radikalas – ' + RAD[best].lt + '.', 'The hydrogen is removed fastest from carbon no. ' + lab + ': the most stable radical forms, a ' + RAD[best].en + '.')
     }, {
       prompt: tie ? t('Pažymėkite radikalus, kurie susidaro greičiausiai.', 'Pick the radicals that form fastest.') : t('Kuris alkilradikalas susidaro greičiausiai?', 'Which alkyl radical forms fastest?'),
       kind: tie ? 'multi' : 'choice', options: radOpts, answer: tie ? idx : 0,
-      hint: t('Prisiminkite radikalų stabilumo eilę: benzilo = alilo > tretinis > antrinis > pirminis > metilo.', 'Recall the stability order of radicals: benzyl = allyl > tertiary > secondary > primary > methyl.'),
+      hint: t('Prisiminkite radikalų stabilumo eilę: benzil- = alil- > tretinis > antrinis > pirminis > metil-.', 'Recall the stability order of radicals: benzyl = allyl > tertiary > secondary > primary > methyl.'),
       solution: t('Kuo stabilesnis radikalas, tuo greičiau jis susidaro. Čia tai ' + RAD[best].lt + '.', 'The more stable the radical, the faster it forms. Here it is the ' + RAD[best].en + '.')
     }, {
       prompt: tie ? t('Pažymėkite pagrindinius produktus.', 'Pick the main products.') : t('Koks yra pagrindinis produktas?', 'What is the main product?'),
@@ -370,7 +418,7 @@
       });
     }
     return {
-      q: [{ p: t('Alkanas brominamas radikaliniu būdu.', 'An alkane is brominated by the radical route.') }, { scheme: { items: [sp(smi), hv('Br')] } }],
+      q: [{ p: t('Angliavandenilis brominamas radikaliniu būdu.', 'A hydrocarbon is brominated by the radical route.') }, { scheme: { items: [sp(smi), hv('Br')] } }],
       steps,
       why: t('Bromo radikalas mažai aktyvus ir labai selektyvus: jis atplėšia tą vandenilį, kurį pašalinus susidaro stabiliausias radikalas, o toks produktas ir vyrauja. Chloras taip nesirenka.',
         'The bromine radical is weakly reactive and very selective: it removes the hydrogen whose loss gives the most stable radical, and that product predominates. Chlorine does not choose like this.'),
@@ -379,32 +427,33 @@
   }
 
   /* ---------- generator: product shares from relative rates ---------- */
-  const RATES = { Cl: { 1: 1, 2: 4, 3: 5 }, Br: { 1: 1, 2: 80, 3: 1600 } };
   function genPct(rng, ctx) {
     const X = ctx.pick(['Cl', 'Br']);
     const pk = pickAnalysed(ctx, X, (a) => a.classes.length >= 2 && a.classes.length <= 3 && a.classes.every(c => c.rad >= 1 && c.rad <= 3));
-    if (!pk) throw new Error('u06.pct: no usable alkane');
+    if (!pk) throw new Error('u06.pct: no usable hydrocarbon');
     const { smi, a } = pk;
     const w = a.classes.map(c => c.nH * RATES[X][c.rad]);
     const total = w.reduce((s, x) => s + x, 0);
     const k = ctx.int(0, a.classes.length - 1);
     const c = a.classes[k];
     const share = Math.round(1000 * w[k] / total) / 10;
-    const lines = a.classes.map((cc, i) => ({ lt: cc.nH + ' × ' + RATES[X][cc.rad] + ' = ' + w[i], en: cc.nH + ' × ' + RATES[X][cc.rad] + ' = ' + w[i] }));
+    const lines = a.classes.map((cc, i) => t(RADH[cc.rad].lt + ' vandeniliai: ' + cc.nH + ' × ' + RATES[X][cc.rad] + ' = ' + w[i], RADH[cc.rad].en + ' hydrogens: ' + cc.nH + ' × ' + RATES[X][cc.rad] + ' = ' + w[i]));
     const rt = RATES[X];
+    const one = c.sites.length === 1;
     return {
       q: [{
-        p: t('Alkano radikalinio halogeninimo metu vieno vandenilio atomo santykinis reaktingumas yra: pirminis ' + rt[1] + ', antrinis ' + rt[2] + ', tretinis ' + rt[3] + ' (supaprastintas modelis, $' + X + '2$, hν).',
-          'In the radical halogenation of an alkane the relative reactivity of one hydrogen is: primary ' + rt[1] + ', secondary ' + rt[2] + ', tertiary ' + rt[3] + ' (a simplified model, $' + X + '2$, hν).')
+        p: t('Angliavandenilio radikalinio halogeninimo metu vieno vandenilio atomo santykinis reaktingumas yra: pirminis ' + rt[1] + ', antrinis ' + rt[2] + ', tretinis ' + rt[3] + ' (supaprastintas modelis, $' + X + '2$, hν).',
+          'In the radical halogenation of a hydrocarbon the relative reactivity of one hydrogen is: primary ' + rt[1] + ', secondary ' + rt[2] + ', tertiary ' + rt[3] + ' (a simplified model, $' + X + '2$, hν).')
       }, { scheme: { items: [sp(smi), hv(X)] } }, { p: t('Apskaičiuokite, kokią dalį visų monohalogeninių produktų sudaro šis junginys:', 'Calculate what share of all monohalogen products this compound makes up:') }, { mol: { smi: c.prod } }],
       steps: [{
         prompt: t('Kiek vandenilio atomų gali duoti šį produktą?', 'How many hydrogen atoms can give this product?'),
         kind: 'number', answer: { value: c.nH, tol: 0 }, mol: { smi, opts: { numbers: 'all' } },
         hint: t('Suskaičiuokite visus vandenilius, kurie su pakeistu vandeniliu ekvivalentūs pagal simetriją.', 'Count all hydrogens that are equivalent to the replaced one by symmetry.'),
-        solution: t('Produktą duoda ' + c.nH + ' ekvivalentiški vandeniliai (atomai Nr. ' + sitesText(c) + ').', c.nH + ' equivalent hydrogens give this product (carbons no. ' + sitesText(c) + ').')
+        solution: c.nH === 1 ? t('Produktą duoda vienas vandenilis, esantis prie atomo Nr. ' + sitesText(c) + '.', 'One hydrogen gives this product, on carbon no. ' + sitesText(c) + '.')
+          : t('Produktą duoda ' + c.nH + ' ekvivalentiški vandeniliai, esantys prie ' + (one ? 'atomo' : 'atomų') + ' Nr. ' + sitesText(c) + '.', c.nH + ' equivalent hydrogens give this product, on ' + (one ? 'carbon' : 'carbons') + ' no. ' + sitesText(c) + '.')
       }, {
         prompt: t('Kokią dalį (procentais) šis produktas sudaro?', 'What share (in per cent) does this product make up?'),
-        kind: 'number', answer: { value: share, tol: 1 }, mol: { smi: c.prod },
+        kind: 'number', answer: { value: share, tol: Math.max(0.2, Math.round(share * 3) / 100) }, mol: { smi: c.prod },
         hint: t('Produkto kiekis proporcingas vandenilių skaičiui, padaugintam iš vieno vandenilio reaktingumo.', 'The amount of a product is proportional to the number of hydrogens times the reactivity of one hydrogen.'),
         solution: [{ p: t('Kiekvienai grupei: vandenilių skaičius × reaktingumas. Šios grupės dalis = jos skaičius / suma.', 'For each group: number of hydrogens × reactivity. The share of this group is its value divided by the sum.') },
           { list: lines }, { p: t('Dalis = ' + w[k] + ' / ' + total + ' = ' + String(share).replace('.', ',') + ' %.', 'Share = ' + w[k] + ' / ' + total + ' = ' + share + ' %.') }]
@@ -417,10 +466,10 @@
 
   /* ---------- generator: order radicals by stability ---------- */
   const WRONG_STAB = [
-    t('Radikalas turi daugiau valentinių elektronų ir todėl pasiekia oktetą.', 'The radical has more valence electrons and therefore reaches an octet.'),
-    t('Stabilumą lemia tik C–H ryšių skaičius visoje molekulėje.', 'Stability depends only on the number of C–H bonds in the whole molecule.'),
+    t('Radikalas turi teigiamą krūvį, kurį stabilizuoja kaimyninės grupės.', 'The radical carries a positive charge that the neighbouring groups stabilise.'),
     t('Kuo mažiau alkilgrupių prie radikalo centro, tuo mažiau erdvinių trukdžių ir tuo radikalas stabilesnis.', 'The fewer alkyl groups at the radical centre, the less steric hindrance and the more stable the radical.'),
-    t('Radikalo centras turi teigiamą krūvį, kurį stabilizuoja kaimyninės grupės.', 'The radical centre carries a positive charge that the neighbouring groups stabilise.')
+    t('Stabilumą lemia tik C–H ryšių skaičius visoje molekulėje.', 'Stability depends only on the number of C–H bonds in the whole molecule.'),
+    t('Radikalas stabilesnis, kai jo anglies atomas yra sp³ hibridizuotas ir piramidinis.', 'A radical is more stable when its carbon is sp³ hybridised and pyramidal.')
   ];
   function genRank(rng, ctx) {
     const cats = ['top', 'tert', 'sec', 'prim', 'methyl'];
@@ -439,76 +488,84 @@
     };
     const opts = [reasons[topCat]].concat(ctx.shuffle(WRONG_STAB).slice(0, 3)).map(x => ({ text: x }));
     return {
-      q: [{ p: t('Alkilradikalai susidaro alkanų halogeninimo metu kaip tarpinės dalelės.', 'Alkyl radicals form as intermediates in the halogenation of alkanes.') }],
+      q: [{ p: t('Radikalai susidaro angliavandenilių halogeninimo metu kaip tarpinės dalelės.', 'Radicals form as intermediates in the halogenation of hydrocarbons.') }],
       steps: [{
         prompt: t('Išdėstykite radikalus nuo stabiliausio iki mažiausiai stabilaus.', 'Put the radicals in order from the most stable to the least stable.'),
         kind: 'order', options: list.map(s => ({ mol: { smi: s } })),
-        hint: t('Prisiminkite eilę: benzilo = alilo > tretinis > antrinis > pirminis > metilo. Pirmiausia nustatykite, kiek alkilgrupių turi radikalo atomas.', 'Recall the order: benzyl = allyl > tertiary > secondary > primary > methyl. First find how many alkyl groups the radical atom carries.'),
+        hint: t('Prisiminkite eilę: benzil- = alil- > tretinis > antrinis > pirminis > metil-. Pirmiausia nustatykite, kiek alkilgrupių turi radikalo atomas.', 'Recall the order: benzyl = allyl > tertiary > secondary > primary > methyl. First find how many alkyl groups the radical atom carries.'),
         solution: t('Stabilumas didėja didėjant radikalo centro pakeistumui, o konjuguoti radikalai stabiliausi.', 'Stability grows with the substitution of the radical centre, and conjugated radicals are the most stable.')
       }, {
-        prompt: t('Kodėl pirmasis radikalas stabiliausias?', 'Why is the first radical the most stable?'),
+        prompt: t('Kodėl stabiliausias iš šių radikalų yra pats stabiliausias?', 'Why is the most stable of these radicals the most stable?'),
         kind: 'choice', options: opts, answer: 0,
         hint: t('Nupieškite radikalą ir paklauskite, su kuo gali sąveikauti jo nesuporuotas elektronas.', 'Draw the radical and ask what its unpaired electron can interact with.'),
         solution: reasons[topCat]
       }],
-      why: t('Radikalą stabilizuoja konjugacija (alilo ir benzilo tipo), hiperkonjugacija su gretimų alkilgrupių C–H ryšiais ir erdviniai trukdžiai. Todėl eilė: benzilo = alilo > tretinis > antrinis > pirminis > metilo.',
+      why: t('Radikalą stabilizuoja konjugacija (aliltipo ir benziltipo), hiperkonjugacija su gretimų alkilgrupių C–H ryšiais ir erdviniai trukdžiai. Todėl eilė: benzil- = alil- > tretinis > antrinis > pirminis > metil-.',
         'A radical is stabilised by conjugation (allylic and benzylic), by hyperconjugation with the C–H bonds of neighbouring alkyl groups and by steric hindrance. The order is therefore benzyl = allyl > tertiary > secondary > primary > methyl.'),
       src: 'L6 p16'
     };
   }
 
-  /* ---------- generator: which alkane gives one product / which alkane for a target ---------- */
+  /* ---------- generator: which hydrocarbon gives one product / which haloalkane is made cleanly ---------- */
   function genSingle(rng, ctx) {
     const mode = ctx.pick(['A', 'B', 'B']);
     const X = mode === 'A' ? 'Cl' : ctx.pick(['Cl', 'Br']);
     let pick = null;
-    for (let k = 0; k < 150 && !pick; k++) {
+    for (let k = 0; k < 200 && !pick; k++) {
       const smi = ctx.pick(POOL);
       const a = analyse(ctx, smi, X);
       if (!a) continue;
       const majors = a.classes.filter(c => c.major);
       if (X === 'Cl' ? a.classes.length !== 1 : majors.length !== 1) continue;
       if (X === 'Br' && a.classes.length < 2) continue;
-      const ps = partners(ctx, smi).filter(p => { const b = analyse(ctx, p, X); return b && (mode === 'A' ? b.classes.length > 1 : true); });
-      if (ps.length < 2) continue;
-      pick = { smi, a, target: majors[0].prod, ps };
+      const wrongs = [];
+      const wrongHalides = [];
+      partners(ctx, smi).forEach(p => {
+        const b = analyse(ctx, p, X);
+        if (!b) return;
+        if (mode === 'A') { if (b.classes.length > 1) wrongs.push(p); return; }
+        const cand = b.classes.filter(c => (X === 'Cl' ? b.classes.length > 1 : !c.major));
+        if (cand.length) wrongHalides.push(ctx.pick(cand).prod);
+      });
+      const pool = mode === 'A' ? wrongs : wrongHalides;
+      if (pool.length < 2) continue;
+      pick = { smi, a, target: majors[0].prod, pool };
     }
-    if (!pick) throw new Error('u06.single: no usable alkane');
+    if (!pick) throw new Error('u06.single: no usable hydrocarbon');
     const selective = pick.a.classes.length > 1;
-    const wrongPick = ctx.shuffle(pick.ps).slice(0, ctx.int(2, Math.min(3, pick.ps.length)));
-    const options = [pick.smi].concat(wrongPick).map(s => ({ mol: { smi: s } }));
+    const wrongPick = ctx.shuffle(pick.pool).slice(0, ctx.int(2, Math.min(3, pick.pool.length)));
+    const options = [mode === 'A' ? pick.smi : pick.target].concat(wrongPick).map(s => ({ mol: { smi: s } }));
     const bestTxt = RADC[pick.a.best];
     const right = selective
-      ? t('Bromas selektyvus: tik vienas C–H ryšys duoda stabiliausią radikalą, todėl vyrauja vienas produktas.', 'Bromine is selective: only one C–H bond gives the most stable radical, so one product predominates.')
+      ? t('Bromas selektyvus: stabiliausią radikalą duoda tik viena ekvivalentinių vandenilių grupė, todėl vyrauja vienas produktas.', 'Bromine is selective: only one group of equivalent hydrogens gives the most stable radical, so one product predominates.')
       : t('Visi vandenilio atomai ekvivalentiški, todėl galimas tik vienas monohalogeninis produktas.', 'All hydrogens are equivalent, so only one monohalogen product is possible.');
     const wrongs = selective
       ? [t('Visi vandenilio atomai ekvivalentiški.', 'All hydrogens are equivalent.'),
         t('Bromas reaguoja tik su pirminiais C–H ryšiais.', 'Bromine reacts only with primary C–H bonds.'),
-        t('Šis alkanas turi mažiausiai anglies atomų, todėl reaguoja greičiausiai.', 'This alkane has the fewest carbons, so it reacts fastest.')]
+        t('Šis junginys turi mažiausiai anglies atomų, todėl susidaro greičiausiai.', 'This compound has the fewest carbons, so it forms fastest.')]
       : [t('Chloras reaguoja tik su pirminiais C–H ryšiais.', 'Chlorine reacts only with primary C–H bonds.'),
-        t('Šiame alkane yra tretinis atomas, kurio radikalas stabiliausias.', 'This alkane has a tertiary carbon whose radical is the most stable.'),
-        t('Tik šis alkanas gali reaguoti grandininiu mechanizmu.', 'Only this alkane can react by a chain mechanism.')];
+        t('Šiame angliavandenilyje yra tretinis atomas, kurio radikalas stabiliausias.', 'This hydrocarbon has a tertiary carbon whose radical is the most stable.'),
+        t('Chloras pigesnis už bromą, todėl vyksta tik viena reakcija.', 'Chlorine is cheaper than bromine, so only one reaction takes place.')];
     const q = mode === 'A'
-      ? [{ p: t('Kuris iš šių izomerinių alkanų, chloruojamas radikaliniu būdu, duoda tik vieną monochlorintą produktą?', 'Which of these isomeric alkanes gives only one monochloro product on radical chlorination?') }]
-      : [{ p: t('Šį junginį reikia gauti radikaliniu halogeninimu su $' + X + '2$, hν, kad kitų pagrindinių produktų nesusidarytų. Kurį alkaną reikia imti?', 'This compound must be made by radical halogenation with $' + X + '2$, hν, without other main products. Which alkane should be used?') },
-        { mol: { smi: pick.target } }];
+      ? [{ p: t('Kuris iš šių izomerinių angliavandenilių, chloruojamas radikaliniu būdu, duoda tik vieną monochlorintą produktą?', 'Which of these isomeric hydrocarbons gives only one monochloro product on radical chlorination?') }]
+      : [{ p: t('Kurį iš šių halogenalkanų galima gauti radikaliniu halogeninimu ($' + X + '2$, hν) kaip vienintelį pagrindinį produktą?', 'Which of these haloalkanes can be made by radical halogenation ($' + X + '2$, hν) as the only main product?') }];
     return {
       q,
       steps: [{
-        prompt: mode === 'A' ? t('Pasirinkite alkaną.', 'Choose the alkane.') : t('Kurį alkaną reikia imti?', 'Which alkane should be used?'),
+        prompt: mode === 'A' ? t('Pasirinkite angliavandenilį.', 'Choose the hydrocarbon.') : t('Pasirinkite halogenalkaną.', 'Choose the haloalkane.'),
         kind: 'choice', options, answer: 0,
-        hint: mode === 'A' ? t('Suskaičiuokite ekvivalentinių vandenilių grupes kiekviename alkane.', 'Count the groups of equivalent hydrogens in each alkane.')
-          : t('Pažiūrėkite, kuris alkanas duoda šį produktą kaip vienintelį (ar vyraujantį), o ne kaip vieną iš kelių.', 'See which alkane gives this product as the only (or predominant) one rather than one of several.'),
-        solution: t('Tinkamas alkanas turi ' + (selective ? 'vieną C–H ryšį, duodantį stabiliausią (' + bestTxt.lt + ') radikalą' : 'vienintelę ekvivalentinių vandenilių grupę') + '. Kitų alkanų produktų mišiniai sunkiai išskiriami.',
-          'The suitable alkane has ' + (selective ? 'one C–H bond that gives the most stable (' + bestTxt.en + ') radical' : 'a single group of equivalent hydrogens') + '. The other alkanes give mixtures that are hard to separate.')
+        hint: mode === 'A' ? t('Suskaičiuokite ekvivalentinių vandenilių grupes kiekviename angliavandenilyje.', 'Count the groups of equivalent hydrogens in each hydrocarbon.')
+          : t('Pagalvokite, iš kokio angliavandenilio kiekvienas halogenalkanas gaunamas ir kaip jis ten susidaro: vienintelis ar vienas iš kelių produktų?', 'Think from which hydrocarbon each haloalkane comes and how it forms there: as the only product or as one of several?'),
+        solution: t('Tinkamas angliavandenilis turi ' + (selective ? 'vienintelę ekvivalentinių vandenilių grupę, duodančią stabiliausią (' + bestTxt.lt + ') radikalą' : 'vienintelę ekvivalentinių vandenilių grupę') + '. Kitų izomerų produktų mišiniai sunkiai išskiriami.',
+          'The suitable hydrocarbon has ' + (selective ? 'a single group of equivalent hydrogens that gives the most stable (' + bestTxt.en + ') radical' : 'a single group of equivalent hydrogens') + '. The other isomers give mixtures that are hard to separate.')
       }, {
-        prompt: t('Kodėl šis alkanas tinka?', 'Why is this alkane suitable?'),
+        prompt: t('Kodėl šis variantas tinka?', 'Why does this option work?'),
         kind: 'choice', options: [right].concat(wrongs).map(x => ({ text: x })), answer: 0,
         hint: t('Mąstykite apie tai, kiek skirtingų produktų galėtų susidaryti.', 'Think about how many different products could form.'),
         solution: right
       }],
-      why: t('Radikalinis halogeninimas duoda vieną produktą tik tada, kai visi vandeniliai ekvivalentiški arba kai bromas pasirenka vienintelį vandenilį, duodantį stabiliausią radikalą. Kitu atveju gaunamas sunkiai skiriamas izomerų mišinys.',
-        'Radical halogenation gives one product only when all hydrogens are equivalent, or when bromine picks the single hydrogen that gives the most stable radical. Otherwise a mixture of isomers forms that is hard to separate.'),
+      why: t('Radikalinis halogeninimas duoda vieną produktą tik tada, kai visi vandeniliai ekvivalentiški, arba kai bromas pasirenka vienintelę vandenilių grupę, duodančią stabiliausią radikalą. Kitu atveju gaunamas sunkiai skiriamas izomerų mišinys.',
+        'Radical halogenation gives one product only when all hydrogens are equivalent, or when bromine picks the single group of hydrogens that gives the most stable radical. Otherwise a mixture of isomers forms that is hard to separate.'),
       src: 'S4.11'
     };
   }
@@ -526,7 +583,7 @@
         },
         {
           mol: [
-            { smi: 'C', name: t('metanas', 'methane') }, { smi: 'CC', name: t('etanas', 'ethane') },
+            { smi: 'C', name: t('metanas', 'methane') }, { smi: 'CC', opts: { condensed: true }, name: t('etanas', 'ethane') },
             { smi: 'CCC', name: t('propanas', 'propane') }, { smi: 'CCCC', name: t('butanas', 'butane') }
           ]
         },
@@ -546,6 +603,15 @@
           p: t('Taip pat elgiasi ir neįtempti cikloalkanai, pavyzdžiui, ciklopentanas ir cikloheksanas. Alkanų konformacijos ir žiedų geometrija aptariamos 5 skyriuje (izomerija).',
             'Unstrained cycloalkanes such as cyclopentane and cyclohexane behave the same way. Conformations of alkanes and the geometry of rings are covered in unit 5 (isomerism).'),
           src: 'T p52'
+        },
+        {
+          p: t('Įtempti trinariai ir keturnariai žiedai elgiasi kitaip: ciklopropanas su halogenais reaguoja atsiverdamas žiedui, todėl radikalinio pakeitimo uždaviniuose jų nėra.',
+            'Strained three- and four-membered rings behave differently: cyclopropane reacts with halogens by ring opening, so they do not appear in the radical substitution problems.'),
+          src: 'T p60'
+        },
+        {
+          scheme: { items: [{ smi: 'C1CC1', name: t('ciklopropanas', 'cyclopropane') }, { arrow: '→', above: f('Br2') }, { smi: 'BrCCCBr', name: t('1,3-dibrompropanas', '1,3-dibromopropane') }] },
+          src: 'T p60'
         },
         { h: t('Alkanai gamtoje', 'Alkanes in nature') },
         {
@@ -582,7 +648,7 @@
             'A half-headed (fish-hook) arrow shows the movement of one electron; the usual full curved arrow shows the movement of an electron pair. Radical reactions use half-headed arrows.')
         },
         {
-          p: t('Radikalus galima sukurti trimis būdais:', 'Radicals can be generated in three ways:'),
+          p: t('Radikalus galima generuoti trimis būdais:', 'Radicals can be generated in three ways:'),
           src: 'L6 p6'
         },
         {
@@ -601,7 +667,7 @@
         },
         { mol: { smi: '[CH3]', caption: t('metilradikalas', 'methyl radical') }, claims: [{ hyb: ['[CH3]', 0, 'sp2'] }] },
         {
-          pitfall: t('Neperpiešinėkite radikalinių stadijų pilnomis strėlėmis. Pilna strėlė perkelia dvi elektronus, todėl radikalų reakcijose klaidinga.',
+          pitfall: t('Radikalinių reakcijų nevaizduokite įprastomis lenktomis strėlėmis: tokia strėlė perkelia du elektronus, o radikalinėje reakcijoje juda pavieniai elektronai.',
             'Do not draw radical steps with full arrows. A full arrow moves two electrons, so it is wrong for radical reactions.')
         },
         { practice: 'u06.step' }
@@ -612,8 +678,8 @@
       title: t('Grandininė reakcija: SR halogeninimas', 'The chain reaction: SR halogenation'),
       blocks: [
         {
-          p: t('Alkano vandenilis pakeičiamas halogenu radikalinio pakeitimo mechanizmu, žymimu SR. Tai grandininė reakcija, kurią sudaro trys dalys: grandinės pradžia (iniciacija), grandinės augimas ir grandinės nutrūkimas. Pavyzdys – metano chlorinimas.',
-            'A hydrogen of an alkane is replaced by a halogen through the radical substitution mechanism, written SR. It is a chain reaction with three parts: initiation (start of the chain), propagation (growth) and termination. The example is the chlorination of methane.'),
+          p: t('Alkano vandenilis pakeičiamas halogenu radikalinio pakeitimo mechanizmu, žymimu SR. Tai grandininė reakcija, kurią sudaro trys stadijos: grandinės pradžia (iniciacija), grandinės augimas ir grandinės nutrūkimas. Pavyzdys – metano chlorinimas.',
+            'A hydrogen of an alkane is replaced by a halogen through the radical substitution mechanism, written SR. It is a chain reaction with three stages: initiation (start of the chain), propagation (growth) and termination. The example is the chlorination of methane.'),
           src: 'L6 p7'
         },
         {
@@ -634,13 +700,13 @@
           mech: [
             {
               scheme: { items: [{ smi: '[Cl]' }, { plus: true }, { smi: 'C', opts: { allH: true } }, { arrow: '→' }, { smi: 'Cl' }, { plus: true }, { smi: '[CH3]' }] },
-              arrows: [{ from: { m: 0, a: 0 }, to: { m: 1, a: 'H0' }, half: true }, { from: { m: 1, b: [0, 'H0'] }, to: { m: 1, a: 0 }, half: true }],
-              note: t('Chloro radikalas atplėšia vandenilį: susidaro $HCl$ ir metilradikalas.', 'A chlorine radical removes a hydrogen: $HCl$ and a methyl radical form.')
+              arrows: [{ from: { m: 0, a: 0 }, to: { m: 1, a: 'H0' }, half: true }, { from: { m: 1, b: [0, 'H0'] }, to: { m: 1, a: 'H0' }, half: true }, { from: { m: 1, b: [0, 'H0'] }, to: { m: 1, a: 0 }, half: true }],
+              note: t('Chloro radikalo elektronas ir vienas $C-H$ elektronas sudaro $H-Cl$ ryšį, o kitas $C-H$ elektronas lieka anglies atomui: susidaro $HCl$ ir metilradikalas.', 'The electron of the chlorine radical and one $C-H$ electron form the $H-Cl$ bond, and the other $C-H$ electron stays on carbon: $HCl$ and a methyl radical form.')
             },
             {
               scheme: { items: [{ smi: '[CH3]' }, { plus: true }, { smi: 'ClCl' }, { arrow: '→' }, { smi: 'CCl', opts: { condensed: true } }, { plus: true }, { smi: '[Cl]' }] },
-              arrows: [{ from: { m: 0, a: 0 }, to: { m: 1, a: 0 }, half: true }, { from: { m: 1, b: [0, 1] }, to: { m: 1, a: 1 }, half: true }],
-              note: t('Metilradikalas atplėšia chloro atomą nuo $Cl2$: susidaro $CH3Cl$ ir naujas chloro radikalas.', 'The methyl radical takes a chlorine atom from $Cl2$: $CH3Cl$ and a new chlorine radical form.')
+              arrows: [{ from: { m: 0, a: 0 }, to: { m: 1, a: 0 }, half: true }, { from: { m: 1, b: [0, 1] }, to: { m: 1, a: 0 }, half: true }, { from: { m: 1, b: [0, 1] }, to: { m: 1, a: 1 }, half: true }],
+              note: t('Metilradikalo elektronas ir vienas $Cl-Cl$ elektronas sudaro $C-Cl$ ryšį, o kitas $Cl-Cl$ elektronas lieka išeinančiam atomui: susidaro $CH3Cl$ ir naujas chloro radikalas.', 'The electron of the methyl radical and one $Cl-Cl$ electron form the $C-Cl$ bond, and the other $Cl-Cl$ electron stays on the leaving atom: $CH3Cl$ and a new chlorine radical form.')
             }
           ],
           src: 'L6 p7'
@@ -670,7 +736,7 @@
           src: 'L6 p7'
         },
         {
-          pitfall: t('Iniciaciją, augimą ir nutrūkimą atskirkite skaičiuodami radikalus: iniciacijoje jų atsiranda (0 → 2), augime skaičius nesikeičia (1 → 1), nutrūkime jų neliks (2 → 0).',
+          pitfall: t('Iniciaciją, augimą ir nutrūkimą atskirkite skaičiuodami radikalus: iniciacijoje jų atsiranda (0 → 2), augime skaičius nesikeičia (1 → 1), nutrūkime jų nebelieka (2 → 0).',
             'Tell initiation, propagation and termination apart by counting radicals: in initiation they appear (0 → 2), in propagation the number stays the same (1 → 1), in termination none is left (2 → 0).')
         },
         { h: t('Daugiau chloro: di-, tri- ir tetrachlorinimas', 'More chlorine: di-, tri- and tetrachlorination') },
@@ -694,13 +760,13 @@
         {
           example: {
             q: [
-              { p: t('Parašykite grandinės augimo stadijas, kai etanas brominamas šviesoje.', 'Write the propagation steps when ethane is brominated in light.') }
+              { p: t('Parašykite grandinės augimo reakcijas, kai etanas brominamas šviesoje.', 'Write the propagation steps when ethane is brominated in light.') }
             ],
             steps: [
-              [{ p: t('Pirmoje stadijoje bromo radikalas atplėšia vandenilį nuo etano. Susidaro $HBr$ ir etilradikalas.', 'In the first step a bromine radical removes a hydrogen from ethane. $HBr$ and an ethyl radical form.') },
-                { scheme: { items: [{ smi: '[Br]' }, { plus: true }, { smi: 'CC', opts: { condensed: true } }, { arrow: '→' }, { smi: 'Br' }, { plus: true }, { smi: 'C[CH2]' }] } }],
-              [{ p: t('Antroje stadijoje etilradikalas atplėšia bromo atomą nuo $Br2$. Susidaro bromoetanas ir vėl bromo radikalas.', 'In the second step the ethyl radical takes a bromine atom from $Br2$. Bromoethane and a bromine radical form again.') },
-                { scheme: { items: [{ smi: 'C[CH2]' }, { plus: true }, { smi: 'BrBr' }, { arrow: '→' }, { smi: 'CCBr', name: t('brometanas', 'bromoethane') }, { plus: true }, { smi: '[Br]' }] } }],
+              [{ p: t('Pirmoje augimo reakcijoje bromo radikalas atplėšia vandenilį nuo etano. Susidaro $HBr$ ir etilradikalas.', 'In the first propagation step a bromine radical removes a hydrogen from ethane. $HBr$ and an ethyl radical form.') },
+                { scheme: { items: [{ smi: '[Br]' }, { plus: true }, { smi: 'CC', opts: { condensed: true } }, { arrow: '→' }, { smi: 'Br' }, { plus: true }, { smi: 'C[CH2]', opts: { condensed: true } }] } }],
+              [{ p: t('Antroje augimo reakcijoje etilradikalas atplėšia bromo atomą nuo $Br2$. Susidaro bromoetanas ir vėl bromo radikalas.', 'In the second propagation step the ethyl radical takes a bromine atom from $Br2$. Bromoethane and a bromine radical form again.') },
+                { scheme: { items: [{ smi: 'C[CH2]', opts: { condensed: true } }, { plus: true }, { smi: 'BrBr' }, { arrow: '→' }, { smi: 'CCBr', name: t('brometanas', 'bromoethane') }, { plus: true }, { smi: '[Br]' }] } }],
               [{ p: t('Radikalas $Br•$ atsinaujino, todėl ciklas kartojasi. Sudėję abi stadijas gauname $CH3CH3 + Br2 → CH3CH2Br + HBr$.', 'The radical $Br•$ is regenerated, so the cycle repeats. Adding both steps gives $CH3CH3 + Br2 → CH3CH2Br + HBr$.') }]
             ]
           },
@@ -720,14 +786,14 @@
         },
         {
           mol: [
-            { smi: '[CH3]', caption: t('metilradikalas', 'methyl radical') }, { smi: 'C[CH2]', caption: t('etilradikalas (pirminis)', 'ethyl radical (primary)') },
-            { smi: 'C[CH]C', caption: t('izopropilradikalas (antrinis)', 'isopropyl radical (secondary)') }, { smi: 'C[C](C)C', caption: t('tret-butilradikalas (tretinis)', 'tert-butyl radical (tertiary)') }
+            { smi: '[CH3]', caption: t('metilradikalas', 'methyl radical') }, { smi: 'C[CH2]', opts: { condensed: true }, caption: t('etilradikalas (pirminis)', 'ethyl radical (primary)') },
+            { smi: 'C[CH]C', opts: { condensed: true }, caption: t('izopropilradikalas (antrinis)', 'isopropyl radical (secondary)') }, { smi: 'C[C](C)C', opts: { condensed: true }, caption: t('tret-butilradikalas (tretinis)', 'tert-butyl radical (tertiary)') }
           ],
           caption: t('Stabilumas didėja iš kairės į dešinę.', 'Stability increases from left to right.'),
           src: 'L6 p11'
         },
         {
-          rule: t('Radikalų stabilumas: benzilo = alilo > tretinis > antrinis > pirminis > metilo. Kuo stabilesnis radikalas, tuo greičiau susidaro.',
+          rule: t('Radikalų stabilumas: benzil- = alil- > tretinis > antrinis > pirminis > metil-. Kuo stabilesnis radikalas, tuo greičiau susidaro.',
             'Radical stability: benzyl = allyl > tertiary > secondary > primary > methyl. The more stable the radical, the faster it forms.'),
           src: 'L6 p16'
         },
@@ -735,7 +801,7 @@
         {
           list: [
             t('Erdviniai trukdžiai: kuo sunkiau pasiekiamas radikalo centras, tuo radikalas mažiau reaktingas.', 'Steric hindrance: the harder the radical centre is to reach, the less reactive the radical.'),
-            t('Konjugacija: alilo ir benzilo tipo radikalų nesuporuotas elektronas delokalizuotas per $π$ sistemą.', 'Conjugation: in allylic and benzylic radicals the unpaired electron is delocalised over a $π$ system.'),
+            t('Konjugacija: aliltipo ir benziltipo radikalų nesuporuotas elektronas delokalizuotas per $π$ sistemą.', 'Conjugation: in allylic and benzylic radicals the unpaired electron is delocalised over a $π$ system.'),
             t('Hiperkonjugacija: nesuporuotas elektronas sąveikauja su gretimų $C-H$ ryšių σ orbitalėmis.', 'Hyperconjugation: the unpaired electron interacts with the σ orbitals of adjacent $C-H$ bonds.')
           ],
           src: 'L6 p16'
@@ -757,9 +823,9 @@
           table: {
             head: [t('Radikalas', 'Radical'), t('Alkilgrupių prie radikalo atomo', 'Alkyl groups on the radical carbon'), t('Hiperkonjugacija', 'Hyperconjugation')],
             rows: [
-              [{ smi: 'C[CH2]' }, t('1', '1'), t('silpniausia', 'weakest')],
-              [{ smi: 'C[CH]C' }, t('2', '2'), t('vidutinė', 'medium')],
-              [{ smi: 'C[C](C)C' }, t('3', '3'), t('stipriausia', 'strongest')]
+              [{ smi: 'C[CH2]', opts: { condensed: true } }, t('1', '1'), t('silpniausia', 'weakest')],
+              [{ smi: 'C[CH]C', opts: { condensed: true } }, t('2', '2'), t('vidutinė', 'medium')],
+              [{ smi: 'C[C](C)C', opts: { condensed: true } }, t('3', '3'), t('stipriausia', 'strongest')]
             ]
           }
         },
@@ -771,7 +837,7 @@
           example: {
             q: [
               { p: t('2-metilbutanas reaguoja su $Br•$. Nuo kurio atomo bromo radikalas atplėš vandenilį greičiausiai?', '2-Methylbutane reacts with $Br•$. From which carbon will the bromine radical remove a hydrogen fastest?') },
-              { mol: { smi: 'CC(C)CC', opts: { highlight: { atoms: [1], tone: 1 } }, name: t('2-metilbutanas', '2-methylbutane') } }
+              { mol: { smi: 'CC(C)CC', name: t('2-metilbutanas', '2-methylbutane') } }
             ],
             steps: [
               [{ p: t('Parašykite radikalus, kurie susidarytų atplėšus vandenilį nuo kiekvieno skirtingo atomo.', 'Write the radicals that would form when a hydrogen is removed from each different carbon.') },
@@ -791,8 +857,8 @@
       title: t('Chloras ir bromas: neselektyvus ir selektyvus', 'Chlorine and bromine: unselective and selective'),
       blocks: [
         {
-          rule: t('Bromas yra mažiau aktyvus, bet labai selektyvus: jis pakeičia tretinio (arba benzilo) anglies atomo vandenilį ir duoda vieną pagrindinį produktą. Chloras aktyvesnis, bet mažai selektyvus: susidaro visų galimų izomerų mišinys, ypač aukštoje temperatūroje.',
-            'Bromine is less reactive but very selective: it replaces the hydrogen on the tertiary (or benzylic) carbon and gives one main product. Chlorine is more reactive but hardly selective: a mixture of all possible isomers forms, especially at high temperature.'),
+          rule: t('Bromas yra mažiau aktyvus, bet labai selektyvus: jis pakeičia tą vandenilį, kurį atplėšus susidaro stabiliausias radikalas (dažniausiai tretinio ar benziltipo atomo). Chloras aktyvesnis, bet mažai selektyvus: susidaro visų galimų izomerų mišinys, ypač aukštoje temperatūroje.',
+            'Bromine is less reactive but very selective: it replaces the hydrogen whose removal gives the most stable radical (most often on a tertiary or benzylic carbon). Chlorine is more reactive but hardly selective: a mixture of all possible isomers forms, especially at high temperature.'),
           src: 'L6 p12, p15'
         },
         {
@@ -816,7 +882,7 @@
         },
         {
           table: {
-            head: [t('Reagentas', 'Reagent'), { lt: '1-halobutanas', en: '1-halobutane' }, t('dalis', 'share'), { lt: '2-halobutanas', en: '2-halobutane' }, t('dalis', 'share')],
+            head: [t('Reagentas', 'Reagent'), { lt: '1-halogenbutanas', en: '1-halobutane' }, t('dalis', 'share'), { lt: '2-halogenbutanas', en: '2-halobutane' }, t('dalis', 'share')],
             rows: [
               [fm('Cl2, hν'), { smi: 'CCCCCl' }, t('susidaro', 'forms'), { smi: 'CCC(C)Cl' }, t('susidaro (daugiau)', 'forms (more)')],
               [fm('Br2, hν'), { smi: 'CCCCBr' }, f('2 %'), { smi: 'CCC(C)Br' }, f('98 %')]
@@ -836,17 +902,17 @@
           src: 'L6 p14'
         },
         {
-          p: t('Chloro atveju pirminis produktas vyrauja tik todėl, kad 2-metilpropane yra devyni pirminiai vandeniliai ir tik vienas tretinis. Vienam vandeniliui skaičiuojant, tretinis vandenilis chlorinamas maždaug penkis kartus greičiau už pirminį (37 / 1 prieš 63 / 9), o bromuojamas tūkstančius kartų greičiau.',
+          p: t('Chloro atveju pirminis produktas vyrauja tik todėl, kad 2-metilpropane yra devyni pirminiai vandeniliai ir tik vienas tretinis. Vienam vandeniliui skaičiuojant, tretinis vandenilis chlorinamas maždaug penkis kartus greičiau už pirminį (37 / 1 prieš 63 / 9), o brominamas tūkstančius kartų greičiau.',
             'With chlorine the primary product predominates only because 2-methylpropane has nine primary hydrogens and only one tertiary hydrogen. Per hydrogen, the tertiary one is chlorinated about five times faster than the primary one (37 / 1 against 63 / 9), and brominated thousands of times faster.'),
           src: 'L6 p14; Klein'
         },
         {
-          p: t('Kodėl taip? Chloro radikalas labai aktyvus ir atplėšia vandenilį beveik bet kur, todėl radikalo stabilumas mažai svarbus. Mažiau aktyvus bromo radikalas „renkasi“: perėjimo būsena primena susidarantį radikalą, todėl stabilumo skirtumas labai paveikia greitį.',
+          p: t('Kodėl taip? Chloro radikalas labai aktyvus ir atplėšia vandenilį beveik bet kur, todėl radikalo stabilumas mažai svarbus. Mažiau aktyvus bromo radikalas „renkasi“: pereinamoji būsena primena susidarantį radikalą, todėl stabilumo skirtumas labai paveikia greitį.',
             'Why? The chlorine radical is very reactive and removes a hydrogen almost anywhere, so the stability of the radical matters little. The less reactive bromine radical is choosy: its transition state resembles the radical that forms, so a difference in radical stability greatly affects the rate.'),
           src: 'L6 p15; Klein'
         },
         {
-          pitfall: t('Neteiskite, kad chloras visus vandenilius keičia vienodai. Chloras tik mažai selektyvus: tretinis vandenilis vis dėlto keičiamas greičiau, o produktų santykis priklauso ir nuo vandenilių skaičiaus. Žemoje temperatūroje chloras truputį selektyvesnis nei aukštoje.',
+          pitfall: t('Neteigkite, kad chloras visus vandenilius keičia vienodai. Chloras tik mažai selektyvus: tretinis vandenilis vis dėlto keičiamas greičiau, o produktų santykis priklauso ir nuo vandenilių skaičiaus. Žemoje temperatūroje chloras truputį selektyvesnis nei aukštoje.',
             'Do not say that chlorine replaces all hydrogens equally. It is only weakly selective: a tertiary hydrogen is still replaced faster, and the product ratio also depends on the number of hydrogens. At low temperature chlorine is somewhat more selective than at high temperature.'),
           src: 'L6 p12'
         },
@@ -912,13 +978,13 @@
         },
         { h: t('Kada gaunamas vienas produktas', 'When one product is obtained') },
         {
-          rule: t('Radikalinis halogeninimas tinka vienam produktui gauti tik tada, kai visi alkano vandeniliai ekvivalentiški. Tada monohalogenidas tik vienas ir galima jį pagaminti tiesiai iš alkano.',
-            'Radical halogenation gives a single product only when all the hydrogens of the alkane are equivalent. There is then just one monohalide, and it can be made directly from the alkane.'),
+          rule: t('Radikaliniu chlorinimu vienas monohalogenidas gaunamas tik tada, kai visi alkano vandeniliai ekvivalentiški. Brominant vienas pagrindinis produktas gaunamas ir tada, kai stabiliausią radikalą duoda tik viena ekvivalentinių vandenilių grupė (pvz., vienintelis tretinis atomas).',
+            'Radical chlorination gives a single monohalide only when all the hydrogens of the alkane are equivalent. Bromination also gives one main product when only one group of equivalent hydrogens gives the most stable radical (for example, a single tertiary carbon).'),
           src: 'S4.11'
         },
         {
           mol: [
-            { smi: 'C', name: t('metanas', 'methane') }, { smi: 'CC', name: t('etanas', 'ethane') }, { smi: 'CC(C)(C)C', name: t('2,2-dimetilpropanas', '2,2-dimethylpropane') },
+            { smi: 'C', name: t('metanas', 'methane') }, { smi: 'CC', opts: { condensed: true }, name: t('etanas', 'ethane') }, { smi: 'CC(C)(C)C', name: t('2,2-dimetilpropanas', '2,2-dimethylpropane') },
             { smi: 'C1CCCC1', name: t('ciklopentanas', 'cyclopentane') }, { smi: 'C1CCCCC1', name: t('cikloheksanas', 'cyclohexane') }
           ],
           caption: t('Kiekvienas duoda tik vieną monohalogenidą.', 'Each gives only one monohalide.')
@@ -988,15 +1054,20 @@
         {
           scheme: {
             items: [{ smi: 'CCC(C)OO' }, { arrow: '→', above: f('t°') }, { smi: 'CCO', name: t('etanolis', 'ethanol') }, { plus: true }, { smi: 'CC=O', name: t('acetaldehidas', 'acetaldehyde') },
-              { arrow: '→', above: f('O2') }, { smi: 'CC(=O)O', name: t('etano rūgštis', 'ethanoic acid') }]
+              { arrow: '→', above: f('O2'), below: t('2 molekulės', '2 molecules') }, { smi: 'CC(=O)O', name: t('etano rūgštis', 'ethanoic acid') }]
           },
           src: 'L6 p19'
         },
         { h: t('Antioksidantai', 'Antioxidants') },
         {
-          p: t('Nesočiųjų riebalų rūgščių liekanos oksiduojasi lengviau, nes alilo padėties $C-H$ ryšys duoda stabilų alilradikalą. Antioksidantai (vitaminas C, vitaminas E, sintetiniai BHA ir BHT) nutraukia šią grandinę: fenolio $O-H$ atiduoda vandenilį radikalui, o susidaręs fenoksilo radikalas stabilus (delokalizuotas žiede), todėl grandinė nebesitęsia.',
-            'Unsaturated fatty acid residues oxidise more readily because an allylic $C-H$ bond gives a stable allyl radical. Antioxidants (vitamin C, vitamin E, the synthetic BHA and BHT) interrupt this chain: the phenolic $O-H$ gives its hydrogen to a radical, and the phenoxyl radical formed is stable (delocalised in the ring), so the chain does not go on.'),
+          p: t('Nesočiųjų riebalų rūgščių liekanos oksiduojasi lengviau, nes alilo padėties $C-H$ ryšys duoda stabilų alilradikalą. Antioksidantai (vitaminas C, vitaminas E, sintetiniai BHA ir BHT) nutraukia šią grandinę: fenolio (vitamino C – enolio) $O-H$ atiduoda vandenilį radikalui, o susidaręs fenoksilo radikalas stabilus (delokalizuotas žiede), todėl grandinė nebesitęsia.',
+            'Unsaturated fatty acid residues oxidise more readily because an allylic $C-H$ bond gives a stable allyl radical. Antioxidants (vitamin C, vitamin E, the synthetic BHA and BHT) interrupt this chain: the phenolic (in vitamin C, enolic) $O-H$ gives its hydrogen to a radical, and the phenoxyl radical formed is stable (delocalised in the ring), so the chain does not go on.'),
           src: 'L6 p20–21'
+        },
+        {
+          scheme: { items: [{ smi: 'CCC=CCC' }, { arrow: '→', above: f('O2') }, { smi: 'CCC(OO)C=CC' }] },
+          caption: t('Alilinė oksidacija: hidroperoksidas atsiranda alilo padėtyje, dvigubasis ryšys pasislenka.', 'Allylic oxidation: the hydroperoxide appears in the allylic position and the double bond shifts.'),
+          src: 'L6 p20'
         },
         {
           scheme: {
@@ -1006,8 +1077,8 @@
           src: 'L6 p20'
         },
         {
-          pitfall: t('Alkanų oksidacija oru nėra švelnus procesas: reikia aukštos temperatūros ir slėgio, o produktai – alkoholių, aldehidų ir rūgščių mišinys su nutrūkusiomis $C-C$ jungtimis. Kontroliuojama oksidacija į ketoną ar alkoholį šiuo būdu neįmanoma.',
-            'Oxidation of alkanes by air is not a gentle process: it needs high temperature and pressure, and the products are a mixture of alcohols, aldehydes and acids with broken $C-C$ bonds. A controlled oxidation to a ketone or an alcohol is not possible this way.')
+          pitfall: t('Alkanų oksidacija oru nėra švelnus procesas: reikia aukštos temperatūros ir slėgio, o produktai – alkoholių, aldehidų ir rūgščių mišinys su nutrūkusiomis $C-C$ jungtimis. Kontroliuojamai oksidacijai į ketoną ar alkoholį šis būdas netinka, nes ji sunkiai valdoma.',
+            'Oxidation of alkanes by air is not a gentle process: it needs high temperature and pressure, and the products are a mixture of alcohols, aldehydes and acids with broken $C-C$ bonds. This way a controlled oxidation to a ketone or an alcohol is hard to achieve.')
         },
         { practice: 'u06.ox' }
       ]
@@ -1034,10 +1105,10 @@
           rx([{ smi: '[CH3]' }, plus, CLR, arr, { smi: 'CCl', opts: { condensed: true } }])
         ].map(s => ({ scheme: s.scheme })),
         hint: t('Pirmiausia turi atsirasti radikalų. Nutrūkimas eina paskutinis, nes jame radikalai sunaudojami.', 'Radicals must appear first. Termination comes last, because it uses radicals up.'),
-        solution: t('Pirma iniciacija ($Cl2$ skyla šviesoje), po to du augimo žingsniai: chloro radikalas atplėšia vandenilį, o metilradikalas atplėšia chloro atomą. Paskutinė – nutrūkimas, kai du radikalai susijungia.',
+        solution: t('Pirma iniciacija ($Cl2$ skyla šviesoje), po to dvi augimo reakcijos: chloro radikalas atplėšia vandenilį, o metilradikalas atplėšia chloro atomą. Paskutinė – nutrūkimas, kai du radikalai susijungia.',
           'First comes initiation ($Cl2$ splits in light), then the two propagation steps: a chlorine radical removes a hydrogen and the methyl radical takes a chlorine atom. Termination, where two radicals combine, comes last.')
       }],
-      why: t('Reakcija prasideda nuo radikalų atsiradimo, tęsiasi dviem ciklą sudarančiais augimo žingsniais ir baigiasi, kai du radikalai susijungia.', 'The reaction starts when radicals appear, continues through the two steps of the propagation cycle and ends when two radicals combine.'),
+      why: t('Reakcija prasideda nuo radikalų atsiradimo, tęsiasi dviem ciklą sudarančiomis augimo reakcijomis ir baigiasi, kai du radikalai susijungia.', 'The reaction starts when radicals appear, continues through the two steps of the propagation cycle and ends when two radicals combine.'),
       src: 'L6 p7'
     },
     {
@@ -1047,11 +1118,11 @@
         prompt: t('Pažymėkite abi grandinės augimo reakcijas.', 'Pick both propagation steps.'),
         kind: 'multi',
         options: [
-          rx([BRR, plus, { smi: 'CC', opts: { condensed: true } }, arr, { smi: 'Br' }, plus, { smi: 'C[CH2]' }]),
-          rx([{ smi: 'C[CH2]' }, plus, { smi: 'BrBr' }, arr, { smi: 'CCBr' }, plus, BRR]),
+          rx([BRR, plus, { smi: 'CC', opts: { condensed: true } }, arr, { smi: 'Br' }, plus, { smi: 'C[CH2]', opts: { condensed: true } }]),
+          rx([{ smi: 'C[CH2]', opts: { condensed: true } }, plus, { smi: 'BrBr' }, arr, { smi: 'CCBr' }, plus, BRR]),
           rx([{ smi: 'BrBr' }, { arrow: '→', above: f('hν') }, BRR, plus, BRR]),
-          rx([{ smi: 'C[CH2]' }, plus, BRR, arr, { smi: 'CCBr' }]),
-          rx([{ smi: 'C[CH2]' }, plus, { smi: 'C[CH2]' }, arr, { smi: 'CCCC' }])
+          rx([{ smi: 'C[CH2]', opts: { condensed: true } }, plus, BRR, arr, { smi: 'CCBr' }]),
+          rx([{ smi: 'C[CH2]', opts: { condensed: true } }, plus, { smi: 'C[CH2]', opts: { condensed: true } }, arr, { smi: 'CCCC' }])
         ].map(s => ({ scheme: s.scheme })),
         answer: [0, 1],
         hint: t('Augimo reakcijoje radikalas sunaudojamas, bet kitas radikalas atsiranda: radikalų skaičius nesikeičia.', 'In a propagation step one radical is used up and another appears: the number of radicals stays the same.'),
@@ -1093,7 +1164,7 @@
         ].map(s => ({ scheme: s.scheme })),
         answer: 0,
         hint: t('Etanas turi du anglies atomus: reikia reakcijos, kurioje susijungia du anglies fragmentai.', 'Ethane has two carbons: you need a step in which two carbon fragments combine.'),
-        solution: t('Du metilradikalai susijungia ir sudaro $C-C$ ryšį. Tai grandinės nutrūkimas, kurio pasekmė – pėdsakai etano tarp produktų.', 'Two methyl radicals combine to form a $C-C$ bond. This is termination, and its trace product is ethane.')
+        solution: t('Du metilradikalai susijungia ir sudaro $C-C$ ryšį. Tokia reakcija palieka pėdsakus etano tarp produktų.', 'Two methyl radicals combine to form a $C-C$ bond. Such a step leaves traces of ethane among the products.')
       }, {
         prompt: t('Kuriai stadijai ji priklauso?', 'Which stage is this?'),
         kind: 'choice',
@@ -1127,12 +1198,12 @@
           { text: t('stiprus kaitinimas (termolizė, virš 500 °C)', 'strong heating (thermolysis, above 500 °C)') },
           { text: t('UV spinduliuotė (fotolizė)', 'UV radiation (photolysis)') },
           { text: t('oksidacijos ir redukcijos procesai', 'oxidation–reduction processes') },
-          { text: t('pridėta vandens', 'adding water') },
-          { text: t('pridėta šarmo', 'adding alkali') }
+          { text: t('pridėta Lewiso rūgšties katalizatoriaus', 'adding a Lewis acid catalyst') },
+          { text: t('pridėtas nukleofilas, pvz. $OH-$', 'adding a nucleophile such as $OH-$') }
         ],
         answer: [0, 1, 2],
         hint: t('Radikalą sukuria homolizė, kuriai reikia energijos arba elektronų pernašos.', 'A radical comes from homolysis, which needs energy or electron transfer.'),
-        solution: t('Radikalai susidaro termolizės, fotolizės ir redokso procesų metu. Vanduo ir šarmas homolizės nesukelia.', 'Radicals form in thermolysis, photolysis and redox processes. Water and alkali do not cause homolysis.')
+        solution: t('Radikalai susidaro termolizės, fotolizės ir redokso procesų metu. Lewiso rūgštis ir nukleofilas sukelia heterolizę, o ne homolizę.', 'Radicals form in thermolysis, photolysis and redox processes. A Lewis acid and a nucleophile cause heterolysis, not homolysis.')
       }],
       why: t('Radikalinė grandinė pradedama tik tada, kai tiekiama energija ar vyksta redokso procesas, nes ryšį reikia suardyti homolizės būdu.', 'A radical chain starts only when energy is supplied or a redox process runs, because the bond has to be cleaved homolytically.'),
       src: 'L6 p6'
@@ -1149,8 +1220,8 @@
           rx([CLR, plus, { smi: 'CCl', opts: { condensed: true } }, arr, { smi: 'ClCCl', opts: { condensed: true } }, plus, { smi: '[H]' }])
         ].map(s => ({ scheme: s.scheme })),
         answer: 0,
-        hint: t('Chloro radikalas atplėšia vandenilį, kaip ir iš metano. Kuris ryšys silpnesnis: $C-H$ ar $C-Cl$?', 'The chlorine radical removes a hydrogen, just as with methane. Which bond is broken: $C-H$ or $C-Cl$?'),
-        solution: t('Ir šiuo atveju atplėšiamas vandenilis: susidaro $HCl$ ir $•CH2Cl$, kuris su $Cl2$ duoda dichlormetaną.', 'Here again a hydrogen is removed: $HCl$ and $•CH2Cl$ form, and the radical gives dichloromethane with $Cl2$.')
+        hint: t('Palyginkite abu galimus kelius: kokia nauja jungtis susidarytų – $H-Cl$ ar $Cl-Cl$? Kuri iš jų tvirtesnė?', 'Compare the two possible paths: which new bond would form, $H-Cl$ or $Cl-Cl$? Which of them is stronger?'),
+        solution: t('Ir šiuo atveju atplėšiamas vandenilis: susidaro $HCl$ ir $•CH2Cl$, kuris su $Cl2$ duoda dichlormetaną. Vandenilis atplėšiamas, nes susidaro tvirtas $H-Cl$ ryšys; $Cl-Cl$ ryšys silpnas, todėl chloro atomo atplėšimas nenaudingas.', 'Here again a hydrogen is removed: $HCl$ and $•CH2Cl$ form, and the radical gives dichloromethane with $Cl2$. The hydrogen is removed because a strong $H-Cl$ bond forms; the $Cl-Cl$ bond is weak, so removing a chlorine atom does not pay.')
       }, {
         prompt: t('Ką daryti, norint gauti daugiausia chlormetano?', 'What should be done to obtain mainly chloromethane?'),
         kind: 'choice',
@@ -1164,18 +1235,18 @@
         hint: t('Kam chloro radikalas dažniau susidurs: metano ar jau chlorinto metano molekulėms?', 'Which will a chlorine radical meet more often: methane or already chlorinated methane?'),
         solution: t('Esant metano pertekliui chloro radikalas dažniausiai susiduria su metanu, todėl chlormetanas toliau nechloruojamas.', 'With excess methane a chlorine radical mostly meets methane, so chloromethane is not chlorinated further.')
       }],
-      why: t('Halogeninimas tęsiasi, kol yra C–H ryšių: chlormetanas turi tokių pat, kaip metanas. Poliganų kiekį lemia reagentų santykis.', 'Halogenation goes on as long as C–H bonds remain: chloromethane has them just like methane. The ratio of reagents sets the amount of polychlorinated products.'),
+      why: t('Halogeninimas tęsiasi, kol yra C–H ryšių: chlormetanas turi tokių pat, kaip metanas. Polichlorintų produktų kiekį lemia reagentų santykis.', 'Halogenation goes on as long as C–H bonds remain: chloromethane has them just like methane. The ratio of reagents sets the amount of polychlorinated products.'),
       src: 'L6 p8'
     },
     {
       id: 'u06.chain.7',
-      q: [{ p: t('Žemiau parodytos dvi lenktos strėlės, vaizduojančios žingsnį $CH3• + Cl2 → CH3Cl + Cl•$.', 'Two curved arrows are drawn for the step $CH3• + Cl2 → CH3Cl + Cl•$.') },
-        { mech: [{ scheme: { items: [{ smi: '[CH3]' }, { plus: true }, { smi: 'ClCl' }, { arrow: '→' }, { smi: 'CCl', opts: { condensed: true } }, { plus: true }, { smi: '[Cl]' }] }, arrows: [{ from: { m: 0, a: 0 }, to: { m: 1, a: 0 }, half: true }, { from: { m: 1, b: [0, 1] }, to: { m: 1, a: 1 }, half: true }] }] }],
+      q: [{ p: t('Žemiau parodytos trys viengalės strėlės, vaizduojančios elementariąją reakciją $CH3• + Cl2 → CH3Cl + Cl•$.', 'Three half-headed arrows are drawn for the step $CH3• + Cl2 → CH3Cl + Cl•$.') },
+        { mech: [{ scheme: { items: [{ smi: '[CH3]' }, { plus: true }, { smi: 'ClCl' }, { arrow: '→' }, { smi: 'CCl', opts: { condensed: true } }, { plus: true }, { smi: '[Cl]' }] }, arrows: [{ from: { m: 0, a: 0 }, to: { m: 1, a: 0 }, half: true }, { from: { m: 1, b: [0, 1] }, to: { m: 1, a: 0 }, half: true }, { from: { m: 1, b: [0, 1] }, to: { m: 1, a: 1 }, half: true }] }] }],
       steps: [{
         prompt: t('Ką rodo šios viengalės strėlės?', 'What do these half-headed arrows show?'),
         kind: 'choice',
         options: [
-          { text: t('Kiekviena judina po vieną elektroną: metilradikalo elektronas sudaro ryšį, o vienas $Cl-Cl$ elektronas lieka išeinančiam chloro atomui.', 'Each moves one electron: the methyl radical electron forms the bond, and one $Cl-Cl$ electron stays on the leaving chlorine atom.') },
+          { text: t('Kiekviena judina po vieną elektroną: metilradikalo elektronas ir vienas $Cl-Cl$ elektronas sudaro naują $C-Cl$ ryšį, o kitas $Cl-Cl$ elektronas lieka išeinančiam chloro atomui.', 'Each moves one electron: the electron of the methyl radical and one $Cl-Cl$ electron form the new $C-Cl$ bond, and the other $Cl-Cl$ electron stays on the departing chlorine atom.') },
           { text: t('Kiekviena judina elektronų porą: metilo anglis jungiasi su chloru savo laisva elektronų pora.', 'Each moves an electron pair: the methyl carbon bonds to chlorine with a lone pair.') },
           { text: t('Viena strėlė rodo elektronų porą, kita – vieną elektroną.', 'One arrow shows an electron pair, the other a single electron.') },
           { text: t('Strėlės rodo, kad $Cl2$ yra nukleofilas, o metilradikalas – elektrofilas.', 'The arrows show that $Cl2$ is the nucleophile and the methyl radical the electrophile.') }
@@ -1215,7 +1286,7 @@
         kind: 'multi',
         options: [{ mol: { smi: 'CCCl' } }, { mol: { smi: 'CCCC' } }, { mol: { smi: 'ClCl' } }, { mol: { smi: 'Cl' } }],
         answer: [0, 1, 2],
-        hint: t('Nutrūkimo reakcijoje susijungia du radikalai: etilas su etilu, etilas su chloru, chloras su chloru.', 'In a termination step two radicals combine: ethyl with ethyl, ethyl with chlorine, chlorine with chlorine.'),
+        hint: t('Kokie radikalai yra reakcijos mišinyje ir ką gauname, kai susijungia du iš jų?', 'Which radicals are present, and what forms when two of them combine?'),
         solution: t('Butanas (du etilai), chloretanas (etilas su chloru) ir $Cl2$ (du chloro radikalai) susidaro nutrūkimo metu. $HCl$ gaunamas augimo reakcijoje, kai chloro radikalas atplėšia vandenilį.', 'Butane (two ethyls), chloroethane (ethyl with chlorine) and $Cl2$ (two chlorine radicals) form in termination. $HCl$ forms in propagation, when a chlorine radical removes a hydrogen.')
       }],
       why: t('Nutrūkimo produktai kyla iš dviejų radikalų susijungimo, todėl tarp jų yra ir naujų $C-C$ ryšių, ir atsinaujinusio reagento.', 'Termination products come from two radicals combining, so they include new $C-C$ bonds and regenerated reagent.'),
@@ -1239,19 +1310,19 @@
     },
     {
       id: 'u06.ox.2',
-      q: [{ p: t('Pentano vidurinė $CH2$ grupė laipsniškai oksiduojama (pirmiausia iki alkoholio).', 'The middle $CH2$ group of pentane is oxidised step by step (first to the alcohol).') },
-        { mol: { smi: 'CCCCC', name: t('pentanas', 'pentane'), opts: { numbers: 'all' } } }],
+      q: [{ p: t('Pentanas oksiduojamas laipsniškai iki ketono.', 'Pentane is oxidised step by step to a ketone.') },
+        { mol: { smi: 'CCCCC', name: t('pentanas', 'pentane') } }],
       steps: [{
-        prompt: t('Koks yra galutinis produktas?', 'What is the final product?'),
-        kind: 'choice',
-        options: [{ mol: { smi: 'CCC(=O)CC' } }, { mol: { smi: 'CCCCC=O' } }, { mol: { smi: 'CCCC(C)=O' } }, { mol: { smi: 'CCC(C)C=O' } }],
-        answer: 0,
-        hint: t('Antrinis anglies atomas negali tapti aldehido ar rūgšties grupe: jis turi dvi $C-C$ jungtis.', 'A secondary carbon cannot become an aldehyde or acid group: it has two $C-C$ bonds.'),
-        solution: t('Atomas Nr. 3 virsta antriniu alkoholiu, po to ketonu: pentan-3-onu. Aldehidas ar 2-ono ketonas reikalautų kito anglies atomo.', 'Carbon no. 3 becomes a secondary alcohol and then a ketone: pentan-3-one. An aldehyde or the 2-one would need a different carbon.')
+        prompt: t('Kurie iš šių junginių gali susidaryti tiesiogiai šiame procese?', 'Which of these compounds can form directly in this process?'),
+        kind: 'multi',
+        options: [{ mol: { smi: 'CCC(=O)CC', name: t('3-pentanonas', 'pentan-3-one') } }, { mol: { smi: 'CCCC(C)=O', name: t('2-pentanonas', 'pentan-2-one') } }, { mol: { smi: 'CCCCC=O', name: t('pentanalis', 'pentanal') } }, { mol: { smi: 'CCC(C)C=O', name: t('2-metilbutanalis', '2-methylbutanal') } }],
+        answer: [0, 1],
+        hint: t('Ketonas atsiranda iš antrinio anglies atomo, aldehidas – tik iš grandinės galo.', 'A ketone comes from a secondary carbon; an aldehyde only from the end of a chain.'),
+        solution: t('Abu antrinių $CH2$ grupių tipai (atomai Nr. 2 ir 3) gali virsti ketonu: gaunamas pentan-2-onas ir pentan-3-onas. Pentanalis reikalautų oksiduoti grandinės galą, o 2-metilbutanalis – kitos anglies grandinės.', 'Both kinds of secondary $CH2$ group (carbons no. 2 and 3) can become a ketone: pentan-2-one and pentan-3-one form. Pentanal would need the chain end to be oxidised, and 2-methylbutanal a different carbon skeleton.')
       }],
       why: t('Antrinės anglies oksidacija sustoja ties ketonu, nes toliau oksiduoti reikėtų suardyti $C-C$ ryšį.', 'Oxidation of a secondary carbon stops at the ketone, because going further would require breaking a $C-C$ bond.'),
       src: 'L6 p18',
-      claims: [{ formula: ['CCC(=O)CC', 'C5H10O'] }]
+      claims: [{ formula: ['CCC(=O)CC', 'C5H10O'] }, { formula: ['CCCC(C)=O', 'C5H10O'] }]
     },
     {
       id: 'u06.ox.3',
@@ -1277,13 +1348,13 @@
         prompt: t('Kuri lygtis rodo nepilną metano oksidaciją iki $CO$?', 'Which equation shows incomplete oxidation of methane to $CO$?'),
         kind: 'choice',
         options: [
-          { text: f('2 CH4 + 3 O2 → 2 CO + 4 H2O') },
-          { text: f('CH4 + 2 O2 → CO2 + 2 H2O') },
-          { text: f('CH4 + O2 → CO + H2 + H2O') }
+          { text: fm('2 CH4 + 3 O2 → 2 CO + 4 H2O') },
+          { text: fm('CH4 + 2 O2 → CO2 + 2 H2O') },
+          { text: fm('CH4 + O2 → CO + H2 + H2O') }
         ],
         answer: 0,
         hint: t('Anglis turi virsti $CO$, o visas vandenilis – vandeniu.', 'Carbon must become $CO$ and all hydrogen must become water.'),
-        solution: t('Pirmoji lygtis subalansuota ir vandenilis tampa vandeniu, santykis $CH4 : O2 = 2 : 3$. Antroji – visiškas degimas, trečioji vandenilį palieka laisvą, ko metano oksidacijoje nebūna.', 'The first equation is balanced, with all hydrogen going to water, and the ratio $CH4 : O2$ is $2 : 3$. The second is complete combustion, the third leaves free hydrogen, which does not occur here.')
+        solution: t('Pirmoji lygtis subalansuota ir vandenilis tampa vandeniu, santykis $CH4 : O2 = 2 : 3$. Antroji – visiškas degimas, trečioji vandenilį palieka laisvą, o kurso lygtyse vandenilis virsta vandeniu.', 'The first equation is balanced, with all hydrogen going to water, and the ratio $CH4 : O2$ is $2 : 3$. The second is complete combustion, the third leaves free hydrogen, while in the course equations hydrogen goes to water.')
       }],
       why: t('Nepilnoje oksidacijoje deguonies mažiau: $2 : 3$ vietoj $1 : 2$, o anglis virsta $CO$.', 'In incomplete oxidation there is less oxygen: $2 : 3$ instead of $1 : 2$, and carbon becomes $CO$.'),
       src: 'L6 p18'
@@ -1291,11 +1362,11 @@
     {
       id: 'u06.ox.5',
       q: [{ p: t('Butanas oksiduojamas oro deguonimi aukštoje temperatūroje. Pirmiausia deguonis atplėšia vandenilį.', 'Butane is oxidised by the oxygen of air at high temperature. First oxygen removes a hydrogen.') },
-        { mol: { smi: 'CCCC', name: t('butanas', 'butane') } }],
+        { mol: { smi: 'CCCC', name: t('butanas', 'butane'), opts: { numbers: 'all' } } }],
       steps: [{
         prompt: t('Kuris hidroperoksidas susidaro daugiausia?', 'Which hydroperoxide forms mainly?'),
         kind: 'choice',
-        options: [{ mol: { smi: 'CCC(C)OO' } }, { mol: { smi: 'CCCCOO' } }, { mol: { smi: 'CC(C)COO' } }],
+        options: [{ mol: { smi: 'CCC(C)OO' } }, { mol: { smi: 'CCCCOO' } }],
         answer: 0,
         hint: t('Kuris radikalas susidaro greičiau: pirminis ar antrinis?', 'Which radical forms faster: the primary or the secondary one?'),
         solution: t('Greičiau susidaro antrinis radikalas, todėl $OOH$ jungiasi prie antrinio atomo: butan-2-ilo hidroperoksidas.', 'The secondary radical forms faster, so $OOH$ ends up on the secondary carbon: the butan-2-yl hydroperoxide.')
@@ -1341,7 +1412,7 @@
       steps: [{
         prompt: t('Bakstelėkite atomą, kuris atiduoda vandenilį radikalui.', 'Tap the atom that gives its hydrogen to a radical.'),
         kind: 'atoms', mol: { smi: 'Cc1cc(C(C)(C)C)c(O)c(C(C)(C)C)c1', opts: { numbers: 'all' } }, answer: [9],
-        hint: t('Antioksidanto grupė su vandeniliu yra fenolio grupė.', 'The group with the hydrogen is the phenol group.'),
+        hint: t('Kurio atomo radikalą stabilizuotų žiedas?', 'Whose radical would the ring stabilise?'),
         solution: t('Vandenilį atiduoda fenolio deguonis (atomas Nr. 10), nes $O-H$ ryšys silpnas, o susidariusį radikalą stabilizuoja žiedas.', 'The phenolic oxygen (atom no. 10) gives the hydrogen, because the $O-H$ bond is weak and the ring stabilises the resulting radical.')
       }, {
         prompt: t('Kodėl šis junginys nutraukia oksidacijos grandinę?', 'Why does this compound stop the oxidation chain?'),
@@ -1371,7 +1442,7 @@
           right: [{ text: t('natūralus', 'natural') }, { text: t('sintetinis', 'synthetic') }],
           pairs: [0, 0, 1, 1]
         },
-        hint: t('BHA ir BHT pavadinimų raidės rodo iš toluenų ir anizolo pagamintus junginius.', 'The letters of BHA and BHT stand for compounds made from anisole and toluene.'),
+        hint: t('BHA ir BHT pavadinimų raidės rodo iš tolueno ir anizolo pagamintus junginius.', 'The letters of BHA and BHT stand for compounds made from anisole and toluene.'),
         solution: t('Vitaminai C ir E yra natūralūs, o BHA (butilhidroksianizolas) ir BHT (butilhidroksitoluenas) – sintetiniai.', 'Vitamins C and E are natural; BHA (butylated hydroxyanisole) and BHT (butylated hydroxytoluene) are synthetic.')
       }],
       why: t('Visų šių antioksidantų veikimas panašus: jie atiduoda vandenilį radikalui ir nutraukia oksidacijos grandinę.', 'All these antioxidants act in a similar way: they give a hydrogen to a radical and interrupt the oxidation chain.'),
@@ -1402,7 +1473,7 @@
         options: [
           { text: t('Ryšiai $C-C$ ir $C-H$ beveik nepoliniai ir tvirti, todėl heterolizei nėra centro, bet radikalinės reakcijos įmanomos.', 'The $C-C$ and $C-H$ bonds are almost non-polar and strong, so there is no site for heterolysis, but radical reactions are possible.') },
           { text: t('Alkanai turi laisvų elektronų porų, kurios neleidžia reaguoti su rūgštimis.', 'Alkanes have lone pairs that prevent reaction with acids.') },
-          { text: t('Alkanų anglies atomai sp² hibridizuoti, todėl jie nepolinės.', 'The carbons of alkanes are sp² hybridised, so they are non-polar.') },
+          { text: t('Alkanų anglies atomai sp² hibridizuoti, todėl jie nepoliniai.', 'The carbons of alkanes are sp² hybridised, so they are non-polar.') },
           { text: t('Alkanų $C-H$ ryšiai poliniai, todėl juos atakuoja tik radikalai.', 'The $C-H$ bonds of alkanes are polar, so only radicals attack them.') }
         ],
         answer: 0,
@@ -1437,7 +1508,7 @@
       }],
       why: t('Produktų santykis yra vandenilių skaičiaus ir jų reaktingumo sandauga. Chloras aktyvus ir mažai selektyvus, todėl vandenilių skaičius gali nugalėti stabilesnį radikalą.', 'The product ratio is the number of hydrogens times their reactivity. Chlorine is reactive and hardly selective, so the number of hydrogens can outweigh a more stable radical.'),
       src: 'L6 p14',
-      claims: [{ react: ['sr.halogenate', ['CC(C)C'], { X: 'Br' }, 'CC(C)(C)Br'] }]
+      claims: [{ react: ['sr.halogenate', ['CC(C)C'], { X: 'Cl' }, 'CC(C)(C)Cl'] }, { react: ['sr.halogenate', ['CC(C)C'], { X: 'Br' }, 'CC(C)(C)Br'] }]
     },
     {
       id: 'u06.why.3',
@@ -1511,8 +1582,8 @@
       steps: [{
         prompt: t('Bakstelėkite anglies atomą, kurio vandenilį bromo radikalas atplėšia.', 'Tap the carbon whose hydrogen the bromine radical removes.'),
         kind: 'atoms', mol: { smi: 'CC(C)c1ccccc1', opts: { numbers: 'all' } }, answer: [1],
-        hint: t('Kuris atomas yra prijungtas prie žiedo ir turi vandenilį?', 'Which carbon is bonded to the ring and carries a hydrogen?'),
-        solution: t('Atomas Nr. 2 yra benzilo padėtyje ir turi vandenilį. Čia susidaro benzilo tipo tretinis radikalas.', 'Carbon no. 2 is in the benzylic position and carries a hydrogen. A tertiary radical of benzylic type forms there.')
+        hint: t('Kuris radikalas galėtų pasidalyti nesuporuotą elektroną su žiedu?', 'Which radical could share its unpaired electron with the ring?'),
+        solution: t('Atomas Nr. 2 yra benzilo padėtyje ir turi vandenilį. Čia susidaro benziltipo tretinis radikalas.', 'Carbon no. 2 is in the benzylic position and carries a hydrogen. A tertiary radical of benzylic type forms there.')
       }, {
         prompt: t('Kodėl šis radikalas toks stabilus?', 'Why is this radical so stable?'),
         kind: 'choice',
@@ -1524,7 +1595,7 @@
         ],
         answer: 0,
         hint: t('Nupieškite rezonansines formules radikalo, esančio šalia žiedo.', 'Draw the resonance structures of a radical next to a ring.'),
-        solution: t('Benzilo tipo radikalai yra stabiliausi (benzilo = alilo), o tretinis stabilesnis už antrinį ir pirminį.', 'Benzylic radicals are the most stable (benzyl = allyl), and a tertiary one is more stable than a secondary or primary one.')
+        solution: t('Benziltipo radikalai yra stabiliausi (benzil- = alil-), o tretinis stabilesnis už antrinį ir pirminį.', 'Benzylic radicals are the most stable (benzyl = allyl), and a tertiary one is more stable than a secondary or primary one.')
       }],
       why: t('Konjugacija su žiedu stabilizuoja radikalą stipriau nei alkilgrupės, todėl benzilo padėties vandenilis keičiamas pirmas.', 'Conjugation with the ring stabilises a radical more than alkyl groups do, so the benzylic hydrogen is replaced first.'),
       src: 'L6 p16',
@@ -1532,7 +1603,7 @@
     },
     {
       id: 'u06.why.7',
-      q: [{ p: t('Alkanas chloruojamas dviem temperatūrom: 25 °C ir aukštesne.', 'An alkane is chlorinated at two temperatures: 25 °C and a higher one.') }],
+      q: [{ p: t('Alkanas chloruojamas dviejose temperatūrose: 25 °C ir aukštesnėje.', 'An alkane is chlorinated at two temperatures: 25 °C and a higher one.') }],
       steps: [{
         prompt: t('Kaip kinta selektyvumas aukštesnėje temperatūroje?', 'How does the selectivity change at the higher temperature?'),
         kind: 'choice',
@@ -1543,7 +1614,7 @@
           { text: t('Chloras ima keisti tik pirminius vandenilius.', 'Chlorine starts to replace only primary hydrogens.') }
         ],
         answer: 0,
-        hint: t('Daugiau šilumos energijos mažina skirtumą tarp aktyvacijos barjerų svarbos.', 'More thermal energy reduces the importance of differences between barriers.'),
+        hint: t('Kaip temperatūra keičia greitų ir lėtų reakcijų greičių santykį?', 'How does temperature change the ratio between the rates of fast and slow reactions?'),
         solution: t('Aukštoje temperatūroje chloro radikalas dar mažiau renkasi: gaunamas beveik statistinis visų galimų izomerų mišinys.', 'At high temperature the chlorine radical chooses even less: an almost statistical mixture of all possible isomers forms.')
       }],
       why: t('Aukštesnė temperatūra mažina skirtumus tarp greičių, todėl chlorinant selektyvumas dar sumažėja.', 'A higher temperature reduces the differences between rates, so the selectivity of chlorination falls further.'),
@@ -1553,7 +1624,7 @@
       id: 'u06.why.8',
       q: [{ p: t('Tret-butilradikalas ($CH3)3C•$ yra stabilesnis už etilradikalą $CH3CH2•$.', 'The tert-butyl radical $(CH3)3C•$ is more stable than the ethyl radical $CH3CH2•$.') }],
       steps: [{
-        prompt: t('Kuris paaiškinimas atitinka paskaitas?', 'Which explanation fits the lectures?'),
+        prompt: t('Kuris paaiškinimas teisingas?', 'Which explanation is correct?'),
         kind: 'choice',
         options: [
           { text: t('Hiperkonjugacija: tretinį radikalą stabilizuoja daugiau gretimų alkilgrupių ($C-H$ ryšių), be to, jis erdviškai užstotas.', 'Hyperconjugation: the tertiary radical is stabilised by more neighbouring alkyl groups ($C-H$ bonds), and it is sterically shielded.') },
@@ -1563,7 +1634,7 @@
         ],
         answer: 0,
         hint: t('Palyginkite, kiek alkilgrupių prijungta prie radikalo atomo.', 'Compare how many alkyl groups are attached to the radical carbon.'),
-        solution: t('Nesuporuotas elektronas sąveikauja su gretimų $C-H$ ryšių orbitalėmis: tretiniam radikalui tokių grupių tris, pirminiam – vieną. Tai ir erdviniai trukdžiai didina stabilumą.', 'The unpaired electron interacts with the orbitals of neighbouring $C-H$ bonds: a tertiary radical has three such groups, a primary one has one. This and steric hindrance raise the stability.')
+        solution: t('Nesuporuotas elektronas sąveikauja su gretimų $C-H$ ryšių orbitalėmis: tretinis radikalas turi tris tokias grupes, pirminis – vieną. Hiperkonjugacija kartu su erdviniais trukdžiais didina stabilumą.', 'The unpaired electron interacts with the orbitals of neighbouring $C-H$ bonds: a tertiary radical has three such groups, a primary one has one. Hyperconjugation together with steric hindrance raises the stability.')
       }],
       why: t('Alkilgrupių skaičius prie radikalo atomo lemia hiperkonjugaciją, todėl stabilumas didėja nuo metilo link tretinio.', 'The number of alkyl groups on the radical carbon sets hyperconjugation, so stability rises from methyl to tertiary.'),
       src: 'L6 p17'
@@ -1640,7 +1711,7 @@
       steps: [{
         prompt: t('Bakstelėkite atomą, kurio vandenilį atplėšia bromo radikalas.', 'Tap the carbon whose hydrogen the bromine radical removes.'),
         kind: 'atoms', mol: { smi: 'CC1CCC(C)(C)CC1', opts: { numbers: 'all' } }, answer: [1],
-        hint: t('Žiede yra vienas tretinis atomas su vandeniliu.', 'The ring has one tertiary carbon with a hydrogen.'),
+        hint: t('Kuris atomas po vandenilio netekimo duotų radikalą su daugiausia alkilgrupių?', 'Which carbon, after losing a hydrogen, would give the radical with the most alkyl groups?'),
         solution: t('Atomas Nr. 2 turi tris anglies kaimynus ir vieną vandenilį: tretinis atomas. Atomas Nr. 5 vandenilių neturi.', 'Carbon no. 2 has three carbon neighbours and one hydrogen: a tertiary carbon. Carbon no. 5 has no hydrogen.')
       }, {
         prompt: t('Koks yra pagrindinis produktas?', 'What is the main product?'),
@@ -1664,7 +1735,7 @@
       }, {
         prompt: t('Koks yra pagrindinis produktas?', 'What is the main product?'),
         kind: 'choice', options: [BR('CC(C)(Br)CCCC'), BR('CC(C)C(Br)CCC'), BR('CC(C)CC(Br)CC'), BR('CC(C)CCCCBr')], answer: 0,
-        hint: t('Tik vienas iš variantų turi bromą tretiniame atome.', 'Only one option has bromine on a tertiary carbon.'),
+        hint: t('Bromas jungiasi ten, kur buvo radikalas.', 'Bromine bonds where the radical was.'),
         solution: t('Pagrindinis produktas – 2-brom-2-metilheksanas. Likę izomerai, tarp jų antriniai bromidai, sudaro tik nedidelę dalį.', 'The main product is 2-bromo-2-methylhexane. The other isomers, including the secondary bromides, form only a small part.')
       }],
       why: t('Net kai grandinė ilga ir yra daug antrinių vandenilių, bromas renkasi vienintelį tretinį.', 'Even when the chain is long and there are many secondary hydrogens, bromine picks the single tertiary one.'),
@@ -1673,7 +1744,7 @@
     },
     {
       id: 'u06.task.5',
-      q: [{ p: t('Koks yra pagrindinis radikalinio brominimo produktas? Alkane yra tik vienas tretinis atomas.', 'What is the main product of radical bromination? The alkane has only one tertiary carbon.') },
+      q: [{ p: t('Koks yra pagrindinis radikalinio brominimo produktas?', 'What is the main product of radical bromination?') },
         { scheme: { items: [{ smi: 'CC(C)(C)C(C)C(C)(C)C(C)(C)C' }, { arrow: '→', above: f('Br2, hν') }] } }],
       steps: [{
         prompt: t('Bakstelėkite atomą, kurio vandenilį atplėšia bromo radikalas.', 'Tap the carbon whose hydrogen the bromine radical removes.'),
@@ -1715,6 +1786,13 @@
         kind: 'choice', options: [{ text: f('SR') }, { text: f('SN1') }, { text: f('AE') }, { text: f('SEAr') }], answer: 0,
         hint: t('Reakciją sukelia radikalai ir vandenilis pakeičiamas halogenu.', 'Radicals drive the reaction and a hydrogen is replaced by a halogen.'),
         solution: t('SR: radikalinis pakeitimas, vykstantis grandinės būdu (iniciacija, augimas, nutrūkimas).', 'SR: radical substitution, a chain reaction (initiation, propagation, termination).')
+      }, {
+        prompt: t('Ką reiškia raidės S ir R simbolyje SR?', 'What do the letters S and R in SR stand for?'),
+        kind: 'choice',
+        options: [{ text: t('S – pakeitimas (substitution), R – radikalinis', 'S – substitution, R – radical') }, { text: t('S – sinchroninis, R – reversinis', 'S – synchronous, R – reversible') }, { text: t('S – stereoselektyvus, R – racematas', 'S – stereoselective, R – racemate') }, { text: t('S – sotusis, R – redukcija', 'S – saturated, R – reduction') }],
+        answer: 0,
+        hint: t('Mechanizmo simbolis nusako, kas vyksta su vandeniliu ir kokios dalelės dalyvauja.', 'The mechanism symbol says what happens to the hydrogen and which species take part.'),
+        solution: t('S – pakeitimas (vandenilis pakeičiamas halogenu), R – radikalinis mechanizmas.', 'S – substitution (hydrogen is replaced by halogen), R – the radical mechanism.')
       }],
       why: t('Visos grupės vandenilių gali būti pakeistos chloru, o bromas renkasi tretinį atomą. Mechanizmas – SR.', 'Hydrogens of every group can be replaced by chlorine, while bromine picks the tertiary carbon. The mechanism is SR.'),
       src: 'S4.10',
@@ -1722,34 +1800,34 @@
     },
     {
       id: 'u06.task.7',
-      q: [{ p: t('Etilcikloheksanas brominamas radikaliniu būdu.', 'Ethylcyclohexane is brominated by the radical route.') },
-        { mol: { smi: 'CCC1CCCCC1', name: t('etilcikloheksanas', 'ethylcyclohexane') } }],
+      q: [{ p: t('Metilcikloheksanas brominamas radikaliniu būdu.', 'Methylcyclohexane is brominated by the radical route.') },
+        { mol: { smi: 'CC1CCCCC1', name: t('metilcikloheksanas', 'methylcyclohexane') } }],
       steps: [{
         prompt: t('Bakstelėkite atomą, kurio vandenilį atplėšia bromo radikalas.', 'Tap the carbon whose hydrogen the bromine radical removes.'),
-        kind: 'atoms', mol: { smi: 'CCC1CCCCC1', opts: { numbers: 'all' } }, answer: [2],
-        hint: t('Yra du antrinio tipo atomai šoninėje grandinėje ir žiede; vienas atomas tretinis.', 'There are secondary carbons in the side chain and in the ring; one carbon is tertiary.'),
-        solution: t('Atomas Nr. 3 turi tris anglies kaimynus ir vandenilį: tretinis atomas.', 'Carbon no. 3 has three carbon neighbours and a hydrogen: a tertiary carbon.')
+        kind: 'atoms', mol: { smi: 'CC1CCCCC1', opts: { numbers: 'all' } }, answer: [1],
+        hint: t('Antrinių atomų yra tik žiede. Kurį radikalą stabilizuotų daugiausia alkilgrupių?', 'The secondary carbons are in the ring. Which radical would be stabilised by the most alkyl groups?'),
+        solution: t('Atomas Nr. 2 turi tris anglies kaimynus ir vandenilį: tretinis atomas.', 'Carbon no. 2 has three carbon neighbours and a hydrogen: a tertiary carbon.')
       }, {
         prompt: t('Koks yra pagrindinis produktas?', 'What is the main product?'),
-        kind: 'choice', options: [BR('CCC1(Br)CCCCC1'), BR('CC(Br)C1CCCCC1'), BR('BrCCC1CCCCC1'), BR('CCC1CCCCC1Br')], answer: 0,
+        kind: 'choice', options: [BR('CC1(Br)CCCCC1'), BR('BrCC1CCCCC1'), BR('CC1CCCCC1Br'), BR('CC1CCCC(Br)C1')], answer: 0,
         hint: t('Bromas pakeičia vandenilį, kurį atplėšus gaunamas stabiliausias radikalas.', 'Bromine replaces the hydrogen whose removal gives the most stable radical.'),
-        solution: t('Susidaro 1-brom-1-etilcikloheksanas. Antrinis bromidas šoninėje grandinėje būtų tik šalutinis.', '1-Bromo-1-ethylcyclohexane forms. The secondary bromide in the side chain would be only a minor product.')
+        solution: t('Susidaro 1-brom-1-metilcikloheksanas. Pirminis ir antriniai bromidai būtų tik šalutiniai.', '1-Bromo-1-methylcyclohexane forms. The primary and secondary bromides would be only minor products.')
       }],
-      why: t('Substituentas prie žiedo sukuria tretinį atomą; jo vandenilis keičiamas selektyviausiai.', 'The substituent on the ring creates a tertiary carbon; its hydrogen is replaced most selectively.'),
-      src: 'L6 p22',
-      claims: [{ react: ['sr.halogenate', ['CCC1CCCCC1'], { X: 'Br' }, 'CCC1(Br)CCCCC1'] }, { name: ['CCC1(Br)CCCCC1', { lt: '1-brom-1-etilcikloheksanas', en: '1-bromo-1-ethylcyclohexane' }] }]
+      why: t('Pakaitas prie žiedo sukuria tretinį atomą; jo vandenilis keičiamas selektyviausiai.', 'A substituent on the ring creates a tertiary carbon; its hydrogen is replaced most selectively.'),
+      src: 'S4.2',
+      claims: [{ react: ['sr.halogenate', ['CC1CCCCC1'], { X: 'Br' }, 'CC1(Br)CCCCC1'] }, { name: ['CC1(Br)CCCCC1', { lt: '1-brom-1-metilcikloheksanas', en: '1-bromo-1-methylcyclohexane' }] }]
     },
     {
       id: 'u06.task.8',
-      q: [{ p: t('Reikia pagaminti pentano C5 chloridą radikaliniu chlorinimu. Palyginkite pentaną ir 2,2-dimetilpropaną.', 'A C5 chloride has to be made by radical chlorination. Compare pentane and 2,2-dimethylpropane.') },
+      q: [{ p: t('Radikaliniu chlorinimu reikia gauti vieną $C5H11Cl$ izomerą. Palyginkite pentaną ir 2,2-dimetilpropaną.', 'One isomer of $C5H11Cl$ has to be made by radical chlorination. Compare pentane and 2,2-dimethylpropane.') },
         { mol: [{ smi: 'CCCCC', name: t('pentanas', 'pentane') }, { smi: 'CC(C)(C)C', name: t('2,2-dimetilpropanas', '2,2-dimethylpropane') }] }],
       steps: [{
         prompt: t('Kiek monochlorintų izomerų gali duoti pentanas?', 'How many monochloro isomers can pentane give?'),
         kind: 'number', answer: { value: 3, tol: 0 }, mol: { smi: 'CCCCC' },
-        hint: t('Pentanas simetriškas: atomai $C1$ ir $C5$ ekvivalentiški, $C2$ ir $C4$ taip pat.', 'Pentane is symmetric: carbons $C1$ and $C5$ are equivalent, and so are $C2$ and $C4$.'),
+        hint: t('Kurie pentano atomai susikeičia vietomis, kai molekulę apverčiate?', 'Which carbons of pentane swap places when you turn the molecule round?'),
         solution: t('Trys grupės: $C1/C5$, $C2/C4$ ir $C3$, todėl 1-, 2- ir 3-chlorpentanas.', 'Three groups: $C1/C5$, $C2/C4$ and $C3$, so 1-, 2- and 3-chloropentane.')
       }, {
-        prompt: t('Kurį chlorintą pentano izomerą galima gauti kaip vienintelį pagrindinį produktą?', 'Which chlorinated C5 isomer can be obtained as the only product?'),
+        prompt: t('Kurį $C5H11Cl$ izomerą galima gauti kaip vienintelį produktą?', 'Which $C5H11Cl$ isomer can be obtained as the only product?'),
         kind: 'choice', options: [BR('CC(C)(C)CCl'), BR('CCCCCCl'), BR('CCC(C)(C)Cl'), BR('CC(C)C(C)Cl')], answer: 0,
         hint: t('Reikia alkano, kurio visi vandeniliai ekvivalentiški.', 'You need an alkane whose hydrogens are all equivalent.'),
         solution: t('Tik 2,2-dimetilpropanas turi vieną vandenilių grupę, todėl 1-chlor-2,2-dimetilpropanas yra vienintelis produktas. 1-Chlorpentanas iš pentano būtų tik viena iš trijų dalių.', 'Only 2,2-dimethylpropane has a single group of hydrogens, so 1-chloro-2,2-dimethylpropane is the only product. 1-Chloropentane from pentane would be only one of three.')
@@ -1762,21 +1840,21 @@
       id: 'u06.task.9',
       q: [{ p: t('Pentano radikalinio chlorinimo mišinys atskirtas į tris frakcijas, kurių virimo temperatūros skiriasi. Žemiausiai verdančią frakciją specialiais būdais galima išskirti į du junginius, turinčius tą pačią virimo temperatūrą.', 'The mixture from radical chlorination of pentane is separated into three fractions with different boiling points. The lowest-boiling fraction can be split by special methods into two compounds with the same boiling point.') }],
       steps: [{
+        prompt: t('Kuris iš trijų konstitucijos izomerų yra chiralinis ir todėl sudarytas iš dviejų enantiomerų?', 'Which of the three constitutional isomers is chiral and therefore consists of two enantiomers?'),
+        kind: 'choice', options: [{ mol: { smi: 'CCCCCCl', name: t('1-chlorpentanas', '1-chloropentane') } }, { mol: { smi: 'CCCC(C)Cl', name: t('2-chlorpentanas', '2-chloropentane') } }, { mol: { smi: 'CCC(CC)Cl', name: t('3-chlorpentanas', '3-chloropentane') } }], answer: 1,
+        hint: t('Du junginiai su ta pačia virimo temperatūra yra enantiomerai. Ieškokite anglies atomo su keturiais skirtingais pakaitais.', 'Two compounds with the same boiling point are enantiomers. Look for a carbon with four different substituents.'),
+        solution: t('Tai 2-chlorpentanas: jo antrasis anglies atomas turi $H$, $Cl$, $CH3$ ir $C3H7$, todėl yra $R$ ir $S$ enantiomerai su vienoda virimo temperatūra.', 'It is 2-chloropentane: its carbon 2 has $H$, $Cl$, $CH3$ and $C3H7$, so there are $R$ and $S$ enantiomers with the same boiling point.')
+      }, {
         prompt: t('Pažymėkite visus keturis junginius, esančius mišinyje.', 'Pick all four compounds in the mixture.'),
         kind: 'multi',
         options: [BR('CCCCCCl'), BR('CCC[C@H](C)Cl'), BR('CCC[C@@H](C)Cl'), BR('CCC(CC)Cl'), BR('CCC(C)(C)Cl')],
         answer: [0, 1, 2, 3],
-        hint: t('Pentanas duoda tris konstitucinius izomerus; vienas iš jų chiralinis, todėl turi du enantiomerus.', 'Pentane gives three constitutional isomers; one of them is chiral, so it has two enantiomers.'),
+        hint: t('Pentanas duoda tris konstitucijos izomerus; vienas iš jų chiralinis, todėl turi du enantiomerus.', 'Pentane gives three constitutional isomers; one of them is chiral, so it has two enantiomers.'),
         solution: t('1-Chlorpentanas, 3-chlorpentanas ir abu 2-chlorpentano enantiomerai. 2-Chlor-2-metilbutanas turi kitokį skeletą.', '1-Chloropentane, 3-chloropentane and both enantiomers of 2-chloropentane. 2-Chloro-2-methylbutane has a different skeleton.')
-      }, {
-        prompt: t('Kuris junginys yra tas, kurio frakciją galima išskirti į du?', 'Which compound is the one whose fraction can be split in two?'),
-        kind: 'choice', options: [BR('CCCCCCl'), BR('CCCC(C)Cl'), BR('CCC(CC)Cl')], answer: 1,
-        hint: t('Du junginiai su ta pačia virimo temperatūra yra enantiomerai.', 'Two compounds with the same boiling point are enantiomers.'),
-        solution: t('Tai 2-chlorpentanas: jis turi chiralinį centrą, todėl sudarytas iš $R$ ir $S$ enantiomerų, kurių virimo temperatūros vienodos.', 'It is 2-chloropentane: it has a chiral centre and consists of $R$ and $S$ enantiomers, which have the same boiling point.')
       }],
       why: t('Chlorinant pentaną susidaro trys konstitucijos izomerai, o vienas iš jų, 2-chlorpentanas, dar yra racematas iš dviejų enantiomerų. Iš viso – keturi junginiai.', 'Chlorinating pentane gives three constitutional isomers, and one of them, 2-chloropentane, is a racemate of two enantiomers. In all, there are four compounds.'),
       src: 'L6 p22',
-      claims: [{ cip: ['CCC[C@H](C)Cl', 3, 'S'] }, { cip: ['CCC[C@@H](C)Cl', 3, 'R'] }, { chiral: ['CCCC(C)Cl', true] }]
+      claims: [{ cip: ['CCC[C@H](C)Cl', 3, 'S'] }, { cip: ['CCC[C@@H](C)Cl', 3, 'R'] }, { chiral: ['CCCC(C)Cl', true] }, { name: ['CCCC(C)Cl', { lt: '2-chlorpentanas', en: '2-chloropentane' }] }]
     }
   ];
 
@@ -1790,11 +1868,11 @@
           [t('Alkanai', 'Alkanes'), t('sp³ C, nepoliniai σ ryšiai, inertiški heterolizei; būdingos radikalinės reakcijos', 'sp³ carbons, non-polar σ bonds, inert in heterolysis; radical reactions are typical')],
           [t('Radikalų generavimas', 'Generating radicals'), t('termolizė (> 500 °C), fotolizė (hν), redokso procesai; viengalė strėlė = vienas elektronas', 'thermolysis (> 500 °C), photolysis (hν), redox processes; half-headed arrow = one electron')],
           [t('SR grandinė', 'The SR chain'), t('iniciacija $X2 → 2 X•$; augimas $X• + RH → HX + R•$, $R• + X2 → RX + X•$; nutrūkimas: du radikalai susijungia', 'initiation $X2 → 2 X•$; propagation $X• + RH → HX + R•$, $R• + X2 → RX + X•$; termination: two radicals combine')],
-          [t('Radikalų stabilumas', 'Radical stability'), t('benzilo = alilo > tretinis > antrinis > pirminis > metilo (konjugacija, hiperkonjugacija, erdviniai trukdžiai)', 'benzyl = allyl > tertiary > secondary > primary > methyl (conjugation, hyperconjugation, steric hindrance)')],
+          [t('Radikalų stabilumas', 'Radical stability'), t('benzil- = alil- > tretinis > antrinis > pirminis > metil- (konjugacija, hiperkonjugacija, erdviniai trukdžiai)', 'benzyl = allyl > tertiary > secondary > primary > methyl (conjugation, hyperconjugation, steric hindrance)')],
           [fm('Cl2, hν'), t('aktyvus, mažai selektyvus: visų monochlorintų izomerų mišinys; skaičius = ekvivalentinių vandenilių grupių skaičius', 'reactive, hardly selective: a mixture of all monochloro isomers; their number = the number of groups of equivalent hydrogens')],
-          [fm('Br2, hν'), t('mažiau aktyvus, selektyvus: vyrauja produktas iš stabiliausio radikalo (tretinis, benzilo)', 'less reactive, selective: the product from the most stable radical predominates (tertiary, benzylic)')],
+          [fm('Br2, hν'), t('mažiau aktyvus, selektyvus: vyrauja produktas iš stabiliausio radikalo (tretinis, benziltipo)', 'less reactive, selective: the product from the most stable radical predominates (tertiary, benzylic)')],
           [t('Chiralumas', 'Chirality'), t('plokščias radikalas → naujas chiralinis centras susidaro kaip racematas', 'planar radical → a new chiral centre forms as a racemate')],
-          [t('Vienas produktas', 'One product'), t('tik kai visi vandeniliai ekvivalentiški (metanas, etanas, 2,2-dimetilpropanas, cikloheksanas)', 'only when all hydrogens are equivalent (methane, ethane, 2,2-dimethylpropane, cyclohexane)')],
+          [t('Vienas produktas', 'One product'), t('$Cl2$: tik kai visi vandeniliai ekvivalentiški (metanas, etanas, 2,2-dimetilpropanas, cikloheksanas); $Br2$: ir kai stabiliausią radikalą duoda viena vandenilių grupė', '$Cl2$: only when all hydrogens are equivalent (methane, ethane, 2,2-dimethylpropane, cyclohexane); $Br2$: also when one group of hydrogens gives the most stable radical')],
           [t('Oksidacija', 'Oxidation'), t('$RCH3 → RCH2OH → RCHO → RCOOH$; $R2CH2 → R2CHOH → R2C=O$; degimas iki $CO2$; autooksidacija per hidroperoksidą (150–200 °C, 30–90 atm)', '$RCH3 → RCH2OH → RCHO → RCOOH$; $R2CH2 → R2CHOH → R2C=O$; combustion to $CO2$; autoxidation through a hydroperoxide (150–200 °C, 30–90 atm)')],
           [t('Antioksidantai', 'Antioxidants'), t('fenolio $O-H$ atiduoda $H•$ radikalui, susidaro stabilus fenoksilo radikalas', 'a phenolic $O-H$ gives $H•$ to a radical, a stable phenoxyl radical forms')]
         ]
