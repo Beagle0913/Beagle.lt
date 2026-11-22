@@ -42,8 +42,8 @@ test('parse builds atoms, bonds and neighbours', () => {
   assert.strictEqual(ion.atoms[0].charge, 1);
   assert.strictEqual(m('C[C@@H](N)O').atoms[1].chiral, '@@');
   assert.strictEqual(m('C%10CC%10').bonds.length, 3);
-  assert.strictEqual(m('[O-]').atoms[0].h, 0); // bracket atoms carry exactly the H they state
-  assert.strictEqual(m('[CH2]').atoms[0].h, 2);
+  assert.strictEqual(m('[O-]C').atoms[0].h, 0); // bracket atoms carry exactly the H they state
+  assert.strictEqual(m('[CH2]C').atoms[0].h, 2); // methyl-type radical
   assert.strictEqual(m('C=1CCCCC1').bondAt(0, 5).order, 2); // ring bond order from the opening digit
 });
 
@@ -464,7 +464,8 @@ test('canonical form does not depend on atom order, branch order or aromatic/Kek
 
 test('bracket atoms: charges, isotopes, classes and metals', () => {
   assert.strictEqual(m('[Fe+2]').atoms[0].charge, 2);
-  assert.strictEqual(m('[O--]').atoms[0].charge, -2);
+  assert.strictEqual(m('[Ca+2]').atoms[0].charge, 2);
+  assert.throws(() => C.parse('[O--]'), (e) => /^SMILES/.test(e.message)); // oxide dianion is not organic chemistry
   assert.strictEqual(m('[13CH4]').atoms[0].h, 4);
   assert.strictEqual(C.formulaString(m('[13CH4]')), 'CH4');
   assert.strictEqual(m('[CH3:1]').atoms[0].h, 3);
@@ -538,4 +539,17 @@ test('unsaturation is null for ions and radicals', () => {
   assert.strictEqual(C.unsaturation(m('CCO')), 0);
   assert.strictEqual(C.unsaturation(m('C[N+](=O)[O-]')), 1); // net neutral: nitro methane CH3NO2, (2+2+1-3)/2
   assert.strictEqual(C.unsaturation(m('c1ccccc1')), 4);
+});
+
+test('charge, radical and bond count must agree', () => {
+  const bad = ['[CH2+]', 'C[CH2+](C)C', 'C[C+](C)(C)C', '[CH4+]', '[CH2-]', 'C[C-](C)(C)C', '[CH2]',
+    '[NH3+](C)C', '[NH2+]', '[N+](C)(C)(C)', '[NH4-]', '[NH3-]', '[OH2+](C)C', '[O+]', '[OH-]C', '[CH-]', '[CH3+]C', '[C+2]'];
+  for (const s of bad) assert.throws(() => C.parse(s), (e) => /^SMILES/.test(e.message), s);
+  const good = ['[CH3+]', 'C[CH2+]', 'CC(C)[CH+]C', 'C[C+](C)C', '[CH3-]', 'C[CH2-]', 'C[C-](C)C', '[CH3]', 'C[CH2]', 'C[CH]C', 'C[C](C)C',
+    '[NH4+]', 'C[NH3+]', 'C[N+](C)(C)C', '[NH2-]', 'C[NH-]', '[OH3+]', 'C[OH+]C', 'CC(C)[CH+]C', '[O-]C', '[OH-]', 'C[O-]', '[O-]C=O', 'O=[N+]([O-])C',
+    'c1cc[nH+]cc1', '[cH+]1cccccc1', '[cH-]1cccc1', '[C-]#[O+]', '[C-]#[N+]C', 'CC(=O)[O-]', 'C[S+](C)C', '[Na+]', '[Cl-]', 'C=[N+]=[N-]'];
+  for (const s of good) assert.doesNotThrow(() => C.parse(s), s);
+  assert.throws(() => C.parse('[CH2]'), (e) => /carbene/.test(e.message));
+  assert.doesNotThrow(() => C.parse('[N+](=O)[O-]')); // the NO2 fragment, used as a substituent string
+  assert.throws(() => C.parse('[N+](=O)(=O)[O-]'));
 });

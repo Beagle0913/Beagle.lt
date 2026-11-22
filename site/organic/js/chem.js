@@ -315,6 +315,18 @@
       const vals = DEFAULT_VALENCE[a.el];
       const bad = (!a.bracket && vals && sum > vals[vals.length - 1]) || (a.el === 'C' && a.charge === 0 && sum + a.h > 4);
       if (bad) throw new Error('SMILES: too many bonds on ' + a.el + ' (atom ' + i + ') in "' + smi + '"');
+      // charge and bond count must agree
+      const total = sum + a.h;
+      const want = { C: { 1: 3, '-1': 3 }, N: { 1: 4, '-1': 2 }, O: { 1: 3, '-1': 1 } }[a.el];
+      // the nitro group written alone, [N+](=O)[O-], is the NO2 fragment (nitrogen dioxide): 3 bonds are allowed there
+      const no2 = a.el === 'N' && a.charge === 1 && total === 3 && nbr[i].length === 2 &&
+        nbr[i].filter((j) => atoms[j].el === 'O' && atoms[j].charge === 0 && bondBetween(bonds, i, j).kek === 2).length === 1 &&
+        nbr[i].filter((j) => atoms[j].el === 'O' && atoms[j].charge === -1 && bondBetween(bonds, i, j).kek === 1).length === 1;
+      if (want && a.charge !== 0 && !no2 && (want[a.charge] === undefined || total !== want[a.charge])) {
+        throw new Error('SMILES: impossible ' + a.el + (a.charge > 0 ? '+' : '-') + (Math.abs(a.charge) > 1 ? Math.abs(a.charge) : '') +
+          ' with ' + total + ' bonds (atom ' + i + ') in "' + smi + '"');
+      }
+      if (a.el === 'C' && a.charge === 0 && a.bracket && total === 2) throw new Error('SMILES: carbene not supported (atom ' + i + ') in "' + smi + '"');
     });
 
     // neutral N with two =O: the nitro group: [N+](=O)[O-]
