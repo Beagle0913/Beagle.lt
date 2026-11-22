@@ -41,13 +41,13 @@ function taskKnown(id) {
 const allSeminarIds = () => Object.keys(TASKS).flatMap((s) => Array.from({ length: TASKS[s] }, (_, i) => s + '.' + (i + 1)));
 const isLab = (id) => /^l\d+$/.test(id);
 
-// A text that is the same in both languages is fine when it is only formulas, numbers, acronyms or one proper name.
-// Words = letter-only tokens of 3+ letters that are not formula-like (Cl, NaOH, HBr, DMSO); $...$ spans are ignored.
-// Flag when there are 2+ words, or one word that starts in lower case.
+// A text that is the same in both languages is fine when it is only formulas, numbers, acronyms, symbols (pKa, pH, SN2, E1)
+// or a single word. Ordinary words = tokens of 3+ letters, lower case with an optional capital first letter (Same, words),
+// not formula-like (NaOH, HBr, DMSO); $...$ spans are ignored. Flag only when there are 2 or more ordinary words.
 function sameTextIsWrong(s) {
   const tokens = s.replace(/\$[^$]*\$/g, ' ').split(/[^\p{L}\p{N}]+/u)
-    .filter((t) => /^\p{L}{3,}$/u.test(t) && !/^([A-Z][a-z]?\d*)+$/.test(t));
-  return tokens.length >= 2 || (tokens.length === 1 && /^\p{Ll}/u.test(tokens[0]));
+    .filter((t) => /^\p{Lu}?\p{Ll}{2,}$/u.test(t) && !/^([A-Z][a-z]?\d*)+$/.test(t));
+  return tokens.length >= 2;
 }
 
 /* ---------- caches shared by every unit (the engine is pure) ---------- */
@@ -95,11 +95,13 @@ function namerAnswer(smi) {
     try {
       if (ORG.name.inScope(smi)) {
         r = { lt: new Set(), en: new Set(), show: { lt: [], en: [] } };
+        let triv = null;
+        try { triv = ORG.name.trivial(smi); } catch (e) { /* no trivial name */ }
         for (const lang of ['lt', 'en']) {
           for (const stereo of [false, true]) {
             const x = ORG.name.name(smi, { lang, stereo });
             if (!x) continue;
-            for (const n of [x.name].concat(x.alts || [])) {
+            for (const n of [x.name].concat(x.alts || [], triv && triv[lang] ? [triv[lang]] : [])) {
               r[lang].add(ORG.check.normName(n).key);
               if (!r.show[lang].includes(n)) r.show[lang].push(n);
             }
@@ -114,7 +116,7 @@ function namerAnswer(smi) {
 
 /* ---------- report: one line per defect, repeated seeds folded together ---------- */
 class Report {
-  constructor(id) { this.id = id; this.errs = new Map(); this.warns = new Map(); this.unchecked = new Set(); this.seedsRun = {}; }
+  constructor(id) { this.id = id; this.errs = new Map(); this.warns = new Map(); this.unchecked = new Set(); this.extras = new Set(); this.seedsRun = {}; }
   add(map, loc, msg, tag) {
     const k = loc + '\u0000' + msg;
     let e = map.get(k);
@@ -242,7 +244,7 @@ function optionKeys(o, lang) {
   if (!isObj(o)) return 'x:' + JSON.stringify(o);
   if ('mol' in o) return 'mol:' + canon(o.mol.smi);
   if ('scheme' in o) return 'scheme:' + JSON.stringify(o.scheme, (k, v) => (k === 'smi' && typeof v === 'string' ? canon(v) : v));
-  if ('text' in o && isObj(o.text)) return 'text:' + (lang ? o.text[lang] : o.text.lt + '|' + o.text.en);
+  if ('text' in o && isObj(o.text)) { const n = (x) => String(x).trim().toLowerCase(); return 'text:' + (lang ? n(o.text[lang]) : n(o.text.lt) + '|' + n(o.text.en)); }
   return 'x:' + JSON.stringify(o);
 }
 
@@ -328,7 +330,7 @@ function checkUnit(unit, opts) {
     }
   }
 
-  function stepChecks(s, i, type, prob, tag) {
+  function stepChecks(s, i, type, prob, tag, p) {
     const loc = L(type, prob, 'steps[' + i + ']');
     if (!isObj(s)) return;
     if (Array.isArray(s.options)) dupCheck(s.options, 'options', loc, tag);
@@ -340,6 +342,17 @@ function checkUnit(unit, opts) {
       if (!got.length) R.err(loc, 'from "' + s.from + '" gives no atoms in ' + s.mol.smi, tag);
       else if (Array.isArray(s.answer) && !same(sortNums(s.answer), got)) R.err(loc, 'answer [' + s.answer + '] differs from the engine\'s "' + s.from + '" atoms [' + got + '] in ' + s.mol.smi, tag);
     }
+    if (s.kind === 'formula' && typeof s.answer === 'string') {
+      // the molecule is step.mol, else the problem's only statement molecule (exactly one Mol among the top-level mol blocks of q)
+      let m = isObj(s.mol) ? s.mol : null;
+      if (!m) { const all = (Array.isArray(p && p.q) ? p.q : []).flatMap((b) => (isObj(b) && b.mol ? [].concat(b.mol) : [])); if (all.length === 1) m = all[0]; }
+      const want = ORG.check.parseFormula(s.answer);
+      if (m && isStr(m.smi) && !parse(m.smi).err && want) {
+        const got = ORG.chem.formula(parse(m.smi).mol);
+        const x = Object.keys(got).sort().map((k) => k + got[k]), y = Object.keys(want.counts).sort().map((k) => k + want.counts[k]);
+        if (!same(x, y)) R.err(loc, 'formula answer ' + s.answer + ' is not the formula of ' + m.smi + ' (' + ORG.chem.formulaString(parse(m.smi).mol) + ')', tag);
+      }
+    }
     if (s.kind === 'name' && isObj(s.answer)) {
       const a = s.answer;
       if (isStr(a.smi) && !(Array.isArray(a.lt) && Array.isArray(a.en))) {
@@ -348,13 +361,19 @@ function checkUnit(unit, opts) {
         if (!r || r.error) R.err(loc, 'answer.smi "' + a.smi + '" is outside the namer\'s scope: write the names in answer.lt and answer.en instead', tag);
       } else if (Array.isArray(a.lt) && Array.isArray(a.en) && a.lt.length && a.en.length && isObj(s.mol) && isStr(s.mol.smi)) {
         if (parse(s.mol.smi).err) return;
-        nameCheck(s.mol.smi, { lt: a.lt[0], en: a.en[0] }, 'first accepted name', loc, tag);
-        // the other accepted names are alternatives; a wrong one is only a warning (trivial and older names are allowed)
+        // every accepted name must be the namer's name, one of its alternatives or its trivial name, unless listed in answer.extra
         const r = namerAnswer(s.mol.smi);
-        if (r && !r.error) {
-          for (const lang of ['lt', 'en']) {
-            a[lang].slice(1).forEach((n) => { if (!r[lang].has(ORG.check.normName(n).key)) R.warn(loc, 'extra accepted ' + lang + ' name "' + n + '" is not a namer name for ' + s.mol.smi, tag); });
-          }
+        const ex = isObj(a.extra) ? a.extra : null;
+        if (ex && !isStr(ex.src)) R.err(loc, 'answer.extra needs a src (where the extra names come from)', tag);
+        if (!r || r.error) R.unchecked.add(s.mol.smi);
+        else for (const lang of ['lt', 'en']) {
+          const extra = new Set((ex && Array.isArray(ex[lang]) ? ex[lang] : []).map((n) => ORG.check.normName(n).key));
+          a[lang].forEach((n) => {
+            const k = ORG.check.normName(n).key;
+            if (r[lang].has(k)) return;
+            if (extra.has(k)) { R.extras.add(lang + ' "' + n + '" for ' + s.mol.smi + ' (' + (ex.src || 'no src') + ')'); return; }
+            R.err(loc, 'accepted ' + lang + ' name "' + n + '" is wrong for ' + s.mol.smi + ' (namer: ' + r.show[lang].join(' / ') + '); if it is a real course spelling the namer does not produce, list it in answer.extra {lt, en, src}', tag);
+          });
         }
       } else R.unchecked.add('(name step without molecule)');
     }
@@ -363,7 +382,7 @@ function checkUnit(unit, opts) {
   function problemChecks(p, type, prob, tag) {
     if (!isObj(p)) return;
     scan(p.q, L(type, prob, 'q'), tag, 'q');
-    (Array.isArray(p.steps) ? p.steps : []).forEach((s, i) => { scan(s, L(type, prob, 'steps[' + i + ']'), tag, 'step'); stepChecks(s, i, type, prob, tag); });
+    (Array.isArray(p.steps) ? p.steps : []).forEach((s, i) => { scan(s, L(type, prob, 'steps[' + i + ']'), tag, 'step'); stepChecks(s, i, type, prob, tag, p); });
     scan(p.why, L(type, prob, 'why'), tag, 'why');
     (Array.isArray(p.claims) ? p.claims : []).forEach((c, k) => {
       const loc = L(type, prob, 'claims[' + k + ']');
@@ -402,6 +421,9 @@ function checkUnit(unit, opts) {
   for (const ty of types) {
     const tid = ty.id;
     scan(ty.title, L(tid, '', 'title'), undefined, 'title');
+    (Array.isArray(ty.mirrors) ? ty.mirrors : []).forEach((m) => {
+      if (typeof m === 'string' && taskKnown(m) && !(isObj(unit.coverage) && Array.isArray(unit.coverage[m]) && unit.coverage[m].includes(tid))) R.err(L(tid, '', 'mirrors'), '"' + m + '" is mirrored but unit.coverage["' + m + '"] does not list ' + tid);
+    });
     mirrorsBad(ty).forEach((m) => R.err(L(tid, '', 'mirrors'), '"' + m + '" is not a known task id', undefined));
     if (Array.isArray(ty.bank)) {
       if (ty.bank.length < 8) guide(L(tid), 'the bank has ' + ty.bank.length + ' problems, the guide asks for at least 8');
@@ -422,20 +444,21 @@ function checkUnit(unit, opts) {
       let p;
       try { p = ORG.check.makeProblem(ty, seed); } catch (e) { R.err(L(tid, '', 'generator'), 'gen threw: ' + e.message, tag); continue; }
       const bad = ORG.check.validateProblem(p);
-      bad.forEach((e) => R.err(L(tid, '', 'structure'), e.replace(/^x\.t\.1\.?/, 'problem'), tag));
+      bad.forEach((e) => R.err(L(tid, '', 'structure'), e.replace(/^x\.t\.1/, 'problem'), tag));
       if (!bad.length) safely(() => problemChecks(p, tid, '', tag), L(tid), tag);
       prints.add(JSON.stringify([p.q, (p.steps || []).map((s) => [s.prompt, s.options, s.mol, s.answer, s.from])]));
       if (seed === 1) {
-        const q = ORG.check.makeProblem(ty, 1);
-        if (JSON.stringify([q.q, q.steps]) !== JSON.stringify([p.q, p.steps])) R.err(L(tid, '', 'generator'), 'seed 1 gives different problems on two runs (use the rng, not Math.random)');
+        try {
+          const q = ORG.check.makeProblem(ty, 1);
+          if (JSON.stringify([q.q, q.steps]) !== JSON.stringify([p.q, p.steps])) R.err(L(tid, '', 'generator'), 'seed 1 gives different problems on two runs (use the rng, not Math.random)');
+        } catch (e) { R.err(L(tid, '', 'generator'), 'gen threw on the second run of seed 1: ' + e.message); }
       }
     }
     R.seedsRun[tid] = ran;
-    if (ran < opts.seeds) R.warn(L(tid, '', 'generator'), 'only ' + ran + ' of ' + opts.seeds + ' seeds were run (' + Math.round((Date.now() - t1) / 1000) + ' s limit)');
-    if (prints.size < MIN_DISTINCT) {
-      const msg = 'the generator gave only ' + prints.size + ' distinct problems in ' + ran + ' seeds, the guide asks for at least ' + MIN_DISTINCT;
-      if (ran >= MIN_DISTINCT) guide(L(tid, '', 'generator'), msg); else R.warn(L(tid, '', 'generator'), msg);
-    }
+    if (ran < opts.seeds) R.err(L(tid, '', 'generator'), 'the generator is too slow: only ' + ran + ' of ' + opts.seeds + ' seeds ran in the ' + (opts.genMs / 1000) + ' s limit (' + (Date.now() - t1) + ' ms); make it cheaper');
+    // distinct problems: at least 30 when 100 or more seeds ran, otherwise at least 30% of the seeds that ran
+    const need = ran >= 100 ? MIN_DISTINCT : Math.ceil(0.3 * ran);
+    if (prints.size < need) guide(L(tid, '', 'generator'), 'the generator gave only ' + prints.size + ' distinct problems in ' + ran + ' seeds, the guide asks for at least ' + need);
   }
 
   // coverage map
@@ -448,7 +471,7 @@ function checkUnit(unit, opts) {
   function finish() {
     return {
       errors: R.lines(R.errs), warnings: R.lines(R.warns),
-      stats: { unchecked: R.unchecked.size, uncheckedList: [...R.unchecked].slice(0, 5), seeds: R.seedsRun, words, ms: Date.now() - t0 }
+      stats: { extras: [...R.extras], unchecked: R.unchecked.size, uncheckedList: [...R.unchecked].slice(0, 5), seeds: R.seedsRun, words, ms: Date.now() - t0 }
     };
   }
 }
@@ -520,7 +543,7 @@ for (const name of fileNames) {
     const seeds = Object.values(res.stats.seeds);
     console.log('[' + unit.id + '] ' + res.stats.ms + ' ms; notes words lt ' + res.stats.words.lt + ' / en ' + res.stats.words.en +
       '; generators ' + seeds.length + (seeds.length ? ' (' + Math.min(...seeds) + '-' + Math.max(...seeds) + ' seeds)' : '') +
-      '; names unchecked (outside namer scope): ' + res.stats.unchecked + (res.stats.uncheckedList.length ? ' e.g. ' + res.stats.uncheckedList.join(' ') : '') +
+      (res.stats.extras.length ? '; extra names to review: ' + res.stats.extras.join(' | ') : '') + '; names unchecked (outside namer scope): ' + res.stats.unchecked + (res.stats.uncheckedList.length ? ' e.g. ' + res.stats.uncheckedList.join(' ') : '') +
       (res.warnings.length ? '\n' + res.warnings.join('\n') : ''));
     const all = idErrs.concat(res.errors);
     assert.ok(!all.length, '\n' + all.length + ' defect(s) in ' + name + ':\n' + all.join('\n'));
@@ -625,8 +648,12 @@ test('validator: names outside the namer scope are counted, not failed', () => {
 });
 
 test('validator: name steps and molecule captions are checked against the namer', () => {
-  let u = fresh(); bankOf(u).steps[6].answer = { lt: ['heksanas'], en: ['hexane'] };
-  only(u, /type u01\.bank, problem u01\.bank\.1, steps\[6\]: first accepted name: name of CCCCC is wrong/);
+  let u = fresh(); bankOf(u).steps[6].answer = { lt: ['pentanas', 'heksanas'], en: ['pentane'] };
+  only(u, /type u01\.bank, problem u01\.bank\.1, steps\[6\]: accepted lt name "heksanas" is wrong for CCCCC \(namer: pentanas\)/);
+  u = fresh(); bankOf(u).steps[6].answer = { lt: ['pentanas'], en: ['pentane', 'pentan'], extra: { en: ['pentan'] } };
+  only(u, /answer\.extra needs a src/);
+  u = fresh(); bankOf(u).steps[6].answer = { lt: ['pentanas'], en: ['pentane', 'pentan'], extra: { en: ['pentan'], src: 'L1 p3' } };
+  const rx = run(u); assert.deepEqual(rx.errors, []); assert.match(rx.stats.extras[0], /en "pentan" for CCCCC \(L1 p3\)/);
   u = fresh(); bankOf(u).q[1] = { mol: { smi: 'CCCCC', name: T('butanas', 'butane') } };
   only(u, /problem u01\.bank\.1, q: molecule name: name of CCCCC is wrong/);
   u = fresh(); bankOf(u).steps[6].answer = { smi: 'c1ccncc1' };
@@ -678,7 +705,7 @@ test('validator: generators', () => {
   const base = (steps) => ({ q: [{ p: T('Klausimas', 'Question') }], steps, why: T('Priežastis', 'Reason') });
   const choice = (options) => ({ prompt: T('Kuris?', 'Which?'), kind: 'choice', options, answer: 0, hint: T('Užuomina', 'Hint'), solution: T('Sprendimas', 'Solution') });
   // duplicate options (text, and molecules that are the same structure written two ways)
-  let r = only(gen((rng, ctx) => base([choice([{ text: T('Taip', 'Yes') }, { text: T('Ne', 'No') }, { text: T('Taip', 'Yes') }])])), /type u01\.gen, steps\[0\]: options 0 and 2 are the same \(same text in lt\): Taip \(seed 1, seed 2, seed 3, seed 4, seed 5 and 35 more\)/);
+  let r = only(gen((rng, ctx) => base([choice([{ text: T('Taip', 'Yes') }, { text: T('Ne', 'No') }, { text: T('Taip', 'Yes') }])])), /type u01\.gen, steps\[0\]: options 0 and 2 are the same \(same text in lt\): taip \(seed 1, seed 2, seed 3, seed 4, seed 5 and 35 more\)/);
   only(gen(() => base([choice([{ mol: { smi: 'OCC' } }, { mol: { smi: 'CCO' } }, { mol: { smi: 'CCC' } }])])), /options 0 and 1 are the same \(same molecule\)/);
   // enantiomers are different options
   assert.deepEqual(run(gen(() => base([choice([{ mol: { smi: 'C[C@H](N)C(=O)O' } }, { mol: { smi: 'C[C@@H](N)C(=O)O' } }, { mol: { smi: 'CCC' } }])]))).errors.filter((e) => !/distinct/.test(e)), []);
@@ -699,7 +726,7 @@ test('validator: coverage keys and mirrors must be known task ids', () => {
   only(u, /"S1\.16" is not a known task id/);
   u = fresh(); u.coverage['LW3.2'] = ['u01.bank'];
   assert.deepEqual(run(u).errors, []);
-  u = fresh(); u.coverage['S1.1'] = ['u01.nothing'];
+  u = fresh(); u.coverage['S1.1'] = ['u01.bank', 'u01.nothing'];
   only(u, /no such exercise type: u01\.nothing/);
   u = fresh(); u.types[0].mirrors = ['S1.1', 'S8.2'];
   only(u, /type u01\.bank, mirrors: "S8\.2" is not a known task id/);
@@ -720,6 +747,39 @@ test('validator: seminar and lab coverage across units', () => {
   // not enforced while a lecture unit is not ready
   const staged = lectures.map((m, i) => Object.assign({}, m, { ready: i < 5 }));
   assert.deepEqual(checkSeminarCoverage(units.concat(labUnits), staged.concat(labs.map((m) => Object.assign({}, m, { ready: false })))), []);
+});
+
+test('validator: step answers are cross-checked, mirrors need coverage, small rules', () => {
+  const numGen = (hi) => (rng, ctx) => ({ q: [{ p: T('K', 'Q') }], steps: [{ prompt: T('Kiek?', 'How many?'), kind: 'number', answer: { value: ctx.int(1, hi), tol: 0 }, hint: T('H', 'Hint'), solution: T('S', 'Sol') }], why: T('P', 'R') });
+  const gen = (fn) => { const x = fresh(); x.types[1].gen = fn; return x; };
+  // 2: formula answer against step.mol (or the problem's only statement molecule)
+  let u = fresh(); bankOf(u).steps[7].answer = 'C5H10';
+  only(u, /steps\[7\]: formula answer C5H10 is not the formula of CCCCC \(C5H12\)/);
+  u = fresh(); delete bankOf(u).steps[7].mol; bankOf(u).q = [bankOf(u).q[1]]; bankOf(u).steps[7].answer = 'C5H10';
+  only(u, /formula answer C5H10 is not the formula of CCCCC/);
+  // 3: mirrors need coverage
+  u = fresh(); delete u.coverage['S1.1']; u.coverage['S1.3'] = ['u01.bank'];
+  only(u, /type u01\.bank, mirrors: "S1\.1" is mirrored but unit\.coverage\["S1\.1"\] does not list u01\.bank/);
+  // 4: separator in generated-problem structure messages
+  const r4 = run(gen(() => ({ q: [], steps: [], why: T('a', 'b') })));
+  assert.ok(r4.errors.some((e) => /structure: problem: needs steps/.test(e)), r4.errors.join('\n'));
+  // 5: a generator that throws on the second call of seed 1 is reported
+  let calls = 0;
+  u = gen((rng, ctx) => { if (++calls === 2) throw new Error('second'); return numGen(9)(rng, ctx); });
+  assert.match(run(u).errors.join('\n'), /gen threw on the second run of seed 1: second/);
+  // 6: option text compared trimmed and case-insensitively
+  u = fresh(); bankOf(u).steps[0].options = [{ text: T('Etanas', 'Ethane') }, { text: T('etanas ', 'ethane') }, { text: T('Propanas', 'Propane') }];
+  only(u, /steps\[0\]: options 0 and 1 are the same/);
+  // 7: a slow generator fails, with the time and seed count; distinct problems scale with the seeds that ran
+  u = gen((rng, ctx) => { const t = Date.now(); while (Date.now() - t < 5) { /* wait */ } return numGen(90)(rng, ctx); });
+  assert.match(checkUnit(u, { guide: 'warn', seeds: 200, genMs: 100 }).errors.join('\n'), /the generator is too slow: only \d+ of 200 seeds ran in the 0\.1 s limit \(\d+ ms\)/);
+  u = gen(numGen(3));
+  assert.match(checkUnit(u, { guide: 'fail', seeds: 50 }).errors.join('\n'), /gave only 3 distinct problems in 50 seeds, the guide asks for at least 15/);
+  assert.doesNotMatch(checkUnit(u, { guide: 'fail', seeds: 8 }).errors.join('\n'), /distinct problems/);
+  // 8: symbols and a single word are not "untranslated"; two ordinary words are
+  for (const x of ['pKa', 'pH', 'SN2', 'E1', 'Markovnikov', '$SN2$ ir E1']) { u = fresh(); bankOf(u).why = T(x, x); assert.deepEqual(run(u).errors, [], x); }
+  u = fresh(); bankOf(u).why = T('Same ordinary words', 'Same ordinary words');
+  only(u, /lt and en are identical/);
 });
 
 test('validator: ready flags and unit files agree', () => {
