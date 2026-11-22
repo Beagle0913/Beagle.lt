@@ -286,9 +286,11 @@
     const textOrBlocks = (v, where) => { if (Array.isArray(v)) blocks(v, where); else t(v, where); };
     function block(b, where) {
       if (!isObj(b)) return err(where, 'block is not an object');
-      const keys = Object.keys(b).filter(k => k !== 'src' && k !== 'caption' && !(k === 'ordered' && 'list' in b));
+      const keys = Object.keys(b).filter(k => k !== 'src' && k !== 'claims' && k !== 'caption' && !(k === 'ordered' && 'list' in b));
       if (keys.length !== 1 || !BLOCKS.includes(keys[0])) return err(where, 'a block has exactly one of ' + BLOCKS.join(', ') + ' (found ' + (keys.join(', ') || 'none') + ')');
       if (b.caption !== undefined) t(b.caption, where + '.caption');
+      if (b.claims !== undefined && !Array.isArray(b.claims)) err(where, 'claims must be a list');
+      if (b.src !== undefined && typeof b.src !== 'string') err(where, 'src must be a string');
       const k = keys[0], v = b[k];
       const w = where + '.' + k;
       switch (k) {

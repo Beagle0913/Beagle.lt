@@ -364,3 +364,17 @@ test('checkStep: answer.extra names are accepted too', () => {
   assert.equal(C.checkStep(wr, 'n-pentane', 'lt').ok, false);
   assert.equal(C.answerEntry(wr, 'lt'), 'pentanas');
 });
+
+test('validateUnit: blocks may carry claims and src, nothing else', () => {
+  const u = clone(unitA);
+  const ex = u.notes[0].blocks.find(b => b.example);
+  ex.claims = [{ formula: ['CCC', 'C3H8'] }];
+  ex.src = 'L1 p3';
+  u.notes[0].blocks.find(b => b.p).claims = [];
+  assert.deepEqual(plain(C.validateUnit(u)), []);
+  ex.claims = 'x';
+  assert.equal(C.validateUnit(u).length, 1);
+  ex.claims = [];
+  ex.colour = 'red';
+  assert.equal(C.validateUnit(u).length, 1);
+});
