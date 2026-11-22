@@ -248,6 +248,9 @@
 
     note(t) { this.noteT = t; return this; }
 
+    // the mechanism of this result, when it differs from RULES[id].mech
+    mech(m) { this.mechV = m; return this; }
+
     result() {
       if (!this.list.some((p) => p.major) && this.list.length) this.list.forEach((p) => { p.major = true; p.by = false; });
       const products = this.list.map((p) => {
@@ -257,6 +260,7 @@
       });
       const r = { products };
       if (this.noteT) r.note = this.noteT;
+      if (this.mechV) r.mech = this.mechV;
       return r;
     }
   }
@@ -388,14 +392,17 @@
   }
 
   // is c allylic or benzylic (next to an aromatic atom or a C=C)?
-  function isConj(g, c) {
+  // 2 = benzylic, 1 = allylic, 0 = neither
+  function conjKind(g, c) {
+    let kind = 0;
     for (const w of g.nbr(c)) {
       if (!isC(g, w) || g.ord(c, w) !== 1) continue;
-      if (ar(g, w)) return true;
-      for (const u of g.nbr(w)) if (u !== c && isC(g, u) && g.ord(w, u) >= 2) return true;
+      if (ar(g, w)) return 2;
+      for (const u of g.nbr(w)) if (u !== c && isC(g, u) && g.ord(w, u) >= 2) kind = 1;
     }
-    return false;
+    return kind;
   }
+  function isConj(g, c) { return conjKind(g, c) > 0; }
 
   // carbon substituent that withdraws electrons (carbonyl, nitrile, CX3, nitro)
   function ewgAt(g, c, except) {
@@ -409,17 +416,20 @@
     return false;
   }
 
-  // stability class of a radical or cation at c: methyl 0, primary 1, secondary 2, tertiary 3,
-  // allylic and benzylic one class higher
+  // stability of a radical or cation at c, the course order (L7 p9, L6 p16):
+  // benzyl > allyl > tertiary > secondary > primary > methyl. Any conjugated site beats any
+  // non-conjugated one, benzylic beats allylic, and within a kind it is the substitution (0..3).
   function cls(g, c) {
-    return Math.min(cNbrs(g, c).length, 3) + (isConj(g, c) ? 1 : 0);
+    return conjKind(g, c) * 10 + Math.min(cNbrs(g, c).length, 3);
   }
 
-  // cation at c: as cls, a lone-pair donor on c helps a lot, an electron-withdrawing group on c rules it out
+  // cation at c: as cls; a lone-pair donor (O, N) on c helps a lot, a halogen a little (it keeps the
+  // geminal product of CH2=CHCl + HBr, L8 p9), an electron-withdrawing group on c rules it out
   function cation(g, c, except) {
     let r = cls(g, c);
-    if (g.nbr(c).some((w) => (g.el(w) === 'O' || g.el(w) === 'N') && g.A[w].charge === 0 && g.ord(c, w) === 1)) r += 3;
-    if (ewgAt(g, c, except)) r -= 10;
+    if (g.nbr(c).some((w) => (g.el(w) === 'O' || g.el(w) === 'N') && g.A[w].charge === 0 && g.ord(c, w) === 1)) r += 50;
+    else if (g.nbr(c).some((w) => HAL[g.el(w)] && g.ord(c, w) === 1)) r += 1.5;
+    if (ewgAt(g, c, except)) r -= 100;
     return r;
   }
 
@@ -532,7 +542,7 @@
     if (quads.length > 1) throw new Error('react: more than one conjugated diene in a molecule is not supported');
     const [a, b, c, d] = quads[0];
     const out = new Out();
-    const note = T('Konjuguotasis dienas jungia 1,2 ir 1,4: abu produktai susidaro.', 'A conjugated diene adds 1,2 and 1,4: both products form.');
+    const note = T('Konjuguotasis dienas prisijungia 1,2- ir 1,4-padėtyse: susidaro abu produktai.', 'A conjugated diene adds 1,2 and 1,4: both products form.');
     if (kind === 'x2') {
       const mk = (set) => {
         const ng = g.clone();
@@ -570,11 +580,14 @@
     const alk = findAlkenes(g);
     if (!alk.length) return none(NOTE_NO_ALKENE);
     const out = new Out();
+    let ewg = false;
     alk.forEach((p) => {
       const a = p[0];
       const b = p[1];
-      const sa = cation(g, a, b);
-      const sb = cation(g, b, a);
+      // the radical stability (peroxide, AR) or the cation stability decides where X goes
+      const sa = peroxide ? cls(g, a) : cation(g, a, b);
+      const sb = peroxide ? cls(g, b) : cation(g, b, a);
+      if (ewgAt(g, a, b) !== ewgAt(g, b, a)) ewg = true;
       [[a, b, sa, sb], [b, a, sb, sa]].forEach((e) => {
         const x = e[0];
         const y = e[1];
@@ -585,9 +598,10 @@
         out.add(ng, peroxide ? e[2] <= e[3] : e[2] >= e[3]);
       });
     });
-    return out.note(peroxide
-      ? T('Su peroksidais HBr jungiasi radikaliniu mechanizmu prieš Markovnikovo taisyklę.', 'With peroxides HBr adds by a radical mechanism, against Markovnikov\'s rule.')
-      : T('Markovnikovo taisyklė: H jungiasi prie C su daugiau H; krypties neapibrėžia vien C=C ryšys, jei jis konjuguotas su elektronakceptoriniu pakaitu.', 'Markovnikov\'s rule: H goes to the carbon with more H (the more stable cation forms).')).result();
+    if (peroxide) out.mech('AR');
+    if (peroxide) return out.note(T('Su peroksidais HBr jungiasi radikaliniu mechanizmu (AR) prieš Markovnikovo taisyklę.', 'With peroxides HBr adds by a radical mechanism (AR), against the Markovnikov rule.')).result();
+    if (ewg) return out.note(T('Elektronakceptorinis pakaitas (C=O, CN, CF3) prie C=C: jungiasi prieš Markovnikovo taisyklę – nukleofilas jungiasi prie C, esančio toliau nuo pakaito.', 'An electron-withdrawing group (C=O, CN, CF3) on the C=C: addition goes against the Markovnikov rule, the nucleophile ends up on the carbon away from the group.')).result();
+    return out.note(T('Markovnikovo taisyklė: H jungiasi prie C su daugiau H, nukleofilas – prie C, sudarančio stabilesnį karbokatijoną.', 'The Markovnikov rule: H goes to the carbon with more H, the nucleophile to the carbon that gives the more stable carbocation.')).result();
   }
 
   def('ae.hx', 'Vandenilio halogenido jungimasis prie alkeno', 'Addition of HX to an alkene', 'AE', null, (rs, o) => {
@@ -659,13 +673,13 @@
         const co2 = c.n() === 3 && c.A.filter((a) => a.el === 'O').length === 2;
         out.add(c, !co2, co2);
       });
-      return out.note(T('Skyla C=C: =CH–R virsta rūgštimi, =CR2 – ketonu, =CH2 – CO2.', 'The C=C is cleaved: =CH-R gives an acid, =CR2 a ketone, =CH2 gives CO2.')).result();
+      return out.note(T('C=C ryšys skyla: =CH–R virsta rūgštimi, =CR2 – ketonu, =CH2 – CO2.', 'The C=C is cleaved: =CH-R gives an acid, =CR2 a ketone, =CH2 gives CO2.')).result();
     });
 
   def('diene.hx', 'HX jungimasis prie konjuguotojo diena (1,2 ir 1,4)', 'HX addition to a conjugated diene (1,2 and 1,4)', 'AE', null, (rs, o) => {
     const X = o.X;
     if (!HAL[X]) throw new Error('react: diene.hx needs X');
-    if (!conjQuads(rs[0]).length) return none(T('Molekulėje nėra konjuguotojo diena.', 'The molecule has no conjugated diene.'));
+    if (!conjQuads(rs[0]).length) return none(T('Molekulėje nėra konjuguotojo dieno.', 'The molecule has no conjugated diene.'));
     return dieneAdd(rs[0], 'hx', X);
   });
 
@@ -682,7 +696,7 @@
     yn.forEach((p) => { g.bond(p[0], p[1], half ? 2 : 1); });
     yn.forEach((p) => { g.fillC(p[0]); g.fillC(p[1]); });
     const out = new Out().add(g, true);
-    if (eq === 1 && !half) out.note(T('Su paprastu Pd hidrinimas nesustoja ties alkenu: gaunamas alkanas. Alkenui reikia Lindlaro katalizatoriaus.', 'Over plain Pd hydrogenation does not stop at the alkene: the alkane forms. An alkene needs Lindlar\'s catalyst.'));
+    if (eq === 1 && !half) out.note(T('Ant paprasto Pd hidrinimas nesustoja ties alkenu: gaunamas alkanas. Alkenui reikia Lindlaro katalizatoriaus.', 'Over plain Pd hydrogenation does not stop at the alkene: the alkane forms. An alkene needs Lindlar\'s catalyst.'));
     if (half) out.note(T('Lindlaro katalizatorius sustabdo ties alkenu (cis).', 'Lindlar\'s catalyst stops at the alkene (cis).'));
     return out.result();
   });
@@ -797,7 +811,8 @@
     if (e === 'N') {
       if (a.charge === 1) return { dir: 'm', st: -3 };
       if (rest.some(carbonylC)) return { dir: 'op', st: 2 }; // NHCOR
-      return strongAcid ? { dir: 'm', st: -3, amine: true } : { dir: 'op', st: 4, amine: true };
+      // only an N,N-dialkylarylamine is turned into the ammonium ion in the nitrating acid (S4.22): meta
+      return strongAcid && a.h === 0 ? { dir: 'm', st: -3, amine: true } : { dir: 'op', st: 4, amine: true };
     }
     if (e === 'O') {
       if (a.charge === -1) return { dir: 'op', st: 5 };
@@ -824,7 +839,7 @@
     const rings = aromRings(g);
     if (!rings.length) return none(T('Molekulėje nėra aromatinio žiedo.', 'The molecule has no aromatic ring.'));
     const fc = E === 'CH3' || E === 'C(C)(C)C' || E === 'C(C)=O';
-    const strongAcid = E === 'NO2' || E === 'SO3H';
+    const strongAcid = E === 'NO2';
     const out = new Out();
     const sub = (p, major) => {
       const ng = g.clone();
@@ -832,6 +847,9 @@
       graft(ng, p, FRAG[E]);
       out.add(ng, major);
     };
+    if (rings.length > 1 && !rings.some((r, i) => rings.some((s, j) => j > i && r.some((x) => s.indexOf(x) >= 0)))) {
+      return none(T('Molekulėje yra keli benzeno žiedai: reakcijos vieta nenustatoma vienareikšmiškai.', 'The molecule has more than one benzene ring: the site of reaction is not unambiguous.'));
+    }
     const fused = rings.some((r, i) => rings.some((s, j) => j > i && r.some((x) => s.indexOf(x) >= 0)));
     if (fused) {
       const at = [];
@@ -875,7 +893,7 @@
       else {
         const minC = Math.min.apply(null, allowed.map(conflicts));
         major = allowed.filter((ip) => conflicts(ip) === minC);
-        const bulkyE = E === 'C(C)(C)C';
+        const bulkyE = E === 'C(C)(C)C' || E === 'C(C)=O' || (E === 'SO3H' && subs.some((d) => d.amine)); // tert-butyl and acyl groups go para
         const hindered = (ip) => {
           const nb = [(ip + 1) % 6, (ip + 5) % 6].map((k) => subs.find((d) => d.iq === k)).filter(Boolean);
           return nb.length === 2 || ((bulkyE || nb.some((d) => d.bulky)) && nb.length >= 1);
@@ -889,6 +907,10 @@
       return none(blocked
         ? T('Friedelio ir Krafto reakcija nevyksta, kai žiede yra stiprus elektronakceptorinis pakaitas arba aminogrupė.', 'The Friedel-Crafts reaction does not take place when the ring has a strong electron-withdrawing group or an amino group.')
         : T('Žiede nėra laisvos C–H padėties.', 'The ring has no free C-H position.'));
+    }
+    if (E === 'NO2' && rings.some((r) => r.some((i) => g.A[i].h === 0 && g.nbr(i).some((j) => g.el(j) === 'N' && g.A[j].charge === 0 && g.A[j].h >= 1 && !g.nbr(j).some((k) => dbl(g, k, 'O') >= 0))))) {
+      out.note(T('ArNH2 ir ArNHR nitrinami kaip o-/p- orientantai; praktiškai aminas pirma apsaugomas (acetanilidas), nes HNO3 jį oksiduoja.', 'ArNH2 and ArNHR are nitrated as o/p directors; in practice the amine is protected first (as the acetanilide) because HNO3 oxidises it.'));
+      return out.result();
     }
     return out.note(T('Orientantai: NH2, OH, OR, alkilas ir halogenai nukreipia į o- ir p-, NO2, CN, SO3H, C=O ir NR3+ – į m- padėtį; lemia stipresnis donoras.', 'Directing effects: NH2, OH, OR, alkyl and halogens direct o/p; NO2, CN, SO3H, C=O and NR3+ direct meta; the stronger donor decides.')).result();
   });
@@ -916,34 +938,84 @@
   def('side.ox', 'Šoninės grandinės oksidacija (KMnO4 arba K2Cr2O7, t)', 'Side-chain oxidation (KMnO4 or K2Cr2O7, heat)', null,
     'the cleaved part of the chain (acid, ketone or CO2), with major: true', (rs) => {
       const g = rs[0].clone();
+      const drops = [];
       let did = 0;
+      let noH = 0;
+      let unsupported = false;
+      // the carbon of an alkene or alkyne fragment x that is cut loose becomes CO2, a ketone or an acid
+      const oxidiseEnd = (x) => {
+        const k = g.nbr(x).length;
+        g.A[x].h = 0;
+        g.bond(x, g.add('O', 0, 0), 2);
+        if (k === 1) attachGroup(g, x, 'OH');
+        else if (k === 0) g.bond(x, g.add('O', 0, 0), 2);
+      };
+      const cyclicTo = (s, x) => {
+        // does x lead back to an aromatic atom without passing through s?
+        const seen = {};
+        seen[s] = true;
+        const q = [x];
+        seen[x] = true;
+        for (let h = 0; h < q.length; h++) {
+          if (ar(g, q[h])) return true;
+          g.nbr(q[h]).forEach((w) => { if (!seen[w]) { seen[w] = true; q.push(w); } });
+        }
+        return false;
+      };
       for (let q = 0; q < g.n(); q++) {
         if (!ar(g, q)) continue;
         g.nbr(q).slice().forEach((s) => {
-          if (!sp3C(g, s) || g.A[s].h < 1 || ar(g, s)) return;
-          if (g.nbr(s).some((j) => j !== q && !isC(g, j))) return;
+          if (ar(g, s) || !isC(g, s)) return;
+          const others = g.nbr(s).filter((j) => j !== q);
+          if (others.some((j) => ar(g, j) || (isC(g, j) && cyclicTo(s, j)))) { unsupported = true; return; }
+          if (dbl(g, s, 'O') >= 0 && g.A[s].h === 1) { // benzaldehyde
+            did++;
+            g.A[s].h = 0;
+            attachGroup(g, s, 'OH');
+            return;
+          }
+          const vin = others.find((j) => isC(g, j) && g.ord(s, j) >= 2);
+          if (vin !== undefined) { // styrene: the C=C is cleaved, the benzylic carbon becomes COOH
+            did++;
+            g.unbond(s, vin);
+            oxidiseEnd(vin);
+            g.A[s].h = 0;
+            g.bond(s, g.add('O', 0, 0), 2);
+            attachGroup(g, s, 'OH');
+            return;
+          }
+          if (!sp3C(g, s)) return;
+          if (g.A[s].h < 1) { noH++; return; }
+          const hetero = others.filter((j) => !isC(g, j));
+          if (hetero.some((j) => g.el(j) !== 'O' || g.nbr(j).length !== 1)) return;
           did++;
-          g.nbr(s).filter((j) => j !== q).forEach((x) => {
+          hetero.forEach((j) => { g.unbond(s, j); drops.push(j); }); // benzyl alcohol: CH2OH is oxidised to COOH
+          others.filter((j) => isC(g, j)).forEach((x) => {
             g.unbond(s, x);
             const k = g.nbr(x).length;
             const hx = g.A[x].h;
             if (k === 0 && hx >= 3) { g.A[x].h = 0; g.bond(x, g.add('O', 0, 0), 2); g.bond(x, g.add('O', 0, 0), 2); }
             else if (k === 1 && hx === 2) { g.A[x].h = 0; g.bond(x, g.add('O', 0, 0), 2); attachGroup(g, x, 'OH'); }
             else if (k === 2 && hx === 1) { g.A[x].h = 0; g.bond(x, g.add('O', 0, 0), 2); }
-            else if (k >= 1) { attachGroup(g, x, 'OH'); g.A[x].h = Math.max(0, g.A[x].h - 1); }
+            else { attachGroup(g, x, 'OH'); g.A[x].h = Math.max(0, g.A[x].h - 1); }
           });
           g.A[s].h = 0;
           g.bond(s, g.add('O', 0, 0), 2);
           attachGroup(g, s, 'OH');
         });
       }
-      if (!did) return none(T('Reikia benzilinio C–H (pvz., terc-butilas neoksiduojasi).', 'A benzylic C-H is needed (tert-butyl, for example, is not oxidised).'));
+      if (unsupported) return none(T('Ciklinės šoninės grandinės (tetralinas, indanas) ir diarilmetanai čia nenagrinėjami.', 'Cyclic side chains (tetralin, indane) and diarylmethanes are not handled here.'));
+      if (!did) {
+        return none(noH
+          ? T('Reikia benzilinio C–H: tretinis alkilas (pvz., terc-butilas) neoksiduojasi.', 'A benzylic C-H is needed: a tertiary alkyl group (tert-butyl, for example) is not oxidised.')
+          : T('Nėra oksiduojamos šoninės grandinės.', 'There is no oxidisable side chain.'));
+      }
       const out = new Out();
-      g.split().forEach((c) => {
-        const co2 = c.n() === 3 && c.A.filter((a) => a.el === 'O').length === 2;
+      (drops.length ? g.without(drops) : g).split().forEach((c) => {
+        const co2 = c.n() === 3 && c.A.filter((x) => x.el === 'O').length === 2;
         out.add(c, !co2, co2);
       });
-      return out.note(T('Kiekviena alkilo grandinė su benziliniu H virsta COOH grupe.', 'Every alkyl chain with a benzylic H becomes a COOH group.')).result();
+      return out.note(T('Kiekviena šoninė grandinė su benziliniu H (ar benzilo alkoholis, aldehidas, vinilas) virsta COOH grupe.', 'Every side chain with a benzylic H (or a benzyl alcohol, aldehyde or vinyl group) becomes a COOH group.')).result();
     });
 
   // ------------------------------------------------------------------
@@ -956,9 +1028,8 @@
     for (const w of gc.nbr(a)) {
       if (!sp3C(gc, w) || ar(gc, w)) continue;
       const nC = cNbrs(gc, w).length;
-      const conj = isConj(gc, w) ? 1 : 0;
       if (gc.A[w].h > 0 && cation(gc, w) > old) return true; // hydride shift
-      if (gc.A[w].h === 0 && Math.min(nC - 1, 3) + conj > old) return true; // alkyl shift
+      if (gc.A[w].h === 0 && conjKind(gc, w) * 10 + Math.min(nC - 1, 3) > old) return true; // alkyl shift
     }
     return false;
   }
@@ -971,7 +1042,7 @@
       const sa = cation(g, p[0], p[1]);
       const sb = cation(g, p[1], p[0]);
       [[p[0], p[1], sa, sb], [p[1], p[0], sb, sa]].forEach((e) => {
-        if (e[2] < e[3] || e[2] < -5) return;
+        if (e[2] < e[3] || e[2] < -50) return;
         const gc = g.clone();
         gc.bond(e[0], e[1], 1);
         gc.A[e[1]].h += 1;
@@ -1064,36 +1135,51 @@
     return true;
   }
 
+  const LG = { I: 3, Br: 2, Cl: 1, F: 0 };
+  const NU_SN1 = { OH: 1, OC: 1, OCC: 1 }; // solvolysis: water, methanol, ethanol
+
   function snRule(mode) {
     return (rs, o) => {
       const nu = o.nu;
       if (NU_ALL.indexOf(nu) < 0) throw new Error('react: ' + mode + ' needs nu from ' + NU_ALL.join(' '));
+      if (mode === 'sn1' && !NU_SN1[nu]) {
+        return none(T('SN1 vyksta su silpnu nukleofilu (vanduo, metanolis, etanolis, solvolizė); stiprus ar bazinis nukleofilas – SN2 arba eliminavimas (žr. sn2, elim).', 'SN1 needs a weak nucleophile (water, methanol, ethanol: solvolysis); a strong or basic nucleophile gives SN2 or elimination (see sn2, elim).'));
+      }
       const g = rs[0];
       const hs = findHalides(g);
       if (!hs.length) return none(T('Halogenarenai ir halogenalkenai nepakeičiami SN reakcijomis (be griežtų sąlygų).', 'Aryl and vinyl halides do not undergo SN reactions (without harsh conditions).'));
       const out = new Out();
+      const bestLG = Math.max.apply(null, hs.map((h) => LG[g.el(h.x)]));
+      let eMajor = false;
+      let neo = 0;
       hs.forEach((h) => {
         const k = cNbrs(g, h.c).length;
         const conj = isConj(g, h.c);
+        const lg = LG[g.el(h.x)] === bestLG; // the better leaving group reacts (RI > RBr > RCl, L10 p10)
         if (mode === 'sn2') {
+          if (k <= 1 && cNbrs(g, h.c).some((w) => sp3C(g, w) && g.nbr(w).length === 4 && g.A[w].h === 0)) { neo++; return; } // neopentyl
           if (k <= 1 || (k === 2 && !NU_BASIC[nu])) {
-            out.add(substitute(g, h.c, h.x, nu), true);
+            out.add(substitute(g, h.c, h.x, nu), lg);
             if (k === 2) addElim(out, g, h.c, h.x, true);
           } else if (k === 2) {
             out.add(substitute(g, h.c, h.x, nu), false);
-            addElim(out, g, h.c, h.x, false);
+            addElim(out, g, h.c, h.x, !lg);
+            if (lg) eMajor = true;
           } else {
-            addElim(out, g, h.c, h.x, false);
+            addElim(out, g, h.c, h.x, !lg);
+            if (lg) eMajor = true;
           }
         } else if (k >= 3 || conj) {
-          out.add(substitute(g, h.c, h.x, nu), true);
-          if (conj && !ar(g, h.c)) transpose(g, h.c, h.x, nu, g.el(h.x)).forEach((t) => out.add(t, true));
+          out.add(substitute(g, h.c, h.x, nu), lg);
+          if (conj && !ar(g, h.c)) transpose(g, h.c, h.x, nu, g.el(h.x)).forEach((t) => out.add(t, lg));
           addElim(out, g, h.c, h.x, true);
         }
       });
       if (!out.list.length) {
+        if (neo) return none(T('Neopentilo tipo halogenalkanai SN2 būdu praktiškai nereaguoja (β-anglis be H, didelė erdvinė kliūtis), o SN1 per pirminį katijoną nevyksta.', 'Neopentyl-type halides practically do not react by SN2 (a quaternary β-carbon blocks the backside) and SN1 through a primary cation does not occur.'));
         return none(T('SN1 vyksta per stabilų karbokatijoną (tretinį, alilo ar benzilo); šis halogenalkanas reaguoja SN2 būdu.', 'SN1 needs a stable carbocation (tertiary, allylic or benzylic); this halide reacts by SN2.'));
       }
+      if (mode === 'sn2' && eMajor) out.mech('E2');
       return out.note(mode === 'sn2'
         ? T('Pirminiai halogenalkanai: SN2; antriniai su stipria baze – daugiausia E2; tretiniai – tik eliminavimas.', 'Primary halides: SN2; secondary with a strong base mostly E2; tertiary only elimination.')
         : T('SN1 su silpnu nukleofilu (vanduo, alkoholis): vyrauja pakeitimas, mažiau alkeno (E1).', 'SN1 with a weak nucleophile (water, alcohol): substitution predominates, a little alkene (E1) forms.')).result();
@@ -1114,6 +1200,10 @@
     const out = new Out();
     sites.forEach((s) => addElim(out, g, s[0], s[1], false));
     if (!out.list.length) return none(T('Nėra β-vandenilio.', 'There is no β-hydrogen.'));
+    // acid dehydration of secondary and tertiary alcohols is E1 (L11 p12, p27); a base on a haloalkane is E2
+    const alcSite = sites === as;
+    if (alcSite) out.mech(sites.every((s) => cNbrs(g, s[0]).length >= 2) ? 'E1' : 'E2');
+    else out.mech(sites.some((s) => cNbrs(g, s[0]).length >= 3) && o.base !== 'strong' ? 'E1' : 'E2');
     return out.note(T('Zaicevo taisyklė: vyrauja daugiausia pakeistas alkenas (H atskyla nuo mažiausiai H turinčio kaimyninio C).', 'Zaitsev\'s rule: the most substituted alkene predominates (H leaves from the neighbouring carbon with fewest H).')).result();
   });
 
@@ -1148,7 +1238,11 @@
       if (h >= 2 && reagent === 'chromic') attachGroup(g, a.c, 'OH');
       g.fillC(a.c);
     });
-    if (!did) return none(T('Tretiniai alkoholiai įprastomis sąlygomis neoksiduojasi.', 'Tertiary alcohols are not oxidised under the usual conditions.'));
+    if (!did) {
+      return none(findAlcohols(g).length
+        ? T('Tretiniai alkoholiai įprastomis sąlygomis neoksiduojasi.', 'Tertiary alcohols are not oxidised under the usual conditions.')
+        : T('Nėra alkoholio OH grupės (fenoliai oksiduojasi kitaip – į chinonus).', 'There is no alcohol OH group (phenols are oxidised differently, to quinones).'));
+    }
     return new Out().add(g, true).note(T('PCC: pirminis alkoholis → aldehidas; chromo rūgštis: pirminis → karboksirūgštis; antriniai visada → ketonas.', 'PCC: primary alcohol → aldehyde; chromic acid: primary → carboxylic acid; secondary always → ketone.')).result();
   });
 
@@ -1156,11 +1250,13 @@
     const metal = o.metal === 'K' ? 'K' : 'Na';
     const g = rs[0];
     const al = findAlcohols(g);
-    if (!al.length) return none(T('Nėra alkoholio OH grupės.', 'There is no alcohol OH group.'));
+    const th = o.excess ? findThiols(g) : []; // an excess of Na also deprotonates SH (L12 p32 Q2a)
+    if (!al.length && !th.length) return none(T('Nėra alkoholio OH grupės.', 'There is no alcohol OH group.'));
     const out = new Out();
     const mk = (list) => {
       const ng = g.clone();
       list.forEach((a) => { ng.A[a.o].h = 0; ng.A[a.o].charge = -1; ng.add(metal, 1, 0); });
+      th.forEach((x) => { ng.A[x.s].h = 0; ng.A[x.s].charge = -1; ng.add(metal, 1, 0); });
       return ng;
     };
     if (o.excess) out.add(mk(al), true);
@@ -1207,7 +1303,7 @@
     return out;
   }
 
-  def('williamson', 'Viljamsono eterių sintezė', 'Williamson ether synthesis', 'SN2', null, (rs) => {
+  def('williamson', 'Viljamsono eterių sintezė', 'Williamson ether synthesis', 'SN2', null, (rs, o) => {
     const g = rs[0];
     if (rs.length === 1) {
       const eth = findEthers(g);
@@ -1250,7 +1346,7 @@
           any = true;
         });
       });
-      if (!any) return none(T('Nėra tinkamo variantų: eterio negalima gauti Viljamsono sinteze (reikia pirminio halogenalkano).', 'No good route: the ether cannot be made by the Williamson synthesis (a primary halide is needed).'));
+      if (!any) return none(T('Nėra tinkamo varianto: šio eterio negalima gauti Viljamsono sintezės būdu (reikia pirminio halogenalkano).', 'No good route: the ether cannot be made by the Williamson synthesis (a primary halide is needed).'));
       return out.note(T('Viljamsono sintezė: alkoksidas + metilo ar pirminis halogenalkanas (SN2). Antrinis ir tretinis halogenalkanai eliminuojasi (E2), arilhalogenidai nereaguoja; todėl šakotesnė dalis imama kaip alkoksidas.', 'Williamson synthesis: alkoxide + methyl or primary halide (SN2). Secondary and tertiary halides eliminate (E2) and aryl halides do not react, so the more hindered part is used as the alkoxide.')).result();
     }
     // forward: nucleophile + halide
@@ -1259,6 +1355,17 @@
     if (!ns.length) return none(T('Pirmasis reagentas turi būti alkoholis, fenolis ar alkoksidas.', 'The first reactant must be an alcohol, phenol or alkoxide.'));
     if (!hs.length) return none(T('Arilhalogenidai ir vinilhalogenidai SN2 nereaguoja.', 'Aryl and vinyl halides do not react by SN2.'));
     const out = new Out();
+    if (o && o.all) {
+      // every O- and S- (or OH, SH) of the first reactant is alkylated by the primary halide: the second step of S5.14b
+      if (cNbrs(rs[1], hs[0].c).length > 1) return none(T('Reikia metilo ar pirminio halogenalkano (SN2).', 'A methyl or primary alkyl halide is needed (SN2).'));
+      let gg = g;
+      for (let i = 0; i < 12; i++) {
+        const site = nucSites(gg).map((x) => x.o).concat(thiolS(gg).map((x) => x.s))[0];
+        if (site === undefined) break;
+        gg = alkylateAt(gg, site, rs[1], hs[0]);
+      }
+      return out.add(gg, true).note(T('Alkilinami visi alkoksidų ir tioliatų centrai (SN2).', 'Every alkoxide and thiolate centre is alkylated (SN2).')).result();
+    }
     ns.forEach((n) => hs.forEach((h) => {
       const k = cNbrs(rs[1], h.c).length;
       const ng = g.clone();
@@ -1277,8 +1384,9 @@
     return out.note(T('Antriniai ir tretiniai halogenalkanai su alkoksidu daugiausia eliminuojasi (E2).', 'Secondary and tertiary halides with an alkoxide mostly eliminate (E2).')).result();
   });
 
-  def('ether.hi', 'Eterio skaldymas HI', 'Ether cleavage with HI', 'SN1/SN2', null, (rs, o) => {
+  def('ether.hi', 'Eterio skaldymas HI (ar HBr)', 'Ether cleavage with HI (or HBr)', 'SN1/SN2', null, (rs, o) => {
     const eq = o.eq === 2 ? 2 : 1;
+    const X = o.acid === 'HBr' ? 'Br' : 'I'; // L12 p35, p37: HI or HBr
     const g = rs[0];
     const eth = findEthers(g);
     if (!eth.length) return none(T('Reikia eterio.', 'An ether is needed.'));
@@ -1287,7 +1395,7 @@
     eth.forEach((e) => {
       const cand = [e.c1, e.c2].filter((c) => !ar(g, c) && sp3C(g, c));
       if (!cand.length) return;
-      const sn1 = (c) => cls(g, c) >= 3 || isConj(g, c);
+      const sn1 = (c) => cls(g, c) >= 3;
       const hind = (c) => cNbrs(g, c).length;
       const score = (c) => (sn1(c) ? 100 + cls(g, c) : -hind(c));
       const best = Math.max.apply(null, cand.map(score));
@@ -1296,18 +1404,18 @@
         const ng = g.clone();
         ng.unbond(e.o, hal);
         ng.A[e.o].h = 1;
-        ng.bond(hal, ng.add('I', 0, 0), 1);
+        ng.bond(hal, ng.add(X, 0, 0), 1);
         let res = ng;
         if (eq === 2 && !ar(g, alc) && sp3C(g, alc)) {
           const k = ng.without([e.o]);
-          k.bond(k.map[alc], k.add('I', 0, 0), 1);
+          k.bond(k.map[alc], k.add(X, 0, 0), 1);
           res = k;
         }
         res.split().forEach((p) => out.add(p, score(hal) === best));
         any = true;
       });
     });
-    if (!any) return none(T('Diarileteriai su HI neskyla.', 'Diaryl ethers are not cleaved by HI.'));
+    if (!any) return none(T('Diarileteriai su HI ar HBr neskyla.', 'Diaryl ethers are not cleaved by HI or HBr.'));
     return out.note(T('Jei gali susidaryti stabilus karbokatijonas (tretinis, alilo, benzilo) – SN1: halogenidas prie šios dalies; kitaip SN2: halogenidas prie mažiau užstoto C. Arilo C–O ryšys neskyla (gaunamas fenolis).', 'If a stable cation can form (tertiary, allylic, benzylic) the cleavage is SN1 and the halide ends up on that part; otherwise SN2 and the halide ends up on the less hindered carbon. An aryl C-O bond is not cleaved (a phenol results).')).result();
   });
 
@@ -1392,6 +1500,7 @@
     if (!phenolO(rs[0]).length) return none(NOTE_NO_PHENOL);
     const ks = acylDonors(rs[1]);
     if (!ks.length) return none(T('Reikia rūgšties chlorido ar anhidrido.', 'An acyl chloride or anhydride is needed.'));
+    if (amineN(rs[0]).some((a) => a.k <= 2)) return none(T('Laisvas amino azotas yra stipresnis nukleofilas už deguonį: acilinamas azotas (žr. amine.acyl), o ne OH.', 'A free amino N is a better nucleophile than O: the nitrogen is acylated (see amine.acyl), not the OH.'));
     const out = new Out();
     ks.forEach((k) => {
       let g = rs[0];
@@ -1448,7 +1557,7 @@
     if (metal === 'Na' || metal === 'K') {
       const g = g0.clone();
       th.forEach((t) => { g.A[t.s].h = 0; g.A[t.s].charge = -1; g.add(metal, 1, 0); });
-      return out.add(g, true).note(T('Tioliai, stipresnės rūgštys už alkoholius, reaguoja su šarmais.', 'Thiols, stronger acids than alcohols, react with alkalis.')).result();
+      return out.add(g, true).note(T('Tioliai – stipresnės rūgštys už alkoholius – reaguoja su šarmais.', 'Thiols, stronger acids than alcohols, react with alkalis.')).result();
     }
     if (metal !== 'Hg' && metal !== 'Pb') throw new Error('react: thiol.base metal must be Na, K, Hg or Pb');
     if (th.length === 1) {
@@ -1459,7 +1568,7 @@
       g.A[th[0].s + off].h = 0;
       g.bond(th[0].s, m, 1);
       g.bond(th[0].s + off, m, 1);
-      return out.add(g, true).note(T('Sunkiųjų metalų (Hg, Pb) tioliatai: tiolių nuodai.', 'Heavy-metal (Hg, Pb) mercaptides: the "thiol poisons".')).result();
+      return out.add(g, true).note(T('Susidaro sunkiųjų metalų (Hg, Pb) tioliatai (tai tiolių nuodai).', 'Heavy-metal (Hg, Pb) mercaptides: the "thiol poisons".')).result();
     }
     if (th.length === 2) {
       const g = g0.clone();
@@ -1510,7 +1619,7 @@
         g.A[th[0].s].h = 0;
         g.A[th[1].s].h = 0;
         g.bond(th[0].s, th[1].s, 1);
-        return new Out().add(g, true).note(T('Ditiolis (S…S per 3–4 C) sudaro ciklinį disulfidą.', 'A dithiol (S…S across 3-4 carbons) forms a cyclic disulfide.')).result();
+        return new Out().add(g, true).note(T('Ditiolis (S…S per 3–4 C atomus) sudaro ciklinį disulfidą.', 'A dithiol (S…S across 3-4 carbons) forms a cyclic disulfide.')).result();
       }
     }
     return none(T('Gaunamas polimerinis disulfidas.', 'A polymeric disulfide forms.'));
@@ -1564,6 +1673,7 @@
       const sitesOf = (h) => (kind === 'thio' ? thiolS(h).map((x) => ({ n: x.s, c: x.c })) : nucSites(h).filter((x) => h.A[x.o].h === 1 && !ar(h, x.c)).map((x) => ({ n: x.o, c: x.c })));
       if (rs.length === 1) {
         if (kind !== 'hemi') return none(T('Reikia dviejų reagentų: karbonilo junginio ir alkoholio.', 'Two reactants are needed: a carbonyl compound and an alcohol.'));
+        const cand = [];
         ks.forEach((k) => sitesOf(g).forEach((s) => {
           const p = g.path(k.c, s.c);
           if (!p || p.length + 1 < 5 || p.length + 1 > 6) return;
@@ -1573,8 +1683,11 @@
           ng.A[s.n].h = 0;
           ng.bond(k.c, s.n, 1);
           ng.fillC(k.c);
-          out.add(ng, true);
+          cand.push({ g: ng, size: p.length + 1 });
         }));
+        // the six-membered (pyranose) ring is the major form of a hydroxy aldehyde such as glucose (L13 p21)
+        const six = cand.some((c) => c.size === 6);
+        cand.forEach((c) => out.add(c.g, !six || c.size === 6));
         if (!out.list.length) return none(T('Ciklinis pusacetalis nesidaro (reikia 5–6 narių žiedo).', 'No cyclic hemiacetal forms (a 5- or 6-membered ring is needed).'));
         return out.note(T('Hidroksialdehidas ciklizuojasi į ciklinį pusacetalį.', 'A hydroxy aldehyde cyclises to a cyclic hemiacetal.')).result();
       }
@@ -1641,6 +1754,17 @@
     'silver [Ag] (the mirror), by: true', (rs) => {
       const g = rs[0].clone();
       const ks = carbonyls(g, ['aldehyde']);
+      const formic = carbonyls(g, ['acid']).filter((k) => g.A[k.c].h === 1 && k.r < 0);
+      if (!ks.length && formic.length) {
+        // formic acid also reduces Tollens' reagent (it is an aldehyde as well): it is oxidised to CO2
+        const co2 = new Graph();
+        const c0 = co2.add('C', 0, 0);
+        co2.bond(c0, co2.add('O', 0, 0), 2);
+        co2.bond(c0, co2.add('O', 0, 0), 2);
+        const ag0 = new Graph();
+        ag0.add('Ag', 0, 0);
+        return new Out().add(co2, true).add(ag0, false, true).note(T('Skruzdžių rūgštis, turinti aldehido grupę, taip pat redukuoja Tolenso reagentą (oksiduojasi iki CO2); išsiskiria sidabras.', 'Formic acid, which also contains an aldehyde group, reduces Tollens\' reagent too (it is oxidised to CO2); silver is deposited.')).result();
+      }
       if (!ks.length) return none(T('Ketonai Tolenso reagento neredukuoja.', 'Ketones do not reduce Tollens\' reagent.'));
       ks.forEach((k) => {
         g.A[k.c].h = 0;
@@ -1656,11 +1780,6 @@
     });
 
   def('co.cannizzaro', 'Kanicaro reakcija (aldehidas be α-H, konc. NaOH)', 'Cannizzaro reaction (aldehyde without α-H, conc. NaOH)', null, null, (rs, o) => {
-    const g = rs[0];
-    const ks = carbonyls(g, ['aldehyde']);
-    if (!ks.length) return none(T('Kanicaro reakcijoje dalyvauja tik aldehidai.', 'Only aldehydes take part in the Cannizzaro reaction.'));
-    if (aldKet(g).some((k) => alphas(g, k).length)) return none(T('Aldehidas turi α-H: vyksta aldolinė reakcija, o ne Kanicaro.', 'The aldehyde has α-H: the aldol reaction competes, not Cannizzaro.'));
-    if (ks.length > 2) throw new Error('react: co.cannizzaro supports one or two CHO groups');
     const reduce = (ng, k) => { ng.bond(k.c, k.o, 1); ng.A[k.o].h = 1; ng.fillC(k.c); };
     const oxidise = (ng, k) => {
       ng.A[k.c].h = 0;
@@ -1668,9 +1787,33 @@
       ng.fillC(k.c);
     };
     const out = new Out();
+    for (const g of rs) {
+      if (!carbonyls(g, ['aldehyde']).length) return none(T('Kanicaro reakcijoje dalyvauja tik aldehidai.', 'Only aldehydes take part in the Cannizzaro reaction.'));
+      if (aldKet(g).some((k) => alphas(g, k).length)) return none(T('Aldehidas turi α-H: vyksta aldolinė reakcija, o ne Kanicaro.', 'The aldehyde has α-H: the aldol reaction competes, not Cannizzaro.'));
+    }
+    if (rs.length === 2) {
+      // crossed Cannizzaro: formaldehyde is the better hydride donor and is oxidised (to formate), the other aldehyde is reduced
+      const isForm = (g) => g.n() === 2 && carbonyls(g, ['aldehyde']).length === 1;
+      const f = rs.findIndex(isForm);
+      const pairs = [];
+      if (f >= 0 && !isForm(rs[1 - f])) pairs.push([1 - f, f]);
+      else rs.forEach((x, i) => rs.forEach((y, j) => pairs.push([i, j])));
+      pairs.forEach((pr) => {
+        const gr = rs[pr[0]];
+        const go = rs[pr[1]];
+        if (carbonyls(gr, ['aldehyde']).length !== 1 || carbonyls(go, ['aldehyde']).length !== 1) return;
+        const a1 = gr.clone(); reduce(a1, carbonyls(a1, ['aldehyde'])[0]); out.add(a1, true);
+        const b1 = go.clone(); oxidise(b1, carbonyls(b1, ['aldehyde'])[0]); out.add(b1, true);
+      });
+      if (!out.list.length) return none(T('Mišriai Kanicaro reakcijai reikia dviejų aldehidų su viena CHO grupe.', 'A crossed Cannizzaro reaction needs two aldehydes with one CHO group each.'));
+      return out.note(T('Mišri Kanicaro reakcija: skruzdžių aldehidas (metanalis) oksiduojasi į formiatą, kitas aldehidas redukuojasi į alkoholį.', 'Crossed Cannizzaro reaction: formaldehyde is oxidised to formate, the other aldehyde is reduced to the alcohol.')).result();
+    }
+    const g = rs[0];
+    const ks = carbonyls(g, ['aldehyde']);
+    if (ks.length > 2) throw new Error('react: co.cannizzaro supports one or two CHO groups');
     if (ks.length === 1) {
-      const a = g.clone(); reduce(a, ks[0]); out.add(a, true);
-      const b = g.clone(); oxidise(b, ks[0]); out.add(b, true);
+      const a1 = g.clone(); reduce(a1, ks[0]); out.add(a1, true);
+      const b1 = g.clone(); oxidise(b1, ks[0]); out.add(b1, true);
     } else {
       [[0, 1], [1, 0]].forEach((pr) => {
         const ng = g.clone();
@@ -1737,7 +1880,7 @@
       res.forEach((r) => out.add(r.g, r.major));
       return out.note(condense
         ? T('Kaitinant aldolis netenka vandens: gaunamas α,β-nesotusis karbonilo junginys.', 'On heating the aldol loses water: an α,β-unsaturated carbonyl compound forms.')
-        : T('Aldolinis jungimasis: enolatas atakuoja kito karbonilo anglį: β-hidroksikarbonilo junginys.', 'Aldol addition: the enolate attacks the carbonyl carbon of another molecule: a β-hydroxy carbonyl compound.')).result();
+        : T('Aldolinis jungimasis: enolatas atakuoja kito karbonilo anglį; susidaro β-hidroksikarbonilo junginys.', 'Aldol addition: the enolate attacks the carbonyl carbon of another molecule: a β-hydroxy carbonyl compound.')).result();
     };
   }
   def('co.aldol', 'Aldolinis prisijungimas', 'Aldol addition', 'AN', null, aldolRule(false));
@@ -1829,11 +1972,11 @@
       });
       out.add(ng.without(drops), true);
     });
-    return out.note(T('Grįžtamoji reakcija, katalizuojama rūgšties; vanduo atskyla iš rūgšties OH ir alkoholio H.', 'A reversible reaction catalysed by acid; water leaves from the acid OH and the alcohol H.')).result();
+    return out.note(T('Grįžtamoji, rūgšties katalizuojama reakcija; vanduo atsiskiria iš rūgšties OH ir alkoholio H.', 'A reversible reaction catalysed by acid; water leaves from the acid OH and the alcohol H.')).result();
   });
 
   def('acid.salt', 'Karboksirūgšties reakcija su baze (druska)', 'Carboxylic acid with a base (salt)', null, null, (rs, o) => {
-    const metal = o.M === 'K' ? 'K' : 'Na';
+    const metal = (o.metal || o.M) === 'K' ? 'K' : 'Na'; // M is an alias of metal
     const g = rs[0].clone();
     const ks = carbonyls(g, ['acid']);
     if (!ks.length) return none(NOTE_NO_ACID);
@@ -1892,6 +2035,7 @@
           gn.add('N', 0, 3);
           sites = [{ n: 0 }];
         } else if (nuKind === 'alcohol') {
+          if (amineN(nu).some((a) => a.k <= 2)) return;
           sites = nucSites(nu).filter((s) => nu.A[s.o].h === 1 && !ar(nu, s.c)).map((s) => ({ n: s.o }));
         } else {
           const am = amineN(nu).filter((a) => a.k <= 2);
@@ -1913,6 +2057,7 @@
           }
         });
       });
+      if (!out.list.length && nuKind === 'alcohol' && amineN(nu).some((a) => a.k <= 2)) return none(T('Laisvas amino azotas yra stipresnis nukleofilas už deguonį: acilinamas azotas (žr. amine.acyl), o ne OH.', 'A free amino N is a better nucleophile than O: the nitrogen is acylated (see amine.acyl), not the OH.'));
       if (!out.list.length) {
         return none(nuKind === 'amine'
           ? T('Tretiniai aminai neturi N–H: amidas nesusidaro.', 'Tertiary amines have no N-H: no amide forms.')
@@ -1946,7 +2091,15 @@
       if (medium === 'acid') attachGroup(g, k.c, 'OH'); else g.bond(k.c, g.add('O', -1, 0), 1);
     });
     const out = new Out();
-    g.split().forEach((c) => out.add(medium === 'base' ? withCounterIons(c, 'Na') : c, true));
+    g.split().forEach((c) => {
+      if (medium === 'base') {
+        // in excess alkali acids and phenols are present as their sodium salts
+        carbonyls(c, ['acid']).forEach((k) => { c.A[k.x].h = 0; c.A[k.x].charge = -1; });
+        phenolO(c).forEach((p) => { if (c.A[p.o].h === 1) { c.A[p.o].h = 0; c.A[p.o].charge = -1; } });
+        withCounterIons(c, 'Na');
+      }
+      out.add(c, true);
+    });
     return out.note(medium === 'acid'
       ? T('Rūgštinė hidrolizė: grįžtamoji, gaunama karboksirūgštis ir alkoholis.', 'Acid hydrolysis: reversible, gives the carboxylic acid and the alcohol.')
       : T('Šarminė hidrolizė (muilinimas): negrįžtama, gaunamas karboksilatas ir alkoholis.', 'Base hydrolysis (saponification): irreversible, gives the carboxylate and the alcohol.')).result();
@@ -1975,8 +2128,14 @@
         });
       });
     });
-    if (!out.list.length) return none(T('Reikia esterio su bent dviem H prie α-C.', 'An ester with at least two H on the α-carbon is needed.'));
-    return out.note(T('Dviejų esterių kondensacija: vienas (enolatas) atakuoja kito karbonilą, atskyla alkoholis; mišinys, kai abu gali enolizuotis.', 'Condensation of two esters: one (as enolate) attacks the carbonyl of the other, an alcohol is lost; a mixture when both can enolise.')).result();
+    if (!out.list.length) {
+      const oneH = items.some((g) => carbonyls(g, ['ester']).some((k) => k.r >= 0 && sp3C(g, k.r) && g.A[k.r].h === 1));
+      if (oneH) {
+        return none(T('Tik vienas α-H: susidaręs β-ketoesteris neturėtų rūgštaus α-H ir negalėtų būti deprotonuotas, todėl pusiausvyra nepasislinktų produkto link (sveikos Klaizeno kondensacijos reikia bent dviejų α-H; vadovėlis p. 91 duoda tik bendrą atvejį su CH2).', 'Only one α-H: the β-keto ester would have no acidic α-H left and could not be deprotonated, so the equilibrium is not driven to the product (a working Claisen condensation needs at least two α-H; the textbook, p. 91, shows only the general case with a CH2).'));
+      }
+      return none(T('Reikia esterio su bent dviem H prie α-C.', 'An ester with at least two H on the α-carbon is needed.'));
+    }
+    return out.note(T('Dviejų esterių kondensacija: vienas (enolatas) atakuoja kito karbonilą, atsiskiria alkoholis; kai abu esteriai gali enolizuotis, gaunamas mišinys.', 'Condensation of two esters: one (as enolate) attacks the carbonyl of the other, an alcohol is lost; a mixture when both can enolise.')).result();
   });
 
   def('lactone', 'Hidroksirūgšties ciklizacija (laktonas)', 'Cyclisation of a hydroxy acid (lactone)', 'AN-E', null, (rs) => {
@@ -2087,14 +2246,14 @@
         const ring = aromRings(g).find((r) => r.indexOf(ipso) >= 0);
         if (!ring || ring.length !== 6) return;
         const i = ring.indexOf(ipso);
-        const p = [3, 1, 5].map((d) => ring[(i + d) % 6]).find((x) => g.A[x].h > 0);
-        if (p === undefined) return;
+        const p = ring[(i + 3) % 6]; // para only; if it is blocked there is no reaction
+        if (g.A[p].h < 1) return;
         ng.A[p].h -= 1;
         graft(ng, p, 'N=O');
         out.add(ng, true);
       }
     });
-    if (!out.list.length) return none(T('Tretiniai alifatiniai aminai su HNO2 tik sudaro druską (nitrozinimo produkto nėra).', 'Tertiary aliphatic amines only form a salt with HNO2 (no nitrosation product).'));
+    if (!out.list.length) return none(T('Tretiniai alifatiniai aminai su HNO2 tik sudaro druską (nitrozinimo produkto nėra); tretinis aromatinis aminas nitrozinamas tik p-padėtyje.', 'Tertiary aliphatic amines only form a salt with HNO2 (no nitrosation product); a tertiary aromatic amine is nitrosated only para.'));
     return out.note(T('Pirminis alifatinis: alkoholis + N2; pirminis aromatinis (0–5 °C): diazonio druska; antrinis: N-nitrozoaminas; tretinis aromatinis: p-nitrozo darinys; tretinis alifatinis: nereaguoja.', 'Primary aliphatic: alcohol + N2; primary aromatic (0-5 °C): diazonium salt; secondary: N-nitrosamine; tertiary aromatic: p-nitroso compound; tertiary aliphatic: no reaction.')).result();
   });
 
@@ -2140,22 +2299,31 @@
   });
 
   // not in the plan's list: the course needs it after the Sandmeyer cyanation and for cyanohydrins (L13 p24, S7.8, S7.11)
-  def('nitrile.hydrolysis', 'Nitrilų hidrolizė (H2O, H+, t)', 'Hydrolysis of nitriles (H2O, H+, heat)', 'AN-E', null, (rs) => {
+  def('nitrile.hydrolysis', 'Nitrilų hidrolizė (H2O, H+, t)', 'Hydrolysis of nitriles (H2O, H+, heat)', 'AN-E', null, (rs, o) => {
     const g = rs[0].clone();
+    const amide = o.stage === 'amide'; // partial hydrolysis stops at the amide (S7.10)
     let did = 0;
     for (let c = 0; c < g.n(); c++) {
       if (!isC(g, c)) continue;
       const n = g.nbr(c).find((j) => g.el(j) === 'N' && g.ord(c, j) === 3);
       if (n === undefined) continue;
       did++;
-      g.A[n].el = 'O';
-      g.A[n].h = 0;
-      g.bond(c, n, 2);
-      attachGroup(g, c, 'OH');
+      if (amide) {
+        g.A[n].h = 2;
+        g.bond(c, n, 1);
+        g.bond(c, g.add('O', 0, 0), 2);
+      } else {
+        g.A[n].el = 'O';
+        g.A[n].h = 0;
+        g.bond(c, n, 2);
+        attachGroup(g, c, 'OH');
+      }
       g.fillC(c);
     }
     if (!did) return none(T('Nėra nitrilo grupės.', 'There is no nitrile group.'));
-    return new Out().add(g, true).note(T('Nitrilas hidrolizuojasi rūgštyje iki karboksirūgšties (ir NH4+).', 'A nitrile is hydrolysed in acid to the carboxylic acid (and NH4+).')).result();
+    return new Out().add(g, true).note(amide
+      ? T('Dalinė hidrolizė sustoja ties amidu.', 'Partial hydrolysis stops at the amide.')
+      : T('Nitrilas hidrolizuojasi rūgštyje iki karboksirūgšties (ir NH4+).', 'A nitrile is hydrolysed in acid to the carboxylic acid (and NH4+).')).result();
   });
 
   //@@RULES

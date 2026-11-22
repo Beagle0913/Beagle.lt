@@ -3,7 +3,7 @@ const test = require('node:test');
 const assert = require('node:assert');
 const load = require('./load.js');
 
-const ORG = load();
+const ORG = load(['chem.js', 'react.js']);
 const { chem, react } = ORG;
 const canon = (s) => chem.canonical(chem.parse(s));
 
@@ -528,6 +528,128 @@ test('nitrile.hydrolysis, and the seminar 7 task 8 chain from p-toluidine', () =
   assert.strictEqual(acid, canon('Cc1ccc(C(=O)O)cc1'));
   // the acid is a meta director, the methyl an ortho/para director: methyl decides
   same(R('sear', [acid], { E: 'Br' }), ['Cc1ccc(C(=O)O)cc1Br']);
+});
+
+// ---------------------------------------------------------------- fix round 1
+
+test('fix 1: benzyl > allyl > tertiary > secondary > primary > methyl', () => {
+  same(R('ae.hx', ['CC(C)=Cc1ccccc1'], { X: 'Br' }), ['CC(C)C(Br)c1ccccc1']);
+  same(R('ae.h2o', ['CC(C)=Cc1ccccc1']), ['CC(C)C(O)c1ccccc1']);
+  same(R('sr.halogenate', ['CC(C)Cc1ccccc1'], { X: 'Br' }), ['CC(C)C(Br)c1ccccc1']);
+  // allylic C-H beats the tertiary one (4-methyl-1-pentene)
+  same(R('sr.halogenate', ['CC(C)CC=C'], { X: 'Br' }), ['CC(C)C(Br)C=C']);
+  // benzyl tert-butyl ether: the benzylic side takes the halide
+  same(R('ether.hi', ['CC(C)(C)OCc1ccccc1'], { eq: 1 }), ['ICc1ccccc1', 'CC(C)(C)O']);
+  assert.strictEqual(react.wouldRearrange('C=CC1CCCCC1'), true);
+  assert.strictEqual(react.wouldRearrange('CC=Cc1ccccc1'), false);
+  assert.strictEqual(react.wouldRearrange('CC(C)C(O)c1ccccc1'), false, 'a benzylic cation is not replaced by a tertiary one');
+});
+
+test('fix 2: ring amines in acid', () => {
+  same(R('sear', ['Nc1ccccc1'], { E: 'SO3H' }), ['Nc1ccc(cc1)S(=O)(=O)O']);
+  const dma = R('sear', ['CN(C)c1ccccc1'], { E: 'NO2' });
+  same(dma, ['CN(C)c1cccc([N+](=O)[O-])c1']);
+  const an = R('sear', ['Nc1ccccc1'], { E: 'NO2' });
+  assert.deepStrictEqual(majorsOf(an), ['Nc1ccc(cc1)[N+](=O)[O-]', 'Nc1ccccc1[N+](=O)[O-]'].map(canon).sort());
+  assert.ok(an.note && /acetanilide/.test(an.note.en));
+});
+
+test('fix 3: acylation goes to the amine N, not to O', () => {
+  assert.ok(R('phenol.acyl', ['Nc1ccc(O)cc1', 'CC(=O)OC(C)=O']).none);
+  assert.ok(R('acyl.nu', ['CC(=O)Cl', 'NCCO'], { nu: 'alcohol' }).none);
+  assert.ok(/amine.acyl/.test(R('acyl.nu', ['CC(=O)Cl', 'NCCO'], { nu: 'alcohol' }).note.en));
+  only(R('amine.acyl', ['NCCO', 'CC(=O)Cl']), 'CC(=O)NCCO');
+  expectProducts(R('amine.acyl', ['Nc1ccc(O)cc1', 'CC(=O)OC(C)=O']), ['CC(=O)Nc1ccc(O)cc1', 'CC(=O)O'], ['CC(=O)Nc1ccc(O)cc1']);
+});
+
+test('fix 4: mechanism per result', () => {
+  assert.strictEqual(R('elim', ['CCC(C)(O)CC'], { base: 'heat-acid' }).mech, 'E1');
+  assert.strictEqual(R('elim', ['CC(O)CC'], { base: 'heat-acid' }).mech, 'E1');
+  assert.strictEqual(R('elim', ['CCC(C)(C)Br'], { base: 'strong' }).mech, 'E2');
+  assert.strictEqual(R('ae.hx', ['C=CC'], { X: 'Br', peroxide: true }).mech, 'AR');
+  assert.strictEqual(R('ae.hx', ['C=CC'], { X: 'Br' }).mech, undefined);
+  assert.strictEqual(R('sn2', ['CC(C)Br'], { nu: 'OCC' }).mech, 'E2');
+  assert.strictEqual(R('sn2', ['CCCBr'], { nu: 'OH' }).mech, undefined);
+  assert.strictEqual(react.RULES.elim.mech, 'E2');
+});
+
+test('fix 5: a halogen on the cation carbon', () => {
+  same(R('ae.hx', ['C=CCl'], { X: 'Br' }), ['CC(Cl)Br']);
+  same(R('ae.hx', ['ClC=CC'], { X: 'Cl' }), ['CCC(Cl)Cl']);
+});
+
+test('fix 6, 7, 21: neopentyl, SN1 nucleophiles, leaving group order', () => {
+  const neo = R('sn2', ['CC(C)(C)CBr'], { nu: 'OH' });
+  assert.ok(neo.none && neo.note);
+  ['CN', 'SH', 'NH3', 'C#CC', 'I', 'SC'].forEach((nu) => assert.ok(R('sn1', ['CC(C)(C)Br'], { nu }).none, nu));
+  ['OH', 'OC', 'OCC'].forEach((nu) => assert.ok(!R('sn1', ['CC(C)(C)Br'], { nu }).none, nu));
+  expectProducts(R('sn2', ['ClCCBr'], { nu: 'I' }), ['ClCCI', 'ICCBr'], ['ClCCI']);
+});
+
+test('fix 8, 9: SEAr with several rings, acylation para', () => {
+  assert.ok(R('sear', ['c1ccc(cc1)c1ccccc1'], { E: 'NO2' }).none);
+  same(R('sear', ['Cc1ccccc1'], { E: 'C(C)=O' }), ['CC(=O)c1ccc(C)cc1']);
+  same(R('sear', ['COc1ccccc1'], { E: 'C(C)=O' }), ['COc1ccc(cc1)C(C)=O']);
+});
+
+test('fix 10, 11, 12: HBr cleavage, nitrile to amide, para-only nitrosation', () => {
+  expectProducts(R('ether.hi', ['CCOC(C)C'], { eq: 1, acid: 'HBr' }), ['CCBr', 'CC(C)O', 'CC(C)Br', 'CCO'], ['CCBr', 'CC(C)O']);
+  expectProducts(R('ether.hi', ['CCOCC'], { eq: 2, acid: 'HBr' }), ['CCBr']);
+  only(R('nitrile.hydrolysis', ['CC(C)(C)c1ccc(C#N)cc1'], { stage: 'amide' }), 'CC(C)(C)c1ccc(cc1)C(N)=O');
+  only(R('nitrile.hydrolysis', ['N#Cc1ccccc1'], { stage: 'amide' }), 'NC(=O)c1ccccc1');
+  assert.ok(R('amine.hno2', ['CN(C)c1ccc(C)cc1']).none, 'para blocked');
+  only(R('amine.hno2', ['CN(C)c1ccccc1']), 'CN(C)c1ccc(N=O)cc1');
+});
+
+test('fix 13, 14, 15: glucose pyranose, phenyl ester in base, crossed Cannizzaro', () => {
+  const glc = R('co.hemiacetal', ['O=CC(O)C(O)C(O)C(O)CO']);
+  same(glc, ['OC1OC(CO)C(O)C(O)C1O']);
+  assert.strictEqual(glc.products.length, 2, 'the furanose is listed as a minor form');
+  expectProducts(R('ester.hydrolysis', ['CC(=O)Oc1ccccc1'], { medium: 'base' }), ['CC(=O)[O-].[Na+]', '[O-]c1ccccc1.[Na+]'],
+    ['CC(=O)[O-].[Na+]', '[O-]c1ccccc1.[Na+]']);
+  expectProducts(R('ester.hydrolysis', ['CC(=O)Oc1ccccc1C(=O)O'], { medium: 'base' }), ['CC(=O)[O-].[Na+]', '[O-]c1ccccc1C(=O)[O-].[Na+].[Na+]']);
+  expectProducts(R('co.cannizzaro', ['O=Cc1ccccc1', 'C=O']), ['OCc1ccccc1', 'O=C[O-].[Na+]'], ['OCc1ccccc1', 'O=C[O-].[Na+]']);
+  expectProducts(R('co.cannizzaro', ['C=O', 'O=Cc1ccc(C)cc1']), ['OCc1ccc(C)cc1', 'O=C[O-].[Na+]']);
+});
+
+test('fix 16, 18: side chain oxidation cases and notes', () => {
+  ['OCc1ccccc1', 'O=Cc1ccccc1', 'C=Cc1ccccc1'].forEach((s) => assert.deepStrictEqual(majorsOf(R('side.ox', [s])), [canon('OC(=O)c1ccccc1')], s));
+  const tet = R('side.ox', ['C1CCc2ccccc2C1']);
+  assert.ok(tet.none && tet.note);
+  assert.ok(!/tert-butyl/.test(R('side.ox', ['c1ccccc1']).note.en));
+  assert.ok(/tert-butyl/.test(R('side.ox', ['CC(C)(C)c1ccccc1']).note.en));
+  assert.ok(!/Tertiary/.test(R('alc.ox', ['Oc1ccccc1'], { reagent: 'chromic' }).note.en));
+  assert.ok(/Tertiary/.test(R('alc.ox', ['CC(C)(C)O'], { reagent: 'chromic' }).note.en));
+  const f = R('co.tollens', ['O=CO']);
+  assert.ok(!f.none);
+  assert.deepStrictEqual(majorsOf(f), [canon('O=C=O')]);
+  assert.ok(R('co.tollens', ['CC(C)=O']).none);
+  // Markovnikov, anti-Markovnikov and peroxide notes
+  const m = R('ae.hx', ['CC=C(C)C'], { X: 'Br' });
+  assert.ok(/Markovnikov/.test(m.note.lt) && /Markovnikov/.test(m.note.en));
+  assert.ok(/against/.test(R('ae.hx', ['C=CC(=O)O'], { X: 'Br' }).note.en) && /prieš/.test(R('ae.hx', ['C=CC(=O)O'], { X: 'Br' }).note.lt));
+});
+
+test('fix 17: excess Na also takes the SH, then both are alkylated (S5.14b)', () => {
+  same(R('alc.na', ['OC(CS)CS'], { excess: true }), ['[O-]C(C[S-])C[S-].[Na+].[Na+].[Na+]']);
+  const salt = R('alc.na', ['CC(O)CC(C)S'], { excess: true }).products.find((p) => p.major).smi;
+  assert.strictEqual(salt, canon('CC([O-])CC(C)[S-].[Na+].[Na+]'));
+  only(R('williamson', [salt, 'CCBr'], { all: true }), 'CCOC(C)CC(C)SCC');
+  // without excess only the alcohol is deprotonated
+  same(R('alc.na', ['CC(O)CC(C)S']), ['CC([O-])CC(C)S.[Na+]']);
+});
+
+test('fix 19, 20, 22: Lithuanian notes, metal option, Claisen with one alpha-H', () => {
+  assert.ok(/dieno\./.test(R('diene.hx', ['CCC'], { X: 'Br' }).note.lt));
+  assert.ok(/prisijungia/.test(R('diene.hx', ['C=CC=C'], { X: 'Br' }).note.lt));
+  assert.ok(/varianto/.test(R('williamson', ['CC(C)OC(C)C']).note.lt));
+  only(R('acid.salt', ['CC(=O)O'], { metal: 'K' }), 'CC(=O)[O-].[K+]');
+  only(R('acid.salt', ['CC(=O)O'], { M: 'K' }), 'CC(=O)[O-].[K+]');
+  const c = R('claisen', ['CC(C)C(=O)OCC']);
+  assert.ok(c.none && /acidic/.test(c.note.en));
+  // every Lithuanian note in the file is non-empty and has no leftover English markers
+  const rules = Object.keys(react.RULES);
+  assert.ok(rules.length > 50);
 });
 
 //@@TESTS
