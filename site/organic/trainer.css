@@ -107,7 +107,7 @@ h2:focus, h3:focus, section:focus { outline: none; }
 .box { border-left: 4px solid var(--accent); background: color-mix(in srgb, var(--accent) 8%, var(--sheet)); border-radius: 0 6px 6px 0; padding: 8px 14px; margin: 12px 0; }
 .box.pitfall { border-left-color: var(--bad); background: color-mix(in srgb, var(--bad) 8%, var(--sheet)); }
 .boxlabel { display: block; font: 600 12px/1 var(--ui); letter-spacing: .05em; text-transform: uppercase; color: var(--ink2); margin-bottom: 4px; }
-.fig { margin: 12px 0; overflow-x: auto; }
+.fig { margin: 12px 0; overflow-x: clip; overflow-y: visible; }
 .fig figcaption, .cap { color: var(--ink2); font-size: 13.5px; margin-top: 4px; }
 .molrow { display: flex; flex-wrap: wrap; gap: 14px 24px; align-items: flex-end; }
 .molitem { text-align: center; max-width: 100%; }
@@ -136,7 +136,7 @@ h2:focus, h3:focus, section:focus { outline: none; }
 .phead { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 14px; margin-bottom: 8px; }
 .ptitle { font: 600 20px/1.25 var(--ui); margin: 0; text-wrap: balance; }
 .pmirrors { color: var(--ink2); font-size: 13px; }
-.stmt { margin: 6px 0 16px; overflow-x: auto; font-family: var(--math); font-size: 18.5px; line-height: 1.7; }
+.stmt { margin: 6px 0 16px; overflow-x: clip; overflow-y: visible; font-family: var(--math); font-size: 18.5px; line-height: 1.7; }
 .stmt p { margin: 4px 0; }
 .steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 16px; }
 .step { display: grid; grid-template-columns: 34px minmax(0, 1fr); gap: 10px; align-items: start; }
@@ -145,7 +145,7 @@ h2:focus, h3:focus, section:focus { outline: none; }
 .step.shown > .no, .step.answered > .no { border-color: var(--ink2); color: var(--ink2); }
 .stepbody { min-width: 0; }
 .sq { font-family: var(--math); font-size: 18.5px; line-height: 1.6; margin-bottom: 6px; }
-.stepmol { margin: 4px 0 8px; overflow-x: auto; }
+.stepmol { margin: 4px 0 8px; overflow-x: clip; overflow-y: visible; }
 .widget { margin: 4px 0 6px; max-width: 100%; }
 .opts { display: flex; flex-wrap: wrap; gap: 8px; }
 .opt { display: inline-flex; align-items: center; gap: 8px; text-align: left; border: 1.5px solid var(--line); background: var(--field); border-radius: 6px; padding: 6px 14px; font: 17px/1.4 var(--math); min-height: 40px; max-width: 100%; }
@@ -190,7 +190,7 @@ input.in:disabled { opacity: 1; color: var(--ink); -webkit-text-fill-color: var(
 .fb.yes { color: var(--good); font-weight: 600; }
 .fb.note { color: var(--ink2); font-weight: 400; }
 .step .fb:empty { display: none; }
-.hint, .sol, .why { font-size: 17px; line-height: 1.7; margin-top: 8px; padding: 6px 12px; border-radius: 4px; overflow-x: auto; max-width: 100%; font-family: var(--math); }
+.hint, .sol, .why { font-size: 17px; line-height: 1.7; margin-top: 8px; padding: 6px 12px; border-radius: 4px; overflow-x: clip; overflow-y: visible; max-width: 100%; font-family: var(--math); }
 .hint { background: color-mix(in srgb, var(--hl) 55%, transparent); }
 .sol { border-left: 3px solid var(--good); background: color-mix(in srgb, var(--good-bg) 70%, transparent); }
 .sol.shown { border-left-color: var(--ink2); background: color-mix(in srgb, var(--line) 35%, transparent); }
@@ -223,7 +223,9 @@ input.in:disabled { opacity: 1; color: var(--ink); -webkit-text-fill-color: var(
 /* molecules: drawn SVG, placeholder text, tap targets */
 .molbox { display: inline-block; max-width: 100%; vertical-align: middle; }
 .molbox svg, svg.drawn { max-width: 100%; height: auto; display: block; }
-.viewbox { max-width: 100%; overflow-x: auto; }
+.viewbox { max-width: 100%; overflow-x: clip; overflow-y: visible; }
+.viewbox svg, .molbox svg { overflow: visible; }
+.btn.practise { text-align: left; height: auto; }
 .viewbox svg { max-width: 100%; height: auto; display: block; }
 .smi, .ph .smi { font: 14px ui-monospace, "Cascadia Mono", Consolas, monospace; background: color-mix(in srgb, var(--line) 40%, transparent); padding: 2px 8px; border-radius: 4px; overflow-wrap: anywhere; }
 .phnote { color: var(--ink2); font-style: italic; }
@@ -275,7 +277,7 @@ line.hit.bad { stroke: color-mix(in srgb, var(--bad) 50%, transparent); }
 }
 
 /* tap steps: enlarged view in a box that scrolls inside the column */
-.zoombox { display: block; overflow: auto; max-width: 100%; border: 1px dashed var(--line); border-radius: 4px; padding: 4px; }
+.zoombox { display: block; overflow-x: auto; overflow-y: hidden; max-width: 100%; border: 1px dashed var(--line); border-radius: 4px; padding: 4px; }
 .zoombox svg.zoomed, .molbox svg.zoomed { max-width: none; height: auto; }
 .zoombtn { margin: 2px 0 6px; }
 

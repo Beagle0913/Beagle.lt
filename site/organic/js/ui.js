@@ -27,7 +27,7 @@
       toc: 'Turinys', summary: 'Santrauka', readOf: (a, b) => `Perskaityta ${a} iš ${b} dalių`, mixAll: 'Maišyti visus', mixTitle: 'Visi tipai', types: 'Uždavinių tipai', noTypes: 'Šiame skyriuje uždavinių dar nėra.',
       lectureMissing: 'Kai šis skyrius buvo rašomas, paskaitos skaidrių dar nebuvo: jis sudarytas pagal pratybų lapą, kurso aprašą ir vadovėlį.',
       loading: 'Kraunama…', unavailable: 'Šio skyriaus dar nėra arba jo nepavyko įkelti.', retry: 'Bandyti dar kartą', notFound: 'Tokio puslapio nėra.', home: 'Į skyrių sąrašą',
-      rule: 'Taisyklė', pitfall: 'Dažna klaida', example: 'Pavyzdys', nextStep: 'Kitas žingsnis', showAll: 'Rodyti visus', practiseThis: 'Treniruotis šį tipą →', noDrawing: 'Brėžinys dar neparengtas', figure: 'Brėžinys',
+      rule: 'Taisyklė', pitfall: 'Dažna klaida', example: 'Pavyzdys', nextStep: 'Kitas žingsnis', showAll: 'Rodyti visus', practiseThis: 'Treniruotis šį tipą →', practiseType: t => `Treniruotis: ${t} →`, noDrawing: 'Brėžinys dar neparengtas', figure: 'Brėžinys',
       stepOf: (k, n) => `${k} žingsnis iš ${n}`, check: 'Tikrinti', answer: 'Atsakyti', hint: 'Užuomina', show: 'Rodyti sprendimą', solution: 'Sprendimas', why: 'Kodėl', mirrors: 'Pratybų užduotys',
       right: 'Teisingai.', wrong: 'Dar ne. Pasitaisykite ir bandykite dar kartą.', pick: 'Pirmiausia pasirinkite arba įrašykite atsakymą.', solvedFirst: 'Išspręsta!', solvedHelp: 'Išspręsta su pagalba', another: 'Dar vienas toks uždavinys', nextType: 'Kitas tipas →', listBack: '← Visi šio skyriaus tipai',
       tapAtoms: 'Bakstelėkite atomus. Dar kartą bakstelėjus pažymėjimas nuimamas.', tapBonds: 'Bakstelėkite ryšius. Dar kartą bakstelėjus pažymėjimas nuimamas.', selected: 'pažymėta', atomWord: 'atomas', bondWord: 'ryšys',
@@ -49,7 +49,7 @@
       toc: 'Contents', summary: 'Summary', readOf: (a, b) => `Read ${a} of ${b} sections`, mixAll: 'Mix all types', mixTitle: 'All types', types: 'Exercise types', noTypes: 'There are no exercises in this unit yet.',
       lectureMissing: 'The lecture slides for this unit were not available when it was written: it is based on the seminar sheet, the course description and the textbook.',
       loading: 'Loading…', unavailable: 'This unit is not available yet, or it could not be loaded.', retry: 'Try again', notFound: 'There is no such page.', home: 'To the list of units',
-      rule: 'Rule', pitfall: 'Common mistake', example: 'Worked example', nextStep: 'Next step', showAll: 'Show all', practiseThis: 'Practise this type →', noDrawing: 'Drawing not available yet', figure: 'Drawing',
+      rule: 'Rule', pitfall: 'Common mistake', example: 'Worked example', nextStep: 'Next step', showAll: 'Show all', practiseThis: 'Practise this type →', practiseType: t => `Practise: ${t} →`, noDrawing: 'Drawing not available yet', figure: 'Drawing',
       stepOf: (k, n) => `Step ${k} of ${n}`, check: 'Check', answer: 'Answer', hint: 'Hint', show: 'Show solution', solution: 'Solution', why: 'Why', mirrors: 'Seminar tasks',
       right: 'Correct.', wrong: 'Not yet. Adjust and try again.', pick: 'Pick or type an answer first.', solvedFirst: 'Solved!', solvedHelp: 'Solved, with help', another: 'Another one like this', nextType: 'Next type →', listBack: '← All types in this unit',
       tapAtoms: 'Tap the atoms. Tap again to unselect.', tapBonds: 'Tap the bonds. Tap again to unselect.', selected: 'selected', atomWord: 'atom', bondWord: 'bond',
@@ -203,10 +203,10 @@
     }
     if (b.example) return example(parent, b.example, path);
     if (b.practice) {
-      const u = unitOfType(b.practice) || (route && route.unit);
-      const type = u && ORG.units[u.id] ? ORG.units[u.id].types.find(t => t.id === b.practice) : null;
-      const a = link('#/' + (u ? u.id : '') + '/t/' + encodeURIComponent(b.practice), S.practiseThis, 'btn practise');
-      if (type) a.setAttribute('title', plain(type.title));
+      const u = unitOfType(b.practice) || (route && route.unit) || ORG.UNITS.find(x => b.practice.startsWith(x.id + '.'));
+      const lu = ORG.units[u && u.id] || ORG.units[(b.practice.split('.')[0])];
+      const type = lu ? lu.types.find(t => t.id === b.practice) : null;
+      const a = link('#/' + (u ? u.id : '') + '/t/' + encodeURIComponent(b.practice), type ? S.practiseType(plain(type.title)) : S.practiseThis, 'btn practise');
       const pr = el('p', 'practicerow'); pr.append(a);
       return parent.append(pr);
     }
