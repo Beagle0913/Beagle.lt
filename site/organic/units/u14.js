@@ -141,7 +141,7 @@
     const fam = ctx.pick(['cl-alc', 'cl-nh3', 'cl-am', 'anh-w', 'anh-nh3', 'anh-alc', 'ac-alc', 'es-base', 'es-acid', 'ac-socl2', 'nitrile']);
     const acid = 'OC(=O)' + X.rs, chlor = 'ClC(=O)' + X.rs, anh = 'O=C(' + X.rs + ')OC(=O)' + X.rs;
     const ester = Q.qe + 'OC(=O)' + X.rs, alc = 'O' + Q.qs, amide = 'NC(=O)' + X.rs, nitr = 'N#C' + X.rs;
-    const salt = X.rs + 'C(=O)[O-].[Na+]';
+    const salt = '[O-]C(=O)' + X.rs + '.[Na+]';
     const alkoxide = Q.qe + '[O-].[Na+]';
     let F;
     const swapped = 'O=C(' + Q.qs + ')O' + X.rs;          // the ester with the two alkyl groups swapped
@@ -152,7 +152,7 @@
         F.why = t('Rūgšties chloridas yra reaktingiausias darinys: alkoholis puola karbonilo anglį, iš tetraedrinio tarpinio junginio išeina chloridas, ir gaunamas esteris. Rūgštinės katalizės nereikia.', 'An acyl chloride is the most reactive derivative: the alcohol attacks the carbonyl carbon, chloride leaves the tetrahedral intermediate, and an ester forms. No acid catalyst is needed.');
         break;
       case 'cl-nh3':
-        F = { reag: [chlor, 'N'], arrow: t('2 ekv.', '2 equiv.'), run: ['acyl.nu', [chlor, 'N'], { nu: 'ammonia' }], tap: chlor, leave: 'Cl', rights: [amide], wrongs: [X.rs + 'C(=O)[O-].[NH4+]', acid, nitr].concat(isoWrongs(ctx, amide, 'amide').slice(0, 1)) };
+        F = { reag: [chlor, 'N'], arrow: t('2 ekv.', '2 equiv.'), run: ['acyl.nu', [chlor, 'N'], { nu: 'ammonia' }], tap: chlor, leave: 'Cl', rights: [amide], wrongs: ['[O-]C(=O)' + X.rs + '.[NH4+]', acid, nitr].concat(isoWrongs(ctx, amide, 'amide').slice(0, 1)) };
         F.why = t('Amoniakas puola chlorido karbonilo anglį, išeina $Cl-$. Antras amoniako ekvivalentas suriša išsiskyrusį HCl, todėl gaunamas amidas ir amonio chloridas, o ne rūgštis ar jos druska.', 'Ammonia attacks the carbonyl carbon of the chloride and $Cl-$ leaves. A second equivalent of ammonia takes up the HCl, so an amide and ammonium chloride result, not an acid or its salt.');
         break;
       case 'cl-am': {
@@ -165,7 +165,7 @@
         break;
       }
       case 'anh-w':
-        F = { reag: [anh, 'O'], run: ['acyl.nu', [anh], { nu: 'water' }], tap: anh, leave: 'RCOO', two: true, rights: [acid, acid], wrongSets: [[acid], [acid, 'OC' + X.rs], [acid, 'O=C' + X.rs], [X.rs + 'C(=O)[O-].[Na+]', acid]], skipCheck: true };
+        F = { reag: [anh, 'O'], run: ['acyl.nu', [anh], { nu: 'water' }], tap: anh, leave: 'RCOO', two: true, rights: [acid, acid], wrongSets: [[acid], [acid, 'OC' + X.rs], [acid, 'O=C' + X.rs], ['[O-]C(=O)' + X.rs + '.[Na+]', acid]], skipCheck: true };
         F.why = t('Vanduo puola anhidrido karbonilo anglį; išeina karboksilatas, kuris tampa kita rūgšties molekule. Iš vienos anhidrido molekulės gaunamos dvi rūgšties molekulės.', 'Water attacks a carbonyl carbon of the anhydride; a carboxylate leaves and becomes a second acid molecule. One anhydride molecule gives two molecules of the acid.');
         break;
       case 'anh-nh3':
@@ -193,7 +193,7 @@
         F.why = t('Tionilchloridas pakeičia rūgšties OH grupę chloru (išsiskiria $SO2$ ir HCl): gaunamas aktyvintas darinys – rūgšties chloridas. Jis vėliau su alkoholiu ar aminu duoda esterį ar amidą.', 'Thionyl chloride replaces the OH of the acid by chlorine ($SO2$ and HCl are released) and gives an activated derivative, the acyl chloride, which later gives an ester or amide with an alcohol or amine.');
         break;
       default:
-        F = { reag: [nitr, 'O'], arrow: t('H2O, H+, t° (ilgai)', 'H2O, H+, t° (prolonged)'), run: ['nitrile.hydrolysis', [nitr], null], tap: nitr, leave: null, rights: [acid], wrongs: [amide, X.rs + 'C(=O)[O-].[NH4+]', 'NC' + X.rs] };
+        F = { reag: [nitr, 'O'], arrow: t('H2O, H+, t° (ilgai)', 'H2O, H+, t° (prolonged)'), run: ['nitrile.hydrolysis', [nitr], null], tap: nitr, leave: null, rights: [acid], wrongs: [amide, '[O-]C(=O)' + X.rs + '.[NH4+]', 'NC' + X.rs] };
         F.why = t('Nitrilas hidrolizuojamas rūgštyje per amidą iki karboksirūgšties (ir $NH4+$). Hidrolizės produktas yra rūgštis, todėl nitrilai priskiriami rūgščių dariniams. Amidas yra tik tarpinis junginys; kaitinant rūgštyje hidrolizė eina iki rūgšties.', 'A nitrile is hydrolysed in acid through the amide to the carboxylic acid (and $NH4+$). The product of hydrolysis is the acid, which is why nitriles count as acid derivatives. The amide is only an intermediate; on heating in acid hydrolysis goes on to the acid.');
     }
     // the engine must agree with the intended product

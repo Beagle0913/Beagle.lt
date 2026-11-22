@@ -138,6 +138,23 @@
     const F = formulaOf(ctx, smi);
     return POOL.filter(s => s !== smi && formulaOf(ctx, s) === F);
   }
+  // per-engine caches for genSingle: the same substrate is analysed again and again across seeds
+  const SINGLE_CACHE = new WeakMap();
+  function cacheFor(ctx) {
+    let c = SINGLE_CACHE.get(ctx.chem);
+    if (!c) { c = { analyse: new Map(), partners: new Map() }; SINGLE_CACHE.set(ctx.chem, c); }
+    return c;
+  }
+  function analyseCached(ctx, smi, X) {
+    const m = cacheFor(ctx).analyse, k = X + '|' + smi;
+    if (!m.has(k)) m.set(k, analyse(ctx, smi, X));
+    return m.get(k);
+  }
+  function partnersCached(ctx, smi) {
+    const m = cacheFor(ctx).partners;
+    if (!m.has(smi)) m.set(smi, partners(ctx, smi));
+    return m.get(smi);
+  }
   function pickAnalysed(ctx, X, ok) {
     for (let k = 0; k < 150; k++) {
       const smi = ctx.pick(POOL);
@@ -519,15 +536,15 @@
     let pick = null;
     for (let k = 0; k < 200 && !pick; k++) {
       const smi = ctx.pick(POOL);
-      const a = analyse(ctx, smi, X);
+      const a = analyseCached(ctx, smi, X);
       if (!a) continue;
       const majors = a.classes.filter(c => c.major);
       if (X === 'Cl' ? a.classes.length !== 1 : majors.length !== 1) continue;
       if (X === 'Br' && a.classes.length < 2) continue;
       const wrongs = [];
       const wrongHalides = [];
-      partners(ctx, smi).forEach(p => {
-        const b = analyse(ctx, p, X);
+      partnersCached(ctx, smi).forEach(p => {
+        const b = analyseCached(ctx, p, X);
         if (!b) return;
         if (mode === 'A') { if (b.classes.length > 1) wrongs.push(p); return; }
         const cand = b.classes.filter(c => (X === 'Cl' ? b.classes.length > 1 : !c.major));

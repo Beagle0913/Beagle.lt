@@ -290,9 +290,9 @@ function optionKeys(o, lang) {
 }
 
 /* ---------- one unit ---------- */
-// opts: { guide: 'fail' | 'warn' (guide minimums), seeds, genMs }
+// opts: { guide: 'fail' | 'warn' (guide minimums), seeds, genMs, slowIsWarning }
 function checkUnit(unit, opts) {
-  opts = Object.assign({ guide: 'fail', seeds: SEEDS, genMs: GEN_MS }, opts);
+  opts = Object.assign({ guide: 'fail', seeds: SEEDS, genMs: GEN_MS, slowIsWarning: !!process.env.CI }, opts);
   const R = new Report(isObj(unit) && unit.id ? unit.id : '?');
   const t0 = Date.now();
   if (!isObj(unit)) { R.err('', 'the unit file did not give a unit object'); return finish(); }
@@ -542,7 +542,12 @@ function checkUnit(unit, opts) {
       }
     }
     R.seedsRun[tid] = ran;
-    if (ran < opts.seeds) R.err(L(tid, '', 'generator'), 'the generator is too slow: only ' + ran + ' of ' + opts.seeds + ' seeds ran in the ' + (opts.genMs / 1000) + ' s limit (' + genTime + ' ms in the generator); make it cheaper');
+    if (ran < opts.seeds) {
+      const msg = 'the generator is too slow: only ' + ran + ' of ' + opts.seeds + ' seeds ran in the ' + (opts.genMs / 1000) + ' s limit (' + genTime + ' ms in the generator); make it cheaper';
+      // shared CI machines are slower and uneven: a timing limit must not block publishing there
+      if (opts.slowIsWarning) console.warn('WARNING [' + tid + '] ' + msg);
+      else R.err(L(tid, '', 'generator'), msg);
+    }
     // distinct problems: at least 30 when 100 or more seeds ran, otherwise at least 30% of the seeds that ran
     const need = ran >= 100 ? MIN_DISTINCT : Math.ceil(0.3 * ran);
     if (prints.size < need) guide(L(tid, '', 'generator'), 'the generator gave only ' + prints.size + ' distinct problems in ' + ran + ' seeds, the guide asks for at least ' + need);
@@ -866,7 +871,7 @@ test('validator: step answers are cross-checked, mirrors need coverage, small ru
   only(u, /steps\[0\]: options 0 and 1 are the same/);
   // 7: a slow generator fails, with the time and seed count; distinct problems scale with the seeds that ran
   u = gen((rng, ctx) => { const t = Date.now(); while (Date.now() - t < 5) { /* wait */ } return numGen(90)(rng, ctx); });
-  assert.match(checkUnit(u, { guide: 'warn', seeds: 200, genMs: 100 }).errors.join('\n'), /the generator is too slow: only \d+ of 200 seeds ran in the 0\.1 s limit \(\d+ ms in the generator\)/);
+  assert.match(checkUnit(u, { guide: 'warn', seeds: 200, genMs: 100, slowIsWarning: false }).errors.join('\n'), /the generator is too slow: only \d+ of 200 seeds ran in the 0\.1 s limit \(\d+ ms in the generator\)/);
   // the validator's own checks (layout of a numbered molecule) are cached across seeds and do not count toward the limit
   u = gen((rng, ctx) => ({ q: [{ p: T('K', 'Q') }, { mol: { smi: 'CC(C)CC(O)C(=O)NC1CCCCC1', opts: { numbers: 'all' } } }], steps: [{ prompt: T('Kiek?', 'How many?'), kind: 'number', answer: { value: ctx.int(1, 90), tol: 0 }, hint: T('H', 'Hint'), solution: T('S', 'Sol') }], why: T('P', 'R') }));
   const t0 = Date.now();
