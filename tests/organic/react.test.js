@@ -567,9 +567,13 @@ test('fix 4: mechanism per result', () => {
   assert.strictEqual(R('elim', ['CC(O)CC'], { base: 'heat-acid' }).mech, 'E1');
   assert.strictEqual(R('elim', ['CCC(C)(C)Br'], { base: 'strong' }).mech, 'E2');
   assert.strictEqual(R('ae.hx', ['C=CC'], { X: 'Br', peroxide: true }).mech, 'AR');
-  assert.strictEqual(R('ae.hx', ['C=CC'], { X: 'Br' }).mech, undefined);
+  assert.strictEqual(R('ae.hx', ['C=CC'], { X: 'Br' }).mech, 'AE');
   assert.strictEqual(R('sn2', ['CC(C)Br'], { nu: 'OCC' }).mech, 'E2');
-  assert.strictEqual(R('sn2', ['CCCBr'], { nu: 'OH' }).mech, undefined);
+  assert.strictEqual(R('sn2', ['CCCBr'], { nu: 'OH' }).mech, 'SN2');
+  assert.strictEqual(R('alc.hx', ['CCCO'], { X: 'Br' }).mech, 'SN2');
+  assert.strictEqual(R('alc.hx', ['CC(C)(C)O'], { X: 'Br' }).mech, 'SN1');
+  assert.strictEqual(R('ether.hi', ['COC(C)(C)C'], { eq: 1 }).mech, 'SN1');
+  assert.strictEqual(R('ether.hi', ['CCOCC'], { eq: 1 }).mech, 'SN2');
   assert.strictEqual(react.RULES.elim.mech, 'E2');
 });
 
@@ -748,6 +752,26 @@ test('fix r3: acylation gives o and p, williamson all needs anions, side.ox keep
     const r = R('side.ox', [smi]);
     assert.deepStrictEqual(majorsOf(r), [canon('OC(=O)c1ccccc1')], smi);
     r.products.filter((p) => !p.major).forEach((p) => assert.ok(p.by && p.smi === canon('O=C=O'), smi + ' ' + p.smi));
+  });
+});
+
+test('every rule with a mechanism symbol returns mech on a sample input', () => {
+  const sample = {
+    'sr.halogenate': [['CCC'], { X: 'Br' }], 'ae.hx': [['C=CC'], { X: 'Br' }], 'ae.h2o': [['C=CC']], 'ae.x2': [['C=CC'], { X: 'Br' }],
+    'diene.hx': [['C=CC=C'], { X: 'Br' }], 'yne.x2': [['CC#C'], { eq: 1, X: 'Br' }], 'yne.hx': [['CC#C'], { eq: 1, X: 'Br' }], 'yne.hydration': [['CC#C']],
+    sear: [['c1ccccc1'], { E: 'Br' }], 'side.br': [['Cc1ccccc1']], sn2: [['CCBr'], { nu: 'OH' }], sn1: [['CC(C)(C)Br'], { nu: 'OH' }],
+    elim: [['CC(C)(C)Br'], { base: 'strong' }], 'alc.hx': [['CCO'], { X: 'Br' }], williamson: [['COC'] ], 'ether.hi': [['COC(C)(C)C'], { eq: 1 }],
+    'phenol.br2': [['Oc1ccccc1']], 'thiol.alkyl': [['CS', 'CI']], 'co.nabh4': [['CC=O']], 'co.hcn': [['CC=O']], 'co.hemiacetal': [['CC=O', 'CO']],
+    'co.acetal': [['CC=O', 'CO']], 'co.thioacetal': [['CC=O', 'CS']], 'co.oxime': [['CC=O']], 'co.phenylhydrazone': [['CC=O']], 'co.aldol': [['CCC=O']],
+    'co.aldolcond': [['CCC=O']], 'acid.ester': [['CC(=O)O', 'CO']], 'acyl.nu': [['CC(=O)Cl'], { nu: 'water' }], 'ester.hydrolysis': [['CC(=O)OC'], { medium: 'acid' }],
+    claisen: [['CC(=O)OCC']], lactone: [['OCCCC(=O)O']], 'amine.alkyl': [['CN', 'CI']], 'amine.acyl': [['CN', 'CC(=O)Cl']], 'nitrile.hydrolysis': [['CC#N']],
+    'phenol.alkyl': [['Oc1ccccc1', 'CI']], 'acid.socl2': [['CC(=O)O']],
+  };
+  Object.keys(react.RULES).forEach((id) => {
+    if (!react.RULES[id].mech) return;
+    assert.ok(sample[id], 'no sample for ' + id);
+    const r = R(id, sample[id][0], sample[id][1]);
+    assert.ok(r.mech && typeof r.mech === 'string', id + ' returns no mech: ' + JSON.stringify(r));
   });
 });
 

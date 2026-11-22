@@ -482,7 +482,13 @@
     const fn = IMPL[rule];
     if (!fn) throw new Error('react: unknown rule ' + rule);
     const rs = (reactants || []).map(reactant);
-    return fn(rs, opts || {}, reactants);
+    const res = fn(rs, opts || {}, reactants);
+    // every result carries its mechanism: the per-result value where a rule computes one, else the rule's default.
+    // Rules with no mechanism symbol in the course (RULES[id].mech absent) carry none: ae.h2, ox.kmno4.mild, ox.kmno4.harsh,
+    // yne.h2, yne.cu, side.ox, alc.ox, alc.na, phenol.base, phenol.acyl, thiol.base, thiol.disulfide, co.tollens, co.cannizzaro,
+    // co.enols, co.iodoform, acid.salt, amine.protonate, amine.hno2, diazo.sub, nitro.reduce.
+    if (!res.mech && RULES[rule].mech) res.mech = RULES[rule].mech;
+    return res;
   }
 
   function need(rs, n, rule) {
@@ -1244,6 +1250,7 @@
       const ng = g.without([a.o]);
       attachGroup(ng, ng.map[a.c], X);
       out.add(ng, true);
+      out.mech(al.every((x) => cls(g, x.c) < 2) ? 'SN2' : 'SN1'); // primary alcohols SN2, secondary and tertiary SN1
       const k = cNbrs(g, a.c).length;
       if (isConj(g, a.c) && k >= 1) transpose(g, a.c, a.o, 'X', X).forEach((t) => out.add(t, true)); // allylic cation: both ends
     });
@@ -1422,6 +1429,7 @@
     if (!eth.length) return none(T('Reikia eterio.', 'An ether is needed.'));
     const out = new Out();
     let any = false;
+    let mechV = 'SN2';
     eth.forEach((e) => {
       const cand = [e.c1, e.c2].filter((c) => !ar(g, c) && sp3C(g, c));
       if (!cand.length) return;
@@ -1429,6 +1437,7 @@
       const hind = (c) => cNbrs(g, c).length;
       const score = (c) => (sn1(c) ? 100 + cls(g, c) : -hind(c));
       const best = Math.max.apply(null, cand.map(score));
+      mechV = best >= 100 ? 'SN1' : 'SN2';
       cand.forEach((hal) => {
         const alc = hal === e.c1 ? e.c2 : e.c1;
         const ng = g.clone();
@@ -1446,6 +1455,7 @@
       });
     });
     if (!any) return none(T('Diarileteriai su HI ar HBr neskyla.', 'Diaryl ethers are not cleaved by HI or HBr.'));
+    out.mech(mechV);
     return out.note(T('Jei gali susidaryti stabilus karbokatijonas (tretinis, alilo, benzilo) – SN1: halogenidas prie šios dalies; kitaip SN2: halogenidas prie mažiau užstoto C. Arilo C–O ryšys neskyla (gaunamas fenolis).', 'If a stable cation can form (tertiary, allylic, benzylic) the cleavage is SN1 and the halide ends up on that part; otherwise SN2 and the halide ends up on the less hindered carbon. An aryl C-O bond is not cleaved (a phenol results).')).result();
   });
 
