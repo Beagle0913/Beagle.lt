@@ -497,7 +497,7 @@
     const below = lines(it.below, lang).map(parseLabel);
     let lw = 0;
     above.concat(below).forEach((p) => { lw = Math.max(lw, partsWidth(p, LABFS)); });
-    const w = Math.max(it.arrow === '↔' ? 48 : ARROW_MIN, Math.ceil(lw + 18));
+    const w = Math.max(it.arrow === '↔' ? 48 : ARROW_MIN, Math.ceil(lw * 1.1 + 36));
     const eq = it.arrow === '⇌';
     return {
       kind: 'arrow', type: it.arrow || '→', w, above, below,
@@ -537,7 +537,8 @@
       out.push(headR(x1, cy, 1, 0));
     }
     const eq = b.type === '⇌';
-    const lab = (parts, y) => node('text', { class: 'lab', x: num(x + b.w / 2), y: num(y), 'text-anchor': 'middle', 'font-size': LABFS, fill: INK }, partsKids(parts, LABFS));
+    const labx = b.type === '→' ? x + 5 + (b.w - 10 - 12) / 2 : x + b.w / 2;
+    const lab = (parts, y) => node('text', { class: 'lab', x: num(labx), y: num(y), 'text-anchor': 'middle', 'font-size': LABFS, fill: INK }, partsKids(parts, LABFS));
     b.above.forEach((p, j) => out.push(lab(p, cy - 10 - (eq ? 4 : 0) - (b.above.length - 1 - j) * 16)));
     b.below.forEach((p, j) => out.push(lab(p, cy + 22 + (eq ? 4 : 0) + j * 16)));
     return out;
@@ -568,10 +569,13 @@
       }
       return connectorBox(it, lang);
     });
-    // groups: a molecule with the connectors that follow it (a row breaks before a molecule)
+    // units: a molecule with the arrow after it; a plus stays with the molecule after it.
+    // A row breaks before a plus or before a molecule that does not follow a plus.
     const groups = [];
-    boxes.forEach((b) => {
-      if (b.kind === 'mol' || !groups.length) groups.push([b]);
+    boxes.forEach((b, i) => {
+      const prev = i > 0 ? boxes[i - 1] : null;
+      const starts = !groups.length || b.kind === 'plus' || (b.kind === 'mol' && prev.kind !== 'plus');
+      if (starts) groups.push([b]);
       else groups[groups.length - 1].push(b);
     });
     const maxW = +spec.maxWidth > 0 ? +spec.maxWidth : Infinity;

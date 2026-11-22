@@ -294,3 +294,63 @@ test('a lone pair arrow leaves away from the atom label', () => {
   const lead = [p[2] - p[0], p[3] - p[1]];
   assert.ok(out[0] * lead[0] + out[1] * lead[1] > 0, 'first segment points away from the atom');
 });
+
+// ---- scheme polish: labels, row breaks, height --------------------------------
+function rowsOf(d) { // y of each molecule group
+  const ys = [];
+  walk(d.svg, (v) => { if (v.t === 'g' && v.a && v.a.class === 'mol-item') { const m = /translate\(([-\d.]+) ([-\d.]+)\)/.exec(v.a.transform); ys.push(+m[2]); } });
+  return ys;
+}
+
+test('arrow labels stay clear of the arrowhead', () => {
+  for (const above of ['KMnO4, H3O+', 'H2SO4', 'CH3CH2OH, conc. H2SO4']) {
+    const d = V.scheme({ items: [{ smi: 'CC' }, { arrow: '→', above, below: 'heat' }, { smi: 'CC' }] });
+    const heads = []; const labs = [];
+    walk(d.svg, (v) => { if (v.t === 'path' && classes(v).includes('rhead')) heads.push(v); if (v.t === 'text' && classes(v).includes('lab')) labs.push(v); });
+    const tipX = Math.max.apply(null, heads[0].a.d.match(/-?\d+(\.\d+)?/g).map(Number).filter((_, i) => i % 2 === 0));
+    const tailX = Math.min.apply(null, heads[0].a.d.match(/-?\d+(\.\d+)?/g).map(Number).filter((_, i) => i % 2 === 0));
+    labs.forEach((l) => {
+      const parts = textOf(l).length;
+      const w = parts * 14 * 0.5;
+      assert.ok(+l.a.x + w / 2 <= tailX, above + ': label right edge ' + (+l.a.x + w / 2) + ' vs head ' + tailX);
+    });
+    assert.ok(tipX > tailX);
+  }
+});
+
+test('wrapped scheme never breaks after a plus or before an arrow', () => {
+  const items = [{ smi: 'CCCCO' }, { plus: true }, { smi: 'CCCC(=O)O' }, { arrow: '⇌', above: 'H+' }, { smi: 'CCCCOC(=O)CCC' }, { plus: true }, { smi: 'O' }];
+  for (const w of [120, 180, 240, 300, 380]) {
+    const d = V.scheme({ items, maxWidth: w });
+    const plusY = []; const molY = rowsOf(d);
+    walk(d.svg, (v) => { if (v.t === 'path' && classes(v).includes('plus')) plusY.push(+v.a.d.match(/-?\d+(\.\d+)?/g)[1]); });
+    // each plus must sit in the row of the molecule that follows it: that molecule's box spans the plus y
+    const boxes = [];
+    let i = 0;
+    walk(d.svg, (v) => { if (v.t === 'g' && v.a && v.a.class === 'mol-item') { boxes.push([molY[i], molY[i] + D.molecule(items.filter((x) => x.smi)[i].smi).height]); i++; } });
+    const follow = [boxes[1], boxes[3]]; // the molecules after the two plus signs
+    plusY.forEach((y, k) => assert.ok(y >= follow[k][0] - 1 && y <= follow[k][1] + 1, 'plus ' + k + ' at ' + y + ' follows its molecule, width ' + w));
+  }
+});
+
+test('scheme and mechanism heights contain every child', () => {
+  const items = [{ smi: 'CC(=O)O' }, { arrow: '⇌', above: 'H+\nheat', below: 'CH3OH\nreflux' }, { smi: 'CC(=O)OC' }, { plus: true }, { smi: '[OH-]' }];
+  for (const d of [V.scheme({ items }), V.scheme({ items, maxWidth: 200 }), V.mechanism({ scheme: { items }, arrows: [{ from: { m: 2, lp: 0 }, to: { m: 1, a: 1 } }] })]) {
+    let top = Infinity; let bottom = -Infinity; let right = -Infinity;
+    const shift = [0, 0];
+    walk(d.svg, (v) => { if (v.t === 'g' && v.a && v.a.transform && v.a.class !== 'mol-item') { const m = /translate\(([-\d.]+) ([-\d.]+)\)/.exec(v.a.transform); shift[0] = +m[1]; shift[1] = +m[2]; } });
+    walk(d.svg, (v) => {
+      if (v.t === 'text' && classes(v).includes('lab')) { top = Math.min(top, +v.a.y - 11 + shift[1]); bottom = Math.max(bottom, +v.a.y + 4 + shift[1]); }
+      if (v.t === 'g' && v.a && v.a.class === 'mol-item') {
+        const m = /translate\(([-\d.]+) ([-\d.]+)\)/.exec(v.a.transform);
+        top = Math.min(top, +m[2] + shift[1]);
+      }
+    });
+    const mh = items.filter((x) => x.smi).map((x) => D.molecule(x.smi, x.opts).height);
+    let i = 0;
+    walk(d.svg, (v) => { if (v.t === 'g' && v.a && v.a.class === 'mol-item') { const m = /translate\(([-\d.]+) ([-\d.]+)\)/.exec(v.a.transform); bottom = Math.max(bottom, +m[2] + mh[i++] + shift[1]); } });
+    assert.ok(top >= -0.01, 'top ' + top);
+    assert.ok(bottom <= d.height + 0.01, 'bottom ' + bottom + ' vs height ' + d.height);
+    assert.ok(d.svg.a.viewBox === '0 0 ' + d.width + ' ' + d.height);
+  }
+});
