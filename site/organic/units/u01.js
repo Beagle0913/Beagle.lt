@@ -39,7 +39,7 @@
     ether: { lt: 'eteris', en: 'ether', sym: '–OR', rank: 31 },
     sulfide: { lt: 'sulfidas', en: 'sulfide', sym: '–SR', rank: 32 },
     nitro: { lt: 'nitrojunginys', en: 'nitro compound', sym: '–NO2', rank: 33 },
-    arene: { lt: 'arenas (aromatinis žiedas)', en: 'arene (aromatic ring)', sym: '', rank: 40 },
+    arene: { lt: 'aromatinis žiedas (arenas ar heteroarenas)', en: 'aromatic ring (arene or heteroarene)', sym: '', rank: 40 },
     alkane: { lt: 'alkanas (cikloalkanas)', en: 'alkane (cycloalkane)', sym: '', rank: 50 }
   };
   const gkey = (type) => (/^amine/.test(type) ? 'amine' : type);
@@ -97,7 +97,7 @@
     let lt, en;
     if (!keys.length) { lt = 'Funkcinių grupių nėra: pavadinimą lemia grandinė ar žiedas ir pakaitai.'; en = 'There is no functional group: the chain or ring and the substituents decide the name.'; }
     else if (top) {
-      lt = 'Funkcinės grupės: ' + listLt(keys) + '. Vyriausioji: ' + G[top].lt + ' – ji nusako priesagą ar galūnę' + (keys.length > 1 ? ', kitos grupės rašomos priešdėliais' : '') + '.';
+      lt = 'Funkcinės grupės: ' + listLt(keys) + '. Vyriausioji: ' + G[top].lt + ' – ji nusako priesagą ar galūnę' + (keys.length > 1 ? ', kitos grupės eina priešdėliais' : '') + '.';
       en = 'Functional groups: ' + listEn(keys) + '. Senior: ' + G[top].en + ' – it gives the suffix or ending' + (keys.length > 1 ? ', the other groups are written as prefixes' : '') + '.';
     } else {
       lt = 'Funkcinės grupės: ' + listLt(pre) + '. Jos pavadinime rašomos tik priešdėliais, todėl šaknį duoda angliavandenilis (alkanas ar arenas), o grupės tampa pakaitais.';
@@ -106,7 +106,7 @@
     return {
       prompt: prompt || t('Pavadinkite junginį pagal IUPAC nomenklatūrą.', 'Name the compound by IUPAC nomenclature.'),
       kind: 'name', mol: { smi }, answer: { smi }, hint: nameHint,
-      solution: t(lt + ' Pavadinimas: ' + n.lt + '.', en + ' Name: ' + n.en + '.')
+      solution: t(lt + ' Visas pavadinimas: ' + n.lt + '.', en + ' Name: ' + n.en + '.')
     };
   }
   /* ---------- pools of compounds (SMILES) ---------- */
@@ -198,12 +198,12 @@
 
   const HET = ['CCCCl', 'CC(C)Br', 'CC(C)(C)Cl', 'CC(C)CCl', 'CCC(C)Br', 'ClCCl', 'BrCCBr', 'CC(Cl)Cl', 'CCCCCI', 'CC(C)CCI', 'CCC(C)(C)Br', 'ClC(Cl)Cl',
     'CCCO', 'CC(C)O', 'CC(C)CO', 'CCC(C)O', 'CC(C)(C)O', 'CCCCO', 'CC(O)CC(C)C', 'OC1CCCCC1', 'CC1CCCCC1O', 'OCCCO', 'CC(O)C(C)O', 'OCCO', 'CCC(O)CC', 'CC(C)CCO',
-    'COC', 'CCOCC', 'CCOC(C)C', 'COCCC', 'COC(C)(C)C', 'CCOCCC', 'COC(C)C',
+    'COC', 'CCOC', 'CCOCC', 'CCOC(C)C', 'COCCC', 'COC(C)(C)C', 'CCOCCC', 'COC(C)C',
     'CCS', 'CCCS', 'CC(C)S', 'CSC', 'CCSC', 'SC1CCCC1', 'Sc1ccccc1', 'CCCSC', 'CC(C)SC', 'SCCS'];
 
   const AMINES = ['CCN', 'CCCN', 'CC(C)N', 'CCNC', 'CN(C)C', 'CCN(C)C', 'CCNCC', 'CCCNC', 'CC(C)NC', 'NCCCCN', 'NCCCN', 'Nc1ccccc1', 'CCN(CC)c1ccccc1', 'NCc1ccccc1',
     'Cc1ccc(N)cc1', 'CC(C)CN', 'NC1CCCCC1', 'CN(C)C1CCCCC1', 'Nc1ccc(cc1N)C(O)=O', 'CCCN(C)C', 'CC(C)(C)N', 'CC(C)N(C)C', 'CCCCNC', 'CCN(CC)CC',
-    'CNc1ccccc1', 'Cc1cccc(N)c1', 'NCCN', 'CCCCCN', 'CCC(C)NC'];
+    'CNc1ccccc1', 'Cc1cccc(N)c1', 'NCCN', 'CCCCCN', 'CCC(C)NC', 'CCCNCC'];
 
   // derivatives of carboxylic acids, carbonyl compounds, nitriles
   const ACYL = ['CCC(O)=O', 'CCCC(O)=O', 'CC(C)C(O)=O', 'CC(C)CC(O)=O', 'CCCCC(O)=O', 'OC(=O)CC(C)CC(O)=O', 'OC(=O)CCCCC(O)=O', 'OC(=O)C1CCCCC1', 'OC(=O)C1=CCCC1',
@@ -225,17 +225,17 @@
     'CC(=O)CCO', 'O=CCCO', 'CC(O)CC=O', 'OCC(O)C(O)C(O)C(O)C=O', 'N#CCC(O)=O', 'CCOC(=O)CC(C)=O', 'COC(=O)CCC(C)=O', 'CC(=O)C=C', 'C=CC=O', 'NCCC(N)=O', 'OCCC(N)=O',
     'ClCC(Cl)=O', 'NCCS', 'SCCO', 'O=C1CCC(O)CC1', 'NC1CCC(O)CC1', 'Nc1ccc(cc1)C(O)=O', 'Oc1ccccc1C(O)=O', 'O=Cc1ccc(O)cc1', 'Nc1ccc(cc1)S(O)(=O)=O', 'OC(=O)c1ccc(cc1)S(O)(=O)=O',
     'N#Cc1ccc(cc1)C(O)=O', 'Nc1ccc(O)cc1', 'COC(=O)c1ccccc1OC', 'CC(C)C(Cl)C(C)=C', 'CC(O)CC#CC', 'CC(O)C(C)CC#C', 'O=CC1CCC(O)C(=O)C1', 'N#Cc1ccc(C=O)cc1', 'OC(=O)C1CCC(CC1)C(N)=O',
-    'CC(C)(O)CC(O)=O', 'NC(=O)CC(O)CC(N)=O', 'CC(=O)CC(=O)OC', 'ClCCCC(O)=O', 'OCC(O)CC=O', 'CCC(O)C(O)=O', 'C=CCC(=O)CC'];
+    'CC(C)(O)CC(O)=O', 'NC(=O)CC(O)CC(N)=O', 'CC(=O)CC(=O)OC', 'ClCCCC(O)=O', 'OCC(O)CC=O', 'CCC(O)C(O)=O', 'C=CCC(=O)CC', 'OCC(O)=O', 'CC(C)(S)CCO'];
 
   // classification by the type of the carbon chain: [smi, ring (0 none, 1 carbo, 2 hetero), saturation (0 saturated, 1 unsaturated, 2 aromatic), class key or null]
   const CHAINS = [
     ['CCCC', 0, 0, 'alkane'], ['CC(C)CC', 0, 0, 'alkane'], ['CCCCCC', 0, 0, 'alkane'], ['CCCO', 0, 0, 'alcohol'], ['CCCCCl', 0, 0, 'halide'], ['CCCN', 0, 0, 'amine1'], ['CC(C)SC', 0, 0, 'sulfide'],
-    ['CC=C', 0, 1, 'alkene'], ['CC#C', 0, 1, 'alkyne'], ['C=CCC=C', 0, 1, 'alkene'], ['CC=CCO', 0, 1, 'alcohol'], ['C=CCCl', 0, 1, 'halide'], ['CC#CC', 0, 1, 'alkyne'], ['C=CC=C', 0, 1, 'alkene'],
+    ['CC=C', 0, 1, 'alkene'], ['CC#C', 0, 1, 'alkyne'], ['C=CCC=C', 0, 1, 'alkene'], ['CC=CCO', 0, 1, 'alcohol'], ['C=CCCl', 0, 1, 'alkene'], ['CC#CC', 0, 1, 'alkyne'], ['C=CC=C', 0, 1, 'alkene'],
     ['C1CCCC1', 1, 0, 'alkane'], ['CC1CCCCC1', 1, 0, 'alkane'], ['OC1CCCCC1', 1, 0, 'alcohol'], ['NC1CCCCC1', 1, 0, 'amine1'], ['ClC1CCCC1', 1, 0, 'halide'], ['C1CC1', 1, 0, 'alkane'], ['C1CCCCCCC1', 1, 0, 'alkane'],
     ['C1=CCCCC1', 1, 1, 'alkene'], ['C1=CCCC1', 1, 1, 'alkene'], ['CC1=CCCCC1', 1, 1, 'alkene'], ['C1=CC=CCC1', 1, 1, 'alkene'], ['OC1C=CCCC1', 1, 1, 'alcohol'],
     ['c1ccccc1', 1, 2, 'arene'], ['Cc1ccccc1', 1, 2, 'arene'], ['Oc1ccccc1', 1, 2, 'phenol'], ['Nc1ccccc1', 1, 2, 'amine1'], ['c1ccc2ccccc2c1', 1, 2, 'arene'], ['OC(=O)c1ccccc1', 1, 2, 'acid'],
     ['C1CCOC1', 2, 0, 'ether'], ['C1CCNCC1', 2, 0, 'amine2'], ['C1CCNC1', 2, 0, 'amine2'], ['C1CCOCC1', 2, 0, 'ether'], ['C1CCSC1', 2, 0, 'sulfide'],
-    ['C1=CNCC1', 2, 1, 'amine2'], ['C1=COCCC1', 2, 1, 'ether'], ['C1=COCC1', 2, 1, 'ether'],
+    ['C1=CNCC1', 2, 1, 'amine2'], ['C1=COCCC1', 2, 1, 'alkene'], ['C1=COCC1', 2, 1, 'alkene'],
     ['c1ccoc1', 2, 2, null], ['c1ccsc1', 2, 2, null], ['c1cc[nH]c1', 2, 2, null], ['c1ccncc1', 2, 2, null], ['c1cncnc1', 2, 2, null], ['c1c[nH]cn1', 2, 2, null]
   ];
 
@@ -256,6 +256,7 @@
   ];
 
   // trivial names of the course: [smiles, lt, en, source]
+  const SYS_EN = { 'Nc1ccccc1': 'benzenamine', 'O=C(Cl)c1ccccc1': 'benzenecarbonyl chloride' };
   const TRIVP = [
     ['C=C', 'etilenas', 'ethylene', 'L1 p51'], ['C#C', 'acetilenas', 'acetylene', 'L1 p51'], ['ClC(Cl)Cl', 'chloroformas', 'chloroform', 'S1.11'],
     ['ClC(Cl)(Cl)Cl', 'anglies tetrachloridas', 'carbon tetrachloride', 'S1.11'], ['CC(C)=O', 'acetonas', 'acetone', 'L1 p51'], ['C=O', 'formaldehidas', 'formaldehyde', 'L1 p51'],
@@ -263,7 +264,7 @@
     ['OC(=O)C(O)=O', 'oksalo rūgštis', 'oxalic acid', 'S1.14'], ['OC(=O)CC(O)=O', 'malono rūgštis', 'malonic acid', 'S1.14'], ['OC(=O)CCC(O)=O', 'gintaro rūgštis', 'succinic acid', 'S1.14'],
     ['OC(=O)CCCC(O)=O', 'glutaro rūgštis', 'glutaric acid', 'S1.14'], ['CC(O)C(O)=O', 'pieno rūgštis', 'lactic acid', 'S1.14'], ['OC(=O)CC(O)C(O)=O', 'obuolių rūgštis', 'malic acid', 'S1.14'],
     ['CC(=O)C(O)=O', 'piruvo rūgštis', 'pyruvic acid', 'S1.14'], ['CC(=O)CC(O)=O', 'acetilacto rūgštis', 'acetoacetic acid', 'S1.14'], ['OC(=O)CC(=O)C(O)=O', 'oksalilacto rūgštis', 'oxaloacetic acid', 'S1.14'],
-    ['OC(=O)CCC(=O)C(O)=O', 'α-ketoglutaro rūgštis', 'α-ketoglutaric acid', 'S1.14'], ['OCC(O)CO', 'glicerolis', 'glycerol', 'T p11'], ['CCOCC', 'dietileteris', 'diethyl ether', 'S1.11'],
+    ['OC(=O)CCC(=O)C(O)=O', 'α-ketoglutaro rūgštis', 'α-ketoglutaric acid', 'S1.14'], ['OC(=O)C(O)C(O)C(O)=O', 'vyno rūgštis', 'tartaric acid', 'S1.14'], ['OCC(O)CO', 'glicerolis', 'glycerol', 'T p11'], ['CCOCC', 'dietileteris', 'diethyl ether', 'S1.11'],
     ['CC(C)O', 'izopropanolis', 'isopropanol', 'S1.11'], ['CCOC(C)=O', 'etilacetatas', 'ethyl acetate', 'S1.11'], ['CN(C)C=O', 'dimetilformamidas', 'dimethylformamide', 'S1.11'],
     ['CC(=O)OC(C)=O', 'acetanhidridas', 'acetic anhydride', 'L1 p46'], ['CC(=O)Cl', 'acetilchloridas', 'acetyl chloride', 'L1 p45'], ['Nc1ccccc1', 'anilinas', 'aniline', 'L1 p51'],
     ['Cc1ccccc1', 'toluenas', 'toluene', 'T p10'], ['OCc1ccccc1', 'benzilo alkoholis', 'benzyl alcohol', 'L1 p51'], ['OC(=O)C=Cc1ccccc1', 'cinamono rūgštis', 'cinnamic acid', 'L1 p51'],
@@ -600,7 +601,7 @@
           list: [
             t('Nustatykite vyriausiąją funkcinę grupę: ji suteikia priesagą. Kitos grupės vadinamos priešdėliais.', 'Find the senior functional group: it provides the suffix. The other groups are named by prefixes.'),
             t('Raskite pagrindinę grandinę ar žiedą pagal kriterijus: a) daugiausia funkcinių grupių, b) daugiausia dvigubųjų ir trigubųjų ryšių, c) ilgiausia grandinė, d) daugiausia pakaitų, kurie gali stovėti tik prieš šaknį, ir angliavandenilių radikalų.', 'Find the main chain or ring by the criteria: a) the most functional groups, b) the most double and triple bonds, c) the longest chain, d) the most substituents that can stand only in front of the root, and hydrocarbon radicals.'),
-            t('Sunumeruokite grandinę taip, kad vyriausioji grupė (jei nėra – pakaitai) gautų mažiausią numerį.', 'Number the chain so that the senior group (if none, the substituents) gets the lowest number.'),
+            t('Grandinę sunumeruokite taip, kad vyriausiajai grupei atitektų mažiausias numeris; jei jos nėra, pirmiausia mažiausią numerį gauna dvigubasis ar trigubasis ryšys, po to pakaitai. Kai dvi kryptys skiriasi, lyginami lokantų rinkiniai ir laimi tas, kurio pirmasis besiskiriantis lokantas mažesnis (2,3,6, o ne 3,6,7).', 'Number the chain so that the senior group gets the lowest number; if there is none, the double or triple bond comes first, then the substituents. When the two directions differ, compare the sets of locants: the winner has the lower number at the first point of difference (2,3,6, not 3,6,7).'),
             t('Pavadinkite grandinę ir grupę: sotumas nusakomas priesagomis -an, -en, -in.', 'Name the chain and the group: the saturation is shown by the endings -an, -en, -in.'),
             t('Išvardykite pakaitus priešdėliais abėcėlės tvarka; vienodiems rašomi $di$-, $tri$-, $tetra$-.', 'List the substituents as prefixes alphabetically; identical ones take $di$-, $tri$-, $tetra$-.')
           ],
@@ -627,7 +628,7 @@
               [f('$–CHO$'), t('formil-; okso-', 'formyl-; oxo-'), t('-karbaldehidas; -alis', '-carbaldehyde; -al')],
               [f('$C=O$'), t('okso-', 'oxo-'), t('-onas', '-one')],
               [f('$–OH$'), t('hidroksi-', 'hydroxy-'), t('-olis', '-ol')],
-              [f('$–SH$'), t('merkapto-', 'mercapto-'), t('-tiolis', '-thiol')],
+              [f('$–SH$'), t('merkapto-', 'mercapto- (also sulfanyl-)'), t('-tiolis', '-thiol')],
               [f('$–NH2$'), t('amino-', 'amino-'), t('-aminas', '-amine')],
               [f('$C=C$'), t('–', '–'), t('-enas', '-ene')],
               [f('$C≡C$'), t('–', '–'), t('-inas', '-yne')]
@@ -682,8 +683,8 @@
       blocks: [
         { h: t('Angliavandeniliai, halogenidai, alkoholiai, aminai', 'Hydrocarbons, halides, alcohols, amines') },
         {
-          p: t('Alkano šaknis nusako anglių skaičių, o priesaga – sotumą: -an, -en, -in. Pakaitų ir dvigubųjų ryšių vieta nurodoma skaičiumi (dvigubajam ar trigubajam ryšiui – mažesniu). Ciklo anglys numeruojamos nuo to atomo, kur yra pakaitas ar ryšys, kad lokantai būtų kuo mažesni; cikloalkene dvigubasis ryšys gauna 1 ir 2.',
-            'The root of an alkane gives the number of carbons and the ending the saturation: -ane, -ene, -yne. The place of substituents and double bonds is given by a number (for a double or triple bond the lower one). The ring carbons are numbered from the atom with a substituent or bond so the locants are as low as possible; in a cycloalkene the double bond gets 1 and 2.'),
+          p: t('Alkano šaknis nusako anglių skaičių, o priesaga – sotumą: -an, -en, -in. Pakaitų ir dvigubųjų ryšių vieta nurodoma skaičiumi (dvigubajam ar trigubajam ryšiui – mažesniu). Ciklo anglys numeruojamos nuo to atomo, kur yra pakaitas ar ryšys, kad lokantai būtų kuo mažesni; cikloalkene dvigubasis ryšys gauna 1 ir 2. Cikle vyriausiosios grupės anglis gauna numerį 1, po to dvigubasis ryšys: 4-metil-3-cikloheksenonas.',
+            'The root of an alkane gives the number of carbons and the ending the saturation: -ane, -ene, -yne. The place of substituents and double bonds is given by a number (for a double or triple bond the lower one). The ring carbons are numbered from the atom with a substituent or bond so the locants are as low as possible; in a cycloalkene the double bond gets 1 and 2. In a ring the carbon of the senior group is C-1, then the double bond: 4-methylcyclohex-3-en-1-one (L1 p57).'),
           src: 'L1 p26-p29, p55'
         },
         {
@@ -692,7 +693,7 @@
         },
         {
           p: t('Halogenas visada rašomas priešdėliu: 2-jodpropanas. Alkoholio galūnė -olis, tiolio – -tiolis, eterio ir sulfido grupės pavadinamos priešdėliais (alkoksi-, alkiltio-): 2-metoksipropanas, metiltioetanas. Aminas turi galūnę -aminas, o pakaitus ant azoto žymi raidė $N$: $N$-metiletanaminas, $N,N$-dimetiletanaminas.',
-            'A halogen is always a prefix: 2-iodopropane. The ending of an alcohol is -ol, of a thiol -thiol, and ethers and sulfides are named with prefixes (alkoxy-, alkylthio-): 2-methoxypropane, methylthioethane. An amine takes the ending -amine, and the substituents on nitrogen are marked by the letter $N$: $N$-methylethanamine, $N,N$-dimethylethanamine.'),
+            'A halogen is always a prefix: 2-iodopropane. The ending of an alcohol is -ol, of a thiol -thiol, and ethers and sulfides are named with prefixes (alkoxy-, alkylthio-): 2-methoxypropane, methylthioethane (also (methylsulfanyl)ethane). An amine takes the ending -amine, and the substituents on nitrogen are marked by the letter $N$: $N$-methylethanamine, $N,N$-dimethylethanamine.'),
           src: 'L1 p30-p37'
         },
         {
@@ -714,7 +715,7 @@
         },
         {
           rule: t('Esterio pavadinimas prasideda alkilo grupe (alkoholio dalimi), o baigiasi rūgšties dalimi su galūne -oatas: etilbutanoatas. Druskos pavadinime pirmiau rašomas metalas: natrio propanoatas. Kai grupė prijungta prie žiedo, jos anglis nėra grandinės dalis ir priesaga gauna -karbo-: benzenkarboksirūgštis, cikloheksankarboksamidas, benzenkarbonitrilas, benzenkarbonilchloridas.',
-            'The name of an ester starts with the alkyl group (the alcohol part) and ends with the acid part with the ending -oate: ethyl butanoate. In the name of a salt the metal comes first: sodium propanoate. When the group is attached to a ring, its carbon is not part of the ring and the suffix gets -carbo-: benzenecarboxylic acid, cyclohexanecarboxamide, benzenecarbonitrile, benzenecarbonyl chloride.'),
+            'The name of an ester starts with the alkyl group (the alcohol part) and ends with the acid part with the ending -oate: ethyl butanoate. In the name of a salt the metal comes first: sodium propanoate. When the group is attached to a ring, its carbon is not part of the ring and the suffix gets -carbo-: cyclohexanecarboxylic acid, cyclohexanecarboxamide, cyclohexanecarbonitrile. For benzene the retained names are used in English: benzoic acid, benzamide, benzonitrile, benzoyl chloride, methyl benzoate (the Lithuanian course writes benzenkarboksirūgštis, benzenkarbonitrilas).'),
           src: 'L1 p41, p42, p43, p44, p45'
         },
         {
@@ -737,8 +738,8 @@
               { mol: { smi: 'N#Cc1ccc(C=O)cc1', opts: { numbers: { 2: '1', 3: '2', 4: '3', 5: '4' } } } }],
             steps: [
               [{ p: t('Grupės: nitrilas $–C≡N$ ir aldehidas $–CHO$. Nitrilai vyresni už aldehidus, todėl vyriausioji grupė – nitrilas, o aldehidas bus priešdėlis formil-.', 'Groups: the nitrile $–C≡N$ and the aldehyde $–CHO$. Nitriles outrank aldehydes, so the senior group is the nitrile and the aldehyde becomes the prefix formyl-.') }],
-              [{ p: t('Abi grupės prijungtos prie benzeno žiedo, todėl priesaga gauna -karbo-: benzenkarbonitrilas. Nitrilo prijungta anglis žiede yra C-1.', 'Both groups are attached to the benzene ring, so the suffix gets -carbo-: benzenecarbonitrile. The ring carbon carrying the nitrile is C-1.') }],
-              [{ p: t('Formilas yra priešingame žiedo atome, C-4: 4-formilbenzenkarbonitrilas.', 'The formyl is on the opposite ring carbon, C-4: 4-formylbenzenecarbonitrile.') }]
+              [{ p: t('Abi grupės prijungtos prie benzeno žiedo, todėl priesaga gauna -karbo-: benzenkarbonitrilas. Nitrilo prijungta anglis žiede yra C-1.', 'Both groups are attached to the benzene ring; the nitrile gives the parent name benzonitrile (systematically benzenecarbonitrile). The ring carbon carrying the nitrile is C-1.') }],
+              [{ p: t('Formilas yra priešingame žiedo atome, C-4: 4-formilbenzenkarbonitrilas.', 'The formyl is on the opposite ring carbon, C-4: 4-formylbenzonitrile.') }]
             ]
           },
           claims: [{ name: ['N#Cc1ccc(C=O)cc1', t('4-formilbenzenkarbonitrilas', '4-formylbenzonitrile')] }]
@@ -802,7 +803,8 @@
               [{ smi: 'CC(=O)C(O)=O' }, t('piruvo rūgštis (piruvatai)', 'pyruvic acid (pyruvates)'), t('2-oksopropano rūgštis', '2-oxopropanoic acid')],
               [{ smi: 'CC(=O)CC(O)=O' }, t('acetilacto rūgštis (acetilacetatai)', 'acetoacetic acid (acetoacetates)'), t('3-oksobutano rūgštis', '3-oxobutanoic acid')],
               [{ smi: 'OC(=O)CC(=O)C(O)=O' }, t('oksalilacto rūgštis (oksalilacetatai)', 'oxaloacetic acid (oxaloacetates)'), t('2-oksobutano dirūgštis', '2-oxobutanedioic acid')],
-              [{ smi: 'OC(=O)CCC(=O)C(O)=O' }, t('α-ketoglutaro rūgštis (α-ketoglutaratai)', 'α-ketoglutaric acid (α-ketoglutarates)'), t('2-oksopentano dirūgštis', '2-oxopentanedioic acid')]
+              [{ smi: 'OC(=O)CCC(=O)C(O)=O' }, t('α-ketoglutaro rūgštis (α-ketoglutaratai)', 'α-ketoglutaric acid (α-ketoglutarates)'), t('2-oksopentano dirūgštis', '2-oxopentanedioic acid')],
+              [{ smi: 'OC(=O)CC(O)(CC(O)=O)C(O)=O' }, t('citrinų rūgštis (citratai)', 'citric acid (citrates)'), t('2-hidroksipropan-1,2,3-trikarboksirūgštis', '2-hydroxypropane-1,2,3-tricarboxylic acid')]
             ]
           },
           src: 'S1.14, T p12'
@@ -1189,12 +1191,13 @@
           });
         }
         const ns = nameStep(ctx, smi);
-        if (ns) steps.push(ns);
+        const nmv = nameOf(ctx, smi);
+        if (ns && nmv && nmv.en.length <= 60 && nmv.lt.length <= 60) steps.push(ns);
         return {
           q: [{ p: t('Šios fiziologiškai aktyvios medžiagos formulė pateikta žemiau.', 'The formula of this physiologically active compound is shown below.') }, { mol: { smi }, caption: t(e[1], e[2]) }],
           steps,
           why: t('Funkcinė grupė lemia junginio chemines savybes. Jei grupių yra kelios, junginys priskiriamas klasei pagal vyriausiąją, o kitos paminimos priešdėliais.', 'The functional group sets the chemical properties of a compound. If there are several, the compound is assigned to the class of the senior one, and the others are mentioned in prefixes.'),
-          src: 'L1 p25, p47, p48, p52, S1.6'
+          src: 'L1 p25, p47, p48, p52, S1.6 (drug names are shown, not asked, when they are long)'
         };
       }
     },
@@ -1240,7 +1243,7 @@
               prompt: t('Kokiu priešdėliu pavadinime išreiškiama ' + d.lt + '?', 'Which prefix expresses ' + d.en + ' in the name?'),
               kind: 'choice', options: [pr].concat(wrong).map((x) => tx(x[0] + '-', x[1] + '-')), answer: 0,
               hint: t('Jaunesnioji grupė, negalinti būti priesaga, pavadinime rašoma priešdėliu: $–OH$, $–NH2$, $=O$, $–SH$, halogenai turi savo priešdėlius.', 'A junior group that cannot be the suffix is written as a prefix: $–OH$, $–NH2$, $=O$, $–SH$ and the halogens each have their own.'),
-              solution: t('Šios grupės priešdėlis: ' + pr[0] + '-.', 'The prefix of this group: ' + pr[1] + '-.')
+              solution: t('Šios grupės priešdėlis: ' + pr[0] + '-.', 'The prefix of this group: ' + pr[1] + '-' + (pr[1] === 'mercapto' ? ' (IUPAC 2013: sulfanyl-)' : '') + '.')
             });
           }
         }
@@ -1340,7 +1343,7 @@
           const items = Object.keys(by).map((k) => by[k]).sort((a, b) => (a.s.k < b.s.k ? -1 : 1) * (o.rev ? -1 : 1));
           const pre = items.map((g) => g.loc.sort(asc).join(',') + '-' + (o.noMult ? '' : MULT[g.loc.length]) + g.s[lang]).join('-');
           const stem = STEMS[lang][n];
-          if (lang === 'lt') return (pre ? pre + '-' : '') + (d ? d + '-' + stem + 'enas' : stem + 'anas');
+          if (lang === 'lt') return d ? (pre ? pre + '-' : '') + d + '-' + stem + 'enas' : pre + stem + 'anas';
           return pre + (d ? stem + '-' + d + '-ene' : stem + 'ane');
         }
         let pick = null;
@@ -1569,9 +1572,9 @@
             },
             {
               prompt: t('Suporuokite tuos pačius junginius su jų sisteminiais (IUPAC) pavadinimais.', 'Now match the same compounds with their systematic (IUPAC) names.'),
-              kind: 'match', answer: { left, right: nms.map((x) => ({ text: t(x.lt, x.en) })), pairs: [0, 1, 2, 3] },
+              kind: 'match', answer: { left, right: nms.map((x, i) => ({ text: t(x.lt, SYS_EN[items[i][0]] || x.en) })), pairs: [0, 1, 2, 3] },
               hint: t('Sisteminis pavadinimas nusako sandarą: ieškokite šaknies (anglių skaičius) ir galūnės (grupė).', 'A systematic name describes the structure: look for the root (the number of carbons) and the ending (the group).'),
-              solution: t(items.map((e, i) => e[1] + ' kitaip vadinamas ' + nms[i].lt).join('; ') + '.', items.map((e, i) => e[2] + ' is systematically ' + nms[i].en).join('; ') + '.')
+              solution: t(items.map((e, i) => e[1] + ' kitaip vadinamas ' + nms[i].lt).join('; ') + '.', items.map((e, i) => e[2] + ' is systematically ' + (SYS_EN[e[0]] || nms[i].en)).join('; ') + '.')
             }
           ],
           why: t('Trivialieji pavadinimai atsirado prieš sandaros išaiškinimą ir nusako medžiagos kilmę ar savybes. Sisteminis pavadinimas pagal IUPAC taisykles vienareikšmiškai nusako formulę, bet chemikai ir toliau dažnai vartoja trivialiuosius.', 'Trivial names arose before structures were known and refer to origin or properties. The IUPAC systematic name defines the formula unambiguously, yet chemists still use the trivial ones a lot.'),
