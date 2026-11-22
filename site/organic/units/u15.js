@@ -21,6 +21,10 @@
           src: 'T p96'
         },
         {
+          p: t('Pagal aminogrupių skaičių aminai būna monoaminai, diaminai ir t. t. Dažni trivialieji pavadinimai: metilaminas, dimetilaminas, trimetilaminas, anilinas, cikloheksilaminas.', 'By the number of amino groups amines are monoamines, diamines and so on. Common trivial names: methylamine, dimethylamine, trimethylamine, aniline, cyclohexylamine.'),
+          src: 'T p96'
+        },
+        {
           rule: t('Aminas yra pirminis, antrinis arba tretinis pagal tai, kiek anglies atomų tiesiogiai prijungta prie azoto: vienas, du arba trys. Ketvirtinė amonio druska $R4N+ X-$ turi keturis radikalus ir teigiamą azotą be laisvos poros.',
             'An amine is primary, secondary or tertiary according to how many carbon atoms are bonded directly to nitrogen: one, two or three. A quaternary ammonium salt $R4N+ X-$ has four groups and a positive nitrogen without a lone pair.'),
           src: 'T p96'
@@ -166,8 +170,8 @@
           caption: t('Anilino rezonansinės formulės: elektronų pora iš azoto pasislenka į žiedą.', 'Resonance structures of aniline: the lone pair moves from nitrogen into the ring.')
         },
         {
-          p: t('Pakaitai žiede keičia bazingumą. Elektronų donorai ($CH3$, $OCH3$) padidina elektronų tankį ir bazingumą, elektronų akceptoriai ($NO2$, halogenai) jį sumažina. Stiprus akceptorius $NO2$ para padėtyje per žiedą ištraukia azoto porą ir bazingumas krinta apie tūkstantį kartų.',
-            'Ring substituents change the basicity. Electron donors ($CH3$, $OCH3$) raise the electron density and the basicity; acceptors ($NO2$, halogens) lower it. A strong acceptor such as $NO2$ in the para position pulls the nitrogen pair through the ring and the basicity drops by a factor of about a thousand.'),
+          p: t('Pakaitai žiede keičia bazingumą. Elektronų donorai ($CH3$, $OCH3$) padidina elektronų tankį ir bazingumą, elektronų akceptoriai ($NO2$, halogenai) jį sumažina. Stiprus akceptorius $NO2$ para padėtyje per žiedą ištraukia azoto porą ir bazingumas krinta keliais tūkstančiais kartų.',
+            'Ring substituents change the basicity. Electron donors ($CH3$, $OCH3$) raise the electron density and the basicity; acceptors ($NO2$, halogens) lower it. A strong acceptor such as $NO2$ in the para position pulls the nitrogen pair through the ring and the basicity drops by a factor of several thousand.'),
           src: 'Klein'
         },
         { h: t('Amidai nėra bazės', 'Amides are not bases') },
@@ -256,8 +260,8 @@
         { scheme: { items: [{ smi: 'CCNC(C)C' }, { plus: true }, { smi: 'CCBr' }, { arrow: '→' }, { smi: 'CC[NH+](CC)C(C)C.[Br-]' }] } },
         { h: t('Alkilinimas', 'Alkylation') },
         {
-          p: t('Aminai reaguoja su halogenalkanais nukleofilinio pakeitimo ($SN2$) būdu ir sudaro amonio druskas, iš kurių šarmas ($NaOH$) išlaisvina aminą. Gautas aminas yra toks pat nukleofilas kaip pradinis, todėl reakcija nesustoja ties vienu žingsniu ir gaunamas aminų mišinys, kol susidaro ketvirtinė amonio druska.',
-            'Amines react with alkyl halides by nucleophilic substitution ($SN2$) to give ammonium salts, from which alkali ($NaOH$) frees the amine. The new amine is as good a nucleophile as the old one, so the reaction does not stop after one step: a mixture of amines results, up to the quaternary ammonium salt.'),
+          p: t('Aminai reaguoja su halogenalkanais nukleofilinio pakeitimo ($SN2$) būdu ir sudaro amonio druskas, iš kurių šarmas ($NaOH$) išlaisvina aminą. Gautas aminas yra ne mažiau nukleofiliškas už pradinį, todėl reakcija nesustoja ties vienu žingsniu ir gaunamas aminų mišinys, kol susidaro ketvirtinė amonio druska.',
+            'Amines react with alkyl halides by nucleophilic substitution ($SN2$) to give ammonium salts, from which alkali ($NaOH$) frees the amine. The new amine is at least as nucleophilic as the old one, so the reaction does not stop after one step: a mixture of amines results, up to the quaternary ammonium salt.'),
           src: 'T p97'
         },
         {
@@ -265,12 +269,8 @@
           caption: t('Metanaminas ir bromoetanas: amonio druska, po to laisvas antrinis aminas.', 'Methanamine and bromoethane: the ammonium salt, then the free secondary amine.')
         },
         {
-          scheme: { items: [{ smi: 'N' }, { arrow: '→', above: f('CH3I') }, { smi: 'CN' }, { arrow: '→', above: f('CH3I') }, { smi: 'CNC' }, { arrow: '→', above: f('CH3I') }, { smi: 'CN(C)C' }, { arrow: '→', above: f('CH3I') }, { smi: 'C[N+](C)(C)C.[I-]' }] },
-          caption: t('Nuosekliai alkilinant gaunami pirminis, antrinis, tretinis aminas ir ketvirtinė amonio druska.', 'Repeated alkylation gives the primary, secondary and tertiary amine and the quaternary ammonium salt.')
-        },
-        {
-          pitfall: t('Aminų alkilinimas yra prastas būdas gauti vieną amino rūšį: reakcijos produktas nukleofiliškesnis už pradinį aminą. Norint gauti tik ketvirtinę druską, halogenalkano ima pertekliumi.',
-            'Alkylation is a poor way to make one single amine: the product is a better nucleophile than the starting amine. To obtain only the quaternary salt, an excess of the alkyl halide is used.'),
+          pitfall: t('Aminų alkilinimas yra prastas būdas gauti vieną amino rūšį: reakcijos produktas ne mažiau nukleofiliškas už pradinį aminą. Norint gauti tik ketvirtinę druską, halogenalkano ima pertekliumi.',
+            'Alkylation is a poor way to make one single amine: the product is at least as nucleophilic as the starting amine. To obtain only the quaternary salt, an excess of the alkyl halide is used.'),
           src: 'T p97'
         },
         { h: t('Acilinimas', 'Acylation') },
@@ -385,8 +385,8 @@
           src: 'T p100'
         },
         {
-          p: t('Tretinis aromatinis aminas turi aktyvuotą žiedą: nitrozilkatijonas atakuoja žiedą ($SE$ reakcija) ir nitrozo grupė patenka tik į $p$-padėtį. Tretinis alifatinis aminas tik sudaro druską, nes neturi $N-H$ ir stabilaus nitrozo darinio negauna.',
-            'A tertiary aromatic amine has an activated ring: the nitrosyl cation attacks the ring (an $SE$ reaction) and the nitroso group enters only the para position. A tertiary aliphatic amine just forms a salt, since it has no $N-H$ and gives no stable nitroso product.'),
+          p: t('Tretinis aromatinis aminas turi aktyvuotą žiedą: nitrozilkatijonas atakuoja žiedą ($SE$ reakcija) ir nitrozo grupė patenka tik į $p$-padėtį. Tretinis alifatinis aminas tik sudaro druską, nes neturi $N-H$ ir stabilaus nitrozo darinio negauna. Knygoje minima ir pusiausvyra su N-nitrozoamonio junginiu, kuris sintezei nesvarbus.',
+            'A tertiary aromatic amine has an activated ring: the nitrosyl cation attacks the ring (an $SE$ reaction) and the nitroso group enters only the para position. A tertiary aliphatic amine just forms a salt, since it has no $N-H$ and gives no stable nitroso product. The book also mentions an equilibrium with an N-nitrosoammonium compound, which is of no synthetic importance.'),
           src: 'T p101'
         },
         {
@@ -456,7 +456,7 @@
               [f('1) $HBF4$  2) t°'), { smi: 'Cc1ccc(F)cc1', name: t('1-fluor-4-metilbenzenas', '1-fluoro-4-methylbenzene') }]
             ]
           },
-          caption: t('Diazonio druskos virsmai: $Cu(I)$ druskos (Zandmeierio reakcijos) ir kiti reagentai.', 'Transformations of the diazonium salt: $Cu(I)$ salts (Sandmeyer reactions) and other reagents.'),
+          caption: t('Diazonio druskos virsmai: $Cu(I)$ druskos (Zandmejerio reakcijos) ir kiti reagentai.', 'Transformations of the diazonium salt: $Cu(I)$ salts (Sandmeyer reactions) and other reagents.'),
           src: 'T p100'
         },
         {
@@ -491,7 +491,7 @@
               { mol: { smi: 'Nc1ccc(Cl)cc1', name: t('4-chlorbenzenaminas', '4-chloroaniline') } }
             ],
             steps: [
-              [{ p: t('Diazotinimas ir Zandmeierio reakcija pakeičia $NH2$ grupę $CN$ grupe. A yra 4-chlorbenzonitrilas.', 'Diazotisation and the Sandmeyer reaction replace $NH2$ by $CN$. A is 4-chlorobenzonitrile.') }, { mol: { smi: 'N#Cc1ccc(Cl)cc1', name: t('4-chlorbenzenkarbonitrilas', '4-chlorobenzonitrile') } }],
+              [{ p: t('Diazotinimas ir Zandmejerio reakcija pakeičia $NH2$ grupę $CN$ grupe. A yra 4-chlorbenzenkarbonitrilas.', 'Diazotisation and the Sandmeyer reaction replace $NH2$ by $CN$. A is 4-chlorobenzonitrile.') }, { mol: { smi: 'N#Cc1ccc(Cl)cc1', name: t('4-chlorbenzenkarbonitrilas', '4-chlorobenzonitrile') } }],
               [{ p: t('Nitrilas rūgštyje hidrolizuojasi iki karboksirūgšties. B yra 4-chlorbenzenkarboksirūgštis.', 'A nitrile is hydrolysed in acid to the carboxylic acid. B is 4-chlorobenzoic acid.') }, { mol: { smi: 'OC(=O)c1ccc(Cl)cc1', name: t('4-chlorbenzenkarboksirūgštis', '4-chlorobenzoic acid') } }],
               [{ p: t('$COOH$ yra $m$-orientantas, $Cl$ – $o,p$-orientantas. Padėtis, esanti $o$ chlorui, yra $m$ karboksilo grupei: abu pakaitai nukreipia bromą į tą pačią vietą. C yra 3-brom-4-chlorbenzenkarboksirūgštis.', '$COOH$ is a $m$-director and $Cl$ an $o,p$-director. The position ortho to chlorine is meta to the carboxyl group, so both substituents direct bromine to the same place. C is 3-bromo-4-chlorobenzoic acid.') }, { mol: { smi: 'OC(=O)c1ccc(Cl)c(Br)c1', name: t('3-brom-4-chlorbenzenkarboksirūgštis', '3-bromo-4-chlorobenzoic acid') } }]
             ]
@@ -527,6 +527,10 @@
           caption: t('Sulfoninimas: 4-aminobenzensulfonrūgštis.', 'Sulfonation: 4-aminobenzenesulfonic acid.'),
           src: 'T p101'
         },
+        {
+          p: t('Sulfoninimas yra grįžtamas: $SO3H$ grupę galima pašalinti kaitinant praskiestoje rūgštyje. Todėl ją galima laikinai įvesti į $p$-padėtį, kad bromas ar kitas elektrofilas patektų į $o$-padėtį, o po to nuimti (blokuojanti grupė).', 'Sulfonation is reversible: the $SO3H$ group can be removed by heating in dilute acid. It can therefore be put on the para position temporarily, so that bromine or another electrophile goes ortho, and removed afterwards (a blocking group).'),
+          src: 'S7.11'
+        },
         { h: t('Amino grupės apsauga acilinant', 'Protecting the amino group by acylation') },
         {
           p: t('Norint gauti monopakeistą darinį, amino grupė paverčiama amidu. Amidas vis dar $o,p$-orientantas, bet silpnesnis aktyvatorius, nes azoto pora dalijasi su karbonilu. Po reakcijos amidas hidrolizuojamas atgal į aminą.',
@@ -538,8 +542,8 @@
           caption: t('Apsauga, bromuojimas, apsaugos nuėmimas: 4-bromanilinas.', 'Protection, bromination, deprotection: 4-bromoaniline.')
         },
         {
-          pitfall: t('Stiprioje rūgštyje aminas protonuojamas ir $-NH3+$ yra $m$-orientantas ir deaktyvuojantis pakaitas: nukreipimas pasikeičia. Todėl nitrinant anilino tiesiogiai rūgštyje atsiranda $m$-izomero, o sulfoninimas duoda $p$-produktą.',
-            'In strong acid the amine is protonated and $-NH3+$ is a $m$-director and a deactivating substituent: the directing effect changes. This is why direct nitration of aniline in acid gives some $m$-isomer.'),
+          pitfall: t('Stiprioje rūgštyje aminas protonuojamas ir $-NH3+$ yra $m$-orientantas ir deaktyvuojantis pakaitas: nukreipimas pasikeičia. Todėl nitrinant anilino tiesiogiai rūgštyje atsiranda $m$-izomero. Knygoje sulfoninimas duoda 4-aminobenzensulfonrūgštį ($p$-produktą).',
+            'In strong acid the amine is protonated and $-NH3+$ is a $m$-director and a deactivating substituent: the directing effect changes. This is why direct nitration of aniline in acid gives some $m$-isomer. In the book sulfonation gives 4-aminobenzenesulfonic acid (the $p$-product).'),
           src: 'T p101'
         },
         { h: t('Oksidacija', 'Oxidation') },
@@ -560,22 +564,12 @@
       blocks: [
         { h: t('Aminai organizme', 'Amines in the body') },
         {
-          p: t('Daug vaistų ir neuromediatorių turi aminogrupę. Neuromediatorius (adrenaliną, dopaminą, serotoniną) vienija struktūrinis motyvas $Ar-C-C-N$: aromatinis žiedas, du anglies atomai ir aminas. Toks pat motyvas yra amfetamine. Amfetaminas sintetinamas redukciniu aminimu: ketonas su $NH3$ sudaro iminą, kuris redukuojamas.',
-            'Many drugs and neurotransmitters contain an amino group. The neurotransmitters (adrenaline, dopamine, serotonin) share the motif $Ar-C-C-N$: an aromatic ring, two carbons and an amine. Amphetamine contains the same motif. It is made by reductive amination: a ketone and $NH3$ give an imine, which is reduced.'),
-          src: 'T p102'
-        },
-        {
           mol: [
             { smi: 'NCCc1ccc(O)c(O)c1', caption: t('dopaminas', 'dopamine') },
             { smi: 'CNCC(O)c1ccc(O)c(O)c1', caption: t('adrenalinas', 'adrenaline') },
             { smi: 'CC(N)Cc1ccccc1', name: t('1-fenil-2-propanaminas', '1-phenylpropan-2-amine') }
           ],
-          caption: t('Dopaminas, adrenalinas ir amfetaminas: visuose yra motyvas $Ar-C-C-N$.', 'Dopamine, adrenaline and amphetamine: all contain the motif $Ar-C-C-N$.')
-        },
-        {
-          scheme: { items: [{ smi: 'CC(=O)Cc1ccccc1' }, { plus: true }, { smi: 'N' }, { arrow: '→', below: t('$AN$, − $H2O$', '$AN$, − $H2O$') }, { smi: 'CC(=N)Cc1ccccc1' }, { arrow: '→', above: f('H2, Ni') }, { smi: 'CC(N)Cc1ccccc1' }] },
-          caption: t('Fenilpropanonas, iminas, amfetaminas.', 'Phenylpropanone, the imine, amphetamine.'),
-          src: 'T p102'
+          caption: t('Dopaminas, adrenalinas ir amfetaminas: neuromediatoriams ir vaistams būdingas motyvas $Ar-C-C-N$ (aromatinis žiedas, du anglies atomai, aminas).', 'Dopamine, adrenaline and amphetamine: neurotransmitters and drugs share the motif $Ar-C-C-N$ (aromatic ring, two carbons, amine).')
         },
         { h: t('Cisteinas: amino, karboksi ir merkaptogrupė', 'Cysteine: amino, carboxyl and thiol groups') },
         {
@@ -779,7 +773,7 @@
           ? t('Azotas sujungtas su karbonilo grupe ($N-C=O$): tai amidas. Jo azoto pora konjuguota su $C=O$, todėl jis nėra aminas.', 'The nitrogen is bonded to a carbonyl group ($N-C=O$): this is an amide. Its nitrogen pair is conjugated with $C=O$, so it is not an amine.')
           : c.cls === 'quat'
             ? t('Azotas turi keturis anglies kaimynus ir teigiamą krūvį: ketvirtinė amonio druska.', 'The nitrogen has four carbon neighbours and a positive charge: a quaternary ammonium salt.')
-            : t('Prie azoto prijungti ' + ({ prim: 'vienas', sec: 'du', tert: 'trys' })[c.cls] + ' anglies atomai(-as): ' + CLS_T[c.cls].lt + '.', 'The nitrogen carries ' + ({ prim: 'one', sec: 'two', tert: 'three' })[c.cls] + ' carbon atom(s): a ' + CLS_T[c.cls].en + '.')
+            : t('Prie azoto tiesiogiai prijungtų anglies atomų: ' + ({ prim: 1, sec: 2, tert: 3 })[c.cls] + '. Tai ' + CLS_T[c.cls].lt + '.', 'Carbon atoms bonded directly to nitrogen: ' + ({ prim: 1, sec: 2, tert: 3 })[c.cls] + '. This is a ' + CLS_T[c.cls].en + '.')
       }];
       if (c.cls === 'prim' || c.cls === 'sec' || c.cls === 'tert') {
         steps.push({
@@ -897,7 +891,23 @@
         REASON_SET([t('Diaminas turi du $NH2$ ir sudaro daugiausia vandenilinių ryšių. Etanaminas sudaro vandenilinius ryšius, bet yra labai lengvas, o heksanas turi didelį paviršių ir van der Valso jėgas.', 'The diamine has two $NH2$ groups and forms the most hydrogen bonds. Ethanamine forms hydrogen bonds but is very light, while hexane has a large surface and van der Waals forces.'), t('Heksanas verda aukščiausiai, nes jame daugiausia anglies atomų.', 'Hexane boils highest because it has the most carbons.'), t('Etanaminas verda aukščiau už heksaną, nes turi azoto.', 'Ethanamine boils above hexane because it contains nitrogen.'), t('Diaminas verda žemiausiai, nes jame yra du bazinio azoto atomai.', 'The diamine boils lowest because it has two basic nitrogens.')], 0,
           t('Vandeniliniai ryšiai nėra vienintelis veiksnys: labai lengva molekulė (etanaminas) gali virti žemiau už sunkų angliavandenilį. Diaminas sudaro daugiausia vandenilinių ryšių ir verda aukščiausiai.', 'Hydrogen bonds are not the only factor: a very light molecule (ethanamine) can boil below a heavy hydrocarbon. The diamine forms the most hydrogen bonds and boils highest.')),
         t('Palyginkite vandenilinius ryšius ir molekulės dydį kartu: nedidelė molekulė su $NH2$ gali virti žemiau už didelį alkaną.', 'Weigh hydrogen bonds and molecule size together: a small molecule with $NH2$ can boil below a large alkane.'),
-        [{ formula: ['NCCN', 'C2H8N2'] }, { formula: ['CCCCCC', 'C6H14'] }])
+        [{ formula: ['NCCN', 'C2H8N2'] }, { formula: ['CCCCCC', 'C6H14'] }]),
+      (() => {
+        const pr = bpProblem(9,
+          [{ smi: 'CCN1CCCC1', name: t('1-etilpirolidinas', '1-ethylpyrrolidine') }, { smi: 'NC1CCCCC1', name: t('cikloheksanaminas', 'cyclohexanamine') }, { smi: 'CNC1CCCC1', name: t('N-metilciklopentanaminas', 'N-methylcyclopentanamine') }],
+          [t('1-etilpirolidinas (tretinis)', '1-ethylpyrrolidine (tertiary)'), t('N-metilciklopentanaminas (antrinis)', 'N-methylcyclopentanamine (secondary)'), t('cikloheksanaminas (pirminis)', 'cyclohexanamine (primary)')], ['105', '118', '134'],
+          REASON_SET([t('Visi trys yra izomerai, bet $N-H$ ryšių skaičius skiriasi: tretinis neturi $N-H$ ir vandenilinių ryšių nesudaro, antrinis turi vieną, pirminis du. Todėl: tretinis < antrinis < pirminis.', 'All three are isomers, but the number of $N-H$ bonds differs: the tertiary amine has none and forms no hydrogen bonds, the secondary has one, the primary two. Hence tertiary < secondary < primary.'), t('Tretinis aminas verda aukščiausiai, nes jo žiedas turi daugiausia anglies atomų prie azoto.', 'The tertiary amine boils highest because its nitrogen carries the most carbon atoms.'), t('Visi trys verda vienodai, nes turi tą pačią formulę.', 'All three boil equally because they have the same formula.'), t('Antrinis aminas verda žemiausiai, nes yra žiedinis.', 'The secondary amine boils lowest because it is cyclic.')], 0,
+            t('Izomerai su ta pačia formule $C6H13N$ skiriasi vandenilinių ryšių galimybe: daugiausia jų sudaro pirminis aminas.', 'Isomers of the same formula $C6H13N$ differ in the ability to hydrogen-bond: the primary amine forms the most.')),
+          t('Kai formulė ta pati, virimo temperatūrą pirmiausia lemia $N-H$ ryšių skaičius: pirminis > antrinis > tretinis.', 'When the formula is the same, the boiling point is set first by the number of $N-H$ bonds: primary > secondary > tertiary.'),
+          [{ formula: ['CCN1CCCC1', 'C6H13N'] }, { formula: ['NC1CCCCC1', 'C6H13N'] }, { formula: ['CNC1CCCC1', 'C6H13N'] }]);
+        pr.steps.unshift({
+          prompt: t('Kokia 1-etilpirolidino molekulinė formulė? (Visi trys junginiai yra jos izomerai.)', 'What is the molecular formula of 1-ethylpyrrolidine? (All three compounds are isomers of it.)'),
+          kind: 'formula', mol: { smi: 'CCN1CCCC1' }, answer: 'C6H13N',
+          hint: t('Suskaičiuokite anglies, vandenilio ir azoto atomus, įskaitant žiedą.', 'Count the carbon, hydrogen and nitrogen atoms, the ring included.'),
+          solution: t('Žiedas turi 4 anglis, etilas – 2: $C6H13N$. Cikloheksanaminas ir N-metilciklopentanaminas turi tą pačią formulę.', 'The ring has 4 carbons and the ethyl group 2: $C6H13N$. Cyclohexanamine and N-methylcyclopentanamine have the same formula.')
+        });
+        return pr;
+      })()
     ]
   });
 
@@ -929,7 +939,8 @@
       const right = base.pka > acid.pka;                         // B takes the proton from HA when BH+ is the weaker acid
       const weakerAcid = right ? acid.pka : base.pka;
       const diff = Math.abs(base.pka - acid.pka);
-      const kLT = nl(diff.toFixed(1)), kEN = diff.toFixed(1);
+      const dTxt = String(Number(diff.toFixed(2)));
+      const kLT = nl(dTxt), kEN = dTxt;
       const strongBase = right ? base.s : acid.s;
       const opts = [{ mol: { smi: right ? base.s : acid.s } }, { mol: { smi: right ? acid.s : base.s } }];
       return {
@@ -997,6 +1008,7 @@
       { scheme: { items: [{ smi: amine }, { plus: true }, { smi: rx }, { arrow: '→' }] } }
     ],
     steps: [
+      ...(n === 1 ? [
       {
         prompt: t('Kuris teiginys teisingas?', 'Which statement is correct?'),
         kind: 'choice', options: roleOpts(), answer: 0,
@@ -1007,7 +1019,8 @@
           { p: t('Su halogenalkanu laisva pora atakuoja elektrofilinį anglies atomą ir išstumia halogenidą: nukleofilinis elgesys ($SN2$).', 'With the alkyl halide the lone pair attacks the electrophilic carbon and displaces the halide: nucleophilic behaviour ($SN2$).') },
           mechSN2(amine, nIdx, rx)
         ]
-      },
+      }
+      ] : []),
       {
         prompt: t('Koks yra produktas su rūgštimi?', 'What is the product with the acid?'),
         kind: 'choice', options: salt1.opts, answer: 0,
@@ -1018,7 +1031,9 @@
         prompt: t('Koks yra produktas su halogenalkanu?', 'What is the product with the alkyl halide?'),
         kind: 'choice', options: salt2.opts, answer: 0,
         hint: t('Nukleofilas pakeičia halogenidą; ar produktas turi $N-H$, kurį galima prarasti?', 'The nucleophile replaces the halide; does the product carry an $N-H$ that could be lost?'),
-        solution: t('Azotas sujungia ryšį su alkilo grupe ir susidaro alkilinta amonio druska; šarmas vėliau gali išlaisvinti laisvą aminą.', 'Nitrogen bonds to the alkyl group to form an alkylated ammonium salt; alkali can free the amine afterwards.')
+        solution: /\[N\+\]\(/.test(salt2.opts[0].mol.smi)
+          ? t('Azotas sujungia ryšį su alkilo grupe. Tretinis aminas neturi $N-H$, todėl susidaro ketvirtinė amonio druska; šarmas jos neišlaisvina, nes laisvos poros nebelieka.', 'Nitrogen forms a bond to the alkyl group. A tertiary amine has no $N-H$, so a quaternary ammonium salt forms; alkali cannot free an amine from it, because there is no lone pair left.')
+          : t('Azotas sujungia ryšį su alkilo grupe ir susidaro alkilinta amonio druska ($R3NH+$ arba $R2NH2+$); šarmas vėliau gali išlaisvinti laisvą aminą.', 'Nitrogen bonds to the alkyl group to form an alkylated ammonium salt ($R3NH+$ or $R2NH2+$); alkali can free the amine afterwards.')
       }
     ],
     why: t('Ta pati laisva azoto pora yra ir baziška, ir nukleofiliška. Su protonu ji sudaro $N-H$ ryšį (bazė), su anglies atomu – $N-C$ ryšį (nukleofilas). Todėl elgesys priklauso nuo reagento, o ne nuo to, ar aminas stiprus.',
@@ -1074,7 +1089,7 @@
       },
       {
         id: 'u15.nuc.8',
-        q: [{ p: t('Stiprus bazė ir geras nukleofilas dažnai kartu: palyginkite $HCl$ ir $CH3Br$ poveikį anilinui.', 'A strong base is often also a good nucleophile: compare the effect of $HCl$ and $CH3Br$ on aniline.') }, { mol: { smi: 'Nc1ccccc1', name: t('benzenaminas', 'aniline') } }],
+        q: [{ p: t('Anilinas silpnesnė bazė ir silpnesnis nukleofilas už alifatinį aminą, bet abiejų savybių nepraranda. Palyginkite $HCl$ ir $CH3Br$ poveikį anilinui.', 'Aniline is a weaker base and a weaker nucleophile than an aliphatic amine, but it keeps both properties. Compare the effect of $HCl$ and $CH3Br$ on aniline.') }, { mol: { smi: 'Nc1ccccc1', name: t('benzenaminas', 'aniline') } }],
         steps: [
           {
             prompt: t('Kurį teiginį apie anilino bazingumą ir nukleofiliškumą pasirinktumėte?', 'Which statement about the basicity and nucleophilicity of aniline would you choose?'),
@@ -1106,7 +1121,7 @@
   /* ---------- u15.alkacyl: alkylation and acylation of amines (generator, S7.5, S7.9) ---------- */
   const NU_POOL = {                                          // amines for alkylation / acylation
     ali: ['CN', 'CCN', 'CCCN', 'CC(C)N', 'CCCCN', 'NC1CCCCC1', 'NCc1ccccc1', 'CNC', 'CCNCC', 'CCNC', 'CC(C)NC', 'C1CCNCC1', 'C1CCNC1', 'CCCNCCC', 'CNCc1ccccc1'],
-    ar: ['Nc1ccccc1', 'Cc1ccc(N)cc1', 'Nc1ccc(Br)cc1', 'Nc1ccc(Cl)cc1', 'COc1ccc(N)cc1', 'CNc1ccccc1', 'CCNc1ccccc1', 'Nc1ccc([N+](=O)[O-])cc1']
+    ar: ['Nc1ccccc1', 'Cc1ccc(N)cc1', 'Nc1ccc(Br)cc1', 'Nc1ccc(Cl)cc1', 'COc1ccc(N)cc1', 'CNc1ccccc1', 'CCNc1ccccc1']
   };
   const RX_POOL = [['CI', 'CH3I'], ['CCBr', 'CH3CH2Br'], ['CCI', 'CH3CH2I'], ['CCCBr', 'CH3CH2CH2Br'], ['CCCCBr', 'CH3(CH2)3Br']];
   const ACYL_POOL = [
@@ -1165,7 +1180,7 @@
             { scheme: { items: [{ smi: amine }, { plus: true }, { smi: rx[0] }, mode === 'alk' ? { arrow: '→' } : { arrow: '→', above: t('perteklius', 'excess') }] } }
           ],
           steps,
-          why: t('Amino azotas yra nukleofilas ir pakeičia halogenidą ($SN2$). Gaunamas amonio druskos jonas ir toliau gali alkilintis, nes jo laisvas aminas yra toks pat geras nukleofilas, todėl su pertekliumi susidaro ketvirtinė druska.', 'The amine nitrogen is a nucleophile and replaces the halide ($SN2$). The new ammonium ion can lose $H+$ and react again, because the free amine is as good a nucleophile, so an excess gives the quaternary salt.'),
+          why: t('Amino azotas yra nukleofilas ir pakeičia halogenidą ($SN2$). Gauta amonio druska gali prarasti $H+$, o susidaręs aminas vėl yra nukleofilas, todėl su pertekliumi susidaro ketvirtinė druska.', 'The amine nitrogen is a nucleophile and replaces the halide ($SN2$). The ammonium salt formed can lose $H+$, and the amine that results is a nucleophile again, so an excess gives the quaternary salt.'),
           src: 'T p97'
         };
       }
@@ -1189,7 +1204,7 @@
           prompt: t('Koks yra acilinimo produktas?', 'What is the product of the acylation?'),
           kind: 'choice', options, answer: 0,
           hint: t('Azoto pora atakuoja karbonilo anglį; kas išeina iš acilo darinio?', 'The nitrogen pair attacks the carbonyl carbon; what leaves the acyl compound?'),
-          solution: t('Nukleofilinis acilo pakeitimas: $Cl$ (arba karboksilatas) pakeičiamas amino grupe ir susidaro amidas. Amino druska atsirastų tik jei $HX$ lieka neprijungtas prie acilo, o neišreagavęs aminas – jei reakcija nevyktų.', 'Nucleophilic acyl substitution: $Cl$ (or the carboxylate) is replaced by the amino group and an amide forms. An ammonium salt would form only from the released acid, and unchanged amine only if nothing happened.')
+          solution: t('Nukleofilinis acilo pakeitimas: $Cl$ (arba karboksilatas) pakeičiamas amino grupe ir susidaro amidas. Išsiskyręs $HX$ suriša papildomas aminas, todėl amonio druska yra šalutinis, ne pagrindinis produktas; neišreagavęs aminas reikštų, kad reakcija nevyko.', 'Nucleophilic acyl substitution: $Cl$ (or the carboxylate) is replaced by the amino group and an amide forms. The released $HX$ is taken up by an extra amine, so the ammonium salt is a by-product, not the main product; unchanged amine would mean no reaction.')
         }
       ];
       if (lt && en) {
@@ -1312,12 +1327,12 @@
         steps.push({
           prompt: t('Pasirinkite produkto struktūrą.', 'Pick the structure of the product.'),
           kind: 'choice', options: opts, answer: 0,
-          hint: cat === 'tert_ar' ? t('Aktyvuotame žiede elektrofilas pasirenka vieną iš dviejų padėčių; kuri mažiau užkrauta?', 'On an activated ring the electrophile picks one of two positions; which one is less hindered?') : t('Palyginkite, kuris atomas pakeitė amino vandenilį ar azoto grupę.', 'Compare which atom replaced the amine hydrogen or the nitrogen group.'),
+          hint: cat === 'tert_ar' ? t('Aktyvuotame žiede elektrofilas pasirenka vieną iš dviejų padėčių; kuri mažiau užkrauta?', 'On an activated ring the electrophile picks one of two positions; which one is less hindered?') : t('Pirminis aromatinis aminas šaltyje: ką azotas virsta, kai jį veikia $NO+$?', 'A primary aromatic amine in the cold: what does the nitrogen become with $NO+$?'),
           solution: ({
             prim_ar: t('Susidaro arildiazonio chloridas $ArN2+ Cl-$; fenolis atsirastų tik šildant.', 'The aryldiazonium chloride $ArN2+ Cl-$ forms; the phenol would appear only on warming.'),
             sec: t('$NO+$ pakeičia vienintelį $N-H$ vandenilį: $R2N-N=O$.', '$NO+$ replaces the single $N-H$ hydrogen: $R2N-N=O$.'),
             tert_ar: t('Nitrozinimas vyksta tik $p$-padėtyje (ne $o$-): $p$-nitrozo darinys.', 'Nitrosation occurs only para (not ortho): the $p$-nitroso compound.'),
-            tert_al: t('Be $N-H$ ir su nukleofiliniu azotu susidaro tik amonio druska.', 'With no $N-H$ only the ammonium salt of the amine forms.')
+            tert_al: t('Be $N-H$ nitrozo darinys nesusidaro; tretinis aminas tik protonuojamas ir susidaro amonio druska.', 'With no $N-H$ no nitroso compound forms; the tertiary amine is only protonated and the ammonium salt results.')
           })[cat]
         });
       }
@@ -1357,11 +1372,11 @@
   });
 
   /* ---------- u15.diazo: Sandmeyer and replacement of the diazonium group (generator, S7.8, S7.9) ---------- */
-  const DZ_AMINES = ['Nc1ccccc1', 'Cc1ccc(N)cc1', 'Nc1ccc(Br)cc1', 'Nc1ccc(Cl)cc1', 'COc1ccc(N)cc1', 'Nc1ccc([N+](=O)[O-])cc1', 'Nc1cccc([N+](=O)[O-])c1', 'Cc1ccccc1N', 'Nc1cccc(Cl)c1', 'CCc1ccc(N)cc1'];
+  const DZ_AMINES = ['Nc1ccccc1', 'Cc1ccc(N)cc1', 'Nc1ccc(Br)cc1', 'Nc1ccc(Cl)cc1', 'COc1ccc(N)cc1', 'Cc1ccccc1N', 'Nc1cccc(Cl)c1', 'CCc1ccc(N)cc1'];
   const DZ_REAGENTS = [
-    { w: 'CuCl', l: 'CuCl', lt: t('Cl pakeičia $N2+$ (Zandmeierio reakcija)', 'Cl replaces $N2+$ (Sandmeyer reaction)') },
-    { w: 'CuBr', l: 'CuBr', lt: t('Br pakeičia $N2+$ (Zandmeierio reakcija)', 'Br replaces $N2+$ (Sandmeyer reaction)') },
-    { w: 'CuCN', l: 'CuCN', lt: t('$CN$ pakeičia $N2+$ (Zandmeierio reakcija)', '$CN$ replaces $N2+$ (Sandmeyer reaction)') },
+    { w: 'CuCl', l: 'CuCl', lt: t('Cl pakeičia $N2+$ (Zandmejerio reakcija)', 'Cl replaces $N2+$ (Sandmeyer reaction)') },
+    { w: 'CuBr', l: 'CuBr', lt: t('Br pakeičia $N2+$ (Zandmejerio reakcija)', 'Br replaces $N2+$ (Sandmeyer reaction)') },
+    { w: 'CuCN', l: 'CuCN', lt: t('$CN$ pakeičia $N2+$ (Zandmejerio reakcija)', '$CN$ replaces $N2+$ (Sandmeyer reaction)') },
     { w: 'KI', l: 'KI', lt: t('$I$ pakeičia $N2+$ (vario nereikia)', '$I$ replaces $N2+$ (no copper needed)') },
     { w: 'H2O', l: 'H2O, t°', lt: t('$OH$ pakeičia $N2+$ (hidrolizė šildant)', '$OH$ replaces $N2+$ (hydrolysis on heating)') }
   ];
@@ -1421,7 +1436,7 @@
           { scheme: { items: [{ smi: amine }, { arrow: '→', above: f('1) NaNO2, HCl, 0–5 °C'), below: f('2) ' + rg.l) }] } }
         ],
         steps,
-        why: t('Diazonio grupė yra puiki nueinančioji grupė ($N2$). $CuCl$, $CuBr$ ir $CuCN$ (Zandmeierio reakcijos) įveda $Cl$, $Br$ ir $CN$, $KI$ – jodą, o vanduo šildant – $OH$ grupę. Diazotinti reikia šaltyje, kad druska nesuirtų.', 'The diazonium group is an excellent leaving group ($N2$). $CuCl$, $CuBr$ and $CuCN$ (Sandmeyer reactions) introduce $Cl$, $Br$ and $CN$, $KI$ introduces iodine, and water on heating gives the $OH$ group. Diazotisation must be done cold so that the salt does not decompose.'),
+        why: t('Diazonio grupė yra puiki nueinančioji grupė ($N2$). $CuCl$, $CuBr$ ir $CuCN$ (Zandmejerio reakcijos) įveda $Cl$, $Br$ ir $CN$, $KI$ – jodą, o vanduo šildant – $OH$ grupę. Diazotinti reikia šaltyje, kad druska nesuirtų.', 'The diazonium group is an excellent leaving group ($N2$). $CuCl$, $CuBr$ and $CuCN$ (Sandmeyer reactions) introduce $Cl$, $Br$ and $CN$, $KI$ introduces iodine, and water on heating gives the $OH$ group. Diazotisation must be done cold so that the salt does not decompose.'),
         src: 'T p100'
       };
   }
@@ -1635,12 +1650,12 @@
       drugProblem(1, 'CCCCOc1cc(C(=O)NCCN(CC)CC)c2ccccc2n1', t('cinchokainas', 'cinchocaine'), 13,
         { pick: t('Dietilamino azotas yra tretinio alifatinio amino azotas ($sp3$, nekonjuguotas). Amido azotas ir chinolino azotas yra silpnesni.', 'The diethylamino nitrogen is a tertiary aliphatic amine nitrogen ($sp3$, not conjugated). The amide and quinoline nitrogens are weaker.'),
           opts: [{ text: t('Amido azoto pora konjuguota su $C=O$, o chinolino azotas yra $sp2$ aromatiniame žiede (pKaH apie 5); abu bazingi mažiau už $sp3$ aminą.', 'The amide nitrogen pair is conjugated with $C=O$ and the quinoline nitrogen is $sp2$ in an aromatic ring (pKaH about 5); both are less basic than an $sp3$ amine.') }, { text: t('Visi trys azoto atomai bazingi vienodai, nes yra toje pačioje molekulėje.', 'All three nitrogens are equally basic because they are in the same molecule.') }, { text: t('Amido azotas bazingiausias, nes jį supa karbonilas.', 'The amide nitrogen is the most basic because a carbonyl surrounds it.') }, { text: t('Chinolino azotas bazingiausias, nes yra aromatiniame žiede.', 'The quinoline nitrogen is the most basic because it is in an aromatic ring.') }],
-          sol: t('Alifatinis tretinis aminas (pKaH apie 10) bazingesnis už chinolino azotą (apie 5) ir amidą (nebazinis).', 'An aliphatic tertiary amine (pKaH about 10) is more basic than the quinoline nitrogen (about 5) and the amide (not basic).') },
+          sol: t('Alifatinis tretinis aminas (pKaH apie 9) bazingesnis už chinolino azotą (apie 5) ir amidą (nebazinis).', 'An aliphatic tertiary amine (pKaH about 9) is more basic than the quinoline nitrogen (about 5) and the amide (not basic).') },
         t('Bazingiausias yra $sp3$ alifatinio amino azotas; amidas ir aromatinis azotas silpnesni dėl konjugacijos arba $sp2$ pobūdžio.', 'The $sp3$ aliphatic amine nitrogen is the most basic; the amide and the aromatic nitrogen are weaker because of conjugation or $sp2$ character.')),
       drugProblem(2, 'CCN(CC)CC(=O)Nc1c(C)cccc1C', t('lidokainas', 'lidocaine'), 2,
         { pick: t('Dietilamino azotas yra tretinio alifatinio amino azotas. Antrasis azotas yra amido azotas, nebazinis.', 'The diethylamino nitrogen is a tertiary aliphatic amine. The other nitrogen is an amide nitrogen, not basic.'),
           opts: [{ text: t('Amido azoto pora konjuguota su $C=O$ (ir su aromatiniu žiedu), todėl nebazinis.', 'The amide nitrogen pair is conjugated with $C=O$ (and with the aromatic ring), so it is not basic.') }, { text: t('Amido azotas bazingesnis, nes jį supa daugiau elektronų.', 'The amide nitrogen is more basic because more electrons surround it.') }, { text: t('Abu azotai vienodai bazingi, nes abu turi laisvą porą.', 'Both nitrogens are equally basic because both have a lone pair.') }, { text: t('Dietilamino azotas nebazinis, nes yra tretinis.', 'The diethylamino nitrogen is not basic because it is tertiary.') }],
-          sol: t('Alifatinis aminas (pKaH apie 8–9, šiek tiek sumažintas gretimo $C=O$) bazingesnis už amidą, kurio pora delokalizuota.', 'The aliphatic amine (pKaH about 8-9, a little lowered by the neighbouring $C=O$) is more basic than the amide, whose pair is delocalised.') },
+          sol: t('Alifatinis aminas (pKaH apie 8, šiek tiek sumažintas gretimo $C=O$) bazingesnis už amidą, kurio pora delokalizuota.', 'The aliphatic amine (pKaH about 8, a little lowered by the neighbouring $C=O$) is more basic than the amide, whose pair is delocalised.') },
         t('Amidas niekada nėra bazingiausias azotas: jo pora dalyvauja konjugacijoje su $C=O$.', 'An amide is never the most basic nitrogen: its pair takes part in conjugation with $C=O$.')),
       drugProblem(3, 'CCN(CC)C(=O)C1C=C2c3cccc4[nH]cc(c34)CC2N(C)C1', t('LSD', 'LSD'), 21,
         { pick: t('Azotas, prie kurio prijungtas metilas, yra tretinio alifatinio amino azotas. Dietilamido azotas ir indolo $NH$ azotas nebazingi.', 'The nitrogen carrying the methyl group is a tertiary aliphatic amine nitrogen. The diethylamide nitrogen and the indole $NH$ nitrogen are not basic.'),
@@ -1729,7 +1744,7 @@
             prompt: t('Koks yra A?', 'What is A?'),
             kind: 'choice', options: [mc('CCc1ccc(cc1)C#N'), mc('CCc1ccc(cc1)Cl'), mc('CCc1ccc(cc1)O'), mc('CCc1ccc(cc1)C(N)=O')], answer: 0,
             hint: t('Ką $CuCN$ įveda vietoj diazonio grupės?', 'What does $CuCN$ introduce in place of the diazonium group?'),
-            solution: t('Zandmeierio reakcija pakeičia $N2+$ grupe $CN$: 4-etilbenzonitrilas.', 'The Sandmeyer reaction replaces $N2+$ with $CN$: 4-ethylbenzonitrile.')
+            solution: t('Zandmejerio reakcija pakeičia $N2+$ grupe $CN$: 4-etilbenzenkarbonitrilas.', 'The Sandmeyer reaction replaces $N2+$ with $CN$: 4-ethylbenzonitrile.')
           },
           {
             prompt: t('Koks yra B?', 'What is B?'),
@@ -1771,7 +1786,7 @@
             prompt: t('Koks yra B?', 'What is B?'),
             kind: 'choice', options: [mc('CC(C)(C)c1ccc(cc1)[N+](=O)[O-]'), mc('CC(C)(C)c1ccccc1[N+](=O)[O-]'), mc('CC(C)(C)c1cccc(c1)[N+](=O)[O-]')], answer: 0,
             hint: t('Alkilo grupė yra $o,p$-orientantas; kuri iš dviejų padėčių mažiau užkrauta tūriniu pakaitu?', 'An alkyl group is an $o,p$-director; which of the two positions is less hindered by a bulky substituent?'),
-            solution: t('Didelė tret-butilo grupė užstoja $o$-padėtis, todėl nitrinama daugiausia $p$-padėtyje: 1-tret-butil-4-nitrobenzenas.', 'The bulky tert-butyl group shields the $o$-positions, so nitration goes mainly para: 1-tert-butyl-4-nitrobenzene.')
+            solution: t('Didelė tret-butilo grupė užstoja $o$-padėtis, todėl nitrinama daugiausia $p$-padėtyje: 1-tret-butil-4-nitrobenzenas. Nitrinimo mišinys: $HNO3$, $H2SO4$.', 'The bulky tert-butyl group shields the $o$-positions, so nitration goes mainly para: 1-tert-butyl-4-nitrobenzene. The nitrating mixture is $HNO3$, $H2SO4$.')
           },
           {
             prompt: t('Koks yra C?', 'What is C?'),
@@ -1782,14 +1797,14 @@
           {
             prompt: t('Koks yra D?', 'What is D?'),
             kind: 'choice', options: [mc('CC(C)(C)c1ccc(cc1)C#N'), mc('CC(C)(C)c1ccc(cc1)Cl'), mc('CC(C)(C)c1ccc(cc1)O'), mc('CC(C)(C)c1ccc(cc1)C(N)=O')], answer: 0,
-            hint: t('Diazotinimas, po to Zandmeierio reakcija su $CuCN$.', 'Diazotisation, then a Sandmeyer reaction with $CuCN$.'),
-            solution: t('Diazonio grupė pakeičiama $CN$: 4-tret-butilbenzonitrilas.', 'The diazonium group is replaced by $CN$: 4-tert-butylbenzonitrile.')
+            hint: t('Diazotinimas, po to Zandmejerio reakcija su $CuCN$.', 'Diazotisation, then a Sandmeyer reaction with $CuCN$.'),
+            solution: t('Diazonio grupė pakeičiama $CN$: 4-tret-butilbenzenkarbonitrilas.', 'The diazonium group is replaced by $CN$: 4-tert-butylbenzonitrile.')
           },
           {
             prompt: t('Koks yra E, kurio formulė $C11H15NO$?', 'What is E, whose formula is $C11H15NO$?'),
             kind: 'choice', options: [mc('CC(C)(C)c1ccc(cc1)C(N)=O'), mc('CC(C)(C)c1ccc(cc1)C(=O)O'), mc('CC(C)(C)c1ccc(cc1)C#N'), mc('CC(C)(C)c1ccc(CN)cc1')], answer: 0,
             hint: t('Suskaičiuokite, kuriuose variantuose yra azotas ir deguonis. Ar visiška hidrolizė išlaikytų azotą?', 'Count which options contain both nitrogen and oxygen. Would complete hydrolysis keep the nitrogen?'),
-            solution: t('Pilna nitrilo hidrolizė duotų rūgštį $C11H14O2$ ir $NH4+$ (azoto nebūtų). Formulė $C11H15NO$ rodo dalinę hidrolizę, kuri sustoja ties amidu: 4-tret-butilbenzamidu.', 'Complete hydrolysis of the nitrile would give the acid $C11H14O2$ and $NH4+$ (no nitrogen). The formula $C11H15NO$ points to partial hydrolysis that stops at the amide: 4-tert-butylbenzamide.')
+            solution: t('Pilna nitrilo hidrolizė duotų rūgštį $C11H14O2$ ir $NH4+$ (azoto nebūtų). Formulė $C11H15NO$ rodo dalinę hidrolizę, kuri sustoja ties amidu: 4-tret-butilbenzenkarboksamidu.', 'Complete hydrolysis of the nitrile would give the acid $C11H14O2$ and $NH4+$ (no nitrogen). The formula $C11H15NO$ points to partial hydrolysis that stops at the amide: 4-tert-butylbenzamide.')
           }
         ],
         why: t('Šiame sekos žingsnyje derinami $SEAr$ (alkilinimas, nitrinimas), redukcija, diazonio chemija ir hidrolizė. Formulė padeda atpažinti, kad hidrolizė sustojo ties amidu.', 'This sequence combines $SEAr$ (alkylation, nitration), reduction, diazonium chemistry and hydrolysis. The formula tells you that hydrolysis stopped at the amide.'),
@@ -1810,12 +1825,12 @@
           {
             prompt: t('Sudėkite reagentus teisinga tvarka.', 'Put the reagents in the right order.'),
             kind: 'order',
-            options: [{ text: t('$NaNO2$, $HCl$, 0–5 °C (diazotinimas)', '$NaNO2$, $HCl$, 0-5 °C (diazotisation)') }, { text: t('$CuCN$ (Zandmeierio reakcija)', '$CuCN$ (Sandmeyer reaction)') }, { text: t('$H2O$, $H+$, šildant (nitrilo hidrolizė)', '$H2O$, $H+$, heat (nitrile hydrolysis)') }, { text: t('$Br2$, $FeBr3$ (bromuojimas)', '$Br2$, $FeBr3$ (bromination)') }],
+            options: [{ text: t('$NaNO2$, $HCl$, 0–5 °C (diazotinimas)', '$NaNO2$, $HCl$, 0-5 °C (diazotisation)') }, { text: t('$CuCN$ (Zandmejerio reakcija)', '$CuCN$ (Sandmeyer reaction)') }, { text: t('$H2O$, $H+$, šildant (nitrilo hidrolizė) ir $Br2$, $FeBr3$ (bromuojimas), bet kuria tvarka', '$H2O$, $H+$, heat (nitrile hydrolysis) and $Br2$, $FeBr3$ (bromination), in either order') }],
             hint: t('Bromo padėtis priklauso nuo to, koks pakaitas jau yra žiede, kai bromuojama.', 'The position of bromine depends on the substituent already on the ring when it is brominated.'),
-            solution: t('Pirma $NH2$ paverčiama $COOH$ (diazotinimas, $CuCN$, hidrolizė), o bromas įvedamas paskutinis.', 'First $NH2$ is converted to $COOH$ (diazotisation, $CuCN$, hydrolysis), and bromine is introduced last.')
+            solution: t('Pirma $NH2$ paverčiamas $COOH$ (arba bent $CN$) per diazonio druską; bromas įvedamas tik po to, kai $NH2$ pakeistas $m$-orientantu.', 'First $NH2$ is replaced by $COOH$ (or at least $CN$) through the diazonium salt; bromine is introduced only after $NH2$ has been replaced by a meta director.')
           },
           {
-            prompt: t('Kodėl bromuojama paskutinis?', 'Why is the bromination done last?'),
+            prompt: t('Kodėl bromas įvedamas tik pakeitus $NH2$?', 'Why is bromine introduced only after $NH2$ has been replaced?'),
             kind: 'choice',
             options: [
               txt('Karboksilo grupė yra $m$-orientantas, todėl bromas patenka į $m$-padėtį; $NH2$ būtų nukreipęs jį į $o,p$.', 'The carboxyl group is an $m$-director, so bromine goes meta; $NH2$ would have directed it ortho or para.'),
@@ -1899,7 +1914,7 @@
             solution: t('$o$-izomerui reikia laikino blokatoriaus $p$-padėtyje. $COOH$ įvedimas pirmiau duotų $m$-bromo darinį.', 'The ortho isomer needs a temporary blocking group in the para position. Introducing $COOH$ first would give the meta bromo compound.')
           }
         ],
-        why: t('Žiedo padėčių valdymui naudojami apsauginiai ir blokuojantys pakaitai, kuriuos vėliau pašalina. Aminų acilinimas moderuoja aktyvumą, o $SO3H$ užima $p$-padėtį.', 'Protecting and blocking groups, removed afterwards, are used to control the positions on a ring. Acylation of the amine moderates the activity, and $SO3H$ occupies the para position.'),
+        why: t('Žiedo padėčių valdymui naudojami apsauginiai ir blokuojantys pakaitai, kuriuos vėliau pašalina. Aminų acilinimas moderuoja aktyvumą, o $SO3H$ užima $p$-padėtį. Šis kelias yra idėja, kurios knygoje nėra.', 'Protecting and blocking groups, removed afterwards, are used to control the positions on a ring. Acylation of the amine moderates the activity, and $SO3H$ occupies the para position. This route is an idea that is not in the book.'),
         src: 'S7.11'
       },
       {
@@ -1923,7 +1938,7 @@
             options: [txt('$NaNO2$, $HCl$, po to $CuCl$', '$NaNO2$, $HCl$, then $CuCl$'), txt('$HCl$', '$HCl$'), txt('$CH3COCl$, piridinas', '$CH3COCl$, pyridine'), txt('$CH3I$ (perteklius)', '$CH3I$ (excess)')],
             answer: 0,
             hint: t('Kuris produktas susidaro pakeičiant grupę nueinančiąja grupe $N2$?', 'Which product forms by replacing a group with the leaving group $N2$?'),
-            solution: t('Zandmeierio reakcijoje diazonio grupė išeina kaip $N2$.', 'In the Sandmeyer reaction the diazonium group leaves as $N2$.')
+            solution: t('Zandmejerio reakcijoje diazonio grupė išeina kaip $N2$.', 'In the Sandmeyer reaction the diazonium group leaves as $N2$.')
           }
         ],
         why: t('Tas pats aminas elgiasi skirtingai priklausomai nuo reagento: kaip nukleofilas ($CH3I$, $CH3COCl$), kaip bazė ($HCl$) arba kaip diazonio grupės šaltinis ($NaNO2$ / $HCl$).', 'The same amine behaves differently depending on the reagent: as a nucleophile ($CH3I$, $CH3COCl$), as a base ($HCl$) or as the source of a diazonium group ($NaNO2$ / $HCl$).'),
@@ -2012,7 +2027,7 @@
             prompt: t('Kurios grupės su $NaOH$ sudaro natrio druskas?', 'Which groups form sodium salts with $NaOH$?'),
             kind: 'multi', options: [txt('$COOH$', '$COOH$'), txt('$SH$', '$SH$'), txt('$C-H$ prie $α$-anglies', '$C-H$ on the $α$-carbon'), txt('$NH2$ (kaip bazė)', '$NH2$ (as a base)')], answer: [0, 1],
             hint: t('Pasiskirstykite grupes pagal rūgštingumą: karboksirūgštis, tiolis, amino grupė.', 'Rank the groups by acidity: carboxylic acid, thiol, amino group.'),
-            solution: t('Stipriausiai rūgštinė yra $COOH$ (pKa apie 2), po jos – $SH$ (apie 8): jos sudaro druskas su $NaOH$. Amino grupė yra bazė ir su šarmu druskos nesudaro; $C-H$ nėra pakankamai rūgštus.', 'The strongest acid is $COOH$ (pKa about 2), then $SH$ (about 8): they form salts with $NaOH$. The amino group is a base and forms no salt with alkali; the $C-H$ is not acidic enough.')
+            solution: t('Stipriausiai rūgštinė yra $COOH$ (pKa apie 2), po jos – $SH$ (apie 8–10): jos sudaro druskas su $NaOH$. Amino grupė yra bazė ir su šarmu druskos nesudaro; $C-H$ nėra pakankamai rūgštus.', 'The strongest acid is $COOH$ (pKa about 2), then $SH$ (about 8-10): they form salts with $NaOH$. The amino group is a base and forms no salt with alkali; the $C-H$ is not acidic enough.')
           },
           {
             prompt: t('Koks yra produktas?', 'What is the product?'),
@@ -2037,7 +2052,7 @@
           {
             prompt: t('Koks yra produktas?', 'What is the product?'),
             kind: 'choice', options: [mc('[NH3+]C(CS)C(=O)O.[Cl-]'), mc('NC(CS)C(=O)Cl'), mc('NC(CCl)C(=O)O'), mc('NC(CCl)C(=O)[O-]')], answer: 0,
-            hint: t('Rūgštis bazės neesterinina ir nepakeičia $SH$; ji tik prijungia $H+$.', 'The acid does not esterify the base or replace the $SH$; it only adds $H+$.'),
+            hint: t('Rūgštis nepakeičia nei $COOH$, nei $SH$; ji tik prijungia $H+$.', 'The acid replaces neither $COOH$ nor $SH$; it only adds $H+$.'),
             solution: t('Susidaro cisteino hidrochloridas: $-NH3+ Cl-$; $COOH$ ir $SH$ nesikeičia.', 'Cysteine hydrochloride forms: $-NH3+ Cl-$; $COOH$ and $SH$ are unchanged.')
           }
         ],
@@ -2080,7 +2095,7 @@
             prompt: t('Koks yra produktas?', 'What is the product?'),
             kind: 'choice', options: [mc('NC(CS[Hg]SCC(N)C(=O)O)C(=O)O'), mc('NC(CS)C(=O)O[Hg]O'), mc('NC(CSSCC(N)C(=O)O)C(=O)O'), mc('NC(C[S-])C(=O)[O-].[Hg+2]')], answer: 0,
             hint: t('Dvi $SH$ grupės pakeičia po vieną $H$ ir jungiasi su $Hg$.', 'Two $SH$ groups each lose one $H$ and bond to $Hg$.'),
-            solution: t('2 cisteino molekulės + $HgO$ → $Hg(SR)2$ + $H2O$: gyvsidabrio merkaptidas. Disulfidas čia nesusidaro, nes $Hg(II)$ ne oksidatorius šioje reakcijoje.', '2 cysteine + $HgO$ → $Hg(SR)2$ + $H2O$: the mercury mercaptide. The disulfide does not form here, because the reaction is salt formation, not oxidation.')
+            solution: t('2 cisteino molekulės + $HgO$ → $Hg(SR)2$ + $H2O$: gyvsidabrio merkaptidas. Disulfidas čia nesusidaro, nes vyksta druskos (merkaptido) susidarymas, o ne oksidacija.', '2 cysteine + $HgO$ → $Hg(SR)2$ + $H2O$: the mercury mercaptide. The disulfide does not form here, because the reaction is salt formation, not oxidation.')
           }
         ],
         why: t('Dėl to sunkieji metalai blokuoja baltymų $SH$ grupes ir yra nuodingi. Cisteino $SH$ elgiasi kaip silpna rūgštis su metalais.', 'This is why heavy metals block the $SH$ groups of proteins and are toxic. The $SH$ of cysteine acts as a weak acid toward metals.'),
@@ -2134,12 +2149,6 @@
             kind: 'choice', options: [txt('Tretinę struktūrą', 'The tertiary structure'), txt('Pirminę struktūrą (aminorūgščių seką)', 'The primary structure (amino acid sequence)'), txt('Antrinę struktūrą, kaip α-spiralės vandeniliniai ryšiai', 'The secondary structure, like the hydrogen bonds of an α-helix'), txt('Tik ketvirtinę struktūrą', 'Only the quaternary structure')], answer: 0,
             hint: t('Tiltelis jungia šonines grandines toli viena nuo kitos pagrindinėje grandinėje.', 'The bridge links side chains that lie far apart along the main chain.'),
             solution: t('Disulfidinis tiltelis jungia šonines grandines ir „susiuva“ jau sulankstytą grandinę: tai tretinė struktūra. Pirminė struktūra – aminorūgščių seka, o antrinė – vandeniliniai ryšiai.', 'A disulfide bridge links side chains and "stitches" the folded chain: this is the tertiary structure. The primary structure is the sequence, the secondary one the hydrogen bonds.')
-          },
-          {
-            prompt: t('Baltymas turi 6 disulfidinius tiltelius. Kiek cisteino likučių juos sudaro?', 'A protein has 6 disulfide bridges. How many cysteine residues form them?'),
-            kind: 'number', answer: { value: 12, tol: 0 },
-            hint: t('Kiek $SH$ grupių sunaudojama vienam tilteliui?', 'How many $SH$ groups does one bridge use?'),
-            solution: t('Kiekvienas tiltelis sunaudoja dvi $SH$ grupes: $6 × 2 = 12$ likučių.', 'Each bridge uses two $SH$ groups: $6 × 2 = 12$ residues.')
           }
         ],
         why: t('Disulfidiniai tilteliai yra kovalentiniai ryšiai tarp šoninių grandinių ir stabilizuoja baltymo tretinę struktūrą, skirtingai nei peptidinis ryšys pagrindinėje grandinėje.', 'Disulfide bridges are covalent bonds between side chains and stabilise the tertiary structure of the protein, unlike the peptide bond of the main chain.'),
@@ -2150,10 +2159,10 @@
         q: [{ p: t('Palyginkite trijų cisteino grupių rūgštingumą.', 'Compare the acidity of the three groups of cysteine.') }, { mol: cysMol }],
         steps: [
           {
-            prompt: t('Išdėstykite protonus nuo lengviausiai iki sunkiausiai atiduodamo.', 'Arrange the protons from the one lost most easily to the one lost least easily.'),
-            kind: 'order', options: [txt('$COOH$ (pKa apie 2)', '$COOH$ (pKa about 2)'), txt('$SH$ (pKa apie 8)', '$SH$ (pKa about 8)'), txt('$NH3+$ (pKa apie 10)', '$NH3+$ (pKa about 10)')],
+            prompt: t('Kuri cisteino grupė yra rūgščiausia?', 'Which group of cysteine is the most acidic?'),
+            kind: 'choice', options: [txt('$COOH$ (pKa apie 2)', '$COOH$ (pKa about 2)'), txt('$SH$', '$SH$'), txt('$NH3+$', '$NH3+$'), txt('$C-H$ prie $α$-anglies', '$C-H$ on the $α$-carbon')], answer: 0,
             hint: t('Rūgštingumą nusako konjuguotosios bazės stabilumas.', 'Acidity is set by the stability of the conjugate base.'),
-            solution: t('Karboksilato krūvis išsklaidytas rezonansu, tiolato – dideliame sieros atome, o iš $NH3+$ susidariusio neutralaus amino jokio anijono nėra: rūgštingumas $COOH$ > $SH$ > $NH3+$.', 'The carboxylate charge is spread by resonance, the thiolate charge over the large sulfur atom, while $NH3+$ loses its proton to give a neutral amine with no anion to stabilise: acidity $COOH$ > $SH$ > $NH3+$.')
+            solution: t('Karboksilato krūvis išsklaidytas rezonansu, todėl $COOH$ (pKa apie 2) yra rūgščiausia. $SH$ ir $NH3+$ pKa yra tarp 8 ir 10,5 (knygos lentelėje 8,18 ir 10,28), jų eilė priklauso nuo pH.', 'The carboxylate charge is spread by resonance, so $COOH$ (pKa about 2) is the most acidic. The pKa values of $SH$ and $NH3+$ lie between 8 and 10.5 (8.18 and 10.28 in the textbook table), and their order depends on the pH.')
           },
           {
             prompt: t('Kodėl tiolis rūgštesnis už alkoholį?', 'Why is a thiol more acidic than an alcohol?'),
