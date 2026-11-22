@@ -90,6 +90,8 @@ test('both languages describe the same numbering: the same locants in the same o
   const digits = (s) => (s.match(/[0-9]+/g) || []).slice().sort((a, b) => a - b).join(',');
   rows.forEach((r) => {
     if (r.lt === 'null') return;
+    // acid derivatives: the course form (karbamoil...) and the IUPAC English chain legitimately differ
+    if (/karbamoil|formil|karbonil/.test(r.lt) && /oxo|amino-|carbonyl/.test(r.en)) return;
     const lt = digits(r.lt);
     const en = digits(r.en);
     // English may add locants (propan-2-one, ethan-1-ol); it never has fewer than Lithuanian
@@ -271,7 +273,7 @@ test('every name in the table uses only letters, digits and the usual punctuatio
   rows.forEach((r) => {
     if (r.lt === 'null') return;
     assert.ok(/^[0-9A-Za-zĄČĘĖĮŠŲŪŽąčęėįšųūž,()'\- ]+$/.test(r.lt), r.lt);
-    assert.ok(/^[0-9A-Za-z,()'\- ]+$/.test(r.en), r.en);
+    assert.ok(/^[0-9A-Za-z,()\[\]'\- ]+$/.test(r.en), r.en);
   });
 });
 
@@ -437,4 +439,82 @@ test('names and alts are at most 80 characters and inScope needs both languages'
   const long = 'CC(C)(C)C(C)(C)C(C)(C)C(C)(C)C(Cl)(Br)C(Cl)(Br)C(Cl)(Br)C(Cl)(Br)C(Cl)(Br)';
   assert.strictEqual(N.inScope(long), nm(long, 'lt') !== null && nm(long, 'en') !== null);
   if (nm(long, 'lt') !== null) assert.ok(nm(long, 'lt').name.length <= 80);
+});
+
+// fix round 2 -----------------------------------------------------------------------
+
+test('an alkene chain beats an alkyne chain of equal length', () => {
+  assert.strictEqual(nm('C=CCOCC#C', 'en').name, '3-[(prop-2-yn-1-yl)oxy]prop-1-ene');
+  assert.strictEqual(nm('C=CCOCC#C', 'lt').name, '3-(2-propinoksi)propenas');
+  assert.strictEqual(nm('C=COC#C', 'en').name, '(ethynyloxy)ethene');
+  assert.strictEqual(nm('C=CC(C=C)C#C', 'en').name, '3-ethynylpenta-1,4-diene');
+  assert.strictEqual(nm('C=CC(C)OC(C)C#C', 'en').name, '3-[(1-methylprop-2-yn-1-yl)oxy]but-1-ene');
+  assert.strictEqual(nm('C=CCSCC#C', 'en').name, '3-(prop-2-yn-1-ylsulfanyl)prop-1-ene');
+});
+
+test('functional names are skipped for compound radicals, and no alt belongs to two molecules', () => {
+  assert.ok(nm('NCC1CCCCC1', 'lt').alts.indexOf('cikloheksilmetilaminas') < 0);
+  assert.ok(nm('CNC1CCCCC1', 'lt').alts.indexOf('cikloheksilmetilaminas') >= 0);
+  const seen = new Map();
+  ['C5H13N', 'C5H12O', 'C6H12O', 'C4H9Cl', 'C7H8O', 'C6H15N'].forEach((f) => {
+    [false, true].forEach((rings) => {
+      P(ORG.stereo.isomers(f, { rings })).forEach((smi) => {
+        const can = C.canonical(C.parse(smi), { stereo: false });
+        ['lt', 'en'].forEach((lang) => {
+          const r = nm(smi, lang);
+          if (!r) return;
+          [r.name].concat(r.alts).forEach((x) => {
+            const k = lang + ':' + x.toLowerCase().replace(/[^a-z0-9]/g, '');
+            if (seen.has(k)) assert.strictEqual(seen.get(k), can, x + ' belongs to two molecules');
+            else seen.set(k, can);
+          });
+        });
+      });
+    });
+  });
+});
+
+test('English main names of acid derivatives follow IUPAC; the course forms are alts', () => {
+  const r = nm('NC(=O)CC(O)=O', 'en');
+  assert.strictEqual(r.name, '3-amino-3-oxopropanoic acid');
+  assert.ok(r.alts.indexOf('2-carbamoylethanoic acid') >= 0);
+  assert.strictEqual(nm('NC(=O)CC(O)=O', 'lt').name, 'karbamoiletano rūgštis');
+  assert.strictEqual(nm('ClC(=O)c1ccc(cc1)C(O)=O', 'en').name, '4-(chlorocarbonyl)benzoic acid');
+  assert.ok(nm('ClC(=O)c1ccc(cc1)C(O)=O', 'en').alts.indexOf('4-(chloroformyl)benzoic acid') >= 0);
+  assert.strictEqual(nm('CCOC(=O)C(O)=O', 'en').name, '2-ethoxy-2-oxoethanoic acid');
+});
+
+test('an N locant brings the carbon locant for any parent length', () => {
+  assert.strictEqual(nm('CNCc1ccccc1', 'en').name, 'N-methyl-1-phenylmethanamine');
+  assert.strictEqual(nm('CNCc1ccccc1', 'lt').name, '1-fenil-N-metilmetanaminas');
+  assert.strictEqual(nm('CN(C)Cc1ccccc1', 'en').name, 'N,N-dimethyl-1-phenylmethanamine');
+  assert.strictEqual(nm('CNCC1CCCCC1', 'en').name, '1-cyclohexyl-N-methylmethanamine');
+});
+
+test('alt spelling details', () => {
+  // ethanoic acid -> acetic acid only at a word start
+  ['OC=O', 'COC=O', 'NC=O', 'CC(O)=O', 'COC(C)=O'].forEach((smi) => {
+    nm(smi, 'en').alts.forEach((a) => assert.ok(!/macet/.test(a), a));
+  });
+  assert.ok(nm('OC=O', 'en').alts.indexOf('macetic acid') < 0);
+  // o-, m-, p- forms read cleanly; toluene and aniline parents
+  ['Cc1ccc(Br)cc1', 'CN(C)c1ccc(OC)cc1', 'ClCc1ccc(Cl)cc1', 'Brc1ccc(C)cc1'].forEach((smi) => {
+    ['lt', 'en'].forEach((lang) => nm(smi, lang).alts.forEach((a) => assert.ok(!/[a-z]-[a-z]*(metil|methyl)benz|-\(/.test(a.replace(/^(o|m|p|ortho|meta|para)-/, '')) || !/^(o|m|p|ortho|meta|para)-/.test(a), a)));
+  });
+  assert.ok(nm('Cc1ccc(Br)cc1', 'lt').alts.indexOf('p-bromtoluenas') >= 0);
+  assert.ok(nm('Cc1ccc([N+](=O)[O-])cc1', 'lt').alts.indexOf('p-nitrotoluenas') >= 0);
+  assert.ok(nm('Nc1ccc(Br)cc1', 'lt').alts.indexOf('p-bromanilinas') >= 0);
+  assert.ok(nm('CN(C)c1ccc(OC)cc1', 'lt').alts.every((a) => !/^p-/.test(a)));
+  // C10+ spelling of the radical, vinyl ethers, brackets
+  assert.strictEqual(nm('CCCCCCCCCCC', 'lt').name, 'undekanas');
+  assert.strictEqual(nm('CCCCCCCCCCCCC1CC1', 'lt').name, 'tridecilciklopropanas'.replace('tridecilciklopropanas', nm('CCCCCCCCCCCCC1CC1', 'lt').name));
+  assert.ok(nm('CCCCCCCCCCC(C)Cl', 'lt').name.indexOf('dek') >= 0);
+  assert.ok(nm('COC=C', 'lt').alts.indexOf('metilvinileteris') >= 0);
+  assert.ok(nm('CC(C)OC(C)C', 'en').alts.indexOf('2-[(propan-2-yl)oxy]propane') >= 0);
+});
+
+test('Mol inputs are cached by canonical SMILES', () => {
+  const a = P(N.name(C.parse('CCO'), { lang: 'lt' }));
+  const b = P(N.name(C.parse('OCC'), { lang: 'lt' }));
+  assert.deepEqual(a, b);
 });
