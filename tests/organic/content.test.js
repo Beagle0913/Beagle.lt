@@ -281,11 +281,18 @@ function checkUnit(unit, opts) {
   const noClaims = (n) => (Array.isArray(n) ? n.map(noClaims) : isObj(n) ? Object.fromEntries(Object.entries(n).filter(([k]) => k !== 'claims').map(([k, v]) => [k, noClaims(v)])) : n);
   for (const e of ORG.check.validateUnit(Object.assign({}, unit, { notes: noClaims(unit.notes), summary: noClaims(unit.summary) }))) R.err('structure', e);
 
+  let curNumbered = false; // the problem or block being scanned has a molecule with opts.numbers
   function textCheck(T, loc, tag) {
     for (const lang of ['lt', 'en']) {
       const s = T[lang];
       if (/<[A-Za-z]/.test(s)) R.err(loc, lang + ' text has "<" followed by a letter (markup is not HTML): "' + snip(s) + '"', tag);
       if (/\bundefined\b|\bNaN\b|\[object /.test(s)) R.err(loc, lang + ' text contains undefined / NaN / [object]: "' + snip(s) + '"', tag);
+    }
+    for (const lang of ['lt', 'en']) {
+      const s = T[lang];
+      let m;
+      if (!curNumbered && (m = /(?:\bNr\.?|\bno\.)\s*\d+|\batom\p{L}*\s+\d+/iu.exec(s))) R.err(loc, lang + ' text refers to an atom number ("' + m[0] + '") but no molecule here shows numbers: add opts.numbers to the molecule', tag);
+      if ((m = /\bskyri\p{L}*\s+\d+|\bsection\s+\d+|\b\d+\s+skyriuje|\b\d+\s+section\b/iu.exec(s))) R.err(loc, lang + ' text refers to a section number ("' + m[0] + '"): sections are not numbered in the trainer; name the section instead', tag);
     }
     for (const lang of ['lt', 'en']) {
       const tokens = smilesLike(T[lang]);
@@ -427,6 +434,7 @@ function checkUnit(unit, opts) {
 
   function problemChecks(p, type, prob, tag) {
     if (!isObj(p)) return;
+    curNumbered = hasNumberedMol(p);
     scan(p.q, L(type, prob, 'q'), tag, 'q');
     (Array.isArray(p.steps) ? p.steps : []).forEach((s, i) => { scan(s, L(type, prob, 'steps[' + i + ']'), tag, 'step'); stepChecks(s, i, type, prob, tag, p); });
     scan(p.why, L(type, prob, 'why'), tag, 'why');
@@ -435,8 +443,16 @@ function checkUnit(unit, opts) {
   const safely = (fn, loc, tag) => { try { fn(); } catch (e) { if (!R.errs.size) R.err(loc, 'validator error: ' + e.message, tag); } };
 
   // notes and summary
-  if (Array.isArray(unit.notes)) unit.notes.forEach((sec, i) => safely(() => scan(sec, 'notes section "' + (sec && sec.id) + '"', undefined, 'notes'), 'notes[' + i + ']'));
-  safely(() => scan(unit.summary, 'summary', undefined, 'summary'), 'summary');
+  // text that mentions atom numbers must sit in a block that has a molecule with numbers (curNumbered)
+  const scanBlocks = (blocks, loc) => (Array.isArray(blocks) ? blocks : []).forEach((b) => { curNumbered = hasNumberedMol(b); scan(b, loc, undefined, 'notes'); });
+  if (Array.isArray(unit.notes)) unit.notes.forEach((sec, i) => safely(() => {
+    const loc = 'notes section "' + (sec && sec.id) + '"';
+    curNumbered = false;
+    scan(sec && sec.title, loc, undefined, 'title');
+    scanBlocks(sec && sec.blocks, loc);
+  }, 'notes[' + i + ']'));
+  safely(() => scanBlocks(unit.summary, 'summary'), 'summary');
+  curNumbered = false;
 
   // notes length
   const words = { lt: 0, en: 0 };
@@ -462,6 +478,7 @@ function checkUnit(unit, opts) {
   const mirrorsBad = (ty) => (Array.isArray(ty.mirrors) ? ty.mirrors : []).filter((m) => typeof m === 'string' && !taskKnown(m));
   for (const ty of types) {
     const tid = ty.id;
+    curNumbered = false;
     scan(ty.title, L(tid, '', 'title'), undefined, 'title');
     (Array.isArray(ty.mirrors) ? ty.mirrors : []).forEach((m) => {
       if (typeof m === 'string' && taskKnown(m) && !(isObj(unit.coverage) && Array.isArray(unit.coverage[m]) && unit.coverage[m].includes(tid))) R.err(L(tid, '', 'mirrors'), '"' + m + '" is mirrored but unit.coverage["' + m + '"] does not list ' + tid);
@@ -857,6 +874,18 @@ test('validator: claims on notes blocks, numbered examples, text lint', () => {
   only(withBlock({ p: T('Pentinos formulė.', 'The pentyne formula.') }), /genitive of -inas is -ino/);
   only(withBlock({ p: T('Propanos formulė.', 'The propane formula.') }), /genitive of -anas is -ano/);
   assert.deepEqual(run(withBlock({ p: T('Buteno formulė ir dienos metu.', 'The butene formula.') })).errors, []);
+  // atom-number and section-number references
+  r = run(withBlock({ p: T('Žiūrėkite atomą 3.', 'Look at atom 3.') })); assert.equal(r.errors.length, 2);
+  assert.match(r.errors[0], /^\[u01\] notes section "more": lt text refers to an atom number \("atomą 3"\)/);
+  r = run(withBlock({ p: T('Pažiūrėkite Nr. 2.', 'See no. 2.') })); assert.equal(r.errors.length, 2);
+  const numbered = { example: { q: [{ p: T('Atomas 3 yra anglis.', 'Atom 3 is carbon.') }, { mol: { smi: 'CCCC', opts: { numbers: 'all' } } }], steps: [[{ p: T('Žingsnis', 'Step') }]] }, claims: [{ formula: ['CCCC', 'C4H10'] }] };
+  assert.deepEqual(run(withBlock(numbered)).errors, []);
+  let u = fresh(); bankOf(u).why = T('Atomas 1 yra karbonilo anglis.', 'Atom 1 is the carbonyl carbon.'); // steps[2] of the fixture has numbers: fine
+  assert.deepEqual(run(u).errors, []);
+  u = fresh(); bankOf(u).steps[2].mol = { smi: 'CC(=O)O' }; bankOf(u).steps[3].mol = { smi: 'CC(=O)O' }; bankOf(u).why = T('Atomas 1 yra karbonilo anglis.', 'Atom 1 is the carbonyl carbon.');
+  assert.equal(run(u).errors.length, 4); // the why (lt, en) and the fixture solution of steps[2] (lt, en)
+  r = run(withBlock({ p: T('Žr. 3 skyrių ir 2 skyriuje.', 'See section 3 and 2 section.') })); assert.equal(r.errors.length, 2);
+  assert.match(r.errors[0], /refers to a section number/);
 });
 
 test('validator: ready flags and unit files agree', () => {

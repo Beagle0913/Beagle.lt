@@ -14,10 +14,13 @@ const load = require('../../tests/organic/load.js');
 
 const DEFAULT_SRC = 'C:\\Users\\dziug\\AppData\\Local\\Temp\\claude\\2e72c334fbad91a1\\44a07bdd-622e-4787-a8b6-fa8ed9f03882\\scratchpad\\organine';
 
+const DEFAULT_BOOK = DEFAULT_SRC.replace(/organine$/, 'textbook\\jakubkiene.txt');
+
 function parseArgs(argv) {
-  const o = { file: null, src: process.env.COPYCHECK_SRC || DEFAULT_SRC, n: 5 };
+  const o = { file: null, src: process.env.COPYCHECK_SRC || DEFAULT_SRC, n: 5, book: process.env.COPYCHECK_BOOK || DEFAULT_BOOK };
   for (let i = 0; i < argv.length; i++) {
     if (argv[i] === '--src') o.src = argv[++i];
+    else if (argv[i] === '--book') o.book = argv[++i];
     else if (argv[i] === '--n') o.n = parseInt(argv[++i], 10) || 5;
     else if (!o.file) o.file = argv[i];
   }
@@ -32,13 +35,15 @@ const STOP = new Set('ir bei ar o bet tai kad kai kur kas ne yra bus buvo gali g
 const CHEM = /(anas|enas|inas|olis|onas|idas|ilas|ilis|rūgštis|aldehidas|ketonas)$/;
 const ignorable = (w) => STOP.has(w) || /\d/.test(w) || CHEM.test(w) || /^(h|br|cl|hbr|hcl|hi|kmno|ch|c|o|n)$/.test(w);
 
-function sourceIndex(dir, n) {
+function sourceIndex(dir, book, n) {
   const idx = new Map(); // n-gram -> [{file, line, pos}]
   const text = new Map(); // file -> words
-  const files = fs.readdirSync(dir).filter((f) => /\.txt$/i.test(f)).sort();
-  for (const f of files) {
+  const list = fs.readdirSync(dir).filter((f) => /\.txt$/i.test(f)).sort().map((f) => ({ f, file: path.join(dir, f) }));
+  if (book && fs.existsSync(book)) list.push({ f: path.basename(book), file: book }); // the course textbook text layer
+  const files = list.map((x) => x.f);
+  for (const { f, file } of list) {
     const w = [], lineOf = [];
-    fs.readFileSync(path.join(dir, f), 'utf8').split(/\r?\n/).forEach((line, li) => words(line).forEach((x) => { w.push(x); lineOf.push(li + 1); }));
+    fs.readFileSync(file, 'utf8').split(/\r?\n/).forEach((line, li) => words(line).forEach((x) => { w.push(x); lineOf.push(li + 1); }));
     text.set(f, w);
     for (let i = 0; i + n <= w.length; i++) {
       const k = w.slice(i, i + n).join(' ');
@@ -51,7 +56,7 @@ function sourceIndex(dir, n) {
 }
 
 // every Lithuanian string of the unit, with where it is
-function ltTexts(unit) {
+function ltTexts(unit, ORG) {
   const out = [];
   (function walk(node, where) {
     if (Array.isArray(node)) return node.forEach((x, i) => walk(x, where + '[' + i + ']'));
@@ -62,7 +67,21 @@ function ltTexts(unit) {
       walk(node[k], where ? where + '.' + k : k);
     }
   })(unit, '');
-  // generated problems are not run here: only written text is compared
+  // generated problems: 20 seeds of every generator, each distinct text once
+  const seen = new Set(out.map((x) => x.text));
+  for (const ty of unit.types || []) {
+    if (typeof ty.gen !== 'function') continue;
+    for (let seed = 1; seed <= 20; seed++) {
+      let p;
+      try { p = ORG.check.makeProblem(ty, seed); } catch (e) { continue; }
+      (function walk(node, where) {
+        if (Array.isArray(node)) return node.forEach((x, i) => walk(x, where + '[' + i + ']'));
+        if (!node || typeof node !== 'object') return;
+        if (typeof node.lt === 'string' && typeof node.en === 'string') { if (!seen.has(node.lt)) { seen.add(node.lt); out.push({ where, text: node.lt }); } return; }
+        for (const k of Object.keys(node)) if (typeof node[k] !== 'function') walk(node[k], where + '.' + k);
+      })({ q: p.q, steps: p.steps, why: p.why }, 'types[' + ty.id + '] seed ' + seed);
+    }
+  }
   return out;
 }
 
@@ -70,10 +89,11 @@ function main() {
   const o = parseArgs(process.argv.slice(2));
   if (!o.file) { console.error('usage: node tools/organic/copycheck.js <unit file> [--src <folder>] [--n 5]'); return 2; }
   if (!fs.existsSync(o.src)) { console.error('source folder not found: ' + o.src + ' (use --src or COPYCHECK_SRC)'); return 2; }
+  const ORG = (load.load || load)(['chem.js', 'stereo.js', 'draw.js', 'views.js', 'name.js', 'react.js', 'units.js', 'check.js']);
   const unit = load.unit(path.resolve(o.file));
-  const { idx, files, text: sources } = sourceIndex(o.src, o.n);
+  const { idx, files, text: sources } = sourceIndex(o.src, o.book, o.n);
   let hits = 0;
-  for (const t of ltTexts(unit)) {
+  for (const t of ltTexts(unit, ORG)) {
     const w = words(t.text);
     let run = null;
     const flush = () => {
