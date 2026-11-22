@@ -169,6 +169,11 @@
           src: 'L9 p6'
         },
         {
+          p: t('Aromatiniai junginiai labai stabilūs, todėl jie renkasi reakcijas, kurios nesuardo aromatinės sistemos: pakeitimo, o ne prijungimo.',
+            'Aromatic compounds are very stable, so they prefer reactions that leave the aromatic system intact: substitution rather than addition.'),
+          src: 'L9 p6'
+        },
+        {
           mol: [
             { smi: 'c1ccccc1', opts: { circle: true }, caption: t('benzenas, 6 π e−', 'benzene, 6 π e−') },
             { smi: 'c1ccc2ccccc2c1', caption: t('naftalenas, 10 π e−', 'naphthalene, 10 π e−') },
@@ -290,6 +295,11 @@
           ],
           caption: t('Elektrofilai.', 'The electrophiles.'), src: 'L9 p12–15'
         },
+        {
+          p: t('Nitrogrupė paprastai redukuojama į aminogrupę: taip iš nitroarenų gaunami aromatiniai aminai (anilinai), kurių reikia dažams ir vaistams.',
+            'A nitro group is easily reduced to an amino group: this is how aromatic amines (anilines) for dyes and drugs are made from nitroarenes.'),
+          src: 'L9 p14'
+        },
         { scheme: { items: [{ smi: '[O-][N+](=O)c1ccccc1' }, { arrow: '→', above: f('1. Fe, H3O+'), below: f('2. HO−') }, { smi: 'Nc1ccccc1' }] }, src: 'L9 p14' },
         {
           p: t('Kondensuotieji arenai mažiau stabilūs, todėl reaguoja švelnesnėmis sąlygomis. Naftalenas nitrinamas į α padėtį: susidaro 1-nitronaftalenas. Laboratorijoje jis pirmiausia matomas kaip oranžinis aliejinis sluoksnelis, o praskiedus vandeniu sukietėja į geltonas nuosėdas.',
@@ -300,6 +310,11 @@
         {
           pitfall: t('Aktyvi dalelė yra ne reagentas, o jo darinys: $HNO3$ pats nenitrina, nitrina nitronio jonas, kurį sukuria $H2SO4$. Be $FeBr3$ benzenas su $Br2$ nereaguoja.',
             'The active particle is not the reagent itself but a derivative of it: $HNO3$ alone does not nitrate, the nitronium ion made by $H2SO4$ does. Without $FeBr3$ benzene does not react with $Br2$.')
+        },
+        {
+          p: t('SEAr vyksta ir gyvuosiuose organizmuose: tiroksino sintezėje tirozino žiedas jodinamas, o fermentas peroksidazė sukuria elektrofilą $I+$. Vitamino K1 sintezėje elektrofilas yra alilo tipo katijonas, alkilinantis naftaleno darinį.',
+            'SEAr also happens in living organisms: in thyroxine synthesis the ring of tyrosine is iodinated and the enzyme peroxidase makes the electrophile $I+$. In vitamin K1 synthesis the electrophile is an allyl-type cation that alkylates a naphthalene derivative.'),
+          src: 'L9 p18–20'
         },
         { practice: 'u09.sear' }
       ]
@@ -396,6 +411,11 @@
           caption: t('Aktyvuojantys ir deaktyvuojantys pakaitai.', 'Activating and deactivating substituents.'), src: 'L9 p28'
         },
         {
+          p: t('Elektronų donoras didina elektronų tankį žiede (ypač o- ir p- padėtyse), todėl žiedas aktyvesnis. Akceptorius elektronų tankį mažina, todėl žiedas deaktyvuojamas, o santykinai daugiausia elektronų lieka m- padėtyse.',
+            'An electron donor raises the electron density in the ring (above all at the o and p positions), so the ring is more reactive. An acceptor lowers it, so the ring is deactivated and relatively the most electron density remains at the m positions.'),
+          src: 'L9 p30'
+        },
+        {
           mol: [
             { smi: 'Cc1ccccc1', opts: { deltas: { 2: '-', 4: '-', 6: '-' } }, caption: t('toluenas: ED, o-/p- padėtys δ−', 'toluene: ED, o/p positions δ−') },
             { smi: '[O-][N+](=O)c1ccccc1', opts: { deltas: { 4: '+', 6: '+', 8: '+' } }, caption: t('nitrobenzenas: EA, o-/p- padėtys δ+', 'nitrobenzene: EA, o/p positions δ+') }
@@ -458,6 +478,11 @@
           src: 'L9 p29–33'
         },
         {
+          p: t('Atakuojant o- ar p- padėtį, teigiamas krūvis būna ir ant atomo su pakaitu. Atakuojant m- padėtį jis ten niekada neatsiduria.',
+            'In o or p attack the positive charge also sits on the carbon that carries the substituent. In m attack it never does.'),
+          src: 'L9 p31–33'
+        },
+        {
           resonance: [{ smi: arenium('OMe', 3, 2, BR).smi }, { smi: '[C+]1(OC)C=CC(Br)C=C1' }, { smi: arenium('OMe', 3, 4, BR).smi }, { smi: 'C[O+]=C1C=CC(Br)C=C1' }],
           caption: t('$OCH3$ ir ataka į para padėtį: ketvirtoji formulė (oksonio jonas) turi oktetus visiems atomams ir yra labai stabili.', '$OCH3$ and attack at the para position: the fourth structure (oxonium ion) has octets on all atoms and is very stable.'), src: 'L9 p31'
         },
@@ -468,6 +493,14 @@
         {
           resonance: [{ smi: arenium('NO2', 3, 2, BR).smi }, { smi: '[C+]1([N+](=O)[O-])C=CC(Br)C=C1' }, { smi: arenium('NO2', 3, 4, BR).smi }],
           caption: t('$NO2$ ir ataka į para padėtį: viena formulė turi $+$ ant atomo, sujungto su teigiamu azotu, – ji labai nepalanki.', '$NO2$ and attack at the para position: one structure has $+$ on the carbon bonded to the positive nitrogen, which is very unfavourable.'), src: 'L9 p33'
+        },
+        {
+          list: [
+            t('ED pakaitas (ypač su laisvąja pora) stabilizuoja arenio joną o-/p- atakos atveju: reakcija greitesnė už benzeno, produktai o- ir p-.', 'A donor (above all one with a lone pair) stabilises the arenium ion in o/p attack: the reaction is faster than for benzene and the products are o and p.'),
+            t('Metilas: viena o-/p- formulė yra tretinis karbokatijonas, todėl jonas stabilesnis.', 'Methyl: one o/p structure is a tertiary carbocation, so the ion is more stable.'),
+            t('EA pakaitas o-/p- atakoje duoda labai nepalankią formulę, todėl lieka m- ataka: ji lėtesnė už benzeno, bet mažiau nepalanki už o-/p-.', 'An acceptor gives a very unfavourable structure in o/p attack, so m attack remains: it is slower than for benzene but less unfavourable than o/p.')
+          ],
+          src: 'L9 p24, p26, p32'
         },
         {
           pitfall: t('Akceptorius nepadaro m- atakos palankios, jis tik labiau pablogina o- ir p- ataką. Todėl su deaktyvuotu žiedu m- produktas susidaro lėčiau nei benzeno reakcijoje.',
@@ -545,6 +578,15 @@
         {
           scheme: { items: [{ smi: 'Cc1ccccc1' }, { arrow: '→', above: f('KMnO4, t°') }, { smi: 'OC(=O)c1ccccc1' }, { arrow: '→', above: f('HNO3, H2SO4') }, { smi: 'OC(=O)c1cccc(c1)[N+](=O)[O-]' }] },
           caption: t('Atvirkštinė tvarka duoda 3-nitrobenzenkarboksirūgštį.', 'The reverse order gives 3-nitrobenzoic acid.'), src: 'L9 p36'
+        },
+        {
+          p: t('Esant stiprių akceptorių, halogeną žiede gali pakeisti ir nukleofilas. Taip Sangerio reagentas (1-fluor-2,4-dinitrobenzenas) pažymi N-galinę amino rūgštį nustatant baltymo seką.',
+            'With strong acceptors on the ring, a halogen can also be replaced by a nucleophile. This is how Sanger’s reagent (1-fluoro-2,4-dinitrobenzene) labels the N-terminal amino acid when a protein sequence is determined.'),
+          src: 'L9 p22'
+        },
+        {
+          scheme: { items: [{ smi: 'Clc1c(cc(cc1[N+](=O)[O-])[N+](=O)[O-])[N+](=O)[O-]' }, { arrow: '→', above: f('1. HO−'), below: f('2. H3O+') }, { smi: 'Oc1c(cc(cc1[N+](=O)[O-])[N+](=O)[O-])[N+](=O)[O-]' }, { plus: true }, { smi: '[Cl-]' }] },
+          caption: t('Halogenarenų nukleofilinis pakeitimas.', 'Nucleophilic substitution of a haloarene.'), src: 'L9 p22'
         },
         {
           pitfall: t('Neplanuokite Friedelio–Krafto reakcijos po stiprios EA grupės įvedimo: žiedas deaktyvuotas. Taip pat 3-bromtolueno tiesiogiai iš tolueno nepagaminsite: bromas patenka tik į o- ir p- padėtis, todėl reikia kitos grupių tvarkos.',
@@ -1120,7 +1162,7 @@
       const steps = [
         {
           prompt: t('Bakstelėkite žiedo anglies atomus, į kuriuos bus kreipiama elektrofilinė dalelė $E+$.', 'Tap the ring carbons to which the electrophile $E+$ is directed.'),
-          kind: 'atoms', mol: { smi: a.smi }, answer: ringIdx,
+          kind: 'atoms', mol: { smi: a.smi, opts: { numbers: 'all' } }, answer: ringIdx,
           hint: t('Pirma nustatykite, ką kiekvienas pakaitas kreipia: o-/p- ar m- padėtis. Paskui palyginkite.', 'First decide what each substituent directs to, o/p or m positions. Then compare.'),
           solution: [{ list: lines }, { p: t(verdict.lt + sterics.lt, verdict.en + sterics.en) }]
         },
@@ -1173,7 +1215,7 @@
       const steps = [
         {
           prompt: t('Pavaizduota viena rezonansinė formulė. Bakstelėkite visus žiedo C atomus, ant kurių rezonansinėse formulėse gali būti teigiamas krūvis.', 'One resonance structure is shown. Tap every ring carbon that can carry the positive charge in some resonance structure.'),
-          kind: 'atoms', mol: { smi: A.smi }, answer: plusIdx,
+          kind: 'atoms', mol: { smi: A.smi, opts: { numbers: 'all' } }, answer: plusIdx,
           hint: t('Krūvis juda per konjuguotą dienilo sistemą: perkelkite dvigubą ryšį gretimo atomo link ir pažiūrėkite, kur atsiranda $+$.', 'The charge moves through the conjugated diene part: shift a double bond toward the charged atom and see where the $+$ appears.'),
           solution: [{ p: t('Teigiamas krūvis dalijasi tarp trijų atomų: dviejų, gretimų $sp3$ atomui, ir atomo, esančio jam priešais.', 'The positive charge is shared by three atoms: the two next to the $sp3$ carbon and the one opposite to it.') }]
         },
