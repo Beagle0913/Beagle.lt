@@ -588,8 +588,8 @@ test('fix 6, 7, 21: neopentyl, SN1 nucleophiles, leaving group order', () => {
 
 test('fix 8, 9: SEAr with several rings, acylation para', () => {
   assert.ok(R('sear', ['c1ccc(cc1)c1ccccc1'], { E: 'NO2' }).none);
-  same(R('sear', ['Cc1ccccc1'], { E: 'C(C)=O' }), ['CC(=O)c1ccc(C)cc1']);
-  same(R('sear', ['COc1ccccc1'], { E: 'C(C)=O' }), ['COc1ccc(cc1)C(C)=O']);
+  same(R('sear', ['Cc1ccccc1'], { E: 'C(C)=O' }), ['CC(=O)c1ccc(C)cc1', 'CC(=O)c1ccccc1C']);
+  same(R('sear', ['COc1ccccc1'], { E: 'C(C)=O' }), ['COc1ccc(cc1)C(C)=O', 'COc1ccccc1C(C)=O']);
 });
 
 test('fix 10, 11, 12: HBr cleavage, nitrile to amide, para-only nitrosation', () => {
@@ -656,7 +656,7 @@ test('fix 19, 20, 22: Lithuanian notes, metal option, Claisen with one alpha-H',
 
 test('fix r2.1: a crowded position between two substituents is never major', () => {
   same(R('sear', ['Cc1cccc(C)c1'], { E: 'C(C)=O' }), ['CC(=O)c1ccc(C)cc1C']);
-  same(R('sear', ['COc1cccc(C)c1'], { E: 'C(C)=O' }), ['COc1ccc(C(C)=O)c(C)c1']);
+  same(R('sear', ['COc1cccc(C)c1'], { E: 'C(C)=O' }), ['COc1ccc(C(C)=O)c(C)c1', 'COc1ccc(C)cc1C(C)=O'.replace('COc1ccc(C)cc1C(C)=O', 'COc1cc(C)ccc1C(C)=O')]);
   same(R('sear', ['Nc1cccc(C)c1'], { E: 'SO3H' }), ['Nc1ccc(S(=O)(=O)O)c(C)c1']);
   same(R('sear', ['Cc1cccc(C)c1'], { E: 'C(C)(C)C' }), ['Cc1ccc(C(C)(C)C)c(C)c1']);
 });
@@ -732,6 +732,23 @@ test('fix r2.2b: every product of every rule parses (fuzz)', () => {
     });
   });
   assert.ok(n > 300, 'products checked: ' + n);
+});
+
+// ---------------------------------------------------------------- fix round 3
+
+test('fix r3: acylation gives o and p, williamson all needs anions, side.ox keeps no C2/C3 acids', () => {
+  expectProducts(R('sear', ['CCc1ccccc1'], { E: 'C(C)=O' }), ['CCc1ccccc1C(C)=O', 'CCc1cccc(C(C)=O)c1', 'CCc1ccc(C(C)=O)cc1'], ['CCc1ccccc1C(C)=O', 'CCc1ccc(C(C)=O)cc1']);
+  assert.strictEqual(majorsOf(R('sear', ['Cc1ccccc1'], { E: 'C(C)=O' })).length, 2);
+  assert.strictEqual(majorsOf(R('sear', ['COc1ccccc1'], { E: 'C(C)=O' })).length, 2);
+  same(R('sear', ['Cc1cccc(C)c1'], { E: 'C(C)=O' }), ['CC(=O)c1ccc(C)cc1C']);
+  same(R('sear', ['Cc1ccccc1'], { E: 'C(C)(C)C' }), ['Cc1ccc(C(C)(C)C)cc1']);
+  const w = R('williamson', ['CC(O)CC(C)S', 'CCBr'], { all: true });
+  assert.ok(w.none && /deprotonate|alkoxide/.test(w.note.en));
+  ['OC(=O)C=Cc1ccccc1', 'O=CC=Cc1ccccc1', 'CC(=O)CCc1ccccc1'].forEach((smi) => {
+    const r = R('side.ox', [smi]);
+    assert.deepStrictEqual(majorsOf(r), [canon('OC(=O)c1ccccc1')], smi);
+    r.products.filter((p) => !p.major).forEach((p) => assert.ok(p.by && p.smi === canon('O=C=O'), smi + ' ' + p.smi));
+  });
 });
 
 //@@TESTS

@@ -894,7 +894,7 @@
       else {
         const minC = Math.min.apply(null, allowed.map(conflicts));
         major = allowed.filter((ip) => conflicts(ip) === minC);
-        const bulkyE = E === 'C(C)(C)C' || E === 'C(C)=O' || (E === 'SO3H' && subs.some((d) => d.amine)); // tert-butyl and acyl groups go para
+        const bulkyE = E === 'C(C)(C)C' || (E === 'SO3H' && subs.some((d) => d.amine)); // tert-butyl groups and the sulfonation of amines go para; acylation gives o and p (L9 p35)
         const hindered = (ip) => {
           const nb = [(ip + 1) % 6, (ip + 5) % 6].map((k) => subs.find((d) => d.iq === k)).filter(Boolean);
           return nb.length === 2 || ((bulkyE || nb.some((d) => d.bulky)) && nb.length >= 1);
@@ -1029,6 +1029,16 @@
       const out = new Out();
       (drops.length ? g.without(drops) : g).split().forEach((c) => {
         const co2 = c.n() === 3 && c.A.filter((x) => x.el === 'O').length === 2;
+        // oxalic, glyoxylic and pyruvic type pieces (a C=O carbon bonded to another C=O carbon) are oxidised on to CO2
+        const oxo = !c.A.some((x) => x.ar) && c.A.some((x, i) => x.el === 'C' && dbl(c, i, 'O') >= 0 && c.nbr(i).some((j) => isC(c, j) && dbl(c, j, 'O') >= 0));
+        if (oxo) {
+          const gas = new Graph();
+          const c0 = gas.add('C', 0, 0);
+          gas.bond(c0, gas.add('O', 0, 0), 2);
+          gas.bond(c0, gas.add('O', 0, 0), 2);
+          out.add(gas, false, true);
+          return;
+        }
         out.add(c, !co2, co2);
       });
       return out.note(T('Kiekviena šoninė grandinė su benziliniu H (ar benzilo alkoholis, aldehidas, vinilas) virsta COOH grupe.', 'Every side chain with a benzylic H (or a benzyl alcohol, aldehyde or vinyl group) becomes a COOH group.')).result();
@@ -1375,12 +1385,15 @@
       // every O- and S- (or OH, SH) of the first reactant is alkylated by the primary halide: the second step of S5.14b
       if (cNbrs(rs[1], hs[0].c).length > 1) return none(T('Reikia metilo ar pirminio halogenalkano (SN2).', 'A methyl or primary alkyl halide is needed (SN2).'));
       let gg = g;
+      let done = 0;
       for (let i = 0; i < 12; i++) {
         // only the anions (O-, S-) are alkylated, not neutral OH or SH
         const site = nucSites(gg).filter((x) => gg.A[x.o].charge === -1).map((x) => x.o).concat(thiolS(gg).filter((x) => gg.A[x.s].charge === -1).map((x) => x.s))[0];
         if (site === undefined) break;
         gg = alkylateAt(gg, site, rs[1], hs[0]);
+        done++;
       }
+      if (!done) return none(T('Pirmiausia reikia gauti alkoksidą ar tioliatą (veikiant Na arba NaH); neutralios OH ir SH grupės nealkilinamos.', 'First form the alkoxide or thiolate (with Na or NaH); neutral OH and SH groups are not alkylated.'));
       return out.add(gg, true).note(T('Alkilinami visi alkoksidų ir tioliatų centrai (SN2).', 'Every alkoxide and thiolate centre is alkylated (SN2).')).result();
     }
     ns.forEach((n) => hs.forEach((h) => {
