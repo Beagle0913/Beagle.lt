@@ -141,8 +141,8 @@
           src: 'L2 p22'
         },
         {
-          p: t('Trečio periodo atomai, pavyzdžiui, siera ir fosforas, gali sudaryti daugiau ryšių, nei leidžia oktetas, nes turi laisvų 3d orbitalių. Siera turi 6 išorinius elektronus (3s²3p⁴). Tioliuose ($CH3SH$) ji dvivalentė kaip deguonis, dimetilsulfokside – keturvalentė, metansulfonrūgštyje – šešiavalentė, ir aplink ją yra 12 elektronų.',
-            'Third-period atoms such as sulfur and phosphorus can form more bonds than the octet allows, because they have vacant 3d orbitals. Sulfur has 6 outer electrons (3s²3p⁴). In thiols ($CH3SH$) it is divalent like oxygen, in dimethyl sulfoxide tetravalent, and in methanesulfonic acid hexavalent, with 12 electrons around it.'),
+          p: t('Trečio periodo atomai, pavyzdžiui, siera ir fosforas, gali sudaryti daugiau ryšių, nei leidžia oktetas, nes turi laisvų 3d orbitalių (taip aiškinama paskaitoje). Siera turi 6 išorinius elektronus (3s²3p⁴). Tioliuose ($CH3SH$) ji dvivalentė kaip deguonis, dimetilsulfokside – keturvalentė, metansulfonrūgštyje – šešiavalentė, ir aplink ją yra 12 elektronų.',
+            'Third-period atoms such as sulfur and phosphorus can form more bonds than the octet allows, because they have vacant 3d orbitals (the explanation given in the course). Sulfur has 6 outer electrons (3s²3p⁴). In thiols ($CH3SH$) it is divalent like oxygen, in dimethyl sulfoxide tetravalent, and in methanesulfonic acid hexavalent, with 12 electrons around it.'),
           src: 'L2 p23'
         },
         {
@@ -197,7 +197,7 @@
               [f('sp'), f('2s + 1 × 2p'), f('2 + 2 p'), f('180°'), t('tiesė', 'straight line'), t('vienas trigubasis (σ + 2π) arba du dvigubieji', 'one triple (σ + 2π) or two double')]
             ]
           },
-          caption: t('Likusios nehibridinės p orbitalės sudaro π ryšius ir yra statmenos hibridinių orbitalių plokštumai.', 'The unhybridised p orbitals form the π bonds and are perpendicular to the plane of the hybrid orbitals.'), src: 'L2 p11, p12, p13, T p21'
+          caption: t('Likusios nehibridinės p orbitalės sudaro π ryšius ir yra statmenos hibridinių orbitalių plokštumai (sp atveju – jų ašiai).', 'The unhybridised p orbitals form the π bonds and are perpendicular to the plane of the hybrid orbitals (to their axis in the sp case).'), src: 'L2 p11, p12, p13, T p21'
         },
         {
           mol: [
@@ -222,7 +222,7 @@
           example: {
             q: [{ p: t('Nustatykite kiekvieno anglies atomo hibridizaciją pent-3-en-1-ine. Atomų numeriai atitinka grandinės numeraciją.', 'Determine the hybridisation of every carbon in pent-3-en-1-yne. The atom numbers follow the chain numbering.') }, { mol: { smi: 'C#CC=CC', name: t('3-penten-1-inas', 'pent-3-en-1-yne'), opts: { numbers: 'all' } } }],
             steps: [
-              [{ p: t('Atomas Nr. 1 turi trigubąjį ryšį su Nr. 2 ir vieną $C-H$; atomas Nr. 2 – trigubąjį ir vieną viengubąjį ryšį su Nr. 3. Abu yra sp.', 'Carbon no. 1 has a triple bond to no. 2 and one $C-H$; carbon no. 2 has the triple bond and one single bond to no. 3. Both are sp.') }],
+              [{ p: t('Atomas Nr. 1 turi trigubąjį ryšį su Nr. 2 ir vieną $C–H$; atomas Nr. 2 – trigubąjį ir vieną viengubąjį ryšį su Nr. 3. Abu yra sp.', 'Carbon no. 1 has a triple bond to no. 2 and one $C–H$; carbon no. 2 has the triple bond and one single bond to no. 3. Both are sp.') }],
               [{ p: t('Atomai Nr. 3 ir Nr. 4 sudaro dvigubąjį ryšį: kiekvienas turi vieną dvigubąjį ir du viengubuosius ryšius, taigi sp².', 'Carbons no. 3 and no. 4 form the double bond: each has one double and two single bonds, so sp².') }],
               [{ p: t('Atomas Nr. 5 yra $CH3$ grupė, turi keturis viengubuosius ryšius, taigi sp³.', 'Carbon no. 5 is a $CH3$ group with four single bonds, so sp³.') }]
             ]
@@ -257,8 +257,8 @@
           src: 'L2 p15, p17'
         },
         {
-          p: t('Deguonis sp³ yra vandenyje, alkoholių $–OH$ grupėje ir eteriuose $–O–$; sp² – karbonilo grupėje $C=O$ ir fenolių $–OH$ grupėje. Tai atspindi bendrą taisyklę: laisvoji pora, esanti šalia π sistemos, patenka į p orbitalę ir dalyvauja konjugacijoje.',
-            'Oxygen is sp³ in water, in the $–OH$ group of alcohols and in ethers $–O–$; it is sp² in the carbonyl group $C=O$ and in the $–OH$ group of phenols. This reflects a general rule: a lone pair next to a π system sits in a p orbital and takes part in conjugation.'),
+          p: t('Deguonis sp³ yra vandenyje, alkoholių $–OH$ grupėje ir eteriuose $–O–$; sp² – karbonilo grupėje $C=O$ ir fenolių $–OH$ grupėje. Fenolyje laisvoji pora greta žiedo π sistemos patenka į p orbitalę ir dalyvauja konjugacijoje.',
+            'Oxygen is sp³ in water, in the $–OH$ group of alcohols and in ethers $–O–$; it is sp² in the carbonyl group $C=O$ and in the $–OH$ group of phenols. In phenol the lone pair next to the π system of the ring goes into a p orbital and takes part in conjugation.'),
           src: 'L2 p16'
         },
         {
@@ -271,8 +271,8 @@
           src: 'L2 p16'
         },
         {
-          pitfall: t('N ir O atomai nevisada yra sp³, nors turi tik viengubuosius ryšius: jei laisvoji pora konjuguota su π sistema (amido $N$, aromatinio amino $N$, fenolio $O$), atomas yra sp². Tuo tarpu anglį visada galima nustatyti vien iš ryšių rūšių.',
-            'N and O atoms are not always sp³ even when they have only single bonds: if the lone pair is conjugated with a π system (the $N$ of an amide, the $N$ of an aromatic amine, the $O$ of a phenol), the atom is sp². For carbon, in contrast, the bond types alone are enough.'),
+          pitfall: t('N ir O atomai nevisada yra sp³, nors turi tik viengubuosius ryšius: jei laisvoji pora konjuguota su π sistema (amido $N$, aromatinio amino $N$, fenolio $O$), atomas yra sp². Dėmesio: 19 paskaitos skaidrėje („!“) karboksirūgšties $–OH$ deguonis ir hidrazono $–NH2$ azotas pažymėti kaip sp³, nors greta yra $C=O$ ar $C=N$; tikrasis vaizdas sudėtingesnis (laisvoji pora iš dalies delokalizuota, kaip amiduose). Egzamine atsakykite taip, kaip paskaitoje: šiuose dviejuose pavyzdžiuose – sp³; amido, aromatinio amino ir fenolio atveju – sp². Anglį visada galima nustatyti vien iš ryšių rūšių.',
+            'N and O atoms are not always sp³ even when they have only single bonds: if the lone pair is conjugated with a π system (the $N$ of an amide, the $N$ of an aromatic amine, the $O$ of a phenol), the atom is sp². Careful: on lecture slide 19 (marked “!”) the $–OH$ oxygen of a carboxylic acid and the $–NH2$ nitrogen of a hydrazone are drawn as sp³ although they stand next to $C=O$ or $C=N$; the real picture is subtler (the lone pair is partly delocalised, as in amides). In the course, answer as the lecture does: sp³ for these two examples; sp² for an amide, an aromatic amine and a phenol. For carbon the bond types alone are enough.'),
           src: 'L2 p19'
         },
         { practice: 'u02.hyb' },
@@ -335,7 +335,7 @@
         { h: t('Donorinis-akceptorinis (koordinacinis) ryšys', 'The donor–acceptor (coordinate) bond') },
         {
           p: t('Kovalentinį ryšį galima sudaryti ne tik sujungiant du vienelektronius atomus. Jei vienas atomas atiduoda visą elektronų porą, o kitas turi tuščią orbitalę, susidaro koordinacinis (donorinis-akceptorinis) ryšys. Amoniakas savo azoto laisvąja pora prisijungia protoną ir susidaro amonio jonas, vanduo – oksonio jonas. Susidaręs jis lieka toks pat kaip ir kiti molekulės kovalentiniai ryšiai; skiriasi tik jo kilmė.',
-            'A covalent bond does not have to form from two single-electron atoms. If one atom donates the whole electron pair and the other has a vacant orbital, a coordinate (donor–acceptor) bond forms. Ammonia uses the lone pair of nitrogen to bond a proton and gives the ammonium ion; water gives the oxonium ion. Once formed, the bond is no different from the other covalent bonds of the molecule: only the way it came about differs.'),
+            'A covalent bond does not have to form from two single-electron atoms. If one atom donates the whole electron pair and the other has a vacant orbital, a coordinate (donor–acceptor) bond forms. Ammonia uses the lone pair of nitrogen to bond to a proton and gives the ammonium ion; water gives the oxonium ion. Once formed, the bond is no different from the other covalent bonds of the molecule: only the way it came about differs.'),
           src: 'L2 p42, T p25'
         },
         {
@@ -444,14 +444,14 @@
           caption: t('Elektrinis neigiamumas didėja periode iš kairės į dešinę ir grupėje iš apačios į viršų. Dar: K 0,8.', 'Electronegativity grows along a period from left to right and up a group. Also: K 0.8.'), src: 'L2 p35'
         },
         {
-          p: t('Anglies elektrinis neigiamumas priklauso nuo hibridizacijos: kuo daugiau s pobūdžio, tuo jis didesnis. Skalėje eilė tokia: F > O > C(sp) > N, Cl > Br, C(sp²) > I > C(sp³), S > H, P. Skaičiuojant užduotyse, jei nepasakyta kitaip, anglies reikšmė yra 2,5.',
-            'The electronegativity of carbon depends on hybridisation: the more s character, the higher it is. On the scale the order is F > O > C(sp) > N, Cl > Br, C(sp²) > I > C(sp³), S > H, P. In calculations, unless told otherwise, take 2.5 for carbon.'),
+          p: t('Anglies elektrinis neigiamumas priklauso nuo hibridizacijos: kuo daugiau s pobūdžio, tuo jis didesnis. Skalėje eilė tokia: F > O > C(sp) > N, Cl > Br, C(sp²) > I > C(sp³), S > H, P. Skaičiuojant užduotyse, jei nepasakyta kitaip, anglies reikšmė yra 2,5. Skaidrėje 34 nurodyta: C(sp) 3,1, C(sp²) 2,8, C(sp³) 2,5 (vadovėlyje C(sp) 3,2). Jodo reikšmė skaidrėje 34 yra 2,6, o 35 skaidrės lentelėje 2,5; skaičiuodami naudokite lentelę, nes abiem atvejais $C–I$ ryšys nepolinis (ΔEN ≤ 0,1).',
+            'The electronegativity of carbon depends on hybridisation: the more s character, the higher it is. On the scale the order is F > O > C(sp) > N, Cl > Br, C(sp²) > I > C(sp³), S > H, P. In calculations, unless told otherwise, take 2.5 for carbon. Slide 34 gives C(sp) 3.1, C(sp²) 2.8, C(sp³) 2.5 (the textbook has C(sp) 3.2). The value for iodine is 2.6 on slide 34 and 2.5 in the table on slide 35; use the table, since either way the $C–I$ bond is nonpolar (ΔEN ≤ 0.1).'),
           src: 'L2 p34'
         },
         { h: t('Nepolinis, polinis ir joninis ryšys', 'Nonpolar, polar and ionic bonds') },
         {
-          rule: t('Ryšio tipą lemia atomų elektrinių neigiamumų skirtumas ΔEN. Kai ΔEN < 0,5, ryšys nepolinis kovalentinis; kai jis nuo 0,5 iki maždaug 1,7 (iki 2), ryšys polinis kovalentinis; kai skirtumas viršija šią ribą, ryšys joninis. Kuo didesnis ΔEN, tuo poliškesnis ryšys.',
-            'The type of bond is set by the difference ΔEN between the electronegativities of the atoms: below 0.5 – a nonpolar covalent bond; from 0.5 to 1.7 (2) – a polar covalent bond; above 1.7 (2) – an ionic bond. Polarity grows as ΔEN grows.'),
+          rule: t('Ryšio tipą lemia atomų elektrinių neigiamumų skirtumas ΔEN. Kai ΔEN < 0,5, ryšys nepolinis kovalentinis; kai jis nuo 0,5 iki maždaug 1,7 (iki 2), ryšys polinis kovalentinis; kai skirtumas viršija šią ribą, ryšys joninis. Kuo didesnis ΔEN, tuo poliškesnis ryšys. Vadovėlyje ribos kitokios (T p24: < 1,5 labiau kovalentinis, > 2,0 labiau joninis); atsakydami remkitės paskaitos ribomis 0,5 ir 1,7 (2). Tarp 1,7 ir 2,0 klausimų nekeliama.',
+            'The type of bond is set by the difference ΔEN between the electronegativities of the atoms: below 0.5 – a nonpolar covalent bond; from 0.5 to 1.7 (2) – a polar covalent bond; above 1.7 (2) – an ionic bond. Polarity grows as ΔEN grows. The textbook draws the limits differently (T p24: < 1.5 more covalent, > 2.0 more ionic); in answers use the limits of the lecture, 0.5 and 1.7 (2). Differences between 1.7 and 2.0 are not asked.'),
           src: 'L2 p37, T p24'
         },
         {
@@ -463,8 +463,8 @@
           src: 'L2 p36, p37'
         },
         {
-          p: t('Poliniame ryšyje elektronų pora pasislenka link elektroneigiamesnio atomo. Jis įgyja dalinį neigiamą krūvį δ−, kitas atomas – dalinį teigiamą δ+. Dalinis krūvis nėra jonas: tai tik elektronų tankio pokytis. Joniniame ryšyje pora praktiškai visiškai priklauso vienam atomui, susidaro jonai, o juos laiko elektrostatinė trauka.',
-            'In a polar bond the electron pair shifts towards the more electronegative atom. That atom gets a partial negative charge δ−, the other atom a partial positive charge δ+. A partial charge is not an ion: it is only a shift of electron density. In an ionic bond the pair belongs almost wholly to one atom, ions form, and electrostatic attraction holds them together.'),
+          p: t('Poliniame ryšyje elektronų pora pasislenka link elektroneigiamesnio atomo. Jis įgyja dalinį neigiamą krūvį δ−, kitas atomas – dalinį teigiamą δ+. Poliarizacijos kryptis žymima rodykle, nukreipta į elektroneigiamesnį atomą: $C→Cl$ (L2 p36); ji rodo tą pačią kryptį kaip δ+ → δ−. Dalinis krūvis nėra jonas: tai tik elektronų tankio pokytis. Joniniame ryšyje pora praktiškai visiškai priklauso vienam atomui, susidaro jonai, o juos laiko elektrostatinė trauka.',
+            'In a polar bond the electron pair shifts towards the more electronegative atom. That atom gets a partial negative charge δ−, the other atom a partial positive charge δ+. The direction of polarisation is drawn as an arrow pointing to the more electronegative atom: $C→Cl$ (L2 p36); it shows the same direction as δ+ → δ−. A partial charge is not an ion: it is only a shift of electron density. In an ionic bond the pair belongs almost wholly to one atom, ions form, and electrostatic attraction holds them together.'),
           src: 'L2 p36'
         },
         {
@@ -477,8 +477,8 @@
           src: 'L2 p36, p52'
         },
         {
-          pitfall: t('Kryptį lemia ΔEN, o ne atomų dydis ar vieta formulėje. Anglis yra δ+, kai ji susijungusi su O, N ar halogenu, bet δ− prie metalų ($Li$, $Mg$) ir silicio. Pagal šias reikšmes $C–S$ ir $C–I$ ryšiai nepoliniai (2,5 ir 2,5): poliškumą ten lemia tik kiti ryšiai, pavyzdžiui, $S–H$.',
-            'The direction is set by ΔEN, not by the size of the atoms or their place in the formula. Carbon is δ+ when bonded to O, N or a halogen, but δ− next to metals ($Li$, $Mg$) and silicon. With these values the $C–S$ and $C–I$ bonds are nonpolar (2.5 and 2.5): any polarity comes from other bonds, for example $S–H$.'),
+          pitfall: t('Kryptį lemia ΔEN, o ne atomų dydis ar vieta formulėje. Anglis yra δ+, kai ji susijungusi su O, N, Cl, Br ar F, bet δ− prie metalų ($Li$, $Mg$) ir silicio. Pagal šias reikšmes $C–S$ ir $C–I$ ryšiai nepoliniai (2,5 ir 2,5): poliškumą ten lemia tik kiti ryšiai, pavyzdžiui, $S–H$. Net ryšys, kurio ΔEN < 0,5 (pvz., $C–Br$ 0,3, $S–H$ 0,4), šiek tiek pasislenka į elektroneigiamesnį atomą, todėl seminare jo kryptis žymima; riba 0,5 tik atskiria ryšius, kurie laikomi nepoliniais.',
+            'The direction is set by ΔEN, not by the size of the atoms or their place in the formula. Carbon is δ+ when bonded to O, N, F, Cl or Br, but δ− next to metals ($Li$, $Mg$) and silicon. With these values the $C–S$ and $C–I$ bonds are nonpolar (2.5 and 2.5): any polarity comes from other bonds, for example $S–H$. Even a bond with ΔEN < 0.5 (for example $C–Br$ 0.3, $S–H$ 0.4) shifts slightly towards the more electronegative atom, so its direction is marked in the seminar tasks; the 0.5 limit only separates the bonds that are treated as nonpolar.'),
           src: 'L2 p35, p36'
         },
         {
@@ -586,8 +586,8 @@
           src: 'L2 p44'
         },
         {
-          rule: t('Didžiausias vandenilinių ryšių skaičius, kurį viena molekulė gali turėti su savo rūšies molekulėmis, lygus donorinių vandenilių ($N–H$, $O–H$) ir akceptorių laisvųjų porų ($N$, $O$) skaičių sumai, jei yra bent vienas donoras; be donoro – nė vieno. Vanduo gali sudaryti 4: du per $H$ ir du per deguonies laisvąsias poras.',
-            'The largest number of hydrogen bonds one molecule can form with identical molecules = the number of donor hydrogens ($N–H$, $O–H$) + the number of acceptor lone pairs ($N$, $O$), if there is at least one donor; with no donor, none. Water can form 4: two through its $H$ atoms and two through the lone pairs of oxygen.'),
+          rule: t('Didžiausias vandenilinių ryšių skaičius, kurį viena molekulė gali turėti su savo rūšies molekulėmis, lygus donorinių vandenilių ($N–H$, $O–H$) ir akceptorių laisvųjų porų ($N$, $O$) skaičių sumai, jei yra bent vienas donoras; be donoro – nė vieno. Vanduo gali sudaryti 4: du per $H$ ir du per deguonies laisvąsias poras. Tai skaičiavimo susitarimas, kaip vandens atveju 45 skaidrėje.',
+            'The largest number of hydrogen bonds one molecule can form with identical molecules = the number of donor hydrogens ($N–H$, $O–H$) + the number of acceptor lone pairs ($N$, $O$), if there is at least one donor; with no donor, none. Water can form 4: two through its $H$ atoms and two through the lone pairs of oxygen. This is a counting convention, as for water on slide 45.'),
           src: 'L2 p45, p46'
         },
         {
@@ -766,7 +766,7 @@
   // groups of hydrocarbons for "which one has this hybridisation": grouped by formula at run time
   const FH = ['CC#C', 'C=C=C', 'C1=CC1', 'CC=C', 'C1CC1',
     'CC#CC', 'C=CC=C', 'C=C=CC', 'C1=CCC1', 'C=C1CC1', 'C#CCC',
-    'CC=CC', 'C1CCC1', 'CC(C)=C', 'C=CCC',
+    'CC=CC', 'C1CCC1', 'CC1CC1', 'CC(C)=C', 'C=CCC',
     'C#CC=C', 'C1=CC=C1',
     'CC#CCC', 'C=CC=CC', 'C=C=CCC', 'C1=CCCC1', 'C#CCCC', 'C=CCC=C',
     'C#CC=CC', 'C1=CC=CC1', 'C=C=CC=C', 'C#CC1CC1',
@@ -1044,8 +1044,8 @@
         return {
           q: [{ p: t('Visi junginiai yra angliavandeniliai su ta pačia molekuline formule, todėl skiriasi tik ryšių išdėstymas.', 'All the compounds are hydrocarbons with the same molecular formula, so only the arrangement of bonds differs.') }],
           steps,
-          why: t('Izomerų formulė ta pati, bet anglies atomų hibridizacija skiriasi: ji priklauso nuo to, kokius ryšius atomas sudaro, o ne nuo formulės. Visi sp² – kai tik dvigubieji ryšiai (arba aromatinis žiedas), sp – kai yra trigubasis ryšys arba du dvigubieji prie to paties atomo.',
-            'Isomers have the same formula, yet the hybridisation of their carbons differs: it depends on the bonds an atom forms, not on the formula. All sp² means only double bonds (or an aromatic ring); sp means a triple bond or two double bonds at one atom.'),
+          why: t('Izomerų formulė ta pati, bet anglies atomų hibridizacija skiriasi: ji priklauso nuo to, kokius ryšius atomas sudaro, o ne nuo formulės. Visi sp² – kai tik dvigubieji ryšiai (arba aromatinis žiedas), sp – kai yra trigubasis ryšys arba du dvigubieji prie to paties atomo. Seminaro atvejai (visi anglies atomai sp³, visi sp² arba visi sp) yra atskiri šio uždavinio atvejai.',
+            'Isomers have the same formula, yet the hybridisation of their carbons differs: it depends on the bonds an atom forms, not on the formula. All sp² means only double bonds (or an aromatic ring); sp means a triple bond or two double bonds at one atom. The seminar cases (all carbons sp³, all sp² or all sp) are special cases of this problem.'),
           src: 'S2.3, L2 p18, p21'
         };
       }
@@ -1248,7 +1248,7 @@
           steps.push({
             prompt: t('Kiek laisvųjų elektronų porų turi visi molekulės heteroatomai kartu?', 'How many lone pairs do all the heteroatoms of the molecule have together?'),
             kind: 'number', answer: { value: total, tol: 0 },
-            hint: t('Heteroatomas turi tiek porų, kiek valentinių elektronų lieka po ryšių: $N$ – 1, $O$ ir $S$ – 2.', 'A heteroatom has as many pairs as valence electrons remain after the bonds: $N$ – 1, $O$ and $S$ – 2.'),
+            hint: t('Heteroatomas turi tiek porų, kiek valentinių elektronų lieka po ryšių: $N$ – 1, $O$ ir $S$ – 2, $Cl$ – 3.', 'A heteroatom has as many pairs as valence electrons remain after the bonds: $N$ – 1, $O$ and $S$ – 2, $Cl$ – 3.'),
             solution: [{ p: t('Poros (atomas, numeris, porų skaičius): ' + withLp + '. Iš viso ' + total + '.', 'Pairs (atom, number, pairs): ' + withLp + '. In all ' + total + '.') }, mo(smi, { lonePairs: true, numbers: 'all' })]
           });
         }
@@ -1338,7 +1338,7 @@
               ],
               answer: 0,
               hint: t('Pasižiūrėkite, kuo skiriasi trys molekulės aplink centrinį atomą.', 'Look at what differs around the central atom of the three molecules.'),
-              solution: t('Laisvosios poros užima daugiau vietos nei ryšių poros. Kiekviena papildoma pora sumažina kampą apie 2°: 109,5° → 107,3° → 104,5°.', 'Lone pairs take up more room than bonding pairs. Each extra pair lowers the angle by about 2°: 109.5° → 107.3° → 104.5°.')
+              solution: t('Laisvosios poros užima daugiau vietos nei ryšių poros. Kiekviena papildoma pora sumažina kampą apie 2–3°: 109,5° → 107,3° → 104,5°.', 'Lone pairs take up more room than bonding pairs. Each extra pair lowers the angle by about 2–3°: 109.5° → 107.3° → 104.5°.')
             }
           ],
           why: t('Visų trijų atomų hibridizacija sp³ ir kampai artimi tetraedro 109,5°, tačiau laisvosios poros šiek tiek suspaudžia ryšių kampą.', 'All three central atoms are sp³ and the angles are near the tetrahedral 109.5°, but lone pairs squeeze the bond angle a little.'),
@@ -1461,7 +1461,7 @@
           steps: [
             {
               prompt: t('Kokios hibridizacijos yra trys anglies atomai (nuo kairiojo iki dešiniojo)?', 'What are the hybridisations of the three carbons (from left to right)?'),
-              kind: 'choice', options: [ft('sp² – sp – sp²'), ft('sp² – sp² – sp²'), ft('$sp$ – sp² – $sp$'), ft('sp³ – sp – sp³')], answer: 0,
+              kind: 'choice', options: [ft('$sp²$ – $sp$ – $sp²$'), ft('$sp²$ – $sp²$ – $sp²$'), ft('$sp$ – $sp²$ – $sp$'), ft('$sp³$ – $sp$ – $sp³$')], answer: 0,
               hint: t('Vidurinis atomas turi du dvigubuosius ryšius, o kraštiniai – po vieną dvigubąjį ir du vandenilius.', 'The middle atom has two double bonds, and the end atoms have one double bond and two hydrogens each.'),
               solution: t('Vidurinė anglis: du dvigubieji ryšiai, dvi sritys, sp. Galinės: dvigubasis ir du $C–H$, trys sritys, sp².', 'Middle carbon: two double bonds, two regions, sp. End carbons: a double bond and two $C–H$, three regions, sp².')
             },
@@ -1531,7 +1531,7 @@
               solution: t('Dvigubąjį ryšį turi trys anglies atomai: $C=O$ ir abu $C=C$ atomai.', 'Three carbon atoms have a double bond: the $C=O$ carbon and both atoms of the $C=C$.')
             }
           ],
-          why: t('Anglies hibridizaciją nusako vien jos ryšių rūšys: viengubieji – sp³, dvigubasis – sp². Heteroatomams galioja papildoma taisyklė: laisvoji pora šalia π sistemos (žiedo ir enolio deguonys) yra p orbitalėje, o šoninės grandinės spirito deguonys yra sp³.', 'The hybridisation of carbon is set by its kinds of bonds alone: single – sp³, double – sp². Heteroatoms follow an extra rule: a lone pair next to a π system (the ring and enol oxygens) is in a p orbital, while the alcohol oxygens of the side chain are sp³.'),
+          why: t('Anglies hibridizaciją nusako vien jos ryšių rūšys: viengubieji – sp³, dvigubasis – sp². Šiame uždavinyje klausiama tik apie anglį; heteroatomų hibridizacija priklauso nuo laisvosios poros konjugacijos (19 skaidrė).', 'The hybridisation of carbon is set by its kinds of bonds alone: single – sp³, double – sp². This problem asks only about carbon; the hybridisation of the heteroatoms depends on conjugation of the lone pair (slide 19).'),
           src: 'L2 p20, p18', claims: [{ hyb: ['OCC(O)C1OC(=O)C(O)=C1O', 1, 'sp3'] }, { hyb: ['OCC(O)C1OC(=O)C(O)=C1O', 2, 'sp3'] }, { hyb: ['OCC(O)C1OC(=O)C(O)=C1O', 4, 'sp3'] }, { hyb: ['OCC(O)C1OC(=O)C(O)=C1O', 6, 'sp2'] }, { hyb: ['OCC(O)C1OC(=O)C(O)=C1O', 8, 'sp2'] }, { hyb: ['OCC(O)C1OC(=O)C(O)=C1O', 10, 'sp2'] }, { formula: ['OCC(O)C1OC(=O)C(O)=C1O', 'C6H8O6'] }]
         },
         {
@@ -1539,16 +1539,16 @@
           q: [{ p: t('Kofeinas yra purino darinys: du sujungti žiedai, trys $N-CH3$ grupės ir dvi karbonilo grupės.', 'Caffeine is a purine derivative: two fused rings, three $N-CH3$ groups and two carbonyl groups.') }, { mol: { smi: 'CN1C=NC2=C1C(=O)N(C)C(=O)N2C', opts: { numbers: 'all' } } }],
           steps: [
             {
-              prompt: t('Bakstelėkite visus sp³ hibridizacijos atomus.', 'Tap every sp³ atom.'),
-              kind: 'atoms', mol: { smi: 'CN1C=NC2=C1C(=O)N(C)C(=O)N2C', opts: { numbers: 'all' } }, from: 'hyb:sp3',
-              hint: t('Pagalvokite, kuriems atomams negalioja π sistema ar dvigubasis ryšys šalia.', 'Think which atoms have no double bond or π system next to them.'),
-              solution: t('Sp³ yra tik trys metilo grupių anglies atomai (Nr. 1, Nr. 10 ir Nr. 14). Visi žiedų atomai ir deguonys yra sp², taip pat ir azoto atomai, nes jų laisvosios poros konjuguotos su žiedo π sistema.', 'Only the three methyl carbons (no. 1, no. 10 and no. 14) are sp³. All ring atoms and the oxygens are sp², and so are the nitrogens, because their lone pairs are conjugated with the π system of the ring.')
+              prompt: t('Bakstelėkite visus sp³ hibridizacijos anglies atomus.', 'Tap every sp³ carbon atom.'),
+              kind: 'atoms', mol: { smi: 'CN1C=NC2=C1C(=O)N(C)C(=O)N2C', opts: { numbers: 'all' } }, answer: [0, 9, 13],
+              hint: t('Raskite anglies atomus, kurie turi tik viengubuosius ryšius.', 'Find the carbon atoms that have only single bonds.'),
+              solution: t('Sp³ yra tik trys metilo grupių anglies atomai (Nr. 1, Nr. 10 ir Nr. 14). Visi kiti anglies atomai turi dvigubąjį ryšį (žiedo $C=C$, $C=N$ arba $C=O$) ir yra sp².', 'Only the three methyl carbons (no. 1, no. 10 and no. 14) are sp³. Every other carbon has a double bond (the ring $C=C$, $C=N$ or $C=O$) and is sp².')
             },
             {
-              prompt: t('Kiek atomų (iš viso, įskaitant azotą ir deguonį) yra sp² hibridizacijos?', 'How many atoms in all (including nitrogen and oxygen) are sp² hybridised?'),
-              kind: 'number', answer: { value: 11, tol: 0 },
-              hint: t('Iš 14 sunkiųjų atomų atimkite sp³ atomus.', 'Subtract the sp³ atoms from the 14 heavy atoms.'),
-              solution: t('14 sunkiųjų atomų, iš jų 3 sp³, taigi sp² yra 11.', 'There are 14 heavy atoms, 3 of them sp³, so 11 are sp².')
+              prompt: t('Kiek sp² hibridizacijos anglies atomų turi molekulė?', 'How many sp² carbon atoms does the molecule have?'),
+              kind: 'number', answer: { value: 5, tol: 0 },
+              hint: t('Iš 8 anglies atomų atimkite sp³ atomus.', 'Subtract the sp³ atoms from the 8 carbon atoms.'),
+              solution: t('8 anglies atomai, iš jų 3 sp³, taigi sp² yra 5. (Azoto atomai čia nevertinami; pagal konjugacijos taisyklę jie taip pat sp².)', 'There are 8 carbon atoms, 3 of them sp³, so 5 are sp². (The nitrogens are not asked here; by the conjugation rule they are sp² too.)')
             }
           ],
           why: t('Kofeino žiedų atomai sudaro vieną konjuguotą plokščią sistemą: todėl net azotai, turintys tik viengubuosius ryšius, yra sp² – jų laisvosios poros guli p orbitalėse.', 'The ring atoms of caffeine form one flat conjugated system: so even the nitrogens that have only single bonds are sp², with their lone pairs in p orbitals.'),
@@ -1575,7 +1575,7 @@
           [t('Atomus sieja joninis ryšys.', 'An ionic bond joins the atoms.'), false],
           [t('Elektronų pora tolygiai dalijama tarp abiejų atomų.', 'The electron pair is shared evenly by both atoms.'), true]],
           0, t('Du vienodi atomai turi vienodą elektrinį neigiamumą (ΔEN = 0), todėl niekuris nepatraukia poros stipriau.', 'Two identical atoms have the same electronegativity (ΔEN = 0), so neither pulls the pair harder.'), 'ClCl', 'Cl2'),
-        ionProblem(3, 'OCl', t('chlorarūgštė (HOCl)', 'hypochlorous acid (HOCl)'), [
+        ionProblem(3, 'OCl', t('hipochlorito rūgštis (HOCl)', 'hypochlorous acid (HOCl)'), [
           [t('Ryšys $O–H$ yra polinis kovalentinis (ΔEN = 1,4).', 'The $O–H$ bond is polar covalent (ΔEN = 1.4).'), true],
           [t('Junginys sudarytas iš $H+$ ir $OCl−$ jonų.', 'The compound consists of $H+$ and $OCl−$ ions.'), false],
           [t('Ryšys $O–Cl$ yra kovalentinis.', 'The $O–Cl$ bond is covalent.'), true],
@@ -1666,7 +1666,7 @@
           steps: [
             {
               prompt: t('Išdėstykite junginius nuo žemiausios iki aukščiausios virimo temperatūros.', 'Put the compounds in order from the lowest to the highest boiling point.'),
-              kind: 'order', options: [tx('propanas (−42 °C)', 'propane (−42 °C)'), tx('dimetileteris (−24 °C)', 'dimethyl ether (−24 °C)'), tx('etanalis (20 °C)', 'ethanal (20 °C)'), tx('etanolis (78 °C)', 'ethanol (78 °C)')],
+              kind: 'order', options: [tx('propanas (−42 °C)', 'propane (−42 °C)'), tx('dimetileteris (−23 °C)', 'dimethyl ether (−23 °C)'), tx('etanalis (20 °C)', 'ethanal (20 °C)'), tx('etanolis (78 °C)', 'ethanol (78 °C)')],
               hint: t('Pirma raskite, kuris junginys gali sudaryti vandenilinius ryšius su savimi. Tada palyginkite poliškumą.', 'First find which compound can form hydrogen bonds with itself. Then compare the polarity.'),
               solution: t('Etanolis asocijuojasi ($O–H$ donoras), todėl verda aukščiausiai. Etanalis ir eteris poliniai, bet be donoro; polinis $C=O$ stipriau traukia molekules nei $C–O–C$. Propanas beveik nepolinis.', 'Ethanol associates (an $O–H$ donor), so it boils highest. Ethanal and the ether are polar but have no donor; the polar $C=O$ attracts the molecules more strongly than $C–O–C$. Propane is almost nonpolar.')
             },
@@ -1711,7 +1711,7 @@
               solution: t('Vandenilio atomai ($δ+$) traukiasi prie kaimynų deguonies laisvųjų porų ($δ−$), o jos pačios laisvosios poros priima kaimynų vandenilius – tetraedrinė struktūra.', 'The hydrogens ($δ+$) are attracted to the lone pairs of neighbouring oxygens ($δ−$), and the molecule’s own lone pairs accept the hydrogens of neighbours: a tetrahedral arrangement.')
             }
           ],
-          why: t('Vanduo turi vienodą donorų ir akceptorių skaičių, todėl sudaro tinklą su keturiais ryšiais iš molekulės. Tai paaiškina jo didelį virimo temperatūrą ir dielektrinę konstantą (78,4).', 'Water has equal numbers of donors and acceptors, so it forms a network with four bonds per molecule. This explains its high boiling point and its large dielectric constant (78.4).'),
+          why: t('Vanduo turi vienodą donorų ir akceptorių skaičių, todėl sudaro tinklą su keturiais ryšiais iš molekulės. Tai paaiškina jo aukštą virimo temperatūrą ir didelę dielektrinę konstantą (78,4).', 'Water has equal numbers of donors and acceptors, so it forms a network with four bonds per molecule. This explains its high boiling point and its large dielectric constant (78.4).'),
           src: 'L2 p45, p46'
         },
         {
@@ -1741,7 +1741,7 @@
             ],
             answer: 0,
             hint: t('Raskite donorą ir akceptorių, kurie viena kitai yra gretimose padėtyse prie žiedo.', 'Find a donor and an acceptor on neighbouring positions of the ring.'),
-            solution: t('$O–H$ prie atomo C2 ir $C=O$ prie C1 yra arti; vandenilio jungtis sudaro šešianarį ciklą ($H$, $O$, C2, C1, $C$, $O$). Tai vidinis (vidinis molekulinis) ryšys.', 'The $O–H$ at C2 and the $C=O$ at C1 are close; the hydrogen bridge closes a six-membered ring ($H$, $O$, C2, C1, $C$, $O$). This is an intramolecular bond.')
+            solution: t('$O–H$ prie atomo C2 ir $C=O$ prie C1 yra arti; vandenilio jungtis sudaro šešianarį ciklą ($H$, $O$, C2, C1, $C$, $O$). Tai vidinis molekulinis ryšys.', 'The $O–H$ at C2 and the $C=O$ at C1 are close; the hydrogen bridge closes a six-membered ring ($H$, $O$, C2, C1, $C$, $O$). This is an intramolecular bond.')
           }],
           why: t('Vidiniai vandeniliniai ryšiai susidaro, kai tarp donoro ir akceptoriaus telpa penkių ar šešių narių ciklas. Toks ryšys, pavyzdžiui, padidina salicilo rūgšties rūgštingumą, palyginti su jos izomerais.', 'Intramolecular hydrogen bonds form when a five- or six-membered ring fits between the donor and the acceptor. Such a bond raises, for example, the acidity of salicylic acid compared with its isomers.'),
           src: 'L2 p49'
@@ -1959,7 +1959,7 @@
               prompt: t('Kodėl $CCl4$ nepolinis, nors $C–Cl$ ryšys polinis?', 'Why is $CCl4$ nonpolar although the $C–Cl$ bond is polar?'),
               kind: 'choice',
               options: [
-                tx('Keturi vienodi $C–Cl$ dipoliai, nukreipti į tetraedro viršūnes, susiprastina.', 'The four identical $C–Cl$ dipoles, pointing to the corners of a tetrahedron, cancel.'),
+                tx('Keturi vienodi $C–Cl$ dipoliai, nukreipti į tetraedro viršūnes, vienas kitą panaikina.', 'The four identical $C–Cl$ dipoles, pointing to the corners of a tetrahedron, cancel.'),
                 tx('$C–Cl$ ryšys joninis.', 'The $C–Cl$ bond is ionic.'),
                 tx('Chloras ir anglis turi vienodą elektrinį neigiamumą.', 'Chlorine and carbon have the same electronegativity.'),
                 tx('Molekulė turi tik π ryšių.', 'The molecule has only π bonds.')
@@ -1969,7 +1969,7 @@
               solution: t('Ryšiai poliniai, bet molekulė simetriška, todėl dipolių vektorių suma lygi nuliui. Nepoliniai ryšiai čia nereikalingi.', 'The bonds are polar, but the molecule is symmetric, so the sum of the dipole vectors is zero. Nonpolar bonds are not needed.')
             }
           ],
-          why: t('Molekulės poliškumą lemia ne vien poliniai ryšiai, bet ir jų išsidėstymas: simetrijoje dipoliai susiprastina.', 'The polarity of a molecule depends not only on the polar bonds but on their arrangement: in a symmetric molecule the dipoles cancel.'),
+          why: t('Molekulės poliškumą lemia ne vien poliniai ryšiai, bet ir jų išsidėstymas: simetrijoje dipoliai vienas kitą panaikina.', 'The polarity of a molecule depends not only on the polar bonds but on their arrangement: in a symmetric molecule the dipoles cancel.'),
           src: 'L2 p38, p39'
         },
         {
@@ -1979,7 +1979,7 @@
             prompt: t('Kuris iš jų yra polinė molekulė?', 'Which of them is a polar molecule?'),
             kind: 'choice', options: [tx('dichlormetanas', 'dichloromethane'), tx('tetrachlormetanas', 'tetrachloromethane'), tx('abu nepoliniai', 'both nonpolar'), tx('abu vienodai poliniai', 'both equally polar')], answer: 0,
             hint: t('Palyginkite, ar dipolių vektoriai simetriškai išsidėstę aplink anglį.', 'Compare whether the dipole vectors are arranged symmetrically around the carbon.'),
-            solution: t('Dichlormetane $C–Cl$ dipoliai nesusiprasta, nes dvi $C–H$ pozicijos nepolinės: molekulė turi dipolį. $CCl4$ simetriškas, μ = 0.', 'In dichloromethane the $C–Cl$ dipoles do not cancel, because two positions carry nonpolar $C–H$: the molecule has a dipole. $CCl4$ is symmetric, μ = 0.')
+            solution: t('Dichlormetane $C–Cl$ dipoliai vienas kito nepanaikina, nes dvi padėtys užimtos beveik nepoliniais $C–H$ ryšiais: molekulė turi dipolį. $CCl4$ simetriškas, μ = 0.', 'In dichloromethane the $C–Cl$ dipoles do not cancel, because two positions carry nonpolar $C–H$: the molecule has a dipole. $CCl4$ is symmetric, μ = 0.')
           }],
           why: t('Pakeitus bent vieną chlorą kitu atomu, simetrija sutrinka ir dipolių suma nebelygi nuliui.', 'Replacing even one chlorine by another atom breaks the symmetry, and the sum of the dipoles is no longer zero.'),
           src: 'L2 p38, p39, Klein', claims: [{ name: ['ClCCl', { lt: 'dichlormetanas', en: 'dichloromethane' }] }, { name: ['ClC(Cl)(Cl)Cl', { lt: 'tetrachlormetanas', en: 'tetrachloromethane' }] }]
