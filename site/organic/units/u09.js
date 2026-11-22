@@ -319,6 +319,25 @@
         },
         { scheme: { items: [{ smi: 'c1ccc2ccccc2c1' }, { arrow: '→', above: f('HNO3') }, { smi: '[O-][N+](=O)c1cccc2ccccc12', name: t('1-nitronaftalenas', '1-nitronaphthalene') }] } },
         {
+          p: t('Kondensuotieji arenai ne tik greičiau dalyvauja SEAr reakcijose: jie lengviau už benzeną jungia reagentus ir oksiduojasi. Naftaleno vienas žiedas dalinai hidrinamas (jungimosi reakcija), o stiprūs oksidatoriai suardo vieną žiedą, ir lieka benzeno žiedas su dviem karboksigrupėmis. Benzeno žiedas tokiomis sąlygomis išlieka, nes jame aromatinis stabilumas didesnis.',
+            'Fused arenes do not only undergo SEAr faster: they also add reagents and are oxidised more easily than benzene. One ring of naphthalene is partly hydrogenated (an addition), and strong oxidants break one ring, leaving a benzene ring with two carboxyl groups. The benzene ring survives such conditions because its aromatic stabilisation is greater.'),
+          src: 'T p66'
+        },
+        {
+          scheme: { items: [{ smi: 'c1ccc2ccccc2c1', name: t('naftalenas', 'naphthalene') }, { arrow: '→', above: f('2 H2, kat.') },
+            { smi: 'C1CCc2ccccc2C1', name: t('1,2,3,4-tetrahidronaftalenas', '1,2,3,4-tetrahydronaphthalene') }], maxWidth: 640 },
+          caption: t('Jungimasis: vienas naftaleno žiedas hidrinamas, benzeno žiedas lieka.', 'Addition: one ring of naphthalene is hydrogenated and a benzene ring remains.'),
+          src: 'T p66',
+          claims: [{ formula: ['C1CCc2ccccc2C1', 'C10H12'] }, { formula: ['c1ccc2ccccc2c1', 'C10H8'] }, { aromatic: ['c1ccc2ccccc2c1', true] }]
+        },
+        {
+          scheme: { items: [{ smi: 'c1ccc2ccccc2c1', name: t('naftalenas', 'naphthalene') }, { arrow: '→', above: t('stiprus oksidatorius', 'strong oxidant') },
+            { smi: 'OC(=O)c1ccccc1C(O)=O', name: t('1,2-benzendikarboksirūgštis', '1,2-benzenedicarboxylic acid') }], maxWidth: 640 },
+          caption: t('Oksidavimas: suardomas vienas žiedas, kitas lieka (ftalio rūgštis). Benzenas tokiomis sąlygomis nereaguoja.', 'Oxidation: one ring is broken and the other remains (phthalic acid). Benzene does not react under such conditions.'),
+          src: 'T p66',
+          claims: [{ formula: ['OC(=O)c1ccccc1C(O)=O', 'C8H6O4'] }]
+        },
+        {
           pitfall: t('Benzeną nitrina ne pati $HNO3$ molekulė, o nitronio jonas $NO2+$; sieros rūgštis padidina jo koncentraciją. Reaktyvesni arenai (pvz., naftalenas) nitrinami ir vien koncentruota $HNO3$, nes joje irgi susidaro šiek tiek $NO2+$. Be $FeBr3$ benzenas su $Br2$ nereaguoja.',
             'Benzene is nitrated not by the $HNO3$ molecule itself but by the nitronium ion $NO2+$; sulfuric acid raises its concentration. More reactive arenes (naphthalene) are nitrated by concentrated $HNO3$ alone, because it also contains a little $NO2+$. Without $FeBr3$ benzene does not react with $Br2$.')
         },

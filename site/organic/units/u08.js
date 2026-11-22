@@ -1191,6 +1191,19 @@
           src: 'L8 p15'
         },
         {
+          p: t('Tą patį rezultatą duoda ir ozonas: alkinas ozonu skaidomas per trigubąjį ryšį ir po vandeniu gaunamos karboksirūgštys, o galinis ≡C–H atomas vėl virsta $CO2$. Todėl iš gautų rūgščių galima nustatyti trigubojo ryšio vietą grandinėje.',
+            'Ozone gives the same result: an alkyne is cleaved by ozone at the triple bond and, after treatment with water, carboxylic acids are obtained; a terminal ≡C–H carbon again becomes $CO2$. The acids formed therefore show where the triple bond was in the chain.'),
+          src: 'T p60'
+        },
+        {
+          scheme: { items: [{ smi: 'CC#CCC', name: t('2-pentinas', 'pent-2-yne') }, { arrow: '→', above: f('1) O3; 2) H2O') },
+            { smi: 'CC(O)=O', name: t('etano rūgštis', 'ethanoic acid') }, { plus: true }, { smi: 'CCC(O)=O', name: t('propano rūgštis', 'propanoic acid') }], maxWidth: 640 },
+          caption: t('Ozonas (kaip ir šarminis $KMnO4$) skaido alkiną į dvi karboksirūgštis.', 'Ozone (like alkaline $KMnO4$) cleaves the alkyne into two carboxylic acids.'),
+          src: 'T p60',
+          claims: [{ react: ['ox.kmno4.harsh', ['CC#CCC'], null, 'CC(O)=O'] }, { react: ['ox.kmno4.harsh', ['CC#CCC'], null, 'CCC(O)=O'] },
+            { name: ['CC#CCC', t('2-pentinas', 'pent-2-yne')] }, { name: ['CC(O)=O', t('etano rūgštis', 'ethanoic acid')] }, { name: ['CCC(O)=O', t('propano rūgštis', 'propanoic acid')] }]
+        },
+        {
           example: {
             q: [{ p: t('2-heptinas hidratuojamas ($H2SO4$, $HgSO4$). Kokie produktai?', 'Hept-2-yne is hydrated ($H2SO4$, $HgSO4$). What are the products?') },
               { mol: { smi: 'CC#CCCCC', name: t('2-heptinas', 'hept-2-yne') } }],
@@ -1668,6 +1681,21 @@
           t('Enolis izomerizuojasi į stabilesnį karbonilinį junginį; tai izomerų, besiskiriančių vandenilio padėtimi, virsmas.', 'The enol isomerises to the more stable carbonyl compound; it is a conversion between isomers that differ in the position of a hydrogen.'))],
         why: t('Enolis ir karbonilinis junginys yra izomerai, besiskiriantys vandenilio padėtimi. Karbonilinė forma stabilesnė, todėl pusiausvyra pasislenka į ją ir enolis ilgai neišlieka.', 'An enol and a carbonyl compound are isomers that differ in the position of a hydrogen. The carbonyl form is more stable, so the equilibrium lies on its side and the enol does not last.'), src: 'L8 p10',
         claims: [{ formula: ['C=CO', 'C2H4O'] }, { formula: ['CC=O', 'C2H4O'] }]
+      },
+      {
+        id: 'u08.yreason.9',
+        q: [{ p: t('1-pentinas apdorojamas ozonu, o po to vandeniu.', '1-Pentyne is treated with ozone and then with water.') },
+          { scheme: { items: [{ smi: 'CCCC#C', name: t('1-pentinas', 'pent-1-yne') }, { arrow: '→', above: f('1) O3; 2) H2O') }] } }],
+        steps: [molChoice(t('Kuri karboksirūgštis susidaro?', 'Which carboxylic acid forms?'), 'CCCC(O)=O', ['CCCCC(O)=O', 'CCC(O)=O', 'CCCC=O'],
+          t('Suskaičiuokite anglies atomus, likusius po trigubojo ryšio nutraukimo.', 'Count the carbons left after the triple bond is cleaved.'),
+          t('Pakeistas trigubojo ryšio atomas virsta $COOH$, todėl gaunama butano rūgštis (keturi C atomai).', 'The substituted triple-bond carbon becomes $COOH$, so butanoic acid (four carbons) forms.')),
+        txtChoice(t('Kuo virsta galinis ≡C–H atomas?', 'What does the terminal ≡C–H carbon become?'),
+          [t('$CO2$', '$CO2$'), t('metano rūgštimi, kuri lieka mišinyje', 'methanoic acid that stays in the mixture'), t('metanoliu', 'methanol'), t('jis nepasikeičia', 'it is unchanged')], 0,
+          t('Metano rūgštis dar oksiduojasi.', 'Methanoic acid is oxidised further.'),
+          t('Galinis atomas oksiduojamas iki $CO2$.', 'The terminal carbon is oxidised all the way to $CO2$.'))],
+        why: t('Ozonas ir šarminis $KMnO4$ nutraukia trigubąjį ryšį: kiekvienas jo atomas tampa karboksirūgšties grupe, o galinis ≡C–H atomas – $CO2$.', 'Ozone and alkaline $KMnO4$ cleave the triple bond: each of its carbons becomes a carboxylic acid group, and a terminal ≡C–H carbon becomes $CO2$.'),
+        src: 'T p60',
+        claims: [{ react: ['ox.kmno4.harsh', ['CCCC#C'], null, 'CCCC(O)=O'] }, { name: ['CCCC#C', t('1-pentinas', 'pent-1-yne')] }, { name: ['CCCC(O)=O', t('butano rūgštis', 'butanoic acid')] }, { formula: ['O=C=O', 'CO2'] }]
       }
     ]
   };

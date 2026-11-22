@@ -570,6 +570,13 @@
           src: 'L7 p19'
         },
         { scheme: { items: [{ smi: 'CC=C' }, { plus: true }, { smi: 'O' }, { arrow: '→', above: f('H2SO4') }, { smi: 'CC(C)O' }] }, caption: t('Propenas: pagrindinis produktas 2-propanolis.', 'Propene: the main product is 2-propanol.') },
+        { h: t('Koncentruota sieros rūgštis: alkilhidrosulfatas', 'Concentrated sulfuric acid: an alkyl hydrogen sulfate') },
+        {
+          p: t('Koncentruota $H2SO4$ prie alkeno jungiasi kaip $HX$: protonas prisijungia pagal Markovnikovo taisyklę, o gautą karbokatijoną atakuoja hidrosulfato anijonas. Susidaro alkilhidrosulfatas (rūgštusis sieros rūgšties esteris). Jį virinant su vandeniu, hidrolizuojasi ir susidaro alkoholis, o sieros rūgštis atsikuria. Taip pat vyksta ir tiesioginė hidratacija: vandenį prie alkenų galima jungti ir su $H3PO4$ ar $HNO3$ katalizatoriumi.',
+            'Concentrated $H2SO4$ adds to an alkene like $HX$: the proton bonds according to Markovnikov’s rule and the hydrogen sulfate anion attacks the carbocation. An alkyl hydrogen sulfate (an acid ester of sulfuric acid) forms. Heated with water, it is hydrolysed to the alcohol and sulfuric acid is regenerated. Water can also be added directly with $H3PO4$ or $HNO3$ as the catalyst.'),
+          src: 'T p57'
+        },
+        { scheme: { items: [{ smi: 'CC=C' }, { plus: true }, { smi: 'OS(=O)(=O)O' }, { arrow: '→', above: f('H2SO4 (konc.)') }, { smi: 'CC(C)OS(=O)(=O)O' }, { arrow: '→', above: f('H2O, t°') }, { smi: 'CC(C)O' }], maxWidth: 700 }, caption: t('Propenas duoda izopropilhidrosulfatą, o šis hidrolizuojamas į 2-propanolį (Markovnikovo produktą).', 'Propene gives isopropyl hydrogen sulfate, which is hydrolysed to 2-propanol (the Markovnikov product).'), src: 'T p57' },
         { h: t('Vandenilio prijungimas (hidrinimas)', 'Addition of hydrogen (hydrogenation)') },
         {
           p: t('Su $H2$ ir $Pt$, $Pd$ ar $Ni$ katalizatoriumi alkenas hidrinamas į alkaną (katalitinis hidrinimas). Abu reagentai adsorbuojasi katalizatoriaus paviršiuje, o π ryšys virsta dviem $C-H$ ryšiais. Abu vandeniliai prisijungia iš tos pačios pusės. Tai ir prijungimas, ir redukcija.',
@@ -2088,12 +2095,41 @@
     }
   ];
 
+  const H2SO4 = [
+    {
+      id: 'u07.why.10',
+      q: [{ p: t('Propenas apdorojamas koncentruota $H2SO4$, o gautas junginys verdamas su vandeniu.', 'Propene is treated with concentrated $H2SO4$, and the product is then heated with water.') },
+        { scheme: { items: [{ smi: 'CC=C', name: t('propenas', 'propene') }, { arrow: '→', above: f('H2SO4 (konc.)') }, { arrow: '→', above: f('H2O, t°') }] } }],
+      steps: [
+        {
+          prompt: t('Kuris junginys susidaro pirmoje stadijoje?', 'Which compound forms in the first stage?'),
+          kind: 'choice',
+          options: [{ mol: { smi: 'CC(C)OS(=O)(=O)O' } }, { mol: { smi: 'CCCOS(=O)(=O)O' } }, { mol: { smi: 'CC(C)O' } }, { mol: { smi: 'CC(S(=O)(=O)O)C' } }],
+          answer: 0,
+          hint: t('Protonas jungiasi pagal Markovnikovo taisyklę, o hidrosulfato deguonis atakuoja katijoną.', 'The proton bonds by Markovnikov’s rule, and the oxygen of hydrogen sulfate attacks the cation.'),
+          solution: t('Susidaro antrinis katijonas, prie kurio jungiasi $HSO4-$ deguonis: izopropilhidrosulfatas.', 'The secondary cation forms and the oxygen of $HSO4-$ bonds to it: isopropyl hydrogen sulfate.')
+        },
+        {
+          prompt: t('Kuris alkoholis gaunamas po hidrolizės?', 'Which alcohol forms after hydrolysis?'),
+          kind: 'choice',
+          options: [{ mol: { smi: 'CC(C)O', name: t('2-propanolis', 'propan-2-ol') } }, { mol: { smi: 'CCCO', name: t('1-propanolis', 'propan-1-ol') } }, { mol: { smi: 'CC(O)CO', name: t('1,2-propandiolis', 'propane-1,2-diol') } }, { mol: { smi: 'CCC=O', name: t('propanalis', 'propanal') } }],
+          answer: 0,
+          hint: t('Hidrolizė C–O ryšio neperkelia: $OH$ atsiduria ten, kur buvo $OSO3H$.', 'Hydrolysis does not move the C–O bond: $OH$ ends up where the $OSO3H$ was.'),
+          solution: t('Bendras rezultatas toks pat kaip hidratacijos: Markovnikovo alkoholis 2-propanolis, o $H2SO4$ atsikuria.', 'The overall result is the same as hydration: the Markovnikov alcohol propan-2-ol, and $H2SO4$ is regenerated.')
+        }
+      ],
+      why: t('Koncentruota $H2SO4$ yra $HX$ analogas: tas pats AE ir ta pati kryptis. Hidrosulfatas yra tarpinis junginys, o jo hidrolizė duoda alkoholį.', 'Concentrated $H2SO4$ is an analogue of $HX$: the same AE and the same direction. The hydrogen sulfate is an intermediate, and its hydrolysis gives the alcohol.'),
+      src: 'T p57',
+      claims: [{ formula: ['CC(C)OS(=O)(=O)O', 'C3H8O4S'] }, { react: ['ae.h2o', ['CC=C'], null, 'CC(C)O'] }, { name: ['CC(C)O', t('2-propanolis', 'propan-2-ol')] }, { name: ['CC=C', t('propenas', 'propene')] }]
+    }
+  ];
+
   ORG.unit({
     id: 'u07',
     notes: NOTES,
     summary: SUMMARY,
     types: TYPES_GEN.concat([
-      { id: 'u07.why', title: t('Kryptis ir priežastis', 'Direction and reason'), mirrors: ['S4.3', 'S4.12', 'S4.14'], bank: WHY },
+      { id: 'u07.why', title: t('Kryptis ir priežastis', 'Direction and reason'), mirrors: ['S4.3', 'S4.12', 'S4.14'], bank: WHY.concat(H2SO4) },
       { id: 'u07.deduce', title: t('Alkeno nustatymas pagal duomenis', 'Deducing the alkene from data'), mirrors: ['S4.14'], bank: DEDUCE },
       { id: 'u07.test', title: t('Dvigubojo ryšio atpažinimas', 'Testing for a double bond'), mirrors: ['S4.4'], bank: TEST }
     ]),

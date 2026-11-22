@@ -439,7 +439,9 @@
                 [f('$NaOCH3$'), t('eteris', 'ether'), { smi: 'CCCOC', name: t('1-metoksipropanas', '1-methoxypropane') }],
                 [f('$NaSCH3$'), t('sulfidas', 'sulfide'), { smi: 'CCCSC', name: t('1-metiltiopropanas', '1-(methylsulfanyl)propane') }],
                 [f('$NaCN$'), t('nitrilas', 'nitrile'), { smi: 'CCCC#N', name: t('butannitrilas', 'butanenitrile') }],
-                [f('$NaC≡CCH3$'), t('alkinas', 'alkyne'), { smi: 'CCCC#CC', name: t('2-heksinas', 'hex-2-yne') }]
+                [f('$NaC≡CCH3$'), t('alkinas', 'alkyne'), { smi: 'CCCC#CC', name: t('2-heksinas', 'hex-2-yne') }],
+                [t('$NH3$ (perteklius)', '$NH3$ (excess)'), t('aminas', 'amine'), { smi: 'CCCN', name: t('1-propanaminas', 'propan-1-amine') }],
+                [f('$CH3COOAg$'), t('esteris', 'ester'), { smi: 'CCCOC(C)=O', name: t('propiletanoatas', 'propyl ethanoate') }]
               ]
             },
             src: 'L10 p14'
@@ -448,6 +450,11 @@
             p: t('Visos šios reakcijos tipinės SN2; alkoksido reakcija yra Viljamsono eterių sintezė.',
               'All of these are typical SN2 reactions; the alkoxide reaction is the Williamson ether synthesis.'),
             src: 'L10 p12, p13'
+          },
+          {
+            p: t('Amoniakas ir aminai nukleofiliškai pakeičia halogeną ir sudaro aminus; amoniako imama pertekliaus, kad gautas aminas toliau nealkilintųsi. Karboksirūgšties sidabro druska su halogenalkanu duoda esterį: karboksilato deguonis yra nukleofilas, o susidaro nuosėdos $AgBr$.',
+              'Ammonia and amines replace the halogen as nucleophiles and give amines; ammonia is used in excess so that the amine formed is not alkylated further. The silver salt of a carboxylic acid gives an ester with a haloalkane: the carboxylate oxygen is the nucleophile, and $AgBr$ precipitates.'),
+            src: 'T p69'
           },
           {
             scheme: { items: [{ smi: 'CI' }, { plus: true }, { smi: '[O-]C1CCCC1' }, { arrow: '→' }, { smi: 'COC1CCCC1', name: t('metoksiciklopentanas', 'methoxycyclopentane') }, { plus: true }, { smi: '[I-]' }], maxWidth: 640 },

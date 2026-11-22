@@ -864,9 +864,9 @@
       title: t('Chloras ir bromas: neselektyvus ir selektyvus', 'Chlorine and bromine: unselective and selective'),
       blocks: [
         {
-          rule: t('Bromas yra mažiau aktyvus, bet labai selektyvus: jis pakeičia tą vandenilį, kurį atplėšus susidaro stabiliausias radikalas (dažniausiai tretinio ar benziltipo atomo). Chloras aktyvesnis, bet mažai selektyvus: susidaro visų galimų izomerų mišinys, ypač aukštoje temperatūroje.',
-            'Bromine is less reactive but very selective: it replaces the hydrogen whose removal gives the most stable radical (most often on a tertiary or benzylic carbon). Chlorine is more reactive but hardly selective: a mixture of all possible isomers forms, especially at high temperature.'),
-          src: 'L6 p12, p15'
+          rule: t('Bromas yra mažiau aktyvus, bet labai selektyvus: jis pakeičia tą vandenilį, kurį atplėšus susidaro stabiliausias radikalas (dažniausiai tretinio ar benziltipo atomo). Chloras aktyvesnis ir beveik neselektyvus: pirminius, antrinius ir tretinius vandenilius jis pakeičia beveik vienodu greičiu, todėl susidaro visų galimų izomerų mišinys.',
+            'Bromine is less reactive but very selective: it replaces the hydrogen whose removal gives the most stable radical (most often on a tertiary or benzylic carbon). Chlorine is more reactive and almost unselective: it replaces primary, secondary and tertiary hydrogens at nearly equal rates, so a mixture of all possible isomers forms.'),
+          src: 'L6 p12, p15; T p53'
         },
         {
           p: t('Reakcija vadinama regioselektyvia, kai reagentas pasirenka tik vieną iš kelių galimų reaktingų molekulės vietų. Brominimas toks ir yra.',
@@ -909,9 +909,9 @@
           src: 'L6 p14'
         },
         {
-          p: t('Chloro atveju pirminis produktas vyrauja tik todėl, kad 2-metilpropane yra devyni pirminiai vandeniliai ir tik vienas tretinis. Vienam vandeniliui skaičiuojant, tretinis vandenilis chlorinamas maždaug penkis kartus greičiau už pirminį (37 / 1 prieš 63 / 9), o brominamas tūkstančius kartų greičiau.',
-            'With chlorine the primary product predominates only because 2-methylpropane has nine primary hydrogens and only one tertiary hydrogen. Per hydrogen, the tertiary one is chlorinated about five times faster than the primary one (37 / 1 against 63 / 9), and brominated thousands of times faster.'),
-          src: 'L6 p14; Klein'
+          p: t('Chloro atveju pirminis produktas vyrauja tik todėl, kad 2-metilpropane yra devyni pirminiai vandeniliai ir tik vienas tretinis. Greičiai skiriasi nedaug: vienam vandeniliui skaičiuojant, tretinis vandenilis chlorinamas tik maždaug penkis kartus greičiau už pirminį (37 / 1 prieš 63 / 9), o brominamas tūkstančius kartų greičiau.',
+            'With chlorine the primary product predominates only because 2-methylpropane has nine primary hydrogens and only one tertiary hydrogen. The rates differ little: per hydrogen, the tertiary one is chlorinated only about five times faster than the primary one (37 / 1 against 63 / 9), and brominated thousands of times faster.'),
+          src: 'L6 p14; Klein; T p53'
         },
         {
           p: t('Kodėl taip? Chloro radikalas labai aktyvus ir atplėšia vandenilį beveik bet kur, todėl radikalo stabilumas mažai svarbus. Mažiau aktyvus bromo radikalas „renkasi“: pereinamoji būsena primena susidarantį radikalą, todėl stabilumo skirtumas labai paveikia greitį.',
@@ -919,9 +919,9 @@
           src: 'L6 p15; Klein'
         },
         {
-          pitfall: t('Neteigkite, kad chloras visus vandenilius keičia vienodai. Chloras tik mažai selektyvus: tretinis vandenilis vis dėlto keičiamas greičiau, o produktų santykis priklauso ir nuo vandenilių skaičiaus. Žemoje temperatūroje chloras truputį selektyvesnis nei aukštoje.',
-            'Do not say that chlorine replaces all hydrogens equally. It is only weakly selective: a tertiary hydrogen is still replaced faster, and the product ratio also depends on the number of hydrogens. At low temperature chlorine is somewhat more selective than at high temperature.'),
-          src: 'L6 p12'
+          pitfall: t('Chloras pirminius, antrinius ir tretinius vandenilius keičia beveik vienodu greičiu, todėl gaunami mišiniai; vis dėlto tretinis vandenilis keičiamas šiek tiek greičiau, o produktų santykis priklauso ir nuo vandenilių skaičiaus. Žemoje temperatūroje chloras truputį selektyvesnis nei aukštoje.',
+            'Chlorine replaces primary, secondary and tertiary hydrogens at nearly equal rates, so mixtures form; a tertiary hydrogen is still replaced slightly faster, and the product ratio also depends on the number of hydrogens. At low temperature chlorine is somewhat more selective than at high temperature.'),
+          src: 'L6 p12; T p53'
         },
         {
           example: {
