@@ -213,3 +213,84 @@ test('every view is free of NaN, undefined and style=', () => {
     V.resonance([{ smi: 'c1ccccc1' }, { smi: 'c1ccccc1' }]),
   ].forEach(clean);
 });
+
+// ---- arrow geometry: direction is what the arrows teach --------------------
+function arrowGeom(d, cls) {
+  const all = [];
+  const heads = [];
+  walk(d.svg, (v) => {
+    if (v.t !== 'path') return;
+    if (classes(v).includes('ahead')) heads.push(v);
+    else if (classes(v).includes('arrow') || classes(v).includes('harrow')) all.push(v);
+  });
+  const out = all.map((p, i) => ({ p, i })).filter((x) => classes(x.p).includes(cls || 'arrow'));
+  return out.map(({ p, i }) => {
+    const n = p.a.d.match(/-?\d+(\.\d+)?/g).map(Number);
+    const h = heads[i].a.d.match(/-?\d+(\.\d+)?/g).map(Number);
+    return { start: [n[0], n[1]], tip: [h[0], h[1]] };
+  });
+}
+function offsetOf(d, k) { // translation of the k-th molecule group, inner translate included
+  const o = [];
+  walk(d.svg, (v) => { if (v.t === 'g' && v.a && v.a.class === 'mol-item') { const m = /translate\(([-\d.]+) ([-\d.]+)\)/.exec(v.a.transform); o.push([+m[1], +m[2]]); } });
+  return o[k];
+}
+const dist = (p, q) => Math.hypot(p[0] - q[0], p[1] - q[1]);
+
+test('arrows start at the source and end at the sink', () => {
+  const items = [{ smi: 'C[CH2+]' }, { plus: true }, { smi: '[Br-]' }];
+  const d = V.mechanism({ scheme: { items }, arrows: [{ from: { m: 1, lp: 0 }, to: { m: 0, a: 1 } }] });
+  const g = arrowGeom(d)[0];
+  const m0 = V.scheme({ items }).mols;
+  const o0 = offsetOf(d, 0); const o1 = offsetOf(d, 1);
+  const mol0 = D.molecule('C[CH2+]'); const mol1 = D.molecule('[Br-]', { lonePairs: [0] });
+  const target = [mol0.atoms[1].x + o0[0], mol0.atoms[1].y + o0[1]];
+  const br = [mol1.atoms[0].x + o1[0], mol1.atoms[0].y + o1[1]];
+  assert.ok(dist(g.start, br) < 26 && dist(g.start, br) > 5, 'starts at the Br lone pair ' + dist(g.start, br));
+  assert.ok(dist(g.tip, target) < 10, 'tip at target ' + dist(g.tip, target));
+  assert.ok(dist(g.tip, br) > 30, 'tip not at the source');
+  assert.ok(m0 === undefined || true);
+  // the lone pair dots' centre is within 8 of the start (start is 4 beyond the dot)
+  const dots = [];
+  walk(d.svg, (v) => { if (v.t === 'g' && classes(v).includes('lp')) dots.push(v.c.map((c) => [+c.a.cx + o1[0], +c.a.cy + o1[1]])); });
+  const near = dots.map((c) => dist(g.start, [(c[0][0] + c[1][0]) / 2, (c[0][1] + c[1][1]) / 2])).sort((a, b) => a - b)[0];
+  assert.ok(near < 8, 'start near a lone pair centre ' + near);
+});
+
+test('bond to atom, bond to bond and half arrows have the right ends', () => {
+  const d = V.mechanism({
+    scheme: { items: [{ smi: 'C=C' }, { plus: true }, { smi: 'Br', opts: { allH: true } }] },
+    arrows: [{ from: { m: 0, b: [0, 1] }, to: { m: 1, a: 'H0' } }, { from: { m: 1, b: [0, 'H0'] }, to: { m: 1, a: 0 }, half: true }],
+  });
+  const o0 = offsetOf(d, 0); const o1 = offsetOf(d, 1);
+  const a = D.molecule('C=C'); const b = D.molecule('Br', { allH: true });
+  const mid0 = [(a.atoms[0].x + a.atoms[1].x) / 2 + o0[0], (a.atoms[0].y + a.atoms[1].y) / 2 + o0[1]];
+  const H = [b.atoms[1].x + o1[0], b.atoms[1].y + o1[1]];
+  const midHBr = [(b.atoms[0].x + b.atoms[1].x) / 2 + o1[0], (b.atoms[0].y + b.atoms[1].y) / 2 + o1[1]];
+  const Br = [b.atoms[0].x + o1[0], b.atoms[0].y + o1[1]];
+  const full = arrowGeom(d, 'arrow')[0];
+  assert.ok(dist(full.start, mid0) < 8, 'pi bond start');
+  assert.ok(dist(full.tip, H) < 10 && dist(full.tip, mid0) > 20, 'tip at H');
+  const half = arrowGeom(d, 'harrow')[0];
+  assert.ok(dist(half.start, midHBr) < 8, 'bond start');
+  assert.ok(dist(half.tip, Br) < 14 && dist(half.tip, midHBr) > 6, 'half tip at Br ' + dist(half.tip, Br) + ' ' + dist(half.tip, midHBr));
+  // bond to bond (mid): the sink is the midpoint of the named pair
+  const e = V.mechanism({ scheme: { items: [{ smi: 'C=C' }, { plus: true }, { smi: 'CC' }] }, arrows: [{ from: { m: 0, b: [0, 1] }, to: { m: 1, mid: [0, 1] } }] });
+  const q0 = offsetOf(e, 0); const q2 = offsetOf(e, 1);
+  const c2 = D.molecule('CC');
+  const sink = [(c2.atoms[0].x + c2.atoms[1].x) / 2 + q2[0], (c2.atoms[0].y + c2.atoms[1].y) / 2 + q2[1]];
+  const g = arrowGeom(e, 'arrow')[0];
+  assert.ok(dist(g.tip, sink) < 10 && dist(g.start, sink) > 20, 'bond to bond');
+  assert.ok(q0);
+});
+
+test('a lone pair arrow leaves away from the atom label', () => {
+  const d = V.mechanism({ scheme: { items: [{ smi: '[OH-]' }, { plus: true }, { smi: 'CCBr' }] }, arrows: [{ from: { m: 0, lp: 0 }, to: { m: 1, a: 0 } }] });
+  const p = find(d, 'arrow', 'path')[0].a.d.match(/-?\d+(\.\d+)?/g).map(Number); // M x y Q cx cy ex ey
+  const o = offsetOf(d, 0);
+  const mol = D.molecule('[OH-]', { lonePairs: [0] });
+  const at = [mol.atoms[0].x + o[0], mol.atoms[0].y + o[1]];
+  const out = [p[0] - at[0], p[1] - at[1]];
+  const lead = [p[2] - p[0], p[3] - p[1]];
+  assert.ok(out[0] * lead[0] + out[1] * lead[1] > 0, 'first segment points away from the atom');
+});

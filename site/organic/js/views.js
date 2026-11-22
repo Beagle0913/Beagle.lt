@@ -207,7 +207,7 @@
 
   const FDIR = { up: [0, 1, -1], down: [0, -1, -1], left: [-1, 0, 1], right: [1, 0, 1] };
 
-  function det3(a, b, c) { // (b-a) . ((c-a) x ... ) helper not used directly
+  function det3(a, b, c) { // 3x3 determinant of the rows a, b, c
     return a[0] * (b[1] * c[2] - b[2] * c[1]) - a[1] * (b[0] * c[2] - b[2] * c[0]) + a[2] * (b[0] * c[1] - b[1] * c[0]);
   }
   // '@' (counter-clockwise from the first neighbour) when negative
@@ -363,7 +363,7 @@
       // an eclipsed group is drawn a little to the side so that it stays visible
       let near = null;
       fa.forEach((f) => { if (Math.abs(norm(d - f)) < 12) near = f; });
-      if (near !== null) { d = near + 30; }
+      if (near !== null) { d = near + 12; }
       return d;
     });
     let lw = 0;
@@ -718,7 +718,7 @@
         const ux = best.x - ax;
         const uy = best.y - ay;
         const ul = Math.hypot(ux, uy) || 1;
-        return { x: best.x + (ux / ul) * 4, y: best.y + (uy / ul) * 4, kind: 'lp', labelled: false };
+        return { x: best.x + (ux / ul) * 4, y: best.y + (uy / ul) * 4, kind: 'lp', labelled: false, ox: ux / ul, oy: uy / ul };
       }
       const pair = ref.b || ref.mid;
       if (pair) {
@@ -751,9 +751,16 @@
       const side = nx * (mx - ctr.x) + ny * (my - ctr.y);
       if (Math.abs(side) < 3) { if (ny > 0) { nx = -nx; ny = -ny; } } else if (side < 0) { nx = -nx; ny = -ny; }
       const peak = Math.max(12, Math.min(34, 0.3 * len));
+      if (p0.ox !== undefined) {
+        // leave the lone pair away from its atom's label: the first segment must point outwards
+        const lead = (sg) => ((mx + sg * nx * 2 * peak - p0.x) * p0.ox + (my + sg * ny * 2 * peak - p0.y) * p0.oy);
+        const cur = lead(1);
+        const alt = lead(-1);
+        if (alt > cur) { nx = -nx; ny = -ny; }
+      }
       const cx = mx + nx * 2 * peak;
       const cy = my + ny * 2 * peak;
-      const gap = p1.labelled ? 12 : 6;
+      const gap = p1.labelled ? 9 : 6;
       let tdx = p1.x - cx;
       let tdy = p1.y - cy;
       const tl = Math.hypot(tdx, tdy) || 1;
