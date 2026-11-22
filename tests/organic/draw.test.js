@@ -509,7 +509,7 @@ test('small inorganic molecules read the conventional way', () => {
 });
 
 test('a charge is a superscript after the whole label', () => {
-  for (const smi of ['[CH2+]C', 'C[OH+]C', '[OH2+]', 'C[N+](C)(C)C', 'CC(=O)[O-]', 'C[NH3+]', '[CH3-]']) {
+  for (const smi of ['[CH2+]C', 'C[OH+]C', 'C[OH2+]', '[OH3+]', 'C[N+](C)(C)C', 'CC(=O)[O-]', 'C[NH3+]', '[CH3-]']) {
     const d = D.molecule(smi, {});
     const ch = find(d, 'charge');
     assert.strictEqual(ch.length, 1, smi);
