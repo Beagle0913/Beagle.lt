@@ -508,6 +508,9 @@
     const sites = [];
     for (let c = 0; c < g.n(); c++) if (sp3C(g, c) && g.A[c].h > 0) sites.push(c);
     if (!sites.length) return none(T('Nėra sp3 C–H ryšio.', 'There is no sp3 C-H bond.'));
+    if (smallRingBonds(g).length) {
+      return none(T('Trijų ir keturių narių žiedai reaguoja kaip nesotieji junginiai: halogenas atveria žiedą (ciklopropanas su Br2 duoda 1,3-dibrompropaną), todėl įprastas radikalinis pakeitimas nenumatomas.', 'Three- and four-membered rings behave like unsaturated compounds: the halogen opens the ring (cyclopropane with Br2 gives 1,3-dibromopropane), so ordinary radical substitution is not predicted.'));
+    }
     const best = Math.max.apply(null, sites.map((c) => cls(g, c, true))); // radicals: benzyl = allyl (L6 p16)
     const out = new Out();
     sites.forEach((c) => {
@@ -582,6 +585,49 @@
     if (grp === 'OH') { const x = ng.add('O', 0, 1); ng.bond(i, x, 1); } else { ng.bond(i, ng.add(grp, 0, 0), 1); }
   }
 
+  // bonds of three- and four-membered carbocycles: [[a, b, ringSize], ...]
+  function smallRingBonds(g) {
+    const out = [];
+    Object.keys(g.B).forEach((k) => {
+      const p = k.split('_').map(Number);
+      if (g.B[k] !== 1 || !isC(g, p[0]) || !isC(g, p[1]) || ar(g, p[0]) || ar(g, p[1])) return;
+      g.unbond(p[0], p[1]);
+      const path = g.path(p[0], p[1]);
+      g.bond(p[0], p[1], 1);
+      if (path && path.length <= 4 && path.every((i) => isC(g, i))) out.push([p[0], p[1], path.length]);
+    });
+    return out;
+  }
+
+  // Three-membered rings behave like unsaturated compounds (T p60): X2 and HX open cyclopropane to the 1,3-product.
+  // Only cyclopropane is opened; cyclobutane is not predicted (none with a note).
+  function ringOpening(g, kind, X) {
+    const rb = smallRingBonds(g);
+    if (!rb.length) return null;
+    const three = rb.filter((b) => b[2] === 3);
+    if (!three.length) return none(T('Ciklobutano žiedo atsivėrimas čia nenagrinėjamas; ciklobutanas reaguoja kaip alkanas.', 'Opening of a cyclobutane ring is not predicted here; cyclobutane behaves like an alkane.'));
+    const out = new Out();
+    const scored = three.map((b) => {
+      const ng = g.clone();
+      ng.unbond(b[0], b[1]);
+      if (kind === 'x2') {
+        attachGroup(ng, b[0], X);
+        attachGroup(ng, b[1], X);
+        return { g: ng, s: 0 };
+      }
+      const sa = cation(g, b[0]);
+      const sb = cation(g, b[1]);
+      const x = sa >= sb ? b[0] : b[1];
+      const y = x === b[0] ? b[1] : b[0];
+      ng.A[y].h += 1;
+      attachGroup(ng, x, X);
+      return { g: ng, s: Math.max(sa, sb) };
+    });
+    const top = Math.max.apply(null, scored.map((e) => e.s));
+    scored.forEach((e) => out.add(e.g, e.s === top));
+    return out.note(T('Trijų narių žiedas reaguoja kaip nesotusis junginys: halogenas ar HX atveria ciklopropano žiedą (vadovėlis, p. 60).', 'A three-membered ring behaves like an unsaturated compound: a halogen or HX opens the cyclopropane ring (textbook, p. 60).')).result();
+  }
+
   // Markovnikov addition of H-G to every C=C (anti-Markovnikov next to an electron-withdrawing group or with peroxides)
   function addHG(g, grp, peroxide) {
     const alk = findAlkenes(g);
@@ -616,6 +662,7 @@
     if (!HAL[X]) throw new Error('react: ae.hx needs X');
     const g = rs[0];
     if (conjQuads(g).length) return dieneAdd(g, 'hx', X);
+    if (!findAlkenes(g).length) { const ro = ringOpening(g, 'hx', X); if (ro) return ro; }
     return addHG(g, X, !!o.peroxide && X === 'Br');
   });
 
@@ -627,6 +674,7 @@
     const g = rs[0];
     if (conjQuads(g).length) return dieneAdd(g, 'x2', X);
     const alk = findAlkenes(g);
+    if (!alk.length) { const ro = ringOpening(g, 'x2', X); if (ro) return ro; }
     if (!alk.length) return none(NOTE_NO_ALKENE);
     const out = new Out();
     alk.forEach((p) => {

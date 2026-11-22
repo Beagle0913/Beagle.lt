@@ -775,4 +775,15 @@ test('every rule with a mechanism symbol returns mech on a sample input', () => 
   });
 });
 
+test('small rings: no radical substitution, cyclopropane opens with X2 and HX', () => {
+  ['C1CC1', 'CC1CC1', 'C1CCC1'].forEach((smi) => assert.ok(R('sr.halogenate', [smi], { X: 'Br' }).none, smi));
+  assert.ok(/ring/.test(R('sr.halogenate', ['CC1CC1'], { X: 'Br' }).note.en) && R('sr.halogenate', ['CC1CC1'], { X: 'Br' }).note.lt);
+  assert.ok(!R('sr.halogenate', ['C1CCCCC1'], { X: 'Br' }).none);
+  only(R('ae.x2', ['C1CC1'], { X: 'Br' }), 'BrCCCBr');
+  only(R('ae.hx', ['C1CC1'], { X: 'Br' }), 'CCCBr');
+  same(R('ae.hx', ['CC1CC1'], { X: 'Br' }), ['CC(C)CBr'.replace('CC(C)CBr', 'CCC(C)Br')]);
+  assert.ok(R('ae.x2', ['C1CCC1'], { X: 'Br' }).none);
+  assert.ok(R('ae.x2', ['C1CCCCC1'], { X: 'Br' }).none);
+});
+
 //@@TESTS
