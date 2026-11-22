@@ -269,6 +269,10 @@
           caption: t('Metanaminas ir bromoetanas: amonio druska, po to laisvas antrinis aminas.', 'Methanamine and bromoethane: the ammonium salt, then the free secondary amine.')
         },
         {
+          scheme: { items: [{ smi: 'N' }, { arrow: '→', above: f('CH3I') }, { smi: 'CN' }, { arrow: '→', above: f('CH3I') }, { smi: 'CNC' }, { arrow: '→', above: f('CH3I') }, { smi: 'CN(C)C' }, { arrow: '→', above: f('CH3I') }, { smi: 'C[N+](C)(C)C.[I-]' }] },
+          caption: t('Nuosekliai alkilinant gaunami pirminis, antrinis, tretinis aminas ir ketvirtinė amonio druska.', 'Repeated alkylation gives the primary, secondary and tertiary amine and the quaternary ammonium salt.')
+        },
+        {
           pitfall: t('Aminų alkilinimas yra prastas būdas gauti vieną amino rūšį: reakcijos produktas ne mažiau nukleofiliškas už pradinį aminą. Norint gauti tik ketvirtinę druską, halogenalkano ima pertekliumi.',
             'Alkylation is a poor way to make one single amine: the product is at least as nucleophilic as the starting amine. To obtain only the quaternary salt, an excess of the alkyl halide is used.'),
           src: 'T p97'
@@ -906,6 +910,7 @@
           hint: t('Suskaičiuokite anglies, vandenilio ir azoto atomus, įskaitant žiedą.', 'Count the carbon, hydrogen and nitrogen atoms, the ring included.'),
           solution: t('Žiedas turi 4 anglis, etilas – 2: $C6H13N$. Cikloheksanaminas ir N-metilciklopentanaminas turi tą pačią formulę.', 'The ring has 4 carbons and the ethyl group 2: $C6H13N$. Cyclohexanamine and N-methylcyclopentanamine have the same formula.')
         });
+        pr.steps[1].solution = t('Tretinis aminas neturi $N-H$ ir vandenilinių ryšių nesudaro, antrinis turi vieną, pirminis du: virimo temperatūra didėja eilėje tretinis < antrinis < pirminis.', 'The tertiary amine has no $N-H$ and forms no hydrogen bonds, the secondary has one, the primary two: the boiling point rises in the order tertiary < secondary < primary.');
         return pr;
       })()
     ]
