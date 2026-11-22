@@ -159,6 +159,7 @@
 
   /* ---------- notes: blocks ---------- */
   const revealed = {};
+  let revealAll = false; // the author playground shows every step of a worked example
   function blocks(parent, list, path) {
     (list || []).forEach((b, i) => block(parent, b, path + '/' + i));
   }
@@ -212,6 +213,7 @@
   }
   function example(parent, ex, path) {
     inset += 34;
+    if (revealAll) revealed[path] = ex.steps.length;
     const box = el('div', 'example');
     box.append(el('span', 'boxlabel', S.example));
     const q = el('div', 'exq'); blocks(q, ex.q, path + '/q'); box.append(q);
@@ -682,6 +684,7 @@
         const note = el('p', 'fb yes', S.right); body.append(note);
         if (st.note) body.append(richEl('p', 'fb note', st.note));
       }
+      if (p.reveal) { const hbox = el('div', 'hint'); hbox.append(el('span', 'tag', S.hint)); rich(hbox, step.hint); body.append(hbox); }
       body.append(solutionBox(step, st.status));
     }
     li.append(body);
@@ -705,7 +708,7 @@
       fin.append(why);
     }
     const bar = el('div', 'finishbar');
-    if (p.mode !== 'exam') bar.append(el('span', 'verdict' + (p.hinted || !p.firstTry ? ' help' : ''), p.hinted || !p.firstTry ? S.solvedHelp : S.solvedFirst));
+    if (p.mode !== 'exam' && !p.reveal) bar.append(el('span', 'verdict' + (p.hinted || !p.firstTry ? ' help' : ''), p.hinted || !p.firstTry ? S.solvedHelp : S.solvedFirst));
     for (const a of hooks.finishActions()) bar.append(a);
     fin.append(bar);
     return fin;
@@ -969,10 +972,38 @@
     resizeTimer = setTimeout(() => {
       if (Math.abs(app.clientWidth - lastW) < 8) return;
       lastW = app.clientWidth;
+      if (ORG.ui && ORG.ui.onResize) { ORG.ui.onResize(); return; }
       const y = window.scrollY; render(); window.scrollTo(0, y);
     }, 200);
   });
   window.addEventListener('hashchange', () => { go(false); window.scrollTo(0, 0); });
+  /* ---------- for the author playground (tools/organic/playground.js): the same renderers, outside the page flow ---------- */
+  const setLang = l => { lang = l === 'en' ? 'en' : 'lt'; S = STR[lang]; doc.documentElement.lang = lang; };
+  ORG.ui = {
+    onResize: null,
+    setLang,
+    // blocks of notes (molecules, schemes, mechanisms, worked examples with every step shown) into a container
+    renderBlocks(container, list, l, path) {
+      setLang(l); inset = 0; revealAll = true;
+      try { blocks(container, list, path || 'pg'); } finally { revealAll = false; }
+    },
+    // one problem with every step answered: the right options marked, the hint, the solution and the why shown
+    renderProblem(container, problem, l, opts) {
+      setLang(l);
+      const type = (opts && opts.type) || { title: { lt: '', en: '' }, mirrors: [] };
+      const p = { mode: 'practice', unit: null, type, seed: 0, problem, k: problem.steps.length - 1, steps: [], finished: true, firstTry: true, hinted: false, reveal: true, focus: null };
+      problem.steps.forEach((step, k) => {
+        const st = newSt(p, k);
+        if (st.perm) st.perm = st.perm.map((_, i) => i);
+        if (st.rperm) st.rperm = st.rperm.map((_, i) => i);
+        st.entry = CK.answerEntry(step, lang);
+        st.status = 'shown'; st.ok = false;
+        p.steps.push(st);
+      });
+      renderSheet(p, container, { redraw() {}, check() {}, show() {}, finishActions: () => [] });
+    }
+  };
+
   applyLang();
   go(true);
 })(globalThis.ORG = globalThis.ORG || {});
