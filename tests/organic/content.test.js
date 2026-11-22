@@ -417,8 +417,13 @@ function checkUnit(unit, opts) {
 
   function runClaim(c, loc, tag) {
     scan(c, loc, tag, 'claim');
-    try { const e = claimCheck(c, R.unchecked); if (e) R.err(loc, e, tag); } catch (e) { R.err(loc, 'claim could not be checked: ' + e.message, tag); }
+    // the same claim in many generated problems is proved once per unit
+    const key = JSON.stringify(c);
+    if (!claimCache.has(key)) { let r; try { r = { e: claimCheck(c, R.unchecked) }; } catch (e) { r = { e: 'claim could not be checked: ' + e.message }; } claimCache.set(key, r); }
+    const res = claimCache.get(key);
+    if (res.e) R.err(loc, res.e, tag);
   }
+  const claimCache = new Map();
 
   function problemChecks(p, type, prob, tag) {
     if (!isObj(p)) return;
@@ -472,14 +477,15 @@ function checkUnit(unit, opts) {
   function generatorChecks(ty) {
     const tid = ty.id;
     const prints = new Set();
-    const t1 = Date.now();
+    let genTime = 0; // only the generator itself (makeProblem) counts toward the limit, not the validator's own checks
     let ran = 0;
     for (let seed = 1; seed <= opts.seeds; seed++) {
-      if (Date.now() - t1 > opts.genMs) break;
+      if (genTime > opts.genMs) break;
       ran++;
       const tag = 'seed ' + seed;
       let p;
-      try { p = ORG.check.makeProblem(ty, seed); } catch (e) { R.err(L(tid, '', 'generator'), 'gen threw: ' + e.message, tag); continue; }
+      const tg = Date.now();
+      try { p = ORG.check.makeProblem(ty, seed); genTime += Date.now() - tg; } catch (e) { genTime += Date.now() - tg; R.err(L(tid, '', 'generator'), 'gen threw: ' + e.message, tag); continue; }
       const bad = ORG.check.validateProblem(p);
       bad.forEach((e) => R.err(L(tid, '', 'structure'), e.replace(/^x\.t\.1/, 'problem'), tag));
       if (!bad.length) safely(() => problemChecks(p, tid, '', tag), L(tid), tag);
@@ -492,7 +498,7 @@ function checkUnit(unit, opts) {
       }
     }
     R.seedsRun[tid] = ran;
-    if (ran < opts.seeds) R.err(L(tid, '', 'generator'), 'the generator is too slow: only ' + ran + ' of ' + opts.seeds + ' seeds ran in the ' + (opts.genMs / 1000) + ' s limit (' + (Date.now() - t1) + ' ms); make it cheaper');
+    if (ran < opts.seeds) R.err(L(tid, '', 'generator'), 'the generator is too slow: only ' + ran + ' of ' + opts.seeds + ' seeds ran in the ' + (opts.genMs / 1000) + ' s limit (' + genTime + ' ms in the generator); make it cheaper');
     // distinct problems: at least 30 when 100 or more seeds ran, otherwise at least 30% of the seeds that ran
     const need = ran >= 100 ? MIN_DISTINCT : Math.ceil(0.3 * ran);
     if (prints.size < need) guide(L(tid, '', 'generator'), 'the generator gave only ' + prints.size + ' distinct problems in ' + ran + ' seeds, the guide asks for at least ' + need);
@@ -814,7 +820,14 @@ test('validator: step answers are cross-checked, mirrors need coverage, small ru
   only(u, /steps\[0\]: options 0 and 1 are the same/);
   // 7: a slow generator fails, with the time and seed count; distinct problems scale with the seeds that ran
   u = gen((rng, ctx) => { const t = Date.now(); while (Date.now() - t < 5) { /* wait */ } return numGen(90)(rng, ctx); });
-  assert.match(checkUnit(u, { guide: 'warn', seeds: 200, genMs: 100 }).errors.join('\n'), /the generator is too slow: only \d+ of 200 seeds ran in the 0\.1 s limit \(\d+ ms\)/);
+  assert.match(checkUnit(u, { guide: 'warn', seeds: 200, genMs: 100 }).errors.join('\n'), /the generator is too slow: only \d+ of 200 seeds ran in the 0\.1 s limit \(\d+ ms in the generator\)/);
+  // the validator's own checks (layout of a numbered molecule) are cached across seeds and do not count toward the limit
+  u = gen((rng, ctx) => ({ q: [{ p: T('K', 'Q') }, { mol: { smi: 'CC(C)CC(O)C(=O)NC1CCCCC1', opts: { numbers: 'all' } } }], steps: [{ prompt: T('Kiek?', 'How many?'), kind: 'number', answer: { value: ctx.int(1, 90), tol: 0 }, hint: T('H', 'Hint'), solution: T('S', 'Sol') }], why: T('P', 'R') }));
+  const t0 = Date.now();
+  const rc = checkUnit(u, { guide: 'warn', seeds: 300, genMs: 2000 });
+  assert.deepEqual(rc.errors, []);
+  assert.equal(rc.stats.seeds['u01.gen'], 300);
+  assert.ok(Date.now() - t0 < 5000, 'took ' + (Date.now() - t0) + ' ms');
   u = gen(numGen(3));
   assert.match(checkUnit(u, { guide: 'fail', seeds: 50 }).errors.join('\n'), /gave only 3 distinct problems in 50 seeds, the guide asks for at least 15/);
   assert.doesNotMatch(checkUnit(u, { guide: 'fail', seeds: 8 }).errors.join('\n'), /distinct problems/);
