@@ -87,8 +87,8 @@
     prompt: t('Kokios klasės yra šis alkoholis?', 'What class of alcohol is this?'),
     kind: 'choice', options: classOptions(), answer: s.k - 1,
     hint: t('Alkoholio klasę nusako, kiek kitų anglies atomų prijungta prie anglies, turinčios OH grupę.', 'The class is set by how many other carbons are bonded to the carbon that carries the OH group.'),
-    solution: t('Prie anglies atomo Nr. ' + (s.c + 1) + ' (su OH) prijungta anglies atomų: ' + s.k + ', todėl tai ' + CLS_LT[s.k - 1] + ' alkoholis.',
-      'The carbon that carries the OH (no. ' + (s.c + 1) + ') has ' + s.k + ' carbon neighbour' + (s.k === 1 ? '' : 's') + ', so this is a ' + CLS_EN[s.k - 1] + ' alcohol.')
+    solution: t('Anglis, prie kurios prijungta OH, turi ' + ['vieną kaimynę anglį', 'dvi kaimynes anglis', 'tris kaimynes anglis'][s.k - 1] + ', todėl tai ' + CLS_LT[s.k - 1] + ' alkoholis.',
+      'The carbon that carries the OH has ' + s.k + ' carbon neighbour' + (s.k === 1 ? '' : 's') + ', so this is a ' + CLS_EN[s.k - 1] + ' alcohol.')
   });
 
   /* ---------- alcohol pools (all stay within the namer's scope; names are never spliced into sentences) ---------- */
@@ -103,6 +103,18 @@
   const ETHER_BY_FORMULA = { C3H8O: 'CCOC', C4H10O: 'CCCOC', C5H12O: 'CCCOCC', C6H14O: 'CCCOCCC', C7H16O: 'CCCCOCCC', C6H12O: 'COC1CCCC1', C7H14O: 'COC1CCCCC1', C8H18O: 'CCCCOCCCC' };
 
   const oxOfRule = (react, a, rule) => { const r = react.run('alc.ox', [a], { reagent: rule }); return r.none ? null : firstMajor(r); };
+  // alcohols of the same carbon skeleton with the OH on another carbon (positional isomers), found by halogenating the alkane
+  function positionalAlcohols(ctx, alc) {
+    const { react } = ctx;
+    const r = react.run('elim', [alc], { base: 'heat-acid' });
+    const alkene = r.none ? null : firstMajor(r);
+    const alkane = alkene ? firstMajor(react.run('ae.h2', [alkene], {})) : null;
+    if (!alkane) return [];
+    const me = canon(ctx, alc);
+    return react.run('sr.halogenate', [alkane], { X: 'Br' }).products.filter(p => !p.by).map(p => p.smi.replace('Br', 'O')).filter(x => canon(ctx, x) !== me);
+  }
+  // alkenes of the same skeleton as the alcohol, formed or not (the formed ones first)
+  const dehydProducts = (ctx, alc) => { const r = ctx.react.run('elim', [alc], { base: 'heat-acid' }); return r.none ? [] : r.products.filter(p => !p.by).map(p => p.smi); };
 
   const HAL = ['Cl', 'Br', 'I'];
   const otherHal = (X) => HAL.filter(h => h !== X);
@@ -147,7 +159,7 @@
             'Alcohols are common in nature: geraniol smells of roses and geraniums, cholesterol is needed for steroid biosynthesis and vitamin $D3$ regulates calcium. They all contain the same $OH$ group, so they follow the same rules.'),
           src: 'L11 p3'
         },
-        { mol: [{ smi: 'CC(C)=CCCC(C)=CCO', name: t('3,7-dimetil-2,6-oktadien-1-olis', '3,7-dimethylocta-2,6-dien-1-ol') }], src: 'L11 p3' },
+        { mol: [{ smi: 'CC(C)=CCC/C(C)=C/CO', name: t('3,7-dimetil-2,6-oktadien-1-olis', '3,7-dimethylocta-2,6-dien-1-ol') }], src: 'L11 p3' },
         {
           pitfall: t('Ne kiekvienas junginys su $OH$ yra alkoholis. Jei $OH$ prijungta prie aromatinio žiedo, tai fenolis, jei prie $C=C$ anglies – enolis, jei prie karbonilo – karboksirūgštis. Šiuose junginiuose OH sudaro kitos klasės funkcinę grupę.',
             'Not every compound with an $OH$ is an alcohol. An $OH$ on an aromatic ring makes a phenol, on a $C=C$ carbon an enol, on a carbonyl carbon a carboxylic acid. In these compounds the OH forms a functional group of another class.')
@@ -174,13 +186,13 @@
         { mol: { smi: 'CCO', opts: { deltas: { 1: '+', 2: '-' } }, caption: t('poliarizuotas $C-O$ ryšys', 'the polarised $C-O$ bond') }, src: 'L11 p5' },
         {
           table: {
-            head: [t('Centras', 'Centre'), t('Reakcija', 'Reaction'), t('Kur sužinoti', 'Where')],
+            head: [t('Centras', 'Centre'), t('Reakcija', 'Reaction'), t('Skyrius', 'Section')],
             rows: [
-              [t('$O-H$ vandenilis', '$O-H$ hydrogen'), t('rūgštinės savybės: alkoksidas', 'acidic behaviour: alkoxide'), t('2 skyrius', 'section 3')],
-              [t('$δ+$ anglis', '$δ+$ carbon'), t('SN: halogenalkanas', 'SN: haloalkane'), t('3 skyrius', 'section 4')],
-              [t('$β$ vandenilis', '$β$ hydrogen'), t('E: alkenas', 'E: alkene'), t('4 skyrius', 'section 5')],
-              [t('deguonies laisvoji pora', 'oxygen lone pair'), t('SN, kai nukleofilas – alkoholis: eteris, esteris', 'SN with the alcohol as nucleophile: ether, ester'), t('5 skyrius', 'section 6')],
-              [t('$C-H$ prie anglies su $OH$', '$C-H$ on the carbon with the $OH$'), t('oksidacija: aldehidas, ketonas, rūgštis', 'oxidation: aldehyde, ketone, acid'), t('6 skyrius', 'section 7')]
+              [t('$O-H$ vandenilis', '$O-H$ hydrogen'), t('rūgštinės savybės: alkoksidas', 'acidic behaviour: alkoxide'), t('Rūgštinės savybės', 'Acidic behaviour')],
+              [t('$δ+$ anglis', '$δ+$ carbon'), t('SN: halogenalkanas', 'SN: haloalkane'), t('Alkoholiai virsta halogenalkanais', 'Alcohols to haloalkanes')],
+              [t('$β$ vandenilis', '$β$ hydrogen'), t('E: alkenas', 'E: alkene'), t('Dehidratacija', 'Dehydration')],
+              [t('deguonies laisvoji pora', 'oxygen lone pair'), t('SN, kai nukleofilas – alkoholis: eteris, esteris', 'SN with the alcohol as nucleophile: ether, ester'), t('Alkoholis kaip nukleofilas', 'The alcohol as a nucleophile')],
+              [t('$C-H$ prie anglies su $OH$', '$C-H$ on the carbon with the $OH$'), t('oksidacija: aldehidas, ketonas, rūgštis', 'oxidation: aldehyde, ketone, acid'), t('Oksidacija', 'Oxidation')]
             ]
           },
           src: 'L11 p5'
@@ -203,7 +215,7 @@
           table: {
             head: [t('Junginys', 'Compound'), t('Formulė', 'Structure'), t('Virimo temperatūra', 'Boiling point')],
             rows: [
-              [t('etanas', 'ethane'), { smi: 'CC' }, t('−89 °C', '−89 °C')],
+              [t('etanas', 'ethane'), { smi: 'CC', opts: { condensed: true } }, t('−89 °C', '−89 °C')],
               [t('chloretanas', 'chloroethane'), { smi: 'CCCl' }, t('12 °C', '12 °C')],
               [t('etanolis', 'ethanol'), { smi: 'CCO' }, t('78 °C', '78 °C')]
             ]
@@ -247,13 +259,13 @@
       blocks: [
         { h: t('Su kuo alkoholis reaguoja kaip rūgštis?', 'With what does an alcohol react as an acid?') },
         {
-          p: t('Alkoholio rūgštingumas toks menkas ($pKa$ 15–18), kad jis prilygsta vandens. Dėl to deprotonuoti jį gali tik šarminiai ir žemės šarminiai metalai arba itin stipri bazė, pavyzdžiui, $NaH$; vandeninis šarmas nepakanka. Susidariusi druska vadinama alkoksidu, arba alkoholiatu.',
+          p: t('Alkoholio rūgštingumas toks menkas ($pKa$ 15–18), kad prilygsta vandens rūgštingumui. Dėl to deprotonuoti jį gali tik šarminiai ir žemės šarminiai metalai arba itin stipri bazė, pavyzdžiui, $NaH$; vandeninio šarmo nepakanka. Susidariusi druska vadinama alkoksidu, arba alkoholiatu.',
             'Alcohols are very weak acids ($pKa$ 15–18), similar to water. They therefore react only with alkali and alkaline-earth metals and with very strong bases such as $NaH$. Monohydric alcohols do not react with alkalis. The products are called alkoxides, or alcoholates.'),
           src: 'L11 p6'
         },
         {
           scheme: { items: [{ smi: 'CCO' }, { plus: true }, { smi: '[Na]' }, { arrow: '→' }, { smi: 'CC[O-].[Na+]' }, { plus: true }, { smi: '[H][H]' }] },
-          caption: t('Natris išstumia vandenilį: dvi alkoholio molekulės duoda vieną $H2$ molekulę.', 'Sodium displaces hydrogen: two alcohol molecules give one $H2$ molecule.'),
+          caption: t('Kiekviena alkoholio molekulė atiduoda po pusę $H2$ molekulės (½ $H2$).', 'Each alcohol molecule gives half an $H2$ molecule (½ $H2$): two alcohol molecules make one $H2$.'),
           src: 'L11 p6'
         },
         {
@@ -272,19 +284,24 @@
         },
         { scheme: { items: [{ smi: 'C[O-].[Na+]' }, { plus: true }, { smi: '[H][H]' }] }, caption: t('Produktai: alkoksidas ir vandenilis.', 'Products: the alkoxide and hydrogen.') },
         {
-          p: t('Su metalu mechanizmas kitoks: alkoholio molekulė adsorbuojasi ant metalo paviršiaus, metalo elektronas pereina $O-H$ ryšiui ir šis homolitiškai skyla. Susidaro alkoksido anijonas ir vandenilio radikalas, o du radikalai sudaro $H2$. Radikalo atomui pavaizduoti naudojama viena pusinė rodyklė.',
-            'With a metal the mechanism is different: the alcohol molecule is adsorbed on the metal surface, an electron of the metal passes into the $O-H$ bond, which then breaks homolytically. An alkoxide anion and a hydrogen radical result, and two radicals combine to $H2$. A single-barbed arrow shows the movement of one electron.'),
+          p: t('Su metalu mechanizmas kitoks: alkoholio molekulė adsorbuojasi ant metalo paviršiaus, metalo elektronas pereina $O-H$ ryšiui ir šis homoliziškai skyla. Susidaro alkoksido anijonas ir vandenilio radikalas, o du radikalai sudaro $H2$. Vieno elektrono judėjimas žymimas pusine rodykle (su viena barzdele).',
+            'With a metal the mechanism is different: the alcohol molecule is adsorbed on the metal surface, an electron of the metal passes into the $O-H$ bond, which then breaks homolytically. An alkoxide anion and a hydrogen radical result, and two radicals combine to $H2$. The movement of one electron is shown by a half arrow (a single barb).'),
           src: 'L11 p7'
         },
         {
           mech: [{
             scheme: { items: [{ smi: 'CO', opts: { allH: true } }, { plus: true }, { smi: '[Na]' }] },
-            arrows: [{ from: { m: 1, a: 0 }, to: { m: 0, mid: [1, 'H1'] }, half: true }, { from: { m: 0, b: [1, 'H1'] }, to: { m: 0, a: 'H1' }, half: true }],
-            note: t('Natrio elektronas pereina $O-H$ ryšiui; ryšys skyla homolitiškai.', 'An electron of sodium passes to the $O-H$ bond; the bond breaks homolytically.')
+            arrows: [{ from: { m: 1, a: 0 }, to: { m: 0, mid: [1, 'H1'] }, half: true }],
+            note: t('1: natrio elektronas pereina $O-H$ ryšiui.', '1: an electron of sodium passes to the $O-H$ bond.')
+          }, {
+            scheme: { items: [{ smi: 'CO', opts: { allH: true } }, { plus: true }, { smi: '[Na+]' }] },
+            arrows: [{ from: { m: 0, b: [1, 'H1'] }, to: { m: 0, a: 'H1' }, half: true }],
+            note: t('2: ryšys skyla homoliziškai: vienas elektronas lieka deguoniui, kitas atitenka vandeniliui.', '2: the bond breaks homolytically: one electron stays on oxygen, the other goes to hydrogen.')
           }],
           src: 'L11 p7'
         },
-        { scheme: { items: [{ smi: 'C[O-]' }, { plus: true }, { smi: '[Na+]' }, { plus: true }, { smi: '[H]' }, { arrow: '→' }, { smi: '[H][H]' }] }, caption: t('Du vandenilio radikalai sudaro $H2$.', 'Two hydrogen radicals combine to $H2$.') },
+        { scheme: { items: [{ smi: 'C[O-].[Na+]' }, { plus: true }, { smi: '[H]' }] }, caption: t('Susidaro alkoksidas ir vandenilio radikalas ($H•$).', 'An alkoxide and a hydrogen radical ($H•$) form.') },
+        { scheme: { items: [{ smi: '[H]' }, { plus: true }, { smi: '[H]' }, { arrow: '→' }, { smi: '[H][H]' }] }, caption: t('Du vandenilio radikalai sudaro $H2$.', 'Two hydrogen radicals combine to $H2$.') },
         {
           rule: t('Alkoholis + $Na$, $K$ arba $NaH$ → alkoksidas + $H2$. Požymis: vandenilio dujų burbuliukai. Su $NaOH$ ar $KOH$ alkoholis nereaguoja.',
             'Alcohol + $Na$, $K$ or $NaH$ → alkoxide + $H2$. Sign: bubbles of hydrogen gas. An alcohol does not react with $NaOH$ or $KOH$.'),
@@ -296,20 +313,20 @@
           src: 'LW6 p2'
         },
         {
-          pitfall: t('Nesumaišykite rūgštingumo su stipriu reagavimu. Natris su alkoholiu reaguoja dėl to, kad yra stiprus reduktorius, o ne dėl to, kad alkoholis yra stipri rūgštis: jo $pKa$ didesnis net už vandens.',
-            'Do not confuse acidity with a vigorous reaction. Sodium reacts with an alcohol because it is a strong reductant, not because the alcohol is a strong acid: its $pKa$ is even higher than that of water.')
+          pitfall: t('Nesumaišykite rūgštingumo su stipriu reagavimu. Natris su alkoholiu reaguoja dėl to, kad yra stiprus reduktorius, o ne dėl to, kad alkoholis yra stipri rūgštis: jo $pKa$ panašus į vandens arba didesnis.',
+            'Do not confuse acidity with a vigorous reaction. Sodium reacts with an alcohol because it is a strong reductant, not because the alcohol is a strong acid: its $pKa$ is similar to or higher than that of water.')
         },
         {
           example: {
-            q: [{ p: t('Parašykite 2-metil-2-propanolio reakciją su kaliu ir pasakykite, ką pamatysime.', 'Write the reaction of 2-methyl-2-propanol with potassium and say what you would see.') },
-              { mol: { smi: 'CC(C)(C)O', name: t('2-metil-2-propanolis', '2-methyl-2-propanol') } }],
+            q: [{ p: t('Parašykite 1-metilciklopentanolio reakciją su kaliu ir pasakykite, ką pamatysime.', 'Write the reaction of 1-methylcyclopentanol with potassium and say what you would see.') },
+              { mol: { smi: 'CC1(O)CCCC1', name: t('1-metilciklopentanolis', '1-methylcyclopentanol') } }],
             steps: [
               [{ p: t('Alkoholis reaguoja kaip rūgštis, o kalis – kaip reduktorius.', 'The alcohol reacts as an acid and potassium acts as the reductant.') }],
-              [{ p: t('Kalis atiduoda elektroną, alkoholio protonas virsta $H2$, o deguonis lieka su neigiamu krūviu: kalio tret-butoksidas.', 'Potassium gives up an electron, the proton of the alcohol ends up as $H2$ and oxygen keeps the negative charge: potassium tert-butoxide.') }, { scheme: { items: [{ smi: 'CC(C)(C)O' }, { arrow: '→', above: f('K') }, { smi: 'CC(C)(C)[O-].[K+]' }, { plus: true }, { smi: '[H][H]' }] } }],
+              [{ p: t('Kalis atiduoda elektroną, alkoholio protonas virsta $H2$, o deguonis lieka su neigiamu krūviu: kalio 1-metilciklopentoksidas.', 'Potassium gives up an electron, the proton of the alcohol ends up as $H2$ and oxygen keeps the negative charge: potassium 1-methylcyclopentoxide.') }, { scheme: { items: [{ smi: 'CC1(O)CCCC1' }, { arrow: '→', above: f('K') }, { smi: 'CC1([O-])CCCC1.[K+]' }, { plus: true }, { smi: '[H][H]' }] } }],
               [{ p: t('Požymis – vandenilio dujų burbuliukai (tretinis alkoholis reaguoja lėčiau nei pirminis).', 'The sign is bubbles of hydrogen gas (a tertiary alcohol reacts more slowly than a primary one).') }]
             ]
           },
-          claims: [{ react: ['alc.na', ['CC(C)(C)O'], { metal: 'K' }, 'CC(C)(C)[O-].[K+]'] }]
+          claims: [{ formula: ['CC1(O)CCCC1', 'C6H12O'] }, { react: ['alc.na', ['CC1(O)CCCC1'], { metal: 'K' }, 'CC1([O-])CCCC1.[K+]'] }]
         },
         { practice: 'u11.acid' },
         { practice: 'u11.acidwhy' }
@@ -322,7 +339,7 @@
       blocks: [
         { h: t('Reagentai ir mechanizmai', 'Reagents and mechanisms') },
         {
-          p: t('Visų klasių alkoholiai su $HI$, $HBr$ ar $HCl$, taip pat su $PBr3$, $PBr5$, $PCl5$ ir $SOCl2$ virsta halogenalkanais, nes $OH$ pakeičiama halogenu. Pats $OH−$ yra bloga nueinančioji grupė, todėl rūgštis ją pirma protonuoja: $OH2+$ išeina kaip vanduo.',
+          p: t('Visų klasių alkoholiai su $HI$, $HBr$ ar $HCl$, taip pat su $PBr3$, $PBr5$, $PCl5$ ir $SOCl2$ virsta halogenalkanais, nes $OH$ pakeičiama halogenu. Pats $OH−$ yra bloga nueinančioji grupė, todėl rūgštis ją pirma protonizuoja: $OH2+$ išeina kaip vanduo.',
             'Primary, secondary and tertiary alcohols react with hydrogen halides ($HI$, $HBr$, $HCl$) and with other reagents ($PBr3$, $PBr5$, $PCl5$, $SOCl2$): the $OH$ is replaced by a halogen. $OH−$ itself is a poor leaving group, so the acid protonates it first and $OH2+$ leaves as water.'),
           src: 'L11 p8'
         },
@@ -335,11 +352,20 @@
           caption: t('Tretinis alkoholis reaguoja be kaitinimo.', 'A tertiary alcohol reacts without heating.'), src: 'L11 p8'
         },
         {
-          scheme: { items: [{ smi: 'CCCO' }, { arrow: '→', above: f('PBr3') }, { smi: 'CCCBr' }, { plus: true }, { smi: 'CCO' }, { arrow: '→', above: f('SOCl2') }, { smi: 'CCCl' }], maxWidth: 560 },
-          caption: t('Tie patys halogenalkanai gaunami ir su $PBr3$ ar $SOCl2$ (be $HX$).', 'The same haloalkanes also form with $PBr3$ or $SOCl2$ (without $HX$).'), src: 'L11 p8'
+          scheme: { items: [{ smi: 'CCCO' }, { arrow: '→', above: f('PBr3') }, { smi: 'CCCBr' }], maxWidth: 560 },
+          caption: t('Halogenalkanai gaunami ir be $HX$: su $PBr3$.', 'Haloalkanes also form without $HX$: with $PBr3$.'), src: 'L11 p8'
         },
         {
-          rule: t('Pirminiai alkoholiai reaguoja pagal SN2 (vienas žingsnis, nukleofilas iš galinės pusės), antriniai ir tretiniai – pagal SN1 (karbokatijono stadija). Rezultatas visada halogenalkanas su tuo pačiu skeletu.',
+          scheme: { items: [{ smi: 'CCO' }, { arrow: '→', above: f('SOCl2') }, { smi: 'CCCl' }, { plus: true }, { smi: 'O=S=O' }, { plus: true }, { smi: 'Cl' }], maxWidth: 600 },
+          caption: t('Su $SOCl2$ susidaro chloretanas ir dujos $SO2$ bei $HCl$.', 'With $SOCl2$ chloroethane forms together with the gases $SO2$ and $HCl$.'), src: 'T p72'
+        },
+        {
+          p: t('Pirminiai ir antriniai alkoholiai su $HCl$ be katalizatoriaus ($ZnCl2$) reaguoja labai lėtai, todėl $HCl$ dažniausiai naudojamas su tretiniais alkoholiais. Halogenvandenilių aktyvumas: $HI$ > $HBr$ > $HCl$.',
+            'Without a catalyst ($ZnCl2$) primary and secondary alcohols react with $HCl$ only very slowly, so $HCl$ is used mainly with tertiary alcohols. Reactivity of the hydrogen halides: $HI$ > $HBr$ > $HCl$.'),
+          src: 'Klein'
+        },
+        {
+          rule: t('Pirminiai alkoholiai reaguoja pagal SN2 (viena stadija: nukleofilas atakuoja iš galinės pusės), antriniai ir tretiniai – pagal SN1 (karbokatijono stadija). Rezultatas visada halogenalkanas su tuo pačiu skeletu.',
             'Primary alcohols react by SN2 (one step, the nucleophile attacks from the back); secondary and tertiary alcohols react by SN1 (through a carbocation). The result is always a haloalkane with the same skeleton.'),
           src: 'L11 p8, p9, p10'
         },
@@ -352,8 +378,8 @@
               note: t('1 stadija: deguonies pora sudaro ryšį su $H+$ ($HBr$ elektronai pereina bromui).', 'Stage 1: an oxygen lone pair bonds to $H+$ (the $HBr$ electrons go to bromine).')
             },
             {
-              scheme: { items: [{ smi: 'CC[OH2+]' }, { plus: true }, { smi: '[Br-]', opts: { lonePairs: true } }] },
-              arrows: [{ from: { m: 1, lp: 0 }, to: { m: 0, a: 1 } }, { from: { m: 0, b: [1, 2] }, to: { m: 0, a: 2 } }],
+              scheme: { items: [{ smi: '[Br-]', opts: { lonePairs: true } }, { plus: true }, { smi: 'CC[OH2+]' }] },
+              arrows: [{ from: { m: 0, lp: 0 }, to: { m: 1, a: 1 } }, { from: { m: 1, b: [1, 2] }, to: { m: 1, a: 2 } }],
               note: t('2 stadija: bromidas atakuoja anglį iš galinės pusės, o $H2O$ išeina vienu metu.', 'Stage 2: bromide attacks the carbon from the back while $H2O$ leaves at the same moment.')
             }
           ],
@@ -362,7 +388,7 @@
         { scheme: { items: [{ smi: 'CCBr' }, { plus: true }, { smi: 'O' }] }, caption: t('Produktai: bromoetanas ir vanduo.', 'Products: bromoethane and water.') },
         { h: t('SN1: antriniai ir tretiniai alkoholiai', 'SN1: secondary and tertiary alcohols') },
         {
-          p: t('Šie alkoholiai sudaro stabilų karbokatijoną. Protonuotas alkoholis praranda vandenį ir susidaro katijonas (lėtoji stadija), o halogenidas prie jo prisijungia (greitoji). Katijonas gali ir prarasti protoną: tada šalutinis produktas yra alkenas (E1).',
+          p: t('Šie alkoholiai sudaro stabilų karbokatijoną. Protonizuotas alkoholis praranda vandenį ir susidaro katijonas (lėtoji stadija), o halogenidas prie jo prisijungia (greitoji). Katijonas gali ir prarasti protoną: tada šalutinis produktas yra alkenas (E1).',
             'These alcohols form a stable carbocation. The protonated alcohol loses water to give the cation (the slow stage) and the halide then bonds to it (the fast stage). The cation can also lose a proton: the side product is then an alkene (E1).'),
           src: 'L11 p9'
         },
@@ -371,7 +397,7 @@
             {
               scheme: { items: [{ smi: 'CC(C)(C)O', opts: { lonePairs: [4] } }, { plus: true }, { smi: 'Br', opts: { allH: true } }] },
               arrows: [{ from: { m: 0, lp: 4 }, to: { m: 1, a: 'H0' } }, { from: { m: 1, b: [0, 'H0'] }, to: { m: 1, a: 0 } }],
-              note: t('1 stadija: protonuojamas deguonis.', 'Stage 1: oxygen is protonated.')
+              note: t('1 stadija: protonizuojamas deguonis.', 'Stage 1: oxygen is protonated.')
             },
             {
               scheme: { items: [{ smi: 'CC(C)(C)[OH2+]' }] },
@@ -387,9 +413,10 @@
           src: 'L11 p9'
         },
         { scheme: { items: [{ smi: 'CC(C)(C)Br' }, { plus: true }, { smi: 'O' }] }, caption: t('Produktai: 2-brom-2-metilpropanas ir vanduo.', 'Products: 2-bromo-2-methylpropane and water.') },
+        { scheme: { items: [{ smi: 'C[C+](C)C' }, { arrow: '⇌' }, { smi: 'CC(C)=C' }, { plus: true }, { smi: '[H+]' }] }, caption: t('Konkuruojantis E1: katijonas netenka protono ir duoda alkeną (2-metilpropeną).', 'Competing E1: the cation loses a proton and gives an alkene (2-methylpropene).'), src: 'L11 p9' },
         {
-          pitfall: t('SN2 nereiškia „vienos žingsnio“ be protonavimo. Prieš nukleofilo ataką visada vyksta protonavimas: be jo $OH−$ neišeitų, nes jis blogai išeinanti grupė.',
-            'SN2 does not mean there is no protonation. Protonation always comes first: without it the $OH−$ would not leave, because it is a poor leaving group.')
+          pitfall: t('SN2 vyksta viena stadija, bet prieš ją deguonis vis tiek protonizuojamas: be to $OH−$ neišeitų, nes jis bloga nueinančioji grupė.',
+            'SN2 is a single stage, but the oxygen is still protonated before it: otherwise $OH−$ would not leave, because it is a poor leaving group.')
         },
         {
           example: {
@@ -411,10 +438,10 @@
       id: 'dehyd',
       title: t('Dehidratacija: alkenai ir eteriai', 'Dehydration: alkenes and ethers'),
       blocks: [
-        { h: t('Vidumolekulinė dehidratacija: alkenai (E1)', 'Intramolecular dehydration: alkenes (E1)') },
+        { h: t('Vidinė molekulinė (intramolekulinė) dehidratacija: alkenai (E1)', 'Intramolecular dehydration: alkenes (E1)') },
         {
-          p: t('Stiprios mineralinės rūgštys ($H2SO4$, $H3PO4$) kaitinant iš antrinio ar tretinio alkoholio molekulės pašalina vandenį ir gaunamas alkenas. Tretiniai alkoholiai dehidratuojasi lengviausiai, antriniai sunkiau, nes karbokatijonas stabilumas mažėja. Aukštesnėje temperatūroje alkenų gaunama ir iš pirminių alkoholių.',
-            'When secondary and tertiary alcohols are heated with strong mineral acids ($H2SO4$, $H3PO4$), water leaves a single molecule and an alkene forms. Tertiary alcohols dehydrate most easily and secondary ones less so, because the stability of the carbocation falls. At a higher temperature alkenes also form from primary alcohols.'),
+          p: t('Antrinis ar tretinis alkoholis, kaitinamas su koncentruota $H2SO4$ ar $H3PO4$, netenka vandens molekulės ir virsta alkenu. Lengviausiai dehidratuojasi tretiniai alkoholiai, sunkiau – antriniai, nes mažėja karbokatijono stabilumas. Pirminiams alkoholiams reikia aukštesnės temperatūros.',
+            'A secondary or tertiary alcohol heated with concentrated $H2SO4$ or $H3PO4$ loses a molecule of water and becomes an alkene. Tertiary alcohols dehydrate most easily and secondary ones less easily, because the carbocation is less stable. Primary alcohols need a higher temperature.'),
           src: 'L11 p12'
         },
         {
@@ -422,7 +449,7 @@
             {
               scheme: { items: [{ smi: 'CC1(O)CCCCC1', opts: { lonePairs: [2] } }, { plus: true }, { smi: 'OS(=O)(=O)O', opts: { allH: true } }] },
               arrows: [{ from: { m: 0, lp: 2 }, to: { m: 1, a: 'H0' } }, { from: { m: 1, b: [0, 'H0'] }, to: { m: 1, a: 0 } }],
-              note: t('1 stadija: alkoholis protonuojamas.', 'Stage 1: the alcohol is protonated.')
+              note: t('1 stadija: alkoholis protonizuojamas.', 'Stage 1: the alcohol is protonated.')
             },
             {
               scheme: { items: [{ smi: 'CC1([OH2+])CCCCC1' }] },
@@ -448,7 +475,7 @@
           caption: t('2-butanolis: vyrauja 2-butenas, šalutinis – 1-butenas.', '2-Butanol: 2-butene predominates, 1-butene is the minor product.'), src: 'L11 p13'
         },
         {
-          p: t('Karbokatijono tarpinė dalelė paaiškina, kodėl kitas alkenas taip pat galimas: protonas gali atsiskirti nuo bet kurios gretimos anglies. Nuo kurios – lemia stabilumas: daugiau pakeistas alkenas yra stabilesnis.',
+          p: t('Tarpinis karbokatijonas paaiškina, kodėl kitas alkenas taip pat galimas: protonas gali atsiskirti nuo bet kurios gretimos anglies. Nuo kurios – lemia stabilumas: daugiau pakeistas alkenas yra stabilesnis.',
             'The carbocation intermediate explains why another alkene is also possible: the proton can leave any neighbouring carbon. Which one is decided by stability: a more substituted alkene is more stable.'),
           src: 'L11 p13'
         },
@@ -458,7 +485,7 @@
         },
         { h: t('Tarpmolekulinė dehidratacija: eteriai (SN2)', 'Intermolecular dehydration: ethers (SN2)') },
         {
-          p: t('Pirminiai alkoholiai su rūgštimi žemesnėje temperatūroje (apie 140 °C) sudaro eterius, o aukštesnėje (apie 180 °C) – alkenus. Protonuotas alkoholis tampa elektrofilu, o antroji alkoholio molekulė – nukleofilu.',
+          p: t('Pirminiai alkoholiai su rūgštimi žemesnėje temperatūroje (apie 140 °C) sudaro eterius, o aukštesnėje (apie 180 °C) – alkenus. Protonizuotas alkoholis tampa elektrofilu, o antroji alkoholio molekulė – nukleofilu.',
             'Primary alcohols with acid give ethers at a lower temperature (about 140 °C) and alkenes at a higher one (about 180 °C). A protonated alcohol becomes the electrophile and a second alcohol molecule acts as the nucleophile.'),
           src: 'L11 p11, T p73'
         },
@@ -467,17 +494,18 @@
             {
               scheme: { items: [{ smi: 'CCO', opts: { lonePairs: [2] } }, { plus: true }, { smi: 'CC[OH2+]' }] },
               arrows: [{ from: { m: 0, lp: 2 }, to: { m: 1, a: 1 } }, { from: { m: 1, b: [1, 2] }, to: { m: 1, a: 2 } }],
-              note: t('SN2: alkoholio deguonis atakuoja protonuoto alkoholio anglį, išeina $H2O$.', 'SN2: the oxygen of one alcohol attacks the carbon of the protonated alcohol and $H2O$ leaves.')
+              note: t('SN2: alkoholio deguonis atakuoja protonizuoto alkoholio anglį, išeina $H2O$.', 'SN2: the oxygen of one alcohol attacks the carbon of the protonated alcohol and $H2O$ leaves.')
             }
           ],
           src: 'L11 p11'
         },
-        { scheme: { items: [{ smi: 'CC[OH+]CC' }, { arrow: '→', above: t('−H+', '−H+') }, { smi: 'CCOCC' }] }, caption: t('Susidaręs oksonio jonas netenka protono ir duoda dietilo eterį.', 'The oxonium ion loses a proton and gives diethyl ether.') },
+        { scheme: { items: [{ smi: 'CC[OH+]CC' }, { arrow: '→', above: f('$−H+$') }, { smi: 'CCOCC' }] }, caption: t('Susidaręs oksonio jonas netenka protono ir duoda dietilo eterį.', 'The oxonium ion loses a proton and gives diethyl ether.') },
         {
           p: t('Gyvuose organizmuose dehidratacijos reakcijas katalizuoja fermentai: fumarazė malatą (obuolių rūgšties anijoną) paverčia fumaratu citrinų rūgšties cikle. Kartais dehidratacija vyksta E1cb būdu: bazė pirmiausia atplėšia protoną nuo anglies šalia karbonilo, o iš gauto anijono išeina hidroksigrupė. Taip veikia ir aldolinė kondensacija.',
             'In living organisms enzymes catalyse dehydration: fumarase turns malate into fumarate in the citric acid cycle. Dehydration sometimes follows the E1cb route: a base first removes a proton from the carbon next to a carbonyl, and the hydroxide then leaves the resulting anion. Aldol condensation works in the same way.'),
           src: 'L11 p14, p15'
         },
+        { scheme: { items: [{ smi: 'CC(O)CC=O' }, { arrow: '→', above: t('bazė', 'base') }, { smi: 'CC=CC=O' }, { plus: true }, { smi: 'O' }], maxWidth: 560 }, caption: t('E1cb: bazė atplėšia $α$ protoną, po to išeina $OH−$; susidaro konjuguotas aldehidas.', 'E1cb: a base removes the $α$ proton, then $OH−$ leaves; a conjugated aldehyde forms.'), src: 'L11 p15' },
         {
           scheme: { items: [{ smi: 'OC(CC(=O)[O-])C(=O)[O-]' }, { arrow: '⇌', above: t('fumarazė', 'fumarase') }, { smi: '[O-]C(=O)/C=C/C(=O)[O-]' }, { plus: true }, { smi: 'O' }], maxWidth: 600 },
           caption: t('malatas → fumaratas + vanduo', 'malate → fumarate + water'), src: 'L11 p14'
@@ -489,7 +517,7 @@
             steps: [
               [{ p: t('Alkoholis tretinis, todėl susidaro tretinis karbokatijonas (E1).', 'The alcohol is tertiary, so a tertiary carbocation forms (E1).') }],
               [{ p: t('Protonas gali atskilti nuo C1 (iš metilo) arba nuo C3 (iš $CH2$). Taip gaunami du alkenai.', 'The proton can leave C1 (a methyl) or C3 (a $CH2$). Two alkenes result.') }, { mol: [{ smi: 'C=C(C)CCC', name: t('2-metil-1-pentenas', '2-methyl-1-pentene') }, { smi: 'CC(C)=CCC', name: t('2-metil-2-pentenas', '2-methyl-2-pentene') }] }],
-              [{ p: t('Vyrauja 2-metil-2-pentenas: jo dvigubasis ryšys turi tris alkilgrupes, o 1-pentene – tik dvi (Zaicevo taisyklė).', '2-Methyl-2-pentene predominates: its double bond carries three alkyl groups, while the 1-pentene has only two (Zaitsev’s rule).') }]
+              [{ p: t('Vyrauja 2-metil-2-pentenas: prie jo dvigubojo ryšio yra trys alkilgrupės, o prie 2-metil-1-penteno dvigubojo ryšio – tik dvi (Zaicevo taisyklė).', '2-Methyl-2-pentene predominates: its double bond carries three alkyl groups, while that of 2-methyl-1-pentene carries only two (Zaitsev’s rule).') }]
             ]
           },
           claims: [{ react: ['elim', ['CC(C)(O)CCC'], { base: 'heat-acid' }, 'CC(C)=CCC'] }, { formula: ['C=C(C)CCC', 'C6H12'] }, { formula: ['CC(C)(O)CCC', 'C6H14O'] }, { name: ['CC(C)=CCC', { lt: '2-metil-2-pentenas', en: '2-methyl-2-pentene' }] }, { name: ['C=C(C)CCC', { lt: '2-metil-1-pentenas', en: '2-methyl-1-pentene' }] }]
@@ -509,12 +537,12 @@
           src: 'L11 p16'
         },
         {
-          scheme: { items: [{ smi: 'OC1CCCCC1' }, { arrow: '→', above: f('Na') }, { smi: 'C1CCC(CC1)[O-].[Na+]' }, { plus: true }, { smi: 'CI' }, { arrow: '→' }, { smi: 'COC1CCCCC1' }, { plus: true }, { smi: '[Na+].[I-]' }], maxWidth: 700 },
+          scheme: { items: [{ smi: 'OC1CCCCC1' }, { arrow: '→', above: f('Na') }, { smi: 'C1CCC(CC1)[O-].[Na+]' }, { plus: true }, { smi: 'CI', opts: { condensed: true } }, { arrow: '→' }, { smi: 'COC1CCCCC1' }, { plus: true }, { smi: '[Na+].[I-]' }], maxWidth: 700 },
           caption: t('Cikloheksanolis duoda metoksicikloheksaną.', 'Cyclohexanol gives methoxycyclohexane.'), src: 'L11 p16'
         },
         {
           mech: [{
-            scheme: { items: [{ smi: 'CC(C)(C)[O-]', opts: { lonePairs: [4] } }, { plus: true }, { smi: 'CI', opts: { lonePairs: false } }] },
+            scheme: { items: [{ smi: 'CC(C)(C)[O-]', opts: { lonePairs: [4] } }, { plus: true }, { smi: 'CI', opts: { condensed: true } }] },
             arrows: [{ from: { m: 0, lp: 4 }, to: { m: 1, a: 0 } }, { from: { m: 1, b: [0, 1] }, to: { m: 1, a: 1 } }],
             note: t('SN2: alkoksido pora atakuoja anglį iš galinės pusės, jodidas išeina.', 'SN2: the alkoxide lone pair attacks the carbon from the back and iodide leaves.')
           }],
@@ -531,18 +559,19 @@
           caption: t('Ne tas variantas: metoksidas su tretiniu chlorbutanu duoda alkeną.', 'The wrong route: methoxide with a tertiary chloride gives an alkene.'), src: 'L11 p17'
         },
         {
-          p: t('Dar vienas variantas naudoja švelnesnę bazę $Ag2O$: alkoholis (o ne iš anksto sudarytas alkoksidas) reaguoja su halogenalkanu, o sidabras surišamas kaip sidabro halogenidas. Taip metilinamas, pavyzdžiui, gliukozės visų $OH$ grupių junginys su $CH3I$.',
-            'Another variant uses the milder base $Ag2O$: the alcohol itself (not a preformed alkoxide) reacts with the haloalkane and silver is removed as silver halide. This is how glucose is methylated on all its $OH$ groups with $CH3I$.'),
+          p: t('Su švelnesne baze $Ag2O$ alkoksido iš anksto ruošti nereikia: halogenalkanas reaguoja tiesiai su alkoholiu, o sidabras virsta netirpiu sidabro halogenidu. Taip $CH3I$ metilinamos visos gliukozės $OH$ grupės.',
+            'With the milder base $Ag2O$ no preformed alkoxide is needed: the haloalkane reacts with the alcohol itself and silver ends up as insoluble silver halide. In this way $CH3I$ methylates every $OH$ group of glucose.'),
           src: 'L11 p18'
         },
+        { scheme: { items: [{ smi: 'OC1CCCCC1' }, { plus: true }, { smi: 'CI', opts: { condensed: true } }, { arrow: '→', above: f('Ag2O') }, { smi: 'COC1CCCCC1' }, { plus: true }, { smi: 'I' }], maxWidth: 700 }, caption: t('Cikloheksanolis su $CH3I$ ir $Ag2O$: gaunamas metilo eteris, o sidabras sudaro $AgI$.', 'Cyclohexanol with $CH3I$ and $Ag2O$ gives the methyl ether, and silver forms $AgI$.'), src: 'L11 p18' },
         {
-          pitfall: t('Slaidėje L11 p16 yra klaida pavadinime: ciklopentilmetileteris yra metoksiciklopentanas (penkių anglies atomų žiedas), o ne „metoksiciklopropanas“. Visada palyginkite pavadinimo žiedą su nupieštu.',
-            'Slide L11 p16 contains an error in the name: cyclopentyl methyl ether is methoxycyclopentane (a five-carbon ring), not "methoxycyclopropane". Always compare the ring in the name with the ring that is drawn.')
+          pitfall: t('Tikrinkite, ar žiedo pavadinimas atitinka nupieštą žiedą: ciklopentilmetileteris yra metoksiciklopentanas (penkianaris žiedas), o ne metoksiciklopropanas (trinaris žiedas).',
+            'Check that the ring in the name matches the ring drawn: cyclopentyl methyl ether is methoxycyclopentane (a five-membered ring), not methoxycyclopropane (a three-membered ring).')
         },
         { h: t('Esterinimas', 'Esterification') },
         {
-          p: t('Alkoholis su mineraline ar karboksirūgštimi, esant rūgštiniam katalizatoriui, sudaro esterį. Alkoholio deguonis atakuoja karbonilo anglį (nukleofilinio acilpakeitimo reakcija), o išeina vanduo. Reakcija grįžtama.',
-            'An alcohol with a mineral or a carboxylic acid forms an ester in the presence of an acid catalyst. The alcohol oxygen attacks the carbonyl carbon (nucleophilic acyl substitution) and water leaves. The reaction is reversible.'),
+          p: t('Alkoholis su mineraline ar karboksirūgštimi, esant rūgštiniam katalizatoriui, sudaro esterį. Alkoholio deguonis atakuoja karbonilo anglį (nukleofilinio acilpakeitimo reakcija), o išeina vanduo. Reakcija grįžtama. Su mineralinėmis rūgštimis susidaro neorganinių rūgščių esteriai, pvz., etilo hidrosulfatas (6 laboratorinis darbas).',
+            'An alcohol with a mineral or a carboxylic acid forms an ester in the presence of an acid catalyst. The alcohol oxygen attacks the carbonyl carbon (nucleophilic acyl substitution) and water leaves. The reaction is reversible. Mineral acids give inorganic esters such as ethyl hydrogen sulfate (lab 6).'),
           src: 'L11 p19'
         },
         { scheme: { items: [{ smi: 'CCO' }, { plus: true }, { smi: 'CC(=O)O' }, { arrow: '⇌', above: f('H+') }, { smi: 'CCOC(C)=O' }, { plus: true }, { smi: 'O' }], maxWidth: 640 }, caption: t('Etanolis ir etano rūgštis duoda etilo etanoatą (etilacetatą).', 'Ethanol and ethanoic acid give ethyl ethanoate (ethyl acetate).'), src: 'L11 p19' },
@@ -551,9 +580,10 @@
             q: [{ p: t('Kaip pagaminti etil-tret-butileterį ($CH3CH2-O-C(CH3)3$)? Kuri reagentų pora tinka?', 'How can ethyl tert-butyl ether ($CH3CH2-O-C(CH3)3$) be made? Which pair of reagents works?') },
               { mol: { smi: 'CCOC(C)(C)C', name: t('2-etoksi-2-metilpropanas', '2-ethoxy-2-methylpropane') } }],
             steps: [
-              [{ p: t('Eteris turi dvi $C-O$ jungtis: etilo ir tret-butilo. Galimi du keliai.', 'The ether has two $C-O$ bonds: ethyl and tert-butyl. Two routes are possible.') }],
+              [{ p: t('Eteris turi du $C-O$ ryšius: etilo ir tret-butilo. Galimi du keliai.', 'The ether has two $C-O$ bonds: ethyl and tert-butyl. Two routes are possible.') }],
               [{ p: t('Tret-butilo halogenidas su alkoksidu eliminuojasi (E2), todėl šis kelias netinka.', 'A tert-butyl halide eliminates with an alkoxide (E2), so this route fails.') }],
-              [{ p: t('Tinka tret-butoksidas ir jodetanas (pirminis halogenalkanas): SN2.', 'Tert-butoxide and iodoethane (a primary haloalkane) work: SN2.') }, { scheme: { items: [{ smi: 'CC(C)(C)[O-].[Na+]' }, { plus: true }, { smi: 'CCI' }, { arrow: '→' }, { smi: 'CCOC(C)(C)C' }] } }]
+              [{ p: t('Tinka tret-butoksidas ir jodetanas (pirminis halogenalkanas): SN2.', 'Tert-butoxide and iodoethane (a primary haloalkane) work: SN2.') }, { scheme: { items: [{ smi: 'CC(C)(C)[O-].[Na+]' }, { plus: true }, { smi: 'CCI' }, { arrow: '→' }, { smi: 'CCOC(C)(C)C' }] } }],
+              [{ p: t('Priešingas kelias: etoksidas veikia kaip bazė ir su tretiniu jodidu duoda alkeną.', 'The opposite route: ethoxide acts as a base and gives an alkene with the tertiary iodide.') }, { scheme: { items: [{ smi: 'CC[O-].[Na+]' }, { plus: true }, { smi: 'CC(C)(C)I' }, { arrow: '→' }, { smi: 'CC(C)=C' }] } }]
             ]
           },
           claims: [{ react: ['williamson', ['CC(C)(C)[O-].[Na+]', 'CCI'], null, 'CCOC(C)(C)C'] }, { react: ['williamson', ['CC[O-].[Na+]', 'CC(C)(C)I'], null, 'CC(C)=C'] }]
@@ -568,8 +598,8 @@
       blocks: [
         { h: t('Nuo ko priklauso produktas?', 'What decides the product?') },
         {
-          p: t('Alkoholio oksidacijos produktas priklauso nuo alkoholio klasės ir nuo oksidatoriaus stiprumo. Oksiduojant prarandamas vandenilis nuo anglies su $OH$ ir prisidedama prie $C=O$ ryšio. Todėl tretiniai alkoholiai, kurie šio vandenilio neturi, įprastomis sąlygomis neoksiduojasi.',
-            'The product of an oxidation depends on the class of the alcohol and on the strength of the oxidant. Oxidation removes a hydrogen from the carbon with the $OH$ and creates a $C=O$ bond. Tertiary alcohols, which have no such hydrogen, are therefore not oxidised under the usual conditions.'),
+          p: t('Alkoholio oksidacijos produktas priklauso nuo alkoholio klasės ir nuo oksidatoriaus stiprumo. Oksiduojant anglis, prie kurios prijungta $OH$, netenka vandenilio ir susidaro $C=O$ ryšys. Todėl tretiniai alkoholiai, kurie šio vandenilio neturi, įprastomis sąlygomis neoksiduojasi.',
+            'The product of an oxidation depends on the class of the alcohol and on the strength of the oxidant. In an oxidation the carbon that carries the $OH$ loses a hydrogen and a $C=O$ bond forms. Tertiary alcohols, which have no such hydrogen, are therefore not oxidised under the usual conditions.'),
           src: 'L11 p20'
         },
         {
@@ -581,13 +611,13 @@
           caption: t('Antrinis alkoholis → ketonas.', 'Secondary alcohol → ketone.'), src: 'L11 p20'
         },
         {
-          p: t('Tretiniai alkoholiai įprastomis sąlygomis neoksiduojasi; veikiami stipriais oksidatoriais ir griežtomis sąlygomis jie suyra, nutrūksta $C-C$ ryšiai ir susidaro ketonų ir rūgščių mišinys.',
-            'Tertiary alcohols are not oxidised under the usual conditions; with strong oxidants under harsh conditions they degrade, $C-C$ bonds break and a mixture of ketones and acids forms.'),
+          p: t('Įprasti oksidatoriai tretinių alkoholių nepaveikia. Tik labai stiprus oksidatorius griežtomis sąlygomis suardo jų anglies skeletą: skyla $C-C$ ryšiai, o gaunamas ketonų ir karboksirūgščių mišinys.',
+            'Ordinary oxidants leave tertiary alcohols alone. Only a very strong oxidant under harsh conditions destroys their carbon skeleton: $C-C$ bonds break and a mixture of ketones and carboxylic acids results.'),
           src: 'L11 p20, T p73'
         },
         { h: t('Švelnūs ir stiprūs oksidatoriai', 'Mild and strong oxidants') },
         {
-          p: t('Švelnus oksidatorius piridinio chlorchromatas (PCC) dichlormetane pirminį alkoholį oksiduoja tik iki aldehido. Stiprūs oksidatoriai ($CrO3$, $Na2Cr2O7$, $KMnO4$) vandeninėje rūgščioje aplinkoje pirminį alkoholį perveda iki karboksirūgšties: aldehidas čia tik tarpinė stotelė ir negaunamas. Antrinis alkoholis visada baigia ketonu, kad ir koks oksidatorius.',
+          p: t('Švelnus oksidatorius piridinio chlorchromatas (PCC) dichlormetane pirminį alkoholį oksiduoja tik iki aldehido. Stiprūs oksidatoriai ($CrO3$, $Na2Cr2O7$, $KMnO4$) vandeninėje rūgščioje aplinkoje pirminį alkoholį perveda iki karboksirūgšties: aldehidas susidaro tik kaip tarpinis produktas ir neišskiriamas. Antrinis alkoholis bet kuriuo oksidatoriumi oksiduojamas iki ketono.',
             'Pyridinium chlorochromate (PCC), a mild oxidant, in dichloromethane oxidises a primary alcohol only as far as the aldehyde. Most common strong oxidants ($CrO3$, $Na2Cr2O7$, $KMnO4$) in aqueous acid take a primary alcohol all the way to the carboxylic acid: the aldehyde is only an intermediate and is not isolated. Secondary alcohols are oxidised to ketones by any oxidant.'),
           src: 'L11 p21, p22, p23'
         },
@@ -610,7 +640,7 @@
         },
         { h: t('Mechanizmas su chromo rūgštimi', 'The mechanism with chromic acid') },
         {
-          p: t('Pirmojoje stadijoje alkoholis ir chromo rūgštis greitai ir grįžtamai sudaro chromato esterį $R2CH-O-CrO3H$. Antrojoje stadijoje vyksta eliminavimas: vandens molekulė, būdama bazė, nutraukia protoną nuo anglies, prie kurios yra $O$, o $C-H$ elektronai sudaro $C=O$ $π$ ryšį, kai $O-Cr$ ryšys nutrūksta ir chromas redukuojasi. Todėl būtinas vandenilis prie tos anglies: tretiniuose alkoholiuose šios stadijos nėra.',
+          p: t('Pirmojoje stadijoje alkoholis ir chromo rūgštis greitai ir grįžtamai sudaro chromato esterį $R2CH-O-CrO3H$. Antrojoje stadijoje vyksta eliminavimas: vandens molekulė, būdama bazė, atplėšia protoną nuo anglies, prie kurios yra $O$, o $C-H$ elektronai sudaro $C=O$ $π$ ryšį, kai $O-Cr$ ryšys nutrūksta ir chromas redukuojasi. Todėl būtinas vandenilis prie tos anglies: tretiniuose alkoholiuose šios stadijos nėra.',
             'In the first stage the alcohol and chromic acid rapidly and reversibly form a chromate ester $R2CH-O-CrO3H$. The second stage is an elimination: water as a base removes the proton from the carbon that bears the $O$, and the $C-H$ electrons form the $C=O$ $π$ bond as the $O-Cr$ bond breaks and chromium is reduced. A hydrogen on that carbon is therefore essential, and tertiary alcohols have none.'),
           src: 'L11 p24'
         },
@@ -626,7 +656,7 @@
           src: 'L11 p25'
         },
         {
-          scheme: { items: [{ smi: 'CO' }, { arrow: '→', above: f('$NAD+$') }, { smi: 'C=O' }, { arrow: '→', above: f('$NAD+$') }, { smi: 'OC=O' }], maxWidth: 640 },
+          scheme: { items: [{ smi: 'CO' }, { arrow: '→', above: f('$NAD+$') }, { smi: 'C=O', opts: { allH: true } }, { arrow: '→', above: f('$NAD+$') }, { smi: 'OC=O' }], maxWidth: 640 },
           caption: t('metanolis → formaldehidas → skruzdžių rūgštis', 'methanol → formaldehyde → formic acid'), src: 'L11 p25'
         },
         {
@@ -638,7 +668,7 @@
             q: [{ p: t('Kas susidaro 2-metil-1-butanolį veikiant PCC ir kas – $Na2Cr2O7$ rūgštyje? Atomų numeriai atitinka grandinės numeraciją.', 'What forms when 2-methyl-1-butanol is treated with PCC, and what with $Na2Cr2O7$ in acid? The atom numbers follow the chain numbering.') },
               { mol: { smi: 'OCC(C)CC', name: t('2-metil-1-butanolis', '2-methyl-1-butanol'), opts: { numbers: { 1: '1', 2: '2', 4: '3', 5: '4' } } } }],
             steps: [
-              [{ p: t('Anglis C1 turi $OH$ ir dvi vandenilius: pirminis alkoholis.', 'Carbon C1 has the $OH$ and two hydrogens: a primary alcohol.') }],
+              [{ p: t('Anglis C1 turi $OH$ ir du vandenilius: pirminis alkoholis.', 'Carbon C1 has the $OH$ and two hydrogens: a primary alcohol.') }],
               [{ p: t('PCC dichlormetane sustoja ties aldehidu.', 'PCC in dichloromethane stops at the aldehyde.') }, { mol: { smi: 'O=CC(C)CC', name: t('2-metilbutanalis', '2-methylbutanal') } }],
               [{ p: t('$Na2Cr2O7$ rūgštyje aldehidą oksiduoja toliau iki karboksirūgšties.', '$Na2Cr2O7$ in acid oxidises the aldehyde further to the carboxylic acid.') }, { mol: { smi: 'OC(=O)C(C)CC', name: t('2-metilbutano rūgštis', '2-methylbutanoic acid') } }]
             ]
@@ -656,17 +686,18 @@
       blocks: [
         { h: t('Reaguoja grupė, o ne visa molekulė', 'The group reacts, not the whole molecule') },
         {
-          p: t('Didelėse molekulėse (cholesteryje, geraniolyje) kiekvienas reagentas randa savo funkcinę grupę. Dydis nesvarbu: suraskite $OH$ ir $C=C$ ir kiekvienai grupei pritaikykite jos taisykles. $Br2$, $H2O/H+$ ir $H2/Pd$ jungiasi prie $C=C$, o $PCC$ ir $Na$ veikia $OH$.',
+          p: t('Didelėse molekulėse (cholesterolyje, geraniolyje) kiekvienas reagentas randa savo funkcinę grupę. Dydis nesvarbus: suraskite $OH$ ir $C=C$ ir kiekvienai grupei pritaikykite jos taisykles. $Br2$, $H2O/H+$ ir $H2/Pd$ jungiasi prie $C=C$, o $PCC$ ir $Na$ veikia $OH$.',
             'In complex compounds (cholesterol, geraniol) every reagent finds its own functional group. Ignore the size of the molecule: find the $OH$ and the $C=C$ and apply the rules of each group. $Br2$, $H2O/H+$ and $H2/Pd$ add to the $C=C$, whereas $PCC$ and $Na$ act on the $OH$.'),
           src: 'S5.16, L11 p26'
         },
         { mol: { smi: 'CC(C)CCCC(C)C1CCC2C1(CCC3C2CC=C4C3(CCC(C4)O)C)C', caption: t('cholesterolis: antrinis alkoholis ir trigubai pakeistas $C=C$', 'cholesterol: a secondary alcohol and a trisubstituted $C=C$') }, src: 'L11 p3' },
+        { mol: { smi: 'CC1=CCC(O)CC1', name: t('4-metil-3-cikloheksen-1-olis', '4-methylcyclohex-3-en-1-ol') }, caption: t('Modelinis junginys lentelei.', 'The model compound for the table.') },
         {
           table: {
-            head: [t('Reagentas', 'Reagent'), t('Kuri grupė reaguoja', 'Which group reacts'), t('Produktas (4-metilcikloheks-3-en-1-olis)', 'Product (4-methylcyclohex-3-en-1-ol)')],
+            head: [t('Reagentas', 'Reagent'), t('Kuri grupė reaguoja', 'Which group reacts'), t('Produktas (4-metil-3-cikloheksen-1-olis)', 'Product (4-methylcyclohex-3-en-1-ol)')],
             rows: [
               [t('$Br2$', '$Br2$'), t('$C=C$ (AE)', '$C=C$ (AE)'), { smi: 'CC1(Br)C(Br)CC(O)CC1' }],
-              [t('$H2O$, $H+$', '$H2O$, $H+$'), t('$C=C$ (Markovnikovas)', '$C=C$ (Markovnikov)'), { smi: 'CC1(O)CCC(O)CC1' }],
+              [t('$H2O$, $H+$', '$H2O$, $H+$'), t('$C=C$ (pagal Markovnikovo taisyklę)', '$C=C$ (by Markovnikov’s rule)'), { smi: 'CC1(O)CCC(O)CC1' }],
               [t('$PCC$', '$PCC$'), t('$OH$ (oksidacija)', '$OH$ (oxidation)'), { smi: 'CC1=CCC(=O)CC1' }],
               [t('1. $Na$; 2. $CH3I$', '1. $Na$; 2. $CH3I$'), t('$OH$ (alkoksidas, SN2)', '$OH$ (alkoxide, SN2)'), { smi: 'CC1=CCC(OC)CC1' }]
             ]
@@ -684,11 +715,11 @@
           src: 'S5.15'
         },
         {
-          scheme: { items: [{ smi: 'CCCCBr' }, { arrow: '→', above: f('NaOH') }, { smi: 'CCCCO' }, { arrow: '→', above: f('PCC, CH2Cl2') }, { smi: 'CCCC=O' }], maxWidth: 700 },
+          scheme: { items: [{ smi: 'CC(C)CCBr' }, { arrow: '→', above: f('NaOH') }, { smi: 'CC(C)CCO' }, { arrow: '→', above: f('PCC, CH2Cl2') }, { smi: 'CC(C)CC=O' }], maxWidth: 700 },
           caption: t('Halogenalkanas → alkoholis (A) → aldehidas (B).', 'Haloalkane → alcohol (A) → aldehyde (B).'), src: 'S5.15'
         },
         {
-          scheme: { items: [{ smi: 'CCC=C' }, { arrow: '→', above: f('H2O, H2SO4') }, { smi: 'CCC(C)O' }, { arrow: '→', above: f('CrO3, H3O+') }, { smi: 'CCC(C)=O' }], maxWidth: 700 },
+          scheme: { items: [{ smi: 'CCCC=C' }, { arrow: '→', above: f('H2O, H2SO4') }, { smi: 'CCCC(C)O' }, { arrow: '→', above: f('CrO3, H3O+') }, { smi: 'CCCC(C)=O' }], maxWidth: 700 },
           caption: t('Alkenas → antrinis alkoholis (A) → ketonas (B).', 'Alkene → secondary alcohol (A) → ketone (B).'), src: 'S5.15'
         },
         {
@@ -696,7 +727,7 @@
             q: [{ p: t('Įrašykite A ir B: 1-hepteno hidratacija, o po to oksidacija $CrO3$ rūgštyje.', 'Fill in A and B: hydration of 1-heptene, followed by oxidation with $CrO3$ in acid.') },
               { scheme: { items: [{ smi: 'CCCCCC=C' }, { arrow: '→', above: f('H2O, H2SO4') }, { arrow: '→', above: f('CrO3, H3O+') }] } }],
             steps: [
-              [{ p: t('Vandens prijungimas vyksta pagal Markovnikovo taisyklę: $OH$ atitenka antrajai anglies. A yra 2-heptanolis, antrinis alkoholis.', 'Water adds by Markovnikov’s rule: the $OH$ goes to carbon 2. A is 2-heptanol, a secondary alcohol.') }, { mol: { smi: 'CC(O)CCCCC', name: t('2-heptanolis', '2-heptanol') } }],
+              [{ p: t('Vandens prijungimas vyksta pagal Markovnikovo taisyklę: $OH$ atitenka antrajam anglies atomui. A yra 2-heptanolis, antrinis alkoholis.', 'Water adds by Markovnikov’s rule: the $OH$ goes to carbon 2. A is 2-heptanol, a secondary alcohol.') }, { mol: { smi: 'CC(O)CCCCC', name: t('2-heptanolis', '2-heptanol') } }],
               [{ p: t('Antrinis alkoholis oksiduojasi iki ketono: B yra 2-heptanonas.', 'A secondary alcohol is oxidised to a ketone: B is 2-heptanone.') }, { mol: { smi: 'CC(=O)CCCCC', name: t('2-heptanonas', '2-heptanone') } }]
             ]
           },
@@ -723,7 +754,7 @@
           table: {
             head: [t('Bandymas', 'Test'), t('Stebėjimas', 'Observation'), t('Paaiškinimas', 'Explanation')],
             rows: [
-              [t('Etanolis + koncentruota $H2SO4$, kaitinimas', 'Ethanol + conc. $H2SO4$, heat'), t('dujos, kurios nuspalvina bromo vandenį ir permanganatą', 'a gas that decolourises bromine water and permanganate'), t('dehidratacija: susidaro etenas ($C=C$)', 'dehydration: ethene forms ($C=C$)')],
+              [t('Etanolis + koncentruota $H2SO4$, kaitinimas', 'Ethanol + conc. $H2SO4$, heat'), t('dujos, nuo kurių išblunka bromo vanduo ir permanganato tirpalas', 'a gas that decolourises bromine water and permanganate'), t('dehidratacija: susidaro etenas ($C=C$)', 'dehydration: ethene forms ($C=C$)')],
               [t('Etanolis + baltas $CuSO4$', 'Ethanol + white $CuSO4$'), t('pamėlynuoja, jei yra vandens', 'turns blue if water is present'), t('susidaro $CuSO4·5H2O$', '$CuSO4·5H2O$ forms')],
               [t('Etanolis + natris', 'Ethanol + sodium'), t('burbuliukai; dujos dega; fenolftaleinas parausta', 'bubbles; the gas burns; phenolphthalein turns crimson'), t('alkoksidas ir $H2$; hidrolizė duoda $NaOH$', 'alkoxide and $H2$; hydrolysis gives $NaOH$')],
               [t('Glicerolis + $Cu(OH)2$', 'Glycerol + $Cu(OH)2$'), t('ryškiai mėlynas tirpalas', 'an intense blue solution'), t('kompleksas su gretimomis $OH$ grupėmis', 'a complex with adjacent $OH$ groups')],
@@ -737,8 +768,8 @@
           caption: t('Etenas iš etanolio: tarpinis produktas yra etilo hidrosulfatas.', 'Ethene from ethanol: the intermediate is ethyl hydrogen sulfate.'), src: 'LW6 p1'
         },
         {
-          p: t('Etenas atpažįstamas dviem būdais. Bromo vandenyje geltona spalva išnyksta, nes susidaro bespalvis 1,2-dibrometanas. Rūgštiniame ar neutraliame permanganate violetinė spalva išnyksta ir iškrenta rudos $MnO2$ nuosėdos, nes susidaro 1,2-diolis. Todėl abiem bandymais nustatomas nesotumas.',
-            'Ethene is recognised in two ways. In bromine water the yellow colour fades because colourless 1,2-dibromoethane forms. In permanganate the violet colour disappears and brown $MnO2$ precipitates because a 1,2-diol forms. Both reactions are used to detect double and triple bonds.'),
+          p: t('Etenas atpažįstamas dviem būdais. Bromo vandenyje geltona spalva išnyksta, nes susidaro bespalvis 1,2-dibrometanas. Neutraliame permanganato tirpale violetinė spalva išnyksta ir iškrenta rudos $MnO2$ nuosėdos, nes etenas oksiduojamas iki 1,2-etandiolio. Abu bandymai rodo dvigubąjį (ar trigubąjį) ryšį.',
+            'Ethene is recognised in two ways. In bromine water the yellow colour fades because colourless 1,2-dibromoethane forms. In neutral permanganate solution the violet colour disappears and brown $MnO2$ precipitates because ethene is oxidised to ethane-1,2-diol. Both tests reveal a double (or triple) bond.'),
           src: 'LW6 p1, p2'
         },
         {
@@ -746,7 +777,7 @@
           caption: t('Eteno ir bromo reakcija: bespalvis dibromidas.', 'Ethene and bromine: a colourless dibromide.'), src: 'LW6 p1'
         },
         {
-          pitfall: t('Nepamirškite, kad glicerolio ir $Cu(OH)2$ bandymas ir fenolio brominimas yra kitų junginių tipų reakcijos: čia jos naudojamos kaip alkoholių ir polialkoholių atpažinimo būdas. Paprastas alkoholis, pvz., etanolis, mėlyno komplekso neduoda.',
+          pitfall: t('Bandymas su $Cu(OH)2$ atpažįsta polialkoholius (gretimas $OH$ grupes), o ne paprastus alkoholius: etanolis mėlyno komplekso neduoda.',
             'Remember that the glycerol and $Cu(OH)2$ test is a reaction of polyols, not of simple alcohols. A simple alcohol such as ethanol does not give the blue complex.')
         },
         { practice: 'u11.lab' }
@@ -761,10 +792,10 @@
         head: [t('Reagentas', 'Reagent'), t('Produktas', 'Product'), t('Pastaba', 'Note')],
         rows: [
           [t('$Na$, $K$, $NaH$', '$Na$, $K$, $NaH$'), t('alkoksidas + $H2$', 'alkoxide + $H2$'), t('rūgštinės savybės; su $NaOH$ nereaguoja', 'acidic behaviour; no reaction with $NaOH$')],
-          [t('$HX$, $PBr3$, $SOCl2$', '$HX$, $PBr3$, $SOCl2$'), t('halogenalkanas', 'haloalkane'), t('pirminis SN2, antr. ir tretin. SN1', 'primary SN2, secondary and tertiary SN1')],
+          [t('$HX$, $PBr3$, $SOCl2$', '$HX$, $PBr3$, $SOCl2$'), t('halogenalkanas', 'haloalkane'), t('pirminis SN2, antriniai ir tretiniai SN1', 'primary SN2, secondary and tertiary SN1')],
           [t('$H2SO4$, 140 °C', '$H2SO4$, 140 °C'), t('eteris (pirminis alkoholis)', 'ether (primary alcohol)'), t('SN2', 'SN2')],
           [t('$H2SO4$, kaitinimas', '$H2SO4$, heat'), t('alkenas (antrinis, tretinis)', 'alkene (secondary, tertiary)'), t('E1; Zaicevo taisyklė', 'E1; Zaitsev’s rule')],
-          [t('1. $Na$ 2. $RX$', '1. $Na$ 2. $RX$'), t('eteris', 'ether'), t('Viljamsonas, SN2; $RX$ pirminis', 'Williamson, SN2; $RX$ primary')],
+          [t('1. $Na$ 2. $RX$', '1. $Na$ 2. $RX$'), t('eteris', 'ether'), t('Viljamsono sintezė, SN2; $RX$ pirminis', 'Williamson synthesis, SN2; $RX$ primary')],
           [t('$PCC$', '$PCC$'), t('aldehidas (pirminis); ketonas (antrinis)', 'aldehyde (primary); ketone (secondary)'), t('tretinis nereaguoja', 'tertiary does not react')],
           [t('$CrO3$, $Na2Cr2O7$, $KMnO4$ + $H3O+$', '$CrO3$, $Na2Cr2O7$, $KMnO4$ + $H3O+$'), t('rūgštis (pirminis); ketonas (antrinis)', 'acid (primary); ketone (secondary)'), t('spalvos pokytis', 'colour change')],
           [t('$R-COOH$, $H+$', '$R-COOH$, $H+$'), t('esteris + $H2O$', 'ester + $H2O$'), t('grįžtama', 'reversible')]
@@ -777,7 +808,7 @@
         t('Klasė: pirminė (1 C kaimynas), antrinė (2), tretinė (3). Ji lemia halogeninimo mechanizmą, dehidrataciją ir oksidaciją.', 'Class: primary (1 C neighbour), secondary (2), tertiary (3). It decides the halogenation mechanism, the dehydration and the oxidation.'),
         t('Vandeniliniai ryšiai: aukšta virimo temperatūra, tirpumas vandenyje mažėja ilgėjant grandinei.', 'Hydrogen bonds: a high boiling point; the solubility in water falls as the chain gets longer.'),
         t('Alkoholio $pKa$ 15–18: silpna rūgštis, alkoksidui reikia $Na$, $K$ ar $NaH$, ne $NaOH$.', 'The $pKa$ of an alcohol is 15–18: a weak acid, an alkoxide needs $Na$, $K$ or $NaH$, not $NaOH$.'),
-        t('Karbokatijono stabilumas: tretinis > antrinis > pirminis: lemia SN1 ir E1; pirminiai alkoholiai eina SN2.', 'Carbocation stability: tertiary > secondary > primary: decides SN1 and E1; primary alcohols go by SN2.'),
+        t('Karbokatijono stabilumas: tretinis > antrinis > pirminis: lemia SN1 ir E1; pirminiai alkoholiai reaguoja SN2 būdu.', 'Carbocation stability: tertiary > secondary > primary: decides SN1 and E1; primary alcohols go by SN2.'),
         t('Zaicevo taisyklė: vyrauja daugiausia pakeistas alkenas.', 'Zaitsev’s rule: the most substituted alkene predominates.'),
         t('Viljamsono sintezė: šakotesnė dalis – alkoksidas, mažiau šakota – halogenalkanas (pirminis ar metilo).', 'Williamson synthesis: the more hindered part is the alkoxide, the less hindered one the haloalkane (primary or methyl).'),
         t('Oksidacija reikalauja $H$ prie anglies su $OH$: tretinis alkoholis neoksiduojasi.', 'Oxidation needs an $H$ on the carbon with the $OH$: a tertiary alcohol is not oxidised.'),
@@ -793,14 +824,14 @@
   const MECH_POOL = [
     { a: 'CC(C)(C)O', cat: 'C[C+](C)C', alt: 'CC(C)[CH2+]' },
     { a: 'CCC(C)(C)O', cat: 'CC[C+](C)C', alt: 'CC(C)C[CH2+]' },
-    { a: 'CC1(O)CCCCC1', cat: 'C[C+]1CCCCC1', alt: 'CC1CCC[CH2+]C1' },
+    { a: 'CC1(O)CCCCC1', cat: 'C[C+]1CCCCC1', alt: '[CH2+]C1CCCCC1' },
     { a: 'CCC(C)(O)CC', cat: 'CC[C+](C)CC', alt: 'CCC(C)C[CH2+]' },
     { a: 'CC1(O)CCCC1', cat: 'C[C+]1CCCC1', alt: 'CC1CCC[CH+]1' },
     { a: 'CC(C)O', cat: 'C[CH+]C', alt: 'CC[CH2+]' },
-    { a: 'CCC(C)O', cat: 'CC[CH+]C', alt: 'CC(C)[CH2+]' },
-    { a: 'OC1CCCCC1', cat: 'C1CC[CH+]CC1', alt: 'C[CH+]CCC[CH2+]' },
+    { a: 'CCC(C)O', cat: 'CC[CH+]C', alt: 'CCC[CH2+]' },
+    { a: 'OC1CCCCC1', cat: 'C1CC[CH+]CC1', alt: '[OH2+]C1CCCCC1' },
     { a: 'CCC(O)CC', cat: 'CC[CH+]CC', alt: 'CCCC[CH2+]' },
-    { a: 'OC1CCCC1', cat: 'C1CC[CH+]C1', alt: 'CC1CC[CH+]1' },
+    { a: 'OC1CCCC1', cat: 'C1CC[CH+]C1', alt: '[OH2+]C1CCCC1' },
     { a: 'CCO' }, { a: 'CCCO' }, { a: 'CCCCO' }, { a: 'CC(C)CO' }, { a: 'CCCCCO' }, { a: 'OCC1CCCCC1' }
   ];
   const chargedAtom = (chem, smi) => chem.parse(smi).atoms.findIndex(a => a.charge === 1 && a.el === 'C');
@@ -860,7 +891,7 @@
     {
       id: 'u11.acid',
       title: t('Alkoholiai su Na, K, NaH: alkoksidai', 'Alcohols with Na, K, NaH: alkoxides'),
-      mirrors: ['S5.3', 'S5.12'],
+      mirrors: ['S5.3'],
       gen(rng, ctx) {
         const { chem, react } = ctx;
         const R = ctx.pick([{ k: 'Na', m: 'Na' }, { k: 'Na', m: 'Na' }, { k: 'K', m: 'K' }, { k: 'K', m: 'K' }, { k: 'NaH', m: 'Na' }, { k: 'NaH', m: 'Na' }, { k: 'NaOH', m: 'Na' }]);
@@ -881,14 +912,14 @@
                   tx('Taip: alkoholis oksiduojasi iki aldehido ar ketono.', 'Yes: the alcohol is oxidised to an aldehyde or a ketone.')
                 ],
                 answer: 0,
-                hint: t('Palyginkite alkoholio ir vandens rūgštingumą: kokia bazė sudaro silpną rūgštį ir ar ji pakankamai stipri?', 'Compare the acidity of the alcohol with that of water: what is the conjugate acid of the base, and is the base strong enough?'),
-                solution: t('Alkoholio $pKa$ (15–18) yra panašus į vandens, todėl $OH-$ negali jo pilnai deprotonuoti: pusiausvyra lieka prie alkoholio. Su šarmais monohidroksiliai alkoholiai nereaguoja.',
-                  'The $pKa$ of an alcohol (15–18) is close to that of water, so $OH-$ cannot deprotonate it fully: the equilibrium stays on the alcohol side. Monohydric alcohols do not react with alkalis.')
+                hint: t('Palyginkite alkoholio ir vandens rūgštingumą: kokia yra $OH-$ konjuguotoji rūgštis ir ar ši bazė pakankamai stipri?', 'Compare the acidity of the alcohol with that of water: what is the conjugate acid of the base, and is the base strong enough?'),
+                solution: t('Alkoholio $pKa$ (15–18) yra panašus į vandens, todėl $OH-$ negali jo visiškai deprotonuoti: pusiausvyra lieka prie alkoholio. Todėl vandeninis šarmas alkoholio į alkoksidą nepaverčia.',
+                  'The $pKa$ of an alcohol (15–18) is close to that of water, so $OH-$ cannot deprotonate it fully: the equilibrium stays on the alcohol side. An aqueous alkali therefore does not turn an alcohol into an alkoxide.')
               },
               {
                 prompt: t('Kuris reagentas tinka alkoksidui gauti?', 'Which reagent will make the alkoxide?'),
                 kind: 'choice',
-                options: [tx('Natris metalas arba $NaH$', 'Sodium metal or $NaH$'), tx('$NaOH$ vandeniniame tirpale', '$NaOH$ in water'), tx('$NaCl$', '$NaCl$'), tx('$Na2SO4$', '$Na2SO4$')],
+                options: [tx('Metalinis natris arba $NaH$', 'Sodium metal or $NaH$'), tx('$NaOH$ vandeniniame tirpale', '$NaOH$ in water'), tx('$NaCl$', '$NaCl$'), tx('$Na2SO4$', '$Na2SO4$')],
                 answer: 0,
                 hint: t('Reikia bazės, kurios konjuguotoji rūgštis daug silpnesnė už alkoholį.', 'You need a base whose conjugate acid is much weaker than the alcohol.'),
                 solution: t('Šarminis metalas atiduoda elektroną (susidaro $H2$), o hidrido jonas $H-$ yra labai stipri bazė: jo konjuguotoji rūgštis $H2$ labai silpna. Abu reagentai alkoholį deprotonuoja visiškai.',
@@ -904,19 +935,26 @@
         const prod = firstMajor(res);
         if (!prod) throw new Error('u11.acid: no alkoxide for ' + alc);
         const alkene = (() => { const r = react.run('elim', [alc], { base: 'heat-acid' }); return r.none ? null : firstMajor(r); })();
-        const isos = isoAlcohols(ctx, alc);
-        const extras = [];
-        if (isos.length) extras.push({ mol: { smi: firstMajor(react.run('alc.na', [ctx.pick(isos)], { metal: R.m })) } });
+        const iodide = firstMajor(react.run('alc.hx', [alc], { X: 'I' }));
+        const ether = iodide ? firstMajor(react.run('williamson', [prod.replace('[K+]', '[Na+]'), iodide], {})) : null;
+        const noRxn = tx('Reakcija nevyksta: alkoholis yra neutralus junginys', 'No reaction: an alcohol is a neutral compound');
+        const extras = [noRxn];
+        if (ether) extras.push({ mol: { smi: ether } });
         if (alkene) extras.push({ mol: { smi: alkene + '.[' + R.m + '+].[OH-]' } });
         const wrongMetal = R.k === 'K' ? 'Na' : 'K';
         extras.push({ mol: { smi: prod.replace(/\[(Na|K)\+\]/, '[' + wrongMetal + '+]') } });
         const options = optionList(ctx, { mol: { smi: prod } }, extras, 4);
         const wordsGas = [
           tx('Išsiskiria bespalvės dujos (burbuliukai) – vandenilis.', 'A colourless gas (bubbles) is evolved: hydrogen.'),
+          tx('Nieko nepastebima, nes alkoholis ir metalas nereaguoja.', 'Nothing is seen, because the alcohol and the metal do not react.'),
           tx('Tirpalas pasidaro oranžinis ir išsiskiria rudos dujos.', 'The solution turns orange and brown fumes appear.'),
-          tx('Iškrenta rudos $MnO2$ nuosėdos.', 'Brown $MnO2$ precipitates.'),
-          tx('Išsiskiria $CO2$, kalkių vanduo drumsčiasi.', '$CO2$ is evolved and lime water turns cloudy.')
+          tx('Iškrenta baltos nuosėdos, o dujų neišsiskiria.', 'A white precipitate forms and no gas is evolved.')
         ];
+        // which alcohol reacts slowest: the tertiary one (the given alcohol, or 2-methyl-2-propanol)
+        const slowRight = site(chem, alc).k === 3 ? alc : 'CC(C)(C)O';
+        const slowOthers = ctx.shuffle(['CO', 'CCO', 'CC(C)O', alc].filter(a => canon(ctx, a) !== canon(ctx, slowRight)));
+        const seenSlow = new Set();
+        const slowOptions = [slowRight].concat(slowOthers).filter(a => { const k = canon(ctx, a); if (seenSlow.has(k)) return false; seenSlow.add(k); return true; }).slice(0, 4).map(a => ({ mol: { smi: a } }));
         return {
           q,
           steps: [
@@ -925,7 +963,7 @@
               kind: 'choice', options, answer: 0,
               hint: t('Alkoholis čia elgiasi kaip rūgštis: kuris atomas netenka protono?', 'Here the alcohol acts as an acid: which atom loses its proton?'),
               solution: [
-                { p: t('Šarminis metalas (ar $NaH$) atplėšia protoną nuo $O-H$ grupės; deguonis lieka su neigiamu krūviu, o metalas virsta katijonu.', 'The alkali metal (or $NaH$) takes the proton from the $O-H$ group; oxygen keeps the negative charge and the metal becomes a cation.') },
+                { p: t('Šarminis metalas (ar $NaH$) atplėšia protoną nuo $O-H$ grupės; deguonis lieka su neigiamu krūviu, o metalas virsta katijonu. Kitas produktas – vandenilis.', 'The alkali metal (or $NaH$) takes the proton from the $O-H$ group; oxygen keeps the negative charge and the metal becomes a cation. The other product is hydrogen.') },
                 { mol: { smi: prod } }
               ]
             },
@@ -933,13 +971,13 @@
               prompt: t('Ką pastebėsite per šią reakciją?', 'What would you observe during this reaction?'),
               kind: 'choice', options: wordsGas, answer: 0,
               hint: t('Pagalvokite, kuo virsta alkoholio protonas ir metalo elektronas (ar hidrido jonas).', 'Think what the proton of the alcohol and the electron of the metal (or the hydride ion) turn into.'),
-              solution: t('Alkoholio protonas ir metalo elektronas (ar hidrido jonas) sudaro vandenilio dujas, todėl matyti burbuliukai.', 'The proton of the alcohol and the electron of the metal (or the hydride ion) make hydrogen gas, so bubbles are seen.')
+              solution: t('Alkoholio protonas ir metalo elektronas (ar hidrido jonas) sudaro vandenilio dujas $H2$, todėl matyti burbuliukai.', 'The proton of the alcohol and the electron of the metal (or the hydride ion) make hydrogen gas $H2$, so bubbles are seen.')
             },
             {
-              prompt: t('Parašykite išsiskiriančių dujų formulę.', 'Write the formula of the gas that is evolved.'),
-              kind: 'formula', mol: { smi: '[H][H]' }, answer: 'H2',
-              hint: t('Du vandenilio atomai jungiasi į molekulę.', 'Two hydrogen atoms combine into a molecule.'),
-              solution: t('Dujos – vandenilis $H2$: ' + (R.k === 'NaH' ? 'hidrido jonas atplėšia protoną.' : 'dvi elektronų ir protonų poros sudaro $H2$.'), 'The gas is hydrogen $H2$: ' + (R.k === 'NaH' ? 'the hydride ion takes the proton.' : 'two electron and proton pairs make $H2$.'))
+              prompt: t('Kuris iš šių alkoholių su natriu reaguotų lėčiausiai?', 'Which of these alcohols would react most slowly with sodium?'),
+              kind: 'choice', options: slowOptions, answer: 0,
+              hint: t('Kaip alkilgrupės veikia $O-H$ rūgštingumą ir deguonies užstojimą?', 'How do alkyl groups affect the acidity of the $O-H$ and the shielding of the oxygen?'),
+              solution: t('Kuo daugiau alkilgrupių prie anglies su $OH$, tuo mažiau rūgštus alkoholis ir tuo lėčiau jis reaguoja: lėčiausiai reaguoja tretinis alkoholis.', 'The more alkyl groups on the carbon with the $OH$, the less acidic the alcohol and the slower it reacts: a tertiary alcohol reacts slowest.')
             }
           ],
           why: t('Alkoholis yra silpna rūgštis, bet labai stipri bazė (šarminis metalas arba $NaH$) jį visiškai deprotonuoja. Susidaro alkoksidas ir vandenilis, kuris išsiskiria dujų burbuliukais.',
@@ -961,6 +999,7 @@
           if (react.wouldRearrange(alc)) continue;
           const s = site(chem, alc);
           const kind = ctx.pick(['hx', 'hx', 'hx', 'p']);
+          if (kind === 'p' && s.k === 3) continue;
           let X, lab;
           if (kind === 'hx') {
             X = s.k === 3 ? ctx.pick(['Cl', 'Br', 'I']) : ctx.pick(['Br', 'I']);
@@ -981,7 +1020,7 @@
         const alkane = alkene ? firstMajor(react.run('ae.h2', [alkene], {})) : null;
         const isoHal = alkane ? react.run('sr.halogenate', [alkane], { X: 'Br' }).products.filter(p => !p.by).map(p => p.smi.replace('Br', X)) : [];
         const extras = [];
-        if (alkene) extras.push({ scheme: { items: [{ smi: alkene }, { plus: true }, { smi: HX_SMI[X] }] } });
+        if (alkene) extras.push({ mol: { smi: alkene } });
         extras.push(prod.replace(X, ctx.pick(otherHal(X))));
         extras.push(...ctx.shuffle(isoHal.slice()));
         const options = optionList(ctx, { mol: { smi: prod } }, extras, 4);
@@ -993,9 +1032,9 @@
           steps.push({
             prompt: t('Kuriuo mechanizmu vyksta ši reakcija?', 'By which mechanism does this reaction proceed?'),
             kind: 'choice', options: [tx('SN1', 'SN1'), tx('SN2', 'SN2'), tx('E1', 'E1'), tx('AE', 'AE')], answer: sn2 ? 1 : 0,
-            hint: t('Ar iš protonuoto alkoholio gali lengvai susidaryti pakankamai stabilus karbokatijonas?', 'Can a reasonably stable carbocation form easily from the protonated alcohol?'),
+            hint: t('Ar iš protonizuoto alkoholio gali lengvai susidaryti pakankamai stabilus karbokatijonas?', 'Can a reasonably stable carbocation form easily from the protonated alcohol?'),
             solution: sn2
-              ? t('Pirminis katijonas per nestabilus, todėl bromidas (ar kitas halogenidas) iš galinės pusės išstumia vandenį vienu žingsniu: SN2.', 'A primary cation is too unstable, so the halide attacks from behind and pushes out water in one step: SN2.')
+              ? t('Pirminis katijonas per nestabilus, todėl bromidas (ar kitas halogenidas) iš galinės pusės išstumia vandenį viena stadija: SN2.', 'A primary cation is too unstable, so the halide attacks from behind and pushes out water in one step: SN2.')
               : t('Antriniai ir tretiniai alkoholiai praranda vandenį ir sudaro karbokatijoną, prie kurio jungiasi halogenidas: SN1.', 'Secondary and tertiary alcohols lose water to give a carbocation, to which the halide then bonds: SN1.')
           });
         }
@@ -1003,15 +1042,18 @@
           prompt: t('Koks yra pagrindinis produktas?', 'What is the main product?'),
           kind: 'choice', options, answer: 0,
           hint: t('OH grupė pakeičiama halogenu; atidžiai pažiūrėkite, kuris halogenas pateiktas reagente.', 'The OH group is replaced by a halogen; check which halogen the reagent supplies.'),
-          solution: [{ p: t('OH grupė (protonuota – kaip $H2O$) išeina, o jos vietą užima halogenas; anglies skeletas nesikeičia.', 'The OH group (protonated, so it leaves as $H2O$) is replaced by the halogen; the carbon skeleton does not change.') }, { mol: { smi: prod } }]
+          solution: [{ p: kind === 'p' ? t('$PBr3$ (ar $SOCl2$) paverčia OH gera nueinančiąja grupe, kurią halogenidas išstumia; anglies skeletas nesikeičia.', '$PBr3$ (or $SOCl2$) turns the OH into a good leaving group that the halide displaces; the carbon skeleton does not change.') : t('OH grupė (protonizuota – kaip $H2O$) išeina, o jos vietą užima halogenas; anglies skeletas nesikeičia.', 'The OH group (protonated, so it leaves as $H2O$) is replaced by the halogen; the carbon skeleton does not change.') }, { mol: { smi: prod } }]
         });
         const ns = nameStep(ctx, prod);
         if (ns) steps.push(ns);
         return {
           q,
           steps,
-          why: t('Alkoholio OH yra bloga nueinančioji grupė, bet protonuota (arba su $PBr3$, $SOCl2$ paversta geresne) ji išeina. Pirminiai alkoholiai reaguoja SN2, antriniai ir tretiniai – SN1 per karbokatijoną. Rezultatas: halogenalkanas su tuo pačiu skeletu.',
-            'The OH of an alcohol is a poor leaving group, but once protonated (or converted into a better one by $PBr3$ or $SOCl2$) it leaves. Primary alcohols react by SN2, secondary and tertiary by SN1 through a carbocation. The result is a haloalkane with the same skeleton.'),
+          why: kind === 'p'
+            ? t('OH yra bloga nueinančioji grupė, bet $PBr3$ ar $SOCl2$ paverčia ją gera, ir halogenidas ją išstumia. Skeletas nesikeičia, o rezultatas – halogenalkanas.',
+              'OH is a poor leaving group, but $PBr3$ or $SOCl2$ turns it into a good one and the halide displaces it. The skeleton does not change and the result is a haloalkane.')
+            : t('Alkoholio OH yra bloga nueinančioji grupė, bet protonizuota ji išeina kaip vanduo. Pirminiai alkoholiai reaguoja SN2, antriniai ir tretiniai – SN1 per karbokatijoną. Rezultatas: halogenalkanas su tuo pačiu skeletu.',
+              'The OH of an alcohol is a poor leaving group, but once protonated it leaves as water. Primary alcohols react by SN2, secondary and tertiary by SN1 through a carbocation. The result is a haloalkane with the same skeleton.'),
           src: 'L11 p8, p9, p10'
         };
       }
@@ -1024,9 +1066,9 @@
       gen(rng, ctx) {
         const { chem, react } = ctx;
         const e = ctx.pick(MECH_POOL);
-        const X = ctx.pick(['Cl', 'Br', 'I']);
         const alc = e.a;
         const s = site(chem, alc);
+        const X = s.k === 3 ? ctx.pick(['Cl', 'Br', 'I']) : ctx.pick(['Br', 'I']);
         const res = react.run('alc.hx', [alc], { X });
         const prod = firstMajor(res);
         if (!prod) throw new Error('u11.mech: no product');
@@ -1040,10 +1082,10 @@
         const tertiaryLike = !!e.cat;
         const steps = [
           {
-            prompt: t('Bakstelėkite atomą, kurį pirmiausia protonuoja rūgštis.', 'Tap the atom that the acid protonates first.'),
+            prompt: t('Bakstelėkite atomą, kurį pirmiausia protonizuoja rūgštis.', 'Tap the atom that the acid protonates first.'),
             kind: 'atoms', mol: { smi: alc, opts: { numbers: 'all' } }, answer: [s.o],
             hint: t('Ieškokite labiausiai baziško atomo su laisvosiomis elektronų poromis.', 'Look for the most basic atom, the one with lone pairs.'),
-            solution: [{ p: t('Deguonies atomas (Nr. ' + (s.o + 1) + ') turi laisvąsias poras, todėl jis protonuojamas pirmas; susidaro oksonio jonas, o $OH2+$ yra gera nueinančioji grupė.', 'The oxygen (no. ' + (s.o + 1) + ') has lone pairs, so it is protonated first; this gives an oxonium ion, and $OH2+$ is a good leaving group.') }, { mech: [protonation] }]
+            solution: [{ p: t('Deguonies atomas (Nr. ' + (s.o + 1) + ') turi laisvąsias poras, todėl jis protonizuojamas pirmas; susidaro oksonio jonas, o $OH2+$ yra gera nueinančioji grupė.', 'The oxygen (no. ' + (s.o + 1) + ') has lone pairs, so it is protonated first; this gives an oxonium ion, and $OH2+$ is a good leaving group.') }, { mech: [protonation] }]
           }
         ];
         if (tertiaryLike) {
@@ -1052,7 +1094,7 @@
           steps.push({
             prompt: t('Kokia tarpinė dalelė susidaro, kai nuo oksonio jono atskyla vanduo?', 'Which intermediate forms when water leaves the oxonium ion?'),
             kind: 'choice', options, answer: 0,
-            hint: t('Teigiamas krūvis lieka ten, kur buvo C–O ryšys. Kuris katijonas stabilesnis?', 'The positive charge stays where the C–O bond was. Which cation is more stable?'),
+            hint: t('Kuris katijonas stabilesnis?', 'Which cation is more stable?'),
             solution: [
               { p: t('Vanduo išeina su abiem C–O ryšio elektronais; krūvį pasilieka anglis, kuri turėjo OH. Šis ' + (s.k === 3 ? 'tretinis' : 'antrinis') + ' katijonas stabiliausias iš galimų.', 'Water leaves with both electrons of the C–O bond and the carbon that carried the OH keeps the charge. This ' + (s.k === 3 ? 'tertiary' : 'secondary') + ' cation is the most stable one possible.') },
               { mech: [{ scheme: { items: [{ smi: ox }] }, arrows: [{ from: { m: 0, b: [s.c, s.o] }, to: { m: 0, a: s.o } }], note: t('$C-O$ ryšio elektronai pereina deguoniui: išeina $H2O$.', 'The $C-O$ electrons go to oxygen: $H2O$ leaves.') },
@@ -1061,7 +1103,7 @@
           });
         } else {
           steps.push({
-            prompt: t('Kaip ištrūksta vanduo iš pirminio oksonio jono?', 'How does water leave a primary oxonium ion?'),
+            prompt: t('Kaip atskyla vanduo nuo oksonio jono?', 'How does water leave the oxonium ion?'),
             kind: 'choice',
             options: [
               tx('Halogenidas atakuoja anglį iš priešingos pusės, o vanduo išeina tuo pačiu metu.', 'The halide attacks the carbon from the opposite side while water leaves at the same moment.'),
@@ -1072,7 +1114,7 @@
             answer: 0,
             hint: t('Ar pirminis katijonas pakankamai stabilus, kad susidarytų kaip tarpinė dalelė?', 'Is a primary cation stable enough to form as an intermediate?'),
             solution: [
-              { p: t('Pirminis katijonas per nestabilus, todėl nukleofilas jungiasi iš galinės pusės, kol vanduo išeina: vienas žingsnis, SN2.', 'A primary cation is too unstable, so the nucleophile bonds from the back while water leaves: one step, SN2.') },
+              { p: t('Pirminis katijonas per nestabilus, todėl nukleofilas jungiasi iš galinės pusės tuo pačiu metu, kai išeina vanduo.', 'A primary cation is too unstable, so the nucleophile bonds from the back at the same moment as water leaves.') },
               { mech: [{ scheme: { items: [{ smi: ox }, { plus: true }, { smi: xm, opts: { lonePairs: true } }] }, arrows: [{ from: { m: 1, lp: 0 }, to: { m: 0, a: s.c } }, { from: { m: 0, b: [s.c, s.o] }, to: { m: 0, a: s.o } }], note: t('Halogenidas atakuoja anglį, tuo pačiu išeina $H2O$.', 'The halide attacks the carbon while $H2O$ leaves.') }] }
             ]
           });
@@ -1080,15 +1122,15 @@
         steps.push({
           prompt: t('Kuriuo simboliu žymimas šios reakcijos mechanizmas?', 'Which symbol names the mechanism of this reaction?'),
           kind: 'choice', options: [tx('SN1', 'SN1'), tx('SN2', 'SN2'), tx('E1', 'E1'), tx('AE', 'AE')], answer: tertiaryLike ? 0 : 1,
-          hint: t('Ar yra karbokatijono tarpinė dalelė, ar viskas vyksta vienu žingsniu?', 'Is there a carbocation intermediate, or does everything happen in one step?'),
+          hint: t('Ar yra karbokatijono tarpinė dalelė, ar viskas vyksta vienoje stadijoje?', 'Is there a carbocation intermediate, or does everything happen in one step?'),
           solution: tertiaryLike
             ? t('Su karbokatijono tarpine dalele, kurios susidarymas lėtas: SN1.', 'With a carbocation intermediate whose formation is slow: SN1.')
-            : t('Vienas žingsnis su atakuojančiu nukleofilu ir išeinančia grupe vienu metu: SN2.', 'One step with the nucleophile attacking and the leaving group departing together: SN2.')
+            : t('Viena stadija su atakuojančiu nukleofilu ir išeinančia grupe vienu metu: SN2.', 'One step with the nucleophile attacking and the leaving group departing together: SN2.')
         });
         return {
           q: [{ p: t('Alkoholis reaguoja su vandenilio halogenidu.', 'An alcohol reacts with a hydrogen halide.') }, { scheme: { items: [{ smi: alc }, { plus: true }, { smi: HX_SMI[X] }, { arrow: '→' }, { smi: prod }, { plus: true }, { smi: 'O' }] } }],
           steps,
-          why: t('Pirmasis žingsnis visada tas pats: protonuojamas deguonis. Toliau lemia katijono stabilumas: tretinis ir antrinis alkoholiai sudaro karbokatijoną (SN1), pirminiai nesudaro ir reaguoja SN2 būdu.',
+          why: t('Pirmoji stadija visada ta pati: protonizuojamas deguonis. Toliau lemia katijono stabilumas: tretinis ir antrinis alkoholiai sudaro karbokatijoną (SN1), pirminiai nesudaro ir reaguoja SN2 būdu.',
             'The first step is always the same: oxygen is protonated. What follows depends on the stability of the cation: tertiary and secondary alcohols form a carbocation (SN1), primary ones do not and react by SN2.'),
           src: 'L11 p9, p10'
         };
@@ -1103,7 +1145,7 @@
         const { chem, react } = ctx;
         let pick = null;
         for (let tries = 0; tries < 80 && !pick; tries++) {
-          const alc = ctx.pick(SEC.concat(TERT));
+          const alc = ctx.pick(SEC.concat(TERT).filter(x => x !== 'CC(C)CC(C)O'));
           if (react.wouldRearrange(alc)) continue;
           const res = react.run('elim', [alc], { base: 'heat-acid' });
           if (res.none) continue;
@@ -1130,35 +1172,35 @@
         const domOpts = optionList(ctx, { mol: { smi: major } }, minors.concat(dec.slice(0, 1)), 4);
         const steps = [
           {
+            prompt: t('Koks karbokatijonas susidaro, kai nuo protonizuoto alkoholio atskyla vanduo?', 'Which carbocation forms when water leaves the protonated alcohol?'),
+            kind: 'choice', options: [tx('Pirminis karbokatijonas', 'Primary carbocation'), tx('Antrinis karbokatijonas', 'Secondary carbocation'), tx('Tretinis karbokatijonas', 'Tertiary carbocation')], answer: s.k - 1,
+            hint: t('Prie kiek anglies atomų prijungta anglis, turėjusi OH?', 'How many carbons are bonded to the carbon that carried the OH?'),
+            solution: t('Teigiamas krūvis lieka ant anglies, turėjusios OH, o ji ' + (s.k === 3 ? 'turi tris' : 'turi dvi') + ' anglies kaimynes: ' + CLS_LT[s.k - 1] + ' katijonas.', 'The positive charge stays on the carbon that carried the OH, which has ' + (s.k === 3 ? 'three' : 'two') + ' carbon neighbours: a ' + CLS_EN[s.k - 1] + ' cation.')
+          },
+          {
             prompt: t('Pažymėkite visus alkenus, kurie gali susidaryti.', 'Pick every alkene that can form.'),
             kind: 'multi', options: step1opts, answer: formed.map((_, i) => i),
             hint: t('Dvigubas ryšys susidaro tarp anglies, kuri turėjo OH, ir gretimos anglies, turinčios vandenilį.', 'The double bond forms between the carbon that carried the OH and a neighbouring carbon that has a hydrogen.'),
-            solution: t('Galimi tik alkenai, kuriuose dvigubas ryšys prasideda ties anglimi, turėjusia OH. Alkenai, kurių dvigubas ryšys nutolęs, šios reakcijos metu nesusidaro.', 'Only alkenes whose double bond starts at the carbon that carried the OH can form. Alkenes with the double bond farther away do not form in this reaction.')
+            solution: t('Galimi tik alkenai, kuriuose dvigubasis ryšys prasideda ties anglimi, turėjusia OH. Alkenai, kurių dvigubasis ryšys nutolęs, šios reakcijos metu nesusidaro.', 'Only alkenes whose double bond starts at the carbon that carried the OH can form. Alkenes with the double bond farther away do not form in this reaction.')
           },
           {
             prompt: t('Kuris alkenas vyrauja?', 'Which alkene predominates?'),
             kind: 'choice', options: domOpts, answer: 0,
-            hint: t('Palyginkite, prie kiek alkilgrupių yra dvigubas ryšys kiekviename alkene.', 'Compare how many alkyl groups sit on the double bond in each alkene.'),
-            solution: [{ p: t('Pagal Zaicevo taisyklę vyrauja alkenas, kurio dvigubasis ryšys turi daugiausia alkilgrupių: protonas atskyla nuo gretimo C atomo, turinčio mažiausiai vandenilių.', 'By Zaitsev’s rule the alkene with the most alkyl groups on the double bond predominates: the proton leaves the neighbouring carbon that has the fewest hydrogens.') }, { mol: { smi: major } }]
-          },
-          {
-            prompt: t('Kokio tipo karbokatijonas susidaro pirmajame etape po vandens atskilimo?', 'What type of carbocation forms after water has left?'),
-            kind: 'choice', options: [tx('Pirminis karbokatijonas', 'Primary carbocation'), tx('Antrinis karbokatijonas', 'Secondary carbocation'), tx('Tretinis karbokatijonas', 'Tertiary carbocation')], answer: s.k - 1,
-            hint: t('Karbokatijono tipas sutampa su alkoholio, iš kurio jis susidarė, klase.', 'The type of the carbocation matches the class of the alcohol it came from.'),
-            solution: t('Teigiamas krūvis lieka ant anglies, turėjusios OH, o ji ' + (s.k === 3 ? 'turi tris' : 'turi dvi') + ' anglies kaimynes: ' + CLS_LT[s.k - 1] + ' katijonas.', 'The positive charge stays on the carbon that carried the OH, which has ' + (s.k === 3 ? 'three' : 'two') + ' carbon neighbours: a ' + CLS_EN[s.k - 1] + ' cation.')
+            hint: t('Palyginkite, prie kiek alkilgrupių yra dvigubasis ryšys kiekviename alkene.', 'Compare how many alkyl groups sit on the double bond in each alkene.'),
+            solution: [{ p: t('Pagal Zaicevo taisyklę vyrauja stabiliausias alkenas, t. y. su daugiausia alkilgrupių prie dvigubojo ryšio; jam susidaryti protonas pasitraukia nuo kaimyninės anglies, turinčios mažiausiai $H$.', 'By Zaitsev’s rule the alkene with the most alkyl groups on the double bond predominates: the proton leaves the neighbouring carbon that has the fewest hydrogens.') }, { mol: { smi: major } }]
           },
           {
             prompt: t('Kuriuo simboliu žymimas šios reakcijos mechanizmas?', 'Which symbol names the mechanism of this reaction?'),
             kind: 'choice', options: [tx('E1', 'E1'), tx('E2', 'E2'), tx('SN1', 'SN1'), tx('AE', 'AE')], answer: 0,
-            hint: t('Pirmiausia protonuojamas deguonis, po to išeina vanduo. Ar yra karbokatijono tarpinė dalelė?', 'The oxygen is protonated first, then water leaves. Is there a carbocation intermediate?'),
+            hint: t('Pirmiausia protonizuojamas deguonis, po to išeina vanduo. Ar yra karbokatijono tarpinė dalelė?', 'The oxygen is protonated first, then water leaves. Is there a carbocation intermediate?'),
             solution: t('Antriniai ir tretiniai alkoholiai su stipria rūgštimi dehidratuojasi per karbokatijoną: eliminavimas E1.', 'Secondary and tertiary alcohols dehydrate in strong acid through a carbocation: elimination E1.')
           }
         ];
         if (rng() < 0.5) { const ns = nameStep(ctx, major, t('Pavadinkite pagrindinį produktą.', 'Name the main product.')); if (ns) steps.push(ns); }
         return {
-          q: [{ p: t('Alkoholis kaitinamas su koncentruota sieros rūgštimi.', 'The alcohol is heated with concentrated sulfuric acid.') }, { scheme: { items: [{ smi: alc }, { arrow: '→', above: f('H2SO4, Δ') }] } }],
+          q: [{ p: t('Alkoholis kaitinamas su koncentruota sieros rūgštimi. Cis ir trans (E/Z) izomerų neskaičiuokite.', 'The alcohol is heated with concentrated sulfuric acid. Do not count cis and trans (E/Z) isomers separately.') }, { scheme: { items: [{ smi: alc }, { arrow: '→', above: f('H2SO4, Δ') }] } }],
           steps,
-          why: t('Rūgštyje alkoholis protonuojamas, praranda vandenį ir sudaro karbokatijoną, po to protonas atskyla nuo gretimos anglies (E1). Kai galimi keli alkenai, vyrauja stabiliausias, daugiausia pakeistas (Zaicevo taisyklė).',
+          why: t('Rūgštyje alkoholis protonizuojamas, praranda vandenį ir sudaro karbokatijoną, po to protonas atskyla nuo gretimos anglies (E1). Kai galimi keli alkenai, vyrauja stabiliausias, daugiausia pakeistas (Zaicevo taisyklė).',
             'In acid the alcohol is protonated, loses water to form a carbocation, and then a proton leaves a neighbouring carbon (E1). When several alkenes are possible the most stable, most substituted one predominates (Zaitsev’s rule).'),
           src: 'L11 p12, p13; S5.4'
         };
@@ -1184,18 +1226,18 @@
         prod = res.none ? null : firstMajor(res);
         const oxOf = (a, rule) => { const r = react.run('alc.ox', [a], { reagent: rule }); return r.none ? null : firstMajor(r); };
         const noRxn = tx('Reakcija nevyksta', 'No reaction');
-        const isos = ctx.shuffle(isoAlcohols(ctx, alc));
+        const pos = ctx.shuffle(positionalAlcohols(ctx, alc));
+        const posOx = pos.map(a => oxOf(a, RE.rule)).filter(x => x);   // the same oxidation at another carbon (same skeleton)
+        const alkenes = RE.rule === 'chromic' && s.k > 1 ? dehydProducts(ctx, alc) : [];
         const extras = [];
         if (s.k === 1) {
           const other = oxOf(alc, RE.rule === 'PCC' ? 'chromic' : 'PCC');   // the other stage of oxidation
           if (other) extras.push(other);
-          isos.forEach(a => { const x = oxOf(a, 'PCC'); if (x && site(chem, a).k > 1) extras.push(x); });
-          extras.push(noRxn);
+          extras.push(...posOx, noRxn);
         } else if (s.k === 2) {
-          isos.forEach(a => { const x = oxOf(a, 'PCC'); if (x) extras.push(x); });
-          extras.push(noRxn);
+          extras.push(...posOx, ...alkenes, noRxn);
         } else {
-          isos.forEach(a => { const x = oxOf(a, 'PCC'); if (x) extras.push(x); });
+          extras.push(...posOx, ...alkenes);
         }
         const right = prod ? { mol: { smi: prod } } : noRxn;
         options = optionList(ctx, right, extras, 4);
@@ -1265,15 +1307,16 @@
         const rB = react.run('alc.ox', [A], { reagent: OXR.rule });
         const B = rB.none ? null : firstMajor(rB);
         const noRxn = tx('B nesusidaro: reakcija nevyksta', 'B does not form: no reaction');
-        // wrong options for A: another alcohol of the same formula, an ether of the same formula
-        const isos = ctx.shuffle(isoAlcohols(ctx, A));
+        // wrong options for A: the anti-Markovnikov alcohol (alkene route), alcohols of the same skeleton, an ether of the same formula
+        const antiMk = fromHal ? [] : react.run('ae.h2o', [start], {}).products.filter(p => !p.major && !p.by).map(p => p.smi);
+        const pos = ctx.shuffle(positionalAlcohols(ctx, A));
         const etherSmi = ETHER_BY_FORMULA[formulaOf(ctx, A)];
-        const extrasA = isos.slice(0, 2).concat(etherSmi ? [etherSmi] : []);
-        const optsA = optionList(ctx, { mol: { smi: A } }, extrasA, 4);
+        const wrongA = antiMk.concat(pos);
+        const optsA = optionList(ctx, { mol: { smi: A } }, wrongA.slice(0, 2).concat(etherSmi ? [etherSmi] : [], wrongA.slice(2)), 4);
         const otherOx = oxOfRule(react, A, OXR.rule === 'PCC' ? 'chromic' : 'PCC');
         const extrasB = [];
         if (sA.k === 1 && otherOx) extrasB.push(otherOx);
-        isos.forEach(a => { const r = react.run('alc.ox', [a], { reagent: OXR.rule }); if (!r.none) extrasB.push(firstMajor(r)); });
+        wrongA.forEach(a => { const r = react.run('alc.ox', [a], { reagent: OXR.rule }); if (!r.none) extrasB.push(firstMajor(r)); });
         extrasB.push(A);
         const optsB = optionList(ctx, B ? { mol: { smi: B } } : noRxn, extrasB.concat(B ? [noRxn] : []), 4);
         const steps = [
@@ -1281,10 +1324,10 @@
             prompt: t('Koks yra junginys A?', 'What is compound A?'),
             kind: 'choice', options: optsA, answer: 0,
             hint: fromHal ? t('Hidroksido jonas yra nukleofilas, o pirminis halogenalkanas reaguoja SN2 būdu.', 'The hydroxide ion is the nucleophile and a primary haloalkane reacts by SN2.')
-              : t('Vanduo jungiasi prie dvigubo ryšio rūgštyje. Kuriam atomui atitenka OH pagal Markovnikovo taisyklę?', 'Water adds across the double bond in acid. Which carbon gets the OH by Markovnikov’s rule?'),
+              : t('Vanduo jungiasi prie dvigubojo ryšio rūgštyje. Kuriam atomui atitenka OH pagal Markovnikovo taisyklę?', 'Water adds across the double bond in acid. Which carbon gets the OH by Markovnikov’s rule?'),
             solution: [{
               p: fromHal ? t('Halogeną pakeičia OH grupė (SN2); anglies skeletas ir OH vieta nesikeičia.', 'The halogen is replaced by OH (SN2); the skeleton and the position of the OH do not change.')
-                : t('Protonas jungiasi prie dvigubo ryšio atomo su daugiau vandenilių, todėl OH atitenka atomui, kuris sudaro stabilesnį karbokatijoną (Markovnikovo taisyklė).', 'The proton bonds to the double-bond carbon with more hydrogens, so the OH goes to the carbon that makes the more stable cation (Markovnikov’s rule).')
+                : t('Protonas jungiasi prie dvigubojo ryšio atomo su daugiau vandenilių, todėl OH atitenka atomui, kuris sudaro stabilesnį karbokatijoną (Markovnikovo taisyklė).', 'The proton bonds to the double-bond carbon with more hydrogens, so the OH goes to the carbon that makes the more stable cation (Markovnikov’s rule).')
             }, { mol: { smi: A } }]
           },
           {
@@ -1301,13 +1344,13 @@
           {
             prompt: t('Kuriuo simboliu žymimas pirmosios reakcijos (į A) mechanizmas?', 'Which symbol names the mechanism of the first reaction (to A)?'),
             kind: 'choice', options: [tx('SN2', 'SN2'), tx('AE', 'AE'), tx('E2', 'E2'), tx('SN1', 'SN1')], answer: fromHal ? 0 : 1,
-            hint: fromHal ? t('Pirminis halogenalkanas ir stiprus nukleofilas.', 'A primary haloalkane and a strong nucleophile.') : t('Reagentas prisijungia prie dvigubo ryšio.', 'A reagent adds across a double bond.'),
+            hint: t('Ar reagentas pakeičia atomą, ar prisijungia prie $π$ ryšio?', 'Does the reagent replace an atom or add across a $π$ bond?'),
             solution: fromHal ? t('Pirminis halogenalkanas su $OH-$: nukleofilinis pakeitimas SN2.', 'A primary haloalkane with $OH-$: nucleophilic substitution, SN2.') : t('Alkenas prijungia vandenį rūgštyje: elektrofilinis prijungimas AE.', 'An alkene adds water in acid: electrophilic addition, AE.')
           }
         ];
         return {
           q: [
-            { p: t('Įrašykite junginių A ir B formules.', 'Write the formulas of compounds A and B.') },
+            { p: t('Nustatykite junginius A ir B.', 'Identify compounds A and B.') },
             { scheme: { items: [{ smi: start }, { arrow: '→', above: step1 }, { arrow: '→', above: f(OXR.lab) }] }, caption: t('Pradinis junginys – prieš pirmąją rodyklę, A – tarp rodyklių, B – po antrosios.', 'The starting compound is before the first arrow, A between the arrows, B after the second.') }
           ],
           steps,
@@ -1361,17 +1404,15 @@
         const pairOpt = (r) => ({ scheme: { items: [{ smi: r.alkoxide }, { plus: true }, { smi: r.halide }] } });
         const neutralOpt = (r) => ({ scheme: { items: [{ smi: r.alc }, { plus: true }, { smi: r.halide }] } });
         const dehydr = { scheme: { items: [{ smi: good[0] }, { plus: true }, { smi: bad[0] }, { arrow: '→', above: f('H2SO4, 140 °C') }] } };
-        const options = tie
-          ? [pairOpt(rGood), pairOpt(rBad), neutralOpt(rGood), dehydr]
-          : [pairOpt(rGood), pairOpt(rBad), neutralOpt(rGood), dehydr];
+        const options = [pairOpt(rGood), pairOpt(rBad), neutralOpt(rGood), dehydr];
         const steps = [
           {
-            prompt: tie ? t('Pažymėkite visas poras, kurios duoda šį eterį gerais išeigomis.', 'Pick every pair that gives this ether in good yield.') : t('Kuri pora duoda šį eterį gerai?', 'Which pair gives this ether well?'),
+            prompt: tie ? t('Pažymėkite visas poras, kurios duoda šį eterį didelėmis išeigomis.', 'Pick every pair that gives this ether in good yield.') : t('Kuri pora duoda šį eterį didele išeiga?', 'Which pair gives this ether in good yield?'),
             kind: tie ? 'multi' : 'choice', options, answer: tie ? [0, 1] : 0,
             hint: t('Alkoksido jonas yra ir nukleofilas, ir bazė. Kuriame halogenalkane SN2 galima be konkurencinio eliminavimo?', 'The alkoxide ion is both a nucleophile and a base. In which haloalkane is SN2 possible without competing elimination?'),
             solution: [
               { p: tie ? t('Abu halogenalkanai metilo ar pirminiai, todėl SN2 vyksta abiem keliais.', 'Both haloalkanes are methyl or primary, so SN2 works both ways.')
-                : t('Reikalingas metilo ar pirminis halogenalkanas, o šakotesnė eterio dalis imama kaip alkoksidas. Alkoksidas turi būti jonas (gaunamas su Na ar NaH), o ne neutralus alkoholis.', 'Use a methyl or primary haloalkane and take the more hindered part of the ether as the alkoxide. The alkoxide must be an ion (made with Na or NaH), not the neutral alcohol.') },
+                : t('Reikalingas metilo ar pirminis halogenalkanas, o šakotesnė eterio dalis imama kaip alkoksidas (arilo dalis – kaip fenoksidas). Alkoksidas turi būti jonas (gaunamas su Na ar NaH), o ne neutralus alkoholis.', 'Use a methyl or primary haloalkane and take the more hindered part of the ether as the alkoxide (an aryl part is always the phenoxide). The alkoxide must be an ion (made with Na or NaH), not the neutral alcohol.') },
               { scheme: { items: [{ smi: rGood.alkoxide }, { plus: true }, { smi: rGood.halide }, { arrow: '→' }, { smi: ether }] } }
             ]
           }
@@ -1384,18 +1425,18 @@
           };
           const R = reasons[kind];
           const wrongs = [
-            { lt: 'Metoksido ar etoksido jonas yra per mažas ir negali atakuoti anglies.', en: 'A methoxide or ethoxide ion is too small to attack a carbon.' },
+            { lt: 'Šakotas halogenalkanas yra geresnis SN2 substratas, nes sudaro stabilų karbokatijoną.', en: 'The branched haloalkane is the better SN2 substrate because it forms a stable carbocation.' },
             { lt: 'Halogenas yra blogesnė nueinančioji grupė pirminiame halogenalkane nei šakotame.', en: 'The halogen is a poorer leaving group on a primary haloalkane than on a branched one.' },
-            { lt: 'Šioje poroje alkoksidas neturi laisvųjų elektronų porų.', en: 'In this pair the alkoxide has no lone pairs.' }
+            { lt: 'Alkoksidas su šiuo halogenalkanu yra per silpnas nukleofilas.', en: 'The alkoxide is too weak a nucleophile for this haloalkane.' }
           ];
           steps.push({
-            prompt: t('Kodėl antroji pora (alkoksidas su šakotesniu ar aromatiniu halogenidu) netinka?', 'Why does the other pair (alkoxide with the more branched or aromatic halide) not work?'),
+            prompt: t('Kodėl kita pora (alkoksidas su šakotesniu ar aromatiniu halogenidu) netinka?', 'Why does the other pair (alkoxide with the more branched or aromatic halide) not work?'),
             kind: 'choice', options: [{ text: t(R.lt, R.en) }].concat(wrongs.map(w => ({ text: t(w.lt, w.en) }))), answer: 0,
             hint: t('Alkoksidas nukleofilas, bet ir bazė. Pagalvokite, kokį halogenalkaną SN2 atakuoja lengvai.', 'The alkoxide is a nucleophile but also a base. Think about which haloalkane SN2 attacks easily.'),
             solution: t(R.lt, R.en)
           });
         }
-        const ns = nameStep(ctx, ether, t('Pavadinkite eterį.', 'Name the ether.'), t('Eteris vadinamas kaip alkoksialkanas: mažesnė grupė tampa pakaitu „oksi“, didesnė – pagrindu.', 'Name the ether as an alkoxyalkane: the smaller group becomes the alkoxy substituent and the larger one the parent.'));
+        const ns = nameStep(ctx, ether, t('Pavadinkite eterį.', 'Name the ether.'), t('Eteris vadinamas kaip alkoksialkanas: mažesnė grupė tampa alkoksi pakaitu (metoksi-, etoksi-), didesnė – pagrindu.', 'Name the ether as an alkoxyalkane: the smaller group becomes the alkoxy substituent and the larger one the parent.'));
         if (ns) steps.push(ns);
         return {
           q: [{ p: t('Nesimetrinį eterį reikia pagaminti Viljamsono sinteze.', 'An unsymmetrical ether is to be made by the Williamson synthesis.') }, { mol: { smi: ether } }],
@@ -1414,7 +1455,8 @@
       gen(rng, ctx) {
         const { chem, react } = ctx;
         const MOLS = ['C=CCCCO', 'C=CCC(C)O', 'CC(=C)CCO', 'CC(=C)CC(C)O', 'CC1=CCC(O)CC1', 'OC1CCC(=C)CC1', 'CC(C)=CCCO', 'CC(O)CCCC=C', 'C=CCCC(C)(C)O', 'C=CCC(C)(C)O', 'OCCC1=CCCCC1', 'OC1CCCC(=C)C1',
-          'CC(C)=CCC(C)O', 'C=CCCCC(C)O', 'OCCCC=CC', 'CC(=C)CCCO', 'CC(O)C(C)CC=C', 'C=C(C)CCC(C)(C)O'];
+          'CC(C)=CCC(C)O', 'C=CCCCC(C)O', 'OCCCC=CC', 'CC(=C)CCCO', 'CC(O)C(C)CC=C', 'C=C(C)CCC(C)(C)O',
+          'CC(C)CCCC(C)C1CCC2C1(CCC3C2CC=C4C3(CCC(C4)O)C)C', 'CC(C)CCCC(C)C1CCC2C1(CCC3C2CC=C4C3(CCC(C4)O)C)C'];
         const REAGS = [
           { k: 'br2', lab: f('Br2'), run: (m) => firstMajor(react.run('ae.x2', [m], { X: 'Br' })), group: 'alkene', rule: 'ae.x2' },
           { k: 'h2o', lab: f('H2O, H+'), run: (m) => firstMajor(react.run('ae.h2o', [m], {})), group: 'alkene' },
@@ -1444,10 +1486,16 @@
         const noRxn = tx('Reakcija nevyksta', 'No reaction');
         const sibling = REAGS.filter(r => r.k !== R.k).map(r => outs[r.k]).filter(x => x);
         const right = prod ? { mol: { smi: prod } } : noRxn;
-        const options = optionList(ctx, right, ctx.shuffle(sibling.slice()).concat(prod ? [noRxn] : []), 4);
+        // same-reagent mistakes: the anti-Markovnikov diol, both groups reacting, the other stage, the alkoxide without the second step
+        const same = [];
+        if (R.k === 'h2o') react.run('ae.h2o', [m], {}).products.filter(p => !p.major && !p.by).forEach(p => same.push(p.smi));
+        if (R.k === 'br2' && prod) { const x = react.run('alc.hx', [prod], { X: 'Br' }); if (!x.none) same.push(firstMajor(x)); }
+        if (R.k === 'pcc' && s.k === 1) same.push(oxOfRule(react, m, 'chromic'));
+        if (R.k === 'na') same.push(firstMajor(react.run('alc.na', [m], { metal: 'Na' })));
+        const options = optionList(ctx, right, same.filter(x => x).slice(0, 2).concat(ctx.shuffle(sibling.slice()).slice(0, 2), prod ? [noRxn] : []), 4);
         const steps = [];
         const dbl = alkeneCarbons(chem, m);
-        const q = [{ p: t('Molekulėje yra du funkcinių grupių tipai. Nekreipkite dėmesio į molekulės dydį: žiūrėkite į grupes.', 'The molecule contains two kinds of functional group. Ignore the size of the molecule and look at the groups.') }, { scheme: { items: [{ smi: m, opts: { numbers: 'all' } }, { arrow: '→', above: R.lab }] } }];
+        const q = [{ p: t('Molekulėje yra dviejų tipų funkcinės grupės: spręskite pagal jas, o ne pagal molekulės dydį.', 'The molecule contains two kinds of functional group: decide by the groups, not by the size of the molecule.') }, { scheme: { items: [{ smi: m, opts: { numbers: 'all' } }, { arrow: '→', above: R.lab }] } }];
         if (prod) {
           const target = R.group === 'alkene' ? dbl : (R.k === 'na' ? [s.o] : [s.c]);
           steps.push({
@@ -1455,10 +1503,10 @@
               : (R.k === 'na' ? t('Bakstelėkite atomą, kuris reaguoja su natriu.', 'Tap the atom that reacts with sodium.') : t('Bakstelėkite anglies atomą, kuris oksiduojamas.', 'Tap the carbon atom that is oxidised.')),
             kind: 'atoms', mol: { smi: m, opts: { numbers: 'all' } }, answer: target,
             hint: R.group === 'alkene' ? t('Kuri grupė turi $π$ ryšį, kurį gali atakuoti reagentas?', 'Which group has the $π$ bond that the reagent can attack?')
-              : t('Kuri grupė turi $O-H$ ryšį ir vandenilius prie šalia esančios anglies?', 'Which group has the $O-H$ bond and hydrogens on the carbon next to it?'),
-            solution: R.group === 'alkene' ? t('Reaguoja dvigubo ryšio atomai (Nr. ' + dbl.map(x => x + 1).join(' ir ') + '); alkoholio grupė šio reagento nepaveikia.', 'The double-bond carbons (no. ' + dbl.map(x => x + 1).join(' and ') + ') react; the alcohol group is not touched by this reagent.')
-              : (R.k === 'na' ? t('Natris deprotonuoja OH grupę (deguonis Nr. ' + (s.o + 1) + '); dvigubas ryšys nereaguoja.', 'Sodium deprotonates the OH group (oxygen no. ' + (s.o + 1) + '); the double bond does not react.')
-                : t('Oksiduojama anglis su OH ir vandeniliu (Nr. ' + (s.c + 1) + '); dvigubas ryšys su PCC nereaguoja.', 'The carbon with the OH and a hydrogen (no. ' + (s.c + 1) + ') is oxidised; the double bond does not react with PCC.'))
+              : (R.k === 'na' ? t('Kuris atomas turi rūgštų vandenilį?', 'Which atom carries an acidic hydrogen?') : t('Kuri grupė turi $O-H$ ryšį ir vandenilius prie šalia esančios anglies?', 'Which group has the $O-H$ bond and hydrogens on the carbon next to it?')),
+            solution: R.group === 'alkene' ? t('Reaguoja dvigubojo ryšio atomai (Nr. ' + dbl.map(x => x + 1).join(' ir ') + '); alkoholio grupė šio reagento nepaveikia.', 'The double-bond carbons (no. ' + dbl.map(x => x + 1).join(' and ') + ') react; the alcohol group is not touched by this reagent.')
+              : (R.k === 'na' ? t('Natris deprotonuoja OH grupę (deguonis Nr. ' + (s.o + 1) + '); dvigubasis ryšys nereaguoja.', 'Sodium deprotonates the OH group (oxygen no. ' + (s.o + 1) + '); the double bond does not react.')
+                : t('Oksiduojama anglis su OH ir vandeniliu (Nr. ' + (s.c + 1) + '); dvigubasis ryšys su PCC nereaguoja.', 'The carbon with the OH and a hydrogen (no. ' + (s.c + 1) + ') is oxidised; the double bond does not react with PCC.'))
           });
         }
         steps.push({
@@ -1466,12 +1514,12 @@
           kind: 'choice', options, answer: 0,
           hint: prod ? t('Pakeičiama tik ta grupė, kuri reaguoja su šiuo reagentu; kita lieka nepakitusi.', 'Only the group that reacts with this reagent changes; the other stays as it is.')
             : t('Patikrinkite, ar anglis su OH turi vandenilių, kuriuos oksidatorius galėtų atimti.', 'Check whether the carbon with the OH has hydrogens that the oxidant could remove.'),
-          solution: prod ? [{ p: t('Reaguoja tik viena grupė; kita (' + (R.group === 'alkene' ? 'alkoholio OH' : 'dvigubas ryšys') + ') išlieka.', 'Only one group reacts; the other (' + (R.group === 'alkene' ? 'the alcohol OH' : 'the double bond') + ') survives.') }, { mol: { smi: prod } }]
-            : t('Tretinis alkoholis neoksiduojasi, o su PCC dvigubas ryšys nereaguoja, todėl reakcijos nėra.', 'A tertiary alcohol is not oxidised and the double bond does not react with PCC, so there is no reaction.')
+          solution: prod ? [{ p: t('Reaguoja tik viena grupė; kita (' + (R.group === 'alkene' ? 'alkoholio OH' : 'dvigubasis ryšys') + ') išlieka.', 'Only one group reacts; the other (' + (R.group === 'alkene' ? 'the alcohol OH' : 'the double bond') + ') survives.') }, { mol: { smi: prod } }]
+            : t('Tretinis alkoholis neoksiduojasi, o su PCC dvigubasis ryšys nereaguoja, todėl reakcijos nėra.', 'A tertiary alcohol is not oxidised and the double bond does not react with PCC, so there is no reaction.')
         });
         return {
           q, steps,
-          why: t('Kiekvienas reagentas atpažįsta savo grupę: $Br2$, $H2O/H+$ ir $H2/Pd$ jungiasi prie dvigubo ryšio, o $PCC$ ir $Na$ veikia alkoholio grupę. Dėl molekulės dydžio nesijaudinkite: svarbios tik funkcinės grupės.',
+          why: t('Kiekvienas reagentas atpažįsta savo grupę: $Br2$, $H2O/H+$ ir $H2/Pd$ jungiasi prie dvigubojo ryšio, o $PCC$ ir $Na$ veikia alkoholio grupę. Dėl molekulės dydžio nesijaudinkite: svarbios tik funkcinės grupės.',
             'Each reagent finds its own group: $Br2$, $H2O/H+$ and $H2/Pd$ add to the double bond, while $PCC$ and $Na$ act on the alcohol group. Do not worry about the size of the molecule: only the functional groups matter.'),
           src: 'L11 p26; S5.16'
         };
@@ -1500,9 +1548,23 @@
         const prod = prods[key];
         if (prod === undefined) throw new Error('u11.react4: undefined');
         const noRxn = tx('Reakcija nevyksta', 'No reaction');
-        const sibling = Object.keys(R).filter(k => k !== key).map(k => prods[k]).filter(x => x);
+        const sibling = ctx.shuffle(Object.keys(R).filter(k => k !== key).map(k => prods[k]).filter(x => x));
         const right = prod ? { mol: { smi: prod } } : noRxn;
-        const options = optionList(ctx, right, ctx.shuffle(sibling.slice()).concat(prod ? [noRxn] : []), 4);
+        // same-reagent mistakes: the wrong carbon, the wrong stage, the competing reaction
+        const alkeneAll = dehydProducts(ctx, alc);
+        const alkaneSkel = alkeneAll.length ? firstMajor(react.run('ae.h2', [alkeneAll[0]], {})) : null;
+        const posBr = alkaneSkel ? react.run('sr.halogenate', [alkaneSkel], { X: 'Br' }).products.filter(p => !p.by).map(p => p.smi) : [];
+        const posAlc = positionalAlcohols(ctx, alc);
+        const alkoxideOnly = firstMajor(react.run('alc.na', [alc], { metal: 'Na' }));
+        const sameMap = {
+          hbr: posBr.concat([prods.h2so4]),
+          na: [alkoxideOnly, firstMajor(react.run('williamson', [alkoxideOnly, 'CI'], {}))],
+          h2so4: alkeneAll.filter(x => x !== prod).concat(posAlc.map(a => dehydProducts(ctx, a)[0])),
+          cr: posAlc.map(a => oxOfRule(react, a, 'chromic')),
+          ester: posAlc.map(a => firstMajor(react.run('acid.ester', ['CC(=O)O', a], {})))
+        };
+        const same = (sameMap[key] || []).filter(x => x);
+        const options = optionList(ctx, right, same.slice(0, 3).concat(sibling.slice(0, 1), prod ? [noRxn] : []), 4);
         const types = {
           SN1: tx('Nukleofilinis pakeitimas (SN1)', 'Nucleophilic substitution (SN1)'),
           SN2: tx('Nukleofilinis pakeitimas (SN2), po alkoksido susidarymo', 'Nucleophilic substitution (SN2), after the alkoxide has formed'),
@@ -1522,8 +1584,18 @@
                   : key === 'cr' ? (prod ? t('Chromo rūgštis antrinį alkoholį oksiduoja iki ketono.', 'Chromic acid oxidises a secondary alcohol to a ketone.') : t('Tretinis alkoholis neturi vandenilio prie anglies su OH ir neoksiduojasi.', 'A tertiary alcohol has no hydrogen on the carbon with the OH and is not oxidised.'))
                     : t('Rūgštinėje terpėje alkoholis ir karboksirūgštis sudaro esterį ir vandenį.', 'In acid an alcohol and a carboxylic acid give an ester and water.')
           }].concat(prod ? [{ mol: { smi: prod } }] : [])
-        }, {
-          prompt: t('Kuri apibūdinimas geriausiai tinka šiai reakcijai?', 'Which description fits this reaction best?'),
+        }, key === 'cr' && !prod ? {
+          prompt: t('Kodėl reakcija nevyksta?', 'Why does no reaction take place?'),
+          kind: 'choice',
+          options: [tx('Anglis, prie kurios prijungta OH, neturi vandenilio, kurį oksidatorius galėtų atimti.', 'The carbon that carries the OH has no hydrogen for the oxidant to remove.'),
+            tx('Chromo rūgštis oksiduoja tik pirminius alkoholius.', 'Chromic acid oxidises only primary alcohols.'),
+            tx('Tretinis alkoholis yra per silpna rūgštis.', 'A tertiary alcohol is too weak an acid.'),
+            tx('Tretinis karbokatijonas per stabilus, kad reaguotų.', 'The tertiary carbocation is too stable to react.')],
+          answer: 0,
+          hint: t('Ką oksidatorius turi atimti iš alkoholio?', 'What must the oxidant take from the alcohol?'),
+          solution: t('Oksidacijai reikia vandenilio prie anglies su $OH$; tretiniame alkoholyje jo nėra.', 'An oxidation needs a hydrogen on the carbon with the $OH$; a tertiary alcohol has none.')
+        } : {
+          prompt: t('Kuris apibūdinimas geriausiai tinka šiai reakcijai?', 'Which description fits this reaction best?'),
           kind: 'choice',
           options: optionList(ctx, types[typeKey], [types.SN1, types.E1, types.ox, types.SN2, types.ester].filter(x => x !== types[typeKey]), 4),
           answer: 0,
@@ -1549,7 +1621,7 @@
       mirrors: [],
       gen(rng, ctx) {
         const { react } = ctx;
-        const PRIMS = ['CCO', 'CCCO', 'CCCCO', 'CC(C)CO', 'CCCCCO', 'CC(C)CCO', 'CCC(C)CO'];
+        const PRIMS = ['CCO', 'CCCO', 'CC(C)CO'];
         const alc = ctx.pick(PRIMS);
         const alkoxide = firstMajor(react.run('alc.na', [alc], { metal: 'Na' }));
         const iodide = firstMajor(react.run('alc.hx', [alc], { X: 'I' }));
@@ -1579,8 +1651,8 @@
             kind: 'match',
             answer: { left: chosen.map(c => ({ text: c.lab })), right: chosen.map(c => ({ mol: { smi: c.smi } })), pairs: chosen.map((_, i) => i) },
             hint: t('Kiekvienam reagentui pasakykite, kuri alkoholio dalis reaguoja: O–H, C–O ar C–H.', 'For each reagent say which part of the alcohol reacts: O–H, C–O or C–H.'),
-            solution: t('Na deprotonuoja O–H (alkoksidas); HI pakeičia OH jodu; rūgštis žemesnėje temperatūroje sudaro eterį, aukštesnėje – alkeną; PCC duoda aldehidą; chromo rūgštis – karboksirūgštį; su rūgštimi ir H+ susidaro esteris; Na ir CH3I duoda metilo eterį.',
-              'Na deprotonates O–H (alkoxide); HI replaces OH by iodine; acid gives an ether at the lower temperature and an alkene at the higher; PCC gives the aldehyde; chromic acid the carboxylic acid; an acid with H+ makes an ester; Na and CH3I give the methyl ether.')
+            solution: t('Na deprotonuoja O–H (alkoksidas); HI pakeičia OH jodu; rūgštis žemesnėje temperatūroje sudaro eterį, aukštesnėje – alkeną; PCC duoda aldehidą; chromo rūgštis – karboksirūgštį; su karboksirūgštimi ($H+$) susidaro esteris; Na ir CH3I duoda metilo eterį.',
+              'Na deprotonates O–H (alkoxide); HI replaces OH by iodine; acid gives an ether at the lower temperature and an alkene at the higher; PCC gives the aldehyde; chromic acid the carboxylic acid; a carboxylic acid with $H+$ gives an ester; Na and CH3I give the methyl ether.')
           }],
           why: t('Bet kuris pirminis alkoholis elgiasi pagal tą patį žemėlapį. Pažiūrėkite į reagentą ir nuspręskite: ar jis atplėšia protoną (Na), pakeičia OH (HX), atskelia vandenį (rūgštis, kaitinant), ar atima vandenilius (oksidatorius).',
             'Any primary alcohol follows the same map. Look at the reagent and decide whether it removes a proton (Na), replaces the OH (HX), removes water (acid, heat) or removes hydrogens (oxidant).'),
@@ -1625,18 +1697,18 @@
     },
     {
       id: 'u11.hb.2',
-      q: [{ p: t('Šie du junginiai yra izomerai ir turi vienodą formulę $C3H8O$.', 'These two compounds are isomers with the same formula $C3H8O$.') },
-        { mol: [{ smi: 'CCCO', name: t('1-propanolis', '1-propanol') }, { smi: 'CCOC', name: t('metoksietanas', 'methoxyethane') }] }],
+      q: [{ p: t('Šie du junginiai yra izomerai ir turi vienodą formulę $C4H10O$.', 'These two compounds are isomers with the same formula $C4H10O$.') },
+        { mol: [{ smi: 'CCCCO', name: t('1-butanolis', '1-butanol') }, { smi: 'CCOCC', name: t('etoksietanas', 'ethoxyethane') }] }],
       steps: [
-        chMol('Kuris junginys verda aukštesnėje temperatūroje?', 'Which compound boils at the higher temperature?', ['CCCO', 'CCOC'],
+        chMol('Kuris junginys verda aukštesnėje temperatūroje?', 'Which compound boils at the higher temperature?', ['CCCCO', 'CCOCC'],
           'Ar abi molekulės turi $O-H$ grupę?', 'Do both molecules have an $O-H$ group?',
-          '1-propanolis verda 97 °C, o metoksietanas tik 7 °C: alkoholio molekulės sudaro vandenilinius ryšius.', '1-Propanol boils at 97 °C and methoxyethane only at 7 °C: alcohol molecules form hydrogen bonds.'),
+          '1-butanolis verda 117 °C, o etoksietanas tik 35 °C: alkoholio molekulės sudaro vandenilinius ryšius.', '1-Butanol boils at 117 °C and ethoxyethane only at 35 °C: alcohol molecules form hydrogen bonds.'),
         ch('Kodėl eteris vandenilinių ryšių tarpusavyje nesudaro?', 'Why can the ether not form hydrogen bonds with itself?',
           [['Eterio deguonis neturi prie jo prijungto vandenilio, todėl nėra vandenilio donoro.', 'The oxygen of the ether carries no hydrogen, so there is no hydrogen donor.'],
             ['Eterio deguonis neturi laisvųjų elektronų porų.', 'The oxygen of the ether has no lone pairs.'],
             ['Eterio $C-O$ ryšys yra nepolinis.', 'The $C-O$ bond of the ether is non-polar.'],
             ['Eteris yra per sunkus.', 'The ether is too heavy.']],
-          'Vandeninis ryšys reikalauja dviejų dalių: vandenilio donoro ir akceptoriaus.', 'A hydrogen bond needs two partners: a hydrogen donor and an acceptor.',
+          'Vandeniliniam ryšiui reikia dviejų dalyvių: vandenilio donoro ir akceptoriaus.', 'A hydrogen bond needs two partners: a hydrogen donor and an acceptor.',
           'Eterio deguonis turi laisvąsias poras (akceptorius), bet nėra $O-H$ grupės (donoro), todėl tarp eterio molekulių vandenilinių ryšių nėra.',
           'The ether oxygen has lone pairs (an acceptor) but no $O-H$ group (a donor), so there are no hydrogen bonds between ether molecules.')
       ],
@@ -1704,7 +1776,7 @@
     },
     {
       id: 'u11.hb.6',
-      q: [{ p: t('Etanolis verda 78 °C, o etano-1,2-diolis (etilenglikolis) – 197 °C.', 'Ethanol boils at 78 °C and ethane-1,2-diol (ethylene glycol) at 197 °C.') },
+      q: [{ p: t('Etanolis verda 78 °C, o 1,2-etandiolis (etilenglikolis) – 197 °C.', 'Ethanol boils at 78 °C and ethane-1,2-diol (ethylene glycol) at 197 °C.') },
         { mol: [{ smi: 'CCO', name: t('etanolis', 'ethanol') }, { smi: 'OCCO', name: t('1,2-etandiolis', 'ethane-1,2-diol') }] }],
       steps: [
         ch('Kuo paaiškinamas toks didelis skirtumas?', 'What explains such a large difference?',
@@ -1714,15 +1786,15 @@
             ['Etanolis nesudaro vandenilinių ryšių.', 'Ethanol does not form hydrogen bonds.']],
           'Palyginkite hidroksigrupių skaičių abiejose molekulėse (abu turi po 2 C).', 'Compare the number of hydroxyl groups in the two molecules (both have two carbons).',
           'Abiejų junginių angliavandenilių dalis vienoda (du C), bet diolis turi dvi $OH$ grupes ir sudaro daugiau vandenilinių ryšių tarp molekulių.', 'Both have the same carbon part (two C), but the diol has two $OH$ groups and forms more hydrogen bonds between molecules.'),
-        ch('Kaip tikėtis, kad pasikeis tirpumas vandenyje?', 'What should one expect for the solubility in water?',
+        ch('Ko galima tikėtis dėl tirpumo vandenyje?', 'What should one expect for the solubility in water?',
           [['Diolis maišosi su vandeniu bent taip pat gerai kaip etanolis.', 'The diol mixes with water at least as well as ethanol.'],
             ['Diolis vandenyje tirpsta daug blogiau už etanolį.', 'The diol dissolves much worse in water than ethanol.'],
             ['Diolis su vandeniu reaguoja ir išskiria vandenilį.', 'The diol reacts with water and releases hydrogen.'],
-            ['Diolis vandenyje netirpsta, nes yra pernelyg poliarus.', 'The diol is insoluble in water because it is too polar.']],
+            ['Diolis vandenyje netirpsta, nes yra pernelyg polinis.', 'The diol is insoluble in water because it is too polar.']],
           'Daugiau $OH$ grupių – daugiau vietų vandeniliniams ryšiams su vandeniu.', 'More $OH$ groups mean more places for hydrogen bonds with water.',
           'Dvi hidrofilinės grupės dar labiau didina tirpumą vandenyje, todėl glikoliai maišosi su vandeniu.', 'Two hydrophilic groups raise the solubility even more, so glycols mix with water.')
       ],
-      why: t('Kiekviena papildoma $OH$ grupė didina vandeninių ryšių skaičių: pakyla virimo temperatūra ir tirpumas vandenyje.', 'Each extra $OH$ group increases the number of hydrogen bonds: the boiling point and the solubility in water both rise.'),
+      why: t('Kiekviena papildoma $OH$ grupė didina vandenilinių ryšių skaičių: pakyla virimo temperatūra ir tirpumas vandenyje.', 'Each extra $OH$ group increases the number of hydrogen bonds: the boiling point and the solubility in water both rise.'),
       src: 'L11 p4'
     },
     {
@@ -1732,9 +1804,9 @@
       steps: [
         {
           prompt: t('Išdėstykite juos pagal virimo temperatūrą nuo aukščiausios iki žemiausios.', 'Order them by boiling point, highest first.'),
-          kind: 'order', options: [tx('etanolis (78 °C)', 'ethanol (78 °C)'), tx('dimetileteris (−24 °C)', 'dimethyl ether (−24 °C)'), tx('propanas (−42 °C)', 'propane (−42 °C)')],
+          kind: 'order', options: [tx('etanolis', 'ethanol'), tx('dimetileteris', 'dimethyl ether'), tx('propanas', 'propane')],
           hint: t('Palyginkite jėgas: vandeniliniai ryšiai, polinis ryšys, tik dispersinė sąveika.', 'Compare the forces: hydrogen bonds, a polar bond, dispersion only.'),
-          solution: t('Etanolis (vandeniliniai ryšiai) > dimetileteris (polinis $C-O-C$) > propanas (tik dispersinė sąveika).', 'Ethanol (hydrogen bonds) > dimethyl ether (polar $C-O-C$) > propane (dispersion only).')
+          solution: t('Etanolis (78 °C, vandeniliniai ryšiai) > dimetileteris (polinis $C-O-C$) > propanas (tik dispersinė sąveika).', 'Ethanol (hydrogen bonds) > dimethyl ether (polar $C-O-C$) > propane (dispersion only).')
         },
         ch('Kuri savybė labiausiai pakelia virimo temperatūrą palyginti su panašios masės nepoliniu junginiu?', 'Which feature raises the boiling point most compared with a non-polar compound of similar mass?',
           [['Vandeniliniai ryšiai tarp molekulių.', 'Hydrogen bonds between molecules.'], ['Didesnis atomų skaičius.', 'A larger number of atoms.'], ['Didesnis anglies atomų skaičius.', 'A larger number of carbon atoms.'], ['Mažesnis vandenilių skaičius.', 'A smaller number of hydrogens.']],
@@ -1751,11 +1823,11 @@
       steps: [
         ch('Kuris paaiškinimas teisingas?', 'Which explanation is correct?',
           [['Etanolio $OH$ sudaro vandenilinius ryšius su vandeniu (kaip donoras ir kaip akceptorius), o heksanas to negali.', 'The $OH$ of ethanol forms hydrogen bonds with water (as donor and as acceptor); hexane cannot.'],
-            ['Heksanas yra poliarus, o vanduo – ne.', 'Hexane is polar and water is not.'],
+            ['Heksanas yra polinis, o vanduo – ne.', 'Hexane is polar and water is not.'],
             ['Etanolis su vandeniu reaguoja ir sudaro naują junginį.', 'Ethanol reacts with water to give a new compound.'],
             ['Etanolio molekulė mažesnė už vandens molekulę.', 'An ethanol molecule is smaller than a water molecule.']],
           'Kuri medžiaga gali sudaryti vandenilinius ryšius su vandeniu?', 'Which substance can form hydrogen bonds with water?',
-          'Panašus ištirpsta panašiame: poliarinis ir vandeniliniais ryšiais susijungiantis alkoholis tirpsta poliniame vandenyje, o nepolinis angliavandenilis – ne.', 'Like dissolves like: an alcohol that is polar and hydrogen-bonding dissolves in polar water, while a non-polar hydrocarbon does not.'),
+          'Panašus ištirpsta panašiame: polinis ir vandeniliniais ryšiais susijungiantis alkoholis tirpsta poliniame vandenyje, o nepolinis angliavandenilis – ne.', 'Like dissolves like: an alcohol that is polar and hydrogen-bonding dissolves in polar water, while a non-polar hydrocarbon does not.'),
         ch('Kas atsitiks, jei prie etanolio pridėsime 100 mL vandens ir 100 mL heksano?', 'What will happen if 100 mL of water and 100 mL of hexane are shaken with some ethanol?',
           [['Didžioji dalis etanolio pateks į vandens fazę, o heksanas liks atskiru sluoksniu.', 'Most of the ethanol goes into the water layer and the hexane stays as a separate layer.'], ['Visos medžiagos susimaišys į vieną fazę.', 'Everything mixes into one phase.'], ['Etanolis visiškai pereis į heksaną.', 'The ethanol goes entirely into the hexane.'], ['Heksanas ištirps vandenyje.', 'The hexane dissolves in the water.']],
           'Kur etanolis jaučiasi geriau: vandenyje ar heksane?', 'Where is ethanol more comfortable: in water or in hexane?',
@@ -1769,7 +1841,8 @@
   const ACID = [
     {
       id: 'u11.acidwhy.1',
-      q: [{ p: t('Palyginkite rūgštingumą šių junginių: etano rūgšties ($pKa$ 4,75), fenolio (≈10), vandens (15,7), etanolio (≈16) ir 2-metil-2-propanolio (≈18).', 'Compare the acidity of ethanoic acid ($pKa$ 4.75), phenol (≈10), water (15.7), ethanol (≈16) and 2-methyl-2-propanol (≈18).') }],
+      q: [{ p: t('Palyginkite šių junginių rūgštingumą.', 'Compare the acidity of these compounds.') },
+        { mol: [{ smi: 'CC(=O)O', name: t('etano rūgštis', 'ethanoic acid') }, { smi: 'Oc1ccccc1', name: t('fenolis', 'phenol') }, { smi: 'O' }, { smi: 'CCO', name: t('etanolis', 'ethanol') }, { smi: 'CC(C)(C)O', name: t('2-metil-2-propanolis', '2-methyl-2-propanol') }] }],
       steps: [
         {
           prompt: t('Išdėstykite nuo stipriausios iki silpniausios rūgšties.', 'Order from the strongest to the weakest acid.'),
@@ -1783,7 +1856,7 @@
             ['Alkoholiai yra stipresnės rūgštys už fenolį.', 'Alcohols are stronger acids than phenol.'],
             ['Alkoholiai yra neutralūs ir protonų neatiduoda.', 'Alcohols are neutral and do not give up protons.']],
           'Palyginkite alkoholio ir $OH-$ konjuguotosios rūgšties (vandens) stiprumą.', 'Compare the alcohol with the conjugate acid of $OH-$ (water).',
-          'Su natriu alkoholis reaguoja, nes natris yra labai stipri bazė (elektronų donoras), bet alkoholio rūgštingumas toks silpnas, kad $OH-$ jo nepakankamai deprotonuoja.', 'An alcohol reacts with sodium because sodium is a very strong reductant, but its acidity is so weak that $OH-$ cannot deprotonate it appreciably.')
+          'Su natriu alkoholis reaguoja, nes natris yra stiprus reduktorius (elektronų donoras), bet alkoholio rūgštingumas toks silpnas, kad $OH-$ jo beveik nedeprotonuoja.', 'An alcohol reacts with sodium because sodium is a very strong reductant, but its acidity is so weak that $OH-$ cannot deprotonate it appreciably.')
       ],
       why: t('Alkoholiai yra silpnos rūgštys ($pKa$ 15–18), nusileidžia vandeniui, fenoliams ir karboksirūgštims. Todėl alkoksidui gauti reikia stipresnės bazės už $OH-$.', 'Alcohols are weak acids ($pKa$ 15–18), weaker than water, phenols and carboxylic acids. So an alkoxide needs a stronger base than $OH-$.'),
       src: 'L11 p6'
@@ -1798,7 +1871,7 @@
         hint: t('Reikia stipresnės bazės arba reduktoriaus, kuris atplėštų protoną nuo labai silpnos rūgšties.', 'You need a stronger base or reductant that can take the proton from a very weak acid.'),
         solution: t('Natris ir kalis atiduoda elektroną protonui (išsiskiria $H2$), o $NaH$ yra stipri bazė ($H-$). $NaOH$ ir $NaHCO3$ per silpnos bazės.', 'Sodium and potassium give an electron to the proton ($H2$ is evolved), and $NaH$ is a strong base ($H-$). $NaOH$ and $NaHCO3$ are too weak.')
       }],
-      why: t('Alkoksidą galima gauti tik veikiant šarminiu metalu arba itin stipria baze, pavyzdžiui, $NaH$.', 'Alkoxides are made with alkali or alkaline-earth metals or with very strong bases such as $NaH$.'),
+      why: t('Alkoksidą galima gauti tik veikiant šarminiu ar žemės šarminiu metalu arba itin stipria baze, pavyzdžiui, $NaH$.', 'Alkoxides are made with alkali or alkaline-earth metals or with very strong bases such as $NaH$.'),
       src: 'L11 p6'
     },
     {
@@ -1806,7 +1879,7 @@
       q: [{ p: t('Į etanolį įmetamas natrio gabalėlis, ir vėliau mišinys atsargiai skiedžiamas vandeniu. Į tirpalą įlašinama fenolftaleino.', 'A piece of sodium is dropped into ethanol and the mixture is later diluted carefully with water. Phenolphthalein is added to the solution.') }],
       steps: [
         ch('Kas susidaro, kai natrio etoksidas patenka į vandenį?', 'What forms when sodium ethoxide meets water?',
-          [['Etanolis ir natrio hidroksidas.', 'Ethanol and sodium hydroxide.'], ['Eteris ir natrio hidroksidas.', 'An ether and sodium hydroxide.'], ['Etanolis ir natrio vandenilis.', 'Ethanol and sodium hydride.'], ['Natrio acetatas ir vandenilis.', 'Sodium acetate and hydrogen.']],
+          [['Etanolis ir natrio hidroksidas.', 'Ethanol and sodium hydroxide.'], ['Eteris ir natrio hidroksidas.', 'An ether and sodium hydroxide.'], ['Etanolis ir natrio hidridas.', 'Ethanol and sodium hydride.'], ['Natrio acetatas ir vandenilis.', 'Sodium acetate and hydrogen.']],
           'Alkoksidas yra stipresnė bazė už $OH-$. Ką jis atima iš vandens?', 'An alkoxide is a stronger base than $OH-$. What does it take from water?',
           'Etoksido jonas atplėšia protoną nuo vandens ir virsta etanoliu, o vandens deguonis lieka kaip $OH-$ (hidrolizė): $C2H5ONa + H2O → C2H5OH + NaOH$.', 'The ethoxide ion takes a proton from water and becomes ethanol, while the oxygen of the water remains as $OH-$ (hydrolysis): $C2H5ONa + H2O → C2H5OH + NaOH$.'),
         ch('Kokia spalva atsiranda ir kodėl?', 'What colour appears, and why?',
@@ -1829,7 +1902,7 @@
           solution: t('2-metil-2-propanolio $pKa$ ≈ 18, etanolio ≈ 16, vandens 15,7, fenolio ≈ 10: kuo didesnis konjuguotosios rūgšties $pKa$, tuo stipresnė bazė.', 'The $pKa$ of 2-methyl-2-propanol is ≈ 18, of ethanol ≈ 16, of water 15.7 and of phenol ≈ 10: the larger the $pKa$ of the conjugate acid, the stronger the base.')
         },
         ch('Kodėl fenoksidas yra daug silpnesnė bazė už alkoksidus?', 'Why is phenoxide a much weaker base than the alkoxides?',
-          [['Jo neigiamas krūvis pasiskirsto per aromatinį žiedą, todėl anijonas stabilesnis.', 'Its negative charge is spread over the aromatic ring, so the anion is more stable.'], ['Fenoksido deguonis neturi laisvųjų poros.', 'The oxygen of phenoxide has no lone pairs.'], ['Fenoksidas turi daugiau anglies atomų.', 'Phenoxide has more carbon atoms.'], ['Fenoksido anglis yra sp3 hibridizuota.', 'The carbon of phenoxide is sp3 hybridised.']],
+          [['Jo neigiamas krūvis pasiskirsto per aromatinį žiedą, todėl anijonas stabilesnis.', 'Its negative charge is spread over the aromatic ring, so the anion is more stable.'], ['Fenoksido deguonis neturi laisvųjų porų.', 'The oxygen of phenoxide has no lone pairs.'], ['Fenoksidas turi daugiau anglies atomų.', 'Phenoxide has more carbon atoms.'], ['Fenoksido anglis yra sp3 hibridizuota.', 'The carbon of phenoxide is sp3 hybridised.']],
           'Nupieškite fenoksidą ir pabandykite parašyti kelias rezonansines formules.', 'Draw phenoxide and try to write several resonance structures.',
           'Stabilus anijonas nelinkęs prijungti protono, todėl jo konjuguotoji rūgštis (fenolis) stipresnė.', 'A stable anion is reluctant to take up a proton, so its conjugate acid (phenol) is stronger.')
       ],
@@ -1848,7 +1921,7 @@
           solution: t('Metanolis > etanolis > 2-propanolis > 2-metil-2-propanolis: kuo daugiau alkilgrupių, tuo mažiau rūgštus alkoholis.', 'Methanol > ethanol > 2-propanol > 2-methyl-2-propanol: the more alkyl groups, the less acidic the alcohol.')
         },
         ch('Kuo paaiškinama ši eilė?', 'What explains this order?',
-          [['Alkilgrupės stumia elektronus (+I) ir šakoja aplinką, todėl alkoksido anijonas mažiau stabilizuojamas tirpiklio.', 'Alkyl groups push electrons (+I) and crowd the oxygen, so the alkoxide anion is less stabilised by the solvent.'],
+          [['Alkilgrupės stumia elektronus (+I) ir užstoja deguonį, todėl alkoksido anijonas mažiau stabilizuojamas tirpiklio.', 'Alkyl groups push electrons (+I) and crowd the oxygen, so the alkoxide anion is less stabilised by the solvent.'],
             ['Alkilgrupės traukia elektronus ir didina $O-H$ poliškumą.', 'Alkyl groups withdraw electrons and increase the polarity of $O-H$.'],
             ['Šakoti alkoholiai neturi $O-H$ ryšio.', 'Branched alcohols have no $O-H$ bond.'],
             ['Natris neprasiskverbia į šakotas molekules.', 'Sodium cannot get into branched molecules.']],
@@ -1866,7 +1939,7 @@
         ch('Kuriame mėgintuvėlyje matomi vandenilio dujų burbuliukai?', 'In which tube are bubbles of hydrogen visible?',
           [['Tik A (alkoholyje).', 'Only A (the alcohol).'], ['Tik B (eteryje).', 'Only B (the ether).'], ['Tik C (alkane).', 'Only C (the alkane).'], ['Visuose trijuose.', 'In all three.']],
           'Kuris iš skysčių turi rūgštų protoną ($O-H$)?', 'Which of the liquids has an acidic proton ($O-H$)?',
-          'Reaguoja tik alkoholis: jis turi poliarų $O-H$ ryšį. Eteris ir alkanas neturi rūgštaus vandenilio, todėl su natriu nereaguoja.', 'Only the alcohol reacts: it has a polar $O-H$ bond. The ether and the alkane have no acidic hydrogen and do not react with sodium.'),
+          'Reaguoja tik alkoholis: jis turi polinį $O-H$ ryšį. Eteris ir alkanas neturi rūgštaus vandenilio, todėl su natriu nereaguoja.', 'Only the alcohol reacts: it has a polar $O-H$ bond. The ether and the alkane have no acidic hydrogen and do not react with sodium.'),
         ch('Kodėl eteris ir heksanas tinka kaip tirpikliai reakcijoms su šarminiais metalais?', 'Why are ethers and hexane suitable solvents for reactions with alkali metals?',
           [['Jie neturi rūgštaus protono, kurį metalas galėtų atplėšti.', 'They have no acidic proton that the metal could remove.'], ['Jie tirpina natrį ir sudaro druskas.', 'They dissolve sodium and form salts.'], ['Jie yra stipresnės rūgštys už alkoholius.', 'They are stronger acids than alcohols.'], ['Jie reaguoja su natriu lėčiau už alkoholį, bet vis tiek reaguoja.', 'They react with sodium more slowly than an alcohol, but still react.']],
           'Ieškokite grupės, kuri su natriu pasikeistų.', 'Look for a group that would change with sodium.',
@@ -1890,7 +1963,7 @@
           'Kas išeina iš reakcijos mišinio?', 'What leaves the reaction mixture?',
           'Kai vienas produktas išsiskiria dujų pavidalu, grįžtamoji reakcija praktiškai nevyksta: alkoholis virsta alkoksidu visiškai.', 'When one product leaves as a gas, the reverse reaction practically cannot occur: the alcohol is converted into the alkoxide completely.')
       ],
-      why: t('Hidrido jonas yra labai stipri bazė, nes jo konjuguotoji rūgštis $H2$ yra itin silpna. Protonas pasiima, o vandenilio dujos pabėga, todėl alkoksidas susidaro visiškai.', 'The hydride ion is a very strong base because its conjugate acid $H2$ is extremely weak. It takes the proton and the hydrogen gas escapes, so the alkoxide forms completely.'),
+      why: t('Hidrido jonas yra labai stipri bazė, nes jo konjuguotoji rūgštis $H2$ yra itin silpna. Jis pasiima protoną, o vandenilio dujos pabėga, todėl alkoksidas susidaro visiškai.', 'The hydride ion is a very strong base because its conjugate acid $H2$ is extremely weak. It takes the proton and the hydrogen gas escapes, so the alkoxide forms completely.'),
       src: 'L11 p6'
     },
     {
@@ -1902,7 +1975,7 @@
           kind: 'choice',
           options: [tx('$2 C2H5OH + 2 K → 2 C2H5OK + H2$', '$2 C2H5OH + 2 K → 2 C2H5OK + H2$'), tx('$C2H5OH + K → C2H5K + OH$', '$C2H5OH + K → C2H5K + OH$'), tx('$C2H5OH + K → C2H4 + KOH$', '$C2H5OH + K → C2H4 + KOH$'), tx('$C2H5OH + 2 K → C2H5OK + KH$', '$C2H5OH + 2 K → C2H5OK + KH$')],
           answer: 0,
-          hint: t('Suskaičiuokite vandenilio atomus abiejose pusėse: iš kiekvienos molekulės išeina vienas protonas.', 'Count the hydrogen atoms on both sides: one proton leaves each molecule.'),
+          hint: t('Patikrinkite, ar abiejose lygties pusėse vienodai $H$ ir $K$ atomų.', 'Check that both sides of the equation have the same number of $H$ and $K$ atoms.'),
           solution: t('Du alkoholio protonai ir du metalo elektronai sudaro vieną $H2$ molekulę; metalas netenka elektrono ir virsta $K+$.', 'Two protons of the alcohol and two electrons of the metal form one $H2$ molecule; the metal loses an electron and becomes $K+$.')
         },
         ch('Kodėl kalis reaguoja audringiau nei natris?', 'Why does potassium react more violently than sodium?',
@@ -1928,7 +2001,7 @@
           'Kuris atomas netenka protono antroje stadijoje?', 'Which atom loses a proton in the second stage?',
           'Antroje stadijoje vyksta eliminavimas: atplėšiamas $C-H$ protonas, o elektronų pora sudaro $C=O$ ryšį. Tretiniame alkoholyje prie anglies su $OH$ nėra $H$.', 'The second stage is an elimination: a $C-H$ proton is removed and its electron pair forms the $C=O$ bond. A tertiary alcohol has no $H$ on the carbon with the $OH$.')
       ],
-      why: t('Oksidacija iš esmės yra $H$ ir $OH$ praradimas iš to paties atomo, todėl reikia vandenilio ties anglimi, turinčia $OH$. Pirminiai (du $H$) ir antriniai (vienas $H$) alkoholiai oksiduojasi, tretiniai – ne.', 'An oxidation is in essence the loss of an $H$ and the $OH$ from the same carbon, so a hydrogen is needed on the carbon with the $OH$. Primary (two $H$) and secondary (one $H$) alcohols are oxidised, tertiary ones are not.'),
+      why: t('Oksiduojant alkoholis netenka dviejų vandenilio atomų: vieno nuo deguonies ($O-H$) ir vieno nuo anglies, prie kurios prijungta $OH$ ($C-H$); tarp jų susidaro $C=O$ ryšys. Todėl prie anglies su $OH$ turi būti vandenilis: pirminiai (du $H$) ir antriniai (vienas $H$) alkoholiai oksiduojasi, tretiniai – ne.', 'In an oxidation the alcohol loses two hydrogens: one from the oxygen ($O-H$) and one from the carbon that carries the $OH$ ($C-H$), and a $C=O$ bond forms between them. A hydrogen on the carbon with the $OH$ is therefore needed: primary (two $H$) and secondary (one $H$) alcohols are oxidised, tertiary ones are not.'),
       src: 'L11 p24, p20'
     },
     {
@@ -1974,9 +2047,9 @@
             ['Etanolis oksiduoja metanolį į nekenksmingą produktą.', 'Ethanol oxidises methanol to a harmless product.'],
             ['Etanolis sudaro su metanoliu esterį.', 'Ethanol forms an ester with methanol.']],
           'Du substratai varžosi dėl to paties fermento. Kuris jį veikia greičiau?', 'Two substrates compete for the same enzyme. Which one is processed faster?',
-          'Fermentas pirmiausia oksiduoja etanolį, o tuo metu metanolis nespėja virsti skruzdžių rūgštimi ir ilgiau pasilieka iki pasišalinimo.', 'The enzyme oxidises ethanol first, so methanol is not converted into formic acid and stays until it is excreted.'),
+          'Fermentas etanolį oksiduoja greičiau ir yra jo „užimtas“, todėl metanolis nespėja virsti skruzdžių rūgštimi ir pamažu pasišalina: dėl to etanolis vartojamas kaip priešnuodis apsinuodijus metanoliu.', 'The enzyme oxidises ethanol first, so methanol is not converted into formic acid and stays until it is excreted.'),
         ch('Koks yra NAD⁺ vaidmuo šiose reakcijose?', 'What is the role of NAD⁺ in these reactions?',
-          [['Oksidatorius: jis priima vandenilį iš alkoholio ir virsta NADH.', 'The oxidant: it takes hydrogen from the alcohol and becomes NADH.'], ['Reduktorius: jis atiduoda vandenilį alkoholiui.', 'The reductant: it gives hydrogen to the alcohol.'], ['Rūgštis, kuri protonuoja alkoholį.', 'An acid that protonates the alcohol.'], ['Tirpiklis.', 'A solvent.']],
+          [['Oksidatorius: jis priima vandenilį iš alkoholio ir virsta NADH.', 'The oxidant: it takes hydrogen from the alcohol and becomes NADH.'], ['Reduktorius: jis atiduoda vandenilį alkoholiui.', 'The reductant: it gives hydrogen to the alcohol.'], ['Rūgštis, kuri protonizuoja alkoholį.', 'An acid that protonates the alcohol.'], ['Tirpiklis.', 'A solvent.']],
           'Alkoholis oksiduojasi: kas turi imti iš jo elektronus ir vandenilį?', 'The alcohol is oxidised: who has to take electrons and hydrogen from it?',
           'Alkoholis atiduoda hidridą ir protoną, o NAD⁺ yra priimantysis, todėl redukuojasi į NADH. Tai biologinis oksidatorius.', 'The alcohol gives up a hydride and a proton, and NAD⁺ is the acceptor, so it is reduced to NADH. It is a biological oxidant.')
       ],
@@ -1994,7 +2067,7 @@
           hint: t('Chromatas pažaliuoja, kai pats redukuojasi, o tam kažkas turi oksiduotis.', 'The chromate turns green when it is itself reduced, so something has to be oxidised.'),
           solution: t('Pirminis (A) ir antrinis (B) alkoholiai oksiduojasi, o $Cr(VI)$ (oranžinis) virsta $Cr(III)$ (žaliu). Tretinis alkoholis (C) ir eteris (D) neoksiduojasi, tirpalas lieka oranžinis.', 'The primary (A) and secondary (B) alcohols are oxidised and $Cr(VI)$ (orange) becomes $Cr(III)$ (green). The tertiary alcohol (C) and the ether (D) are not oxidised, so the solution stays orange.')
         },
-        ch('Kuris oksidacijos laipsnio pasikeitimas atsiranda reakcijoje, kurios metu tirpalas keičia spalvą?', 'Which change of oxidation state is behind the colour change?',
+        ch('Koks oksidacijos laipsnio pokytis lemia spalvos pasikeitimą?', 'Which change of oxidation state is behind the colour change?',
           [['Chromas keičiasi nuo $+6$ iki $+3$.', 'Chromium changes from $+6$ to $+3$.'], ['Chromas keičiasi nuo $+3$ iki $+6$.', 'Chromium changes from $+3$ to $+6$.'], ['Anglis keičiasi nuo $+3$ iki $0$.', 'Carbon changes from $+3$ to $0$.'], ['Deguonis keičiasi nuo $−2$ iki $0$.', 'Oxygen changes from $−2$ to $0$.']],
           'Spalvą keičia oksidatorius: jis priima elektronus.', 'The oxidant changes colour: it accepts electrons.',
           'Oksidatorius redukuojasi: oranžinis bichromatas ($Cr$ $+6$) virsta žaliais $Cr^3+^$ jonais.', 'The oxidant is reduced: orange dichromate ($Cr$ $+6$) becomes green $Cr^3+^$ ions.')
@@ -2030,17 +2103,17 @@
       q: [{ p: t('Tretinis alkoholis kaitinamas su stipriu oksidatoriumi rūgščioje terpėje.', 'A tertiary alcohol is heated with a strong oxidant in acidic solution.') },
         { scheme: { items: [{ smi: 'CC(C)(C)O' }, { arrow: '→', above: f('KMnO4, H3O+, Δ') }] } }],
       steps: [
-        ch('Ką galima tikėtis, kad atsitiks, jei reakcijos sąlygos labai griežtos?', 'What can be expected if the conditions are very harsh?',
-          [['Nutrūksta $C-C$ ryšiai ir susidaro ketonų bei rūgščių mišinys.', 'The $C-C$ bonds break and a mixture of ketones and acids forms.'], ['Susidaro aldehidas, kaip ir pirminio alkoholio atveju.', 'An aldehyde forms, as with a primary alcohol.'], ['Susidaro ta pati ketono forma kaip antrinio alkoholio atveju.', 'The same ketone forms as with a secondary alcohol.'], ['Alkoholis visiškai nepasikeičia.', 'The alcohol is left entirely unchanged.']],
+        ch('Ko galima tikėtis, jei reakcijos sąlygos labai griežtos?', 'What can be expected if the conditions are very harsh?',
+          [['Suyra anglies skeletas (skyla $C-C$ ryšiai): gaunamas ketonų ir karboksirūgščių mišinys.', 'The $C-C$ bonds break and a mixture of ketones and acids forms.'], ['Susidaro aldehidas, kaip ir pirminio alkoholio atveju.', 'An aldehyde forms, as with a primary alcohol.'], ['Susidaro ta pati ketono forma kaip antrinio alkoholio atveju.', 'The same ketone forms as with a secondary alcohol.'], ['Alkoholis visiškai nepasikeičia.', 'The alcohol is left entirely unchanged.']],
           'Įprastomis sąlygomis tretinis alkoholis neoksiduojasi, bet griežtomis sąlygomis jis gali suirti.', 'Under normal conditions a tertiary alcohol is not oxidised, but under harsh conditions it can degrade.',
-          'Tretiniai alkoholiai atsparūs oksidacijai, bet veikiami stipriais oksidatoriais jie suyra: nutrūksta $C-C$ ryšiai ir susidaro ketonų bei rūgščių mišiniai.', 'Tertiary alcohols resist oxidation, but with strong oxidants they degrade: $C-C$ bonds break and mixtures of ketones and acids form.')
+          'Įprastomis sąlygomis tretinis alkoholis nesioksiduoja, nes prie anglies su $OH$ nėra vandenilio. Labai stiprus oksidatorius griežtomis sąlygomis vis dėlto suardo jo skeletą: skyla $C-C$ ryšiai ir gaunamas ketonų bei karboksirūgščių mišinys.', 'Tertiary alcohols resist oxidation, but with strong oxidants they degrade: $C-C$ bonds break and mixtures of ketones and acids form.')
       ],
       why: t('Tretinis alkoholis neturi $H$ prie anglies su $OH$, todėl įprastu būdu neoksiduojasi. Tik griežtomis sąlygomis nutrūksta $C-C$ ryšiai, bet tai jau ne kontroliuojama oksidacija.', 'A tertiary alcohol has no $H$ on the carbon with the $OH$, so it is not oxidised in the usual way. Only under harsh conditions $C-C$ bonds break, but that is no longer a controlled oxidation.'),
       src: 'T p73; L11 p20'
     },
     {
       id: 'u11.oxwhy.8',
-      q: [{ p: t('Oranžinis bichromatas ir violetinis permanganatas rūgščioje terpėje keičia spalvą, kai su jais reaguoja alkoholis.', 'In acid, orange dichromate and violet permanganate change colour when an alcohol reacts with them.') }],
+      q: [{ p: t('Oranžinis bichromatas ir violetinis permanganatas keičia spalvą, kai su jais reaguoja alkoholis.', 'Orange dichromate and violet permanganate change colour when an alcohol reacts with them.') }],
       steps: [{
         prompt: t('Sudėkite kiekvieną reagentą su spalvos pasikeitimu.', 'Pair each reagent with its colour change.'),
         kind: 'match',
@@ -2060,32 +2133,32 @@
   const LAB = [
     {
       id: 'u11.lab.1',
-      q: [{ p: t('Į mėgintuvėlį su etanoliu ir koncentruota sieros rūgštimi pridedama žiupsnelis $Al2O3$ ir mišinys kaitinamas. Dujos barbotuojamos per bromo vandenį.', 'A pinch of $Al2O3$ is added to a test tube with ethanol and concentrated sulfuric acid, and the mixture is heated. The gas is bubbled through bromine water.') }],
+      q: [{ p: t('Į mėgintuvėlį su etanoliu ir koncentruota sieros rūgštimi pridedamas žiupsnelis $Al2O3$ ir mišinys kaitinamas. Dujos barbotuojamos per bromo vandenį.', 'A pinch of $Al2O3$ is added to a test tube with ethanol and concentrated sulfuric acid, and the mixture is heated. The gas is bubbled through bromine water.') }],
       steps: [
         ch('Kokios dujos susidaro?', 'Which gas forms?',
           [['Etenas, $CH2=CH2$.', 'Ethene, $CH2=CH2$.'], ['Etanas, $CH3CH3$.', 'Ethane, $CH3CH3$.'], ['Anglies dioksidas.', 'Carbon dioxide.'], ['Vandenilis.', 'Hydrogen.']],
           'Koncentruota sieros rūgštis kaitinant atskelia vandenį iš alkoholio.', 'Hot concentrated sulfuric acid removes water from the alcohol.',
-          'Etanolis su rūgštimi sudaro etilo hidrosulfatą, kurį kaitinant skyla į etaną ir rūgštį: bendrai vyksta dehidratacija ir susidaro etenas.', 'Ethanol and the acid first make ethyl hydrogen sulfate, which on heating breaks down to ethene and the acid: overall a dehydration to ethene.'),
+          'Etanolis su rūgštimi pirmiausia sudaro etilo hidrosulfatą, kuris kaitinamas skyla į eteną ir sieros rūgštį: iš viso vyksta dehidratacija.', 'Ethanol and the acid first make ethyl hydrogen sulfate, which on heating breaks down to ethene and the acid: overall a dehydration to ethene.'),
         ch('Ką pamatysite bromo vandenyje ir kodėl?', 'What do you see in the bromine water, and why?',
           [['Geltona spalva išnyksta, nes etenas prijungia bromą ir susidaro bespalvis 1,2-dibrometanas.', 'The yellow colour fades because ethene adds bromine and colourless 1,2-dibromoethane forms.'], ['Spalva tamsėja, nes susidaro bromo perteklius.', 'The colour deepens because excess bromine forms.'], ['Iškrenta rudos nuosėdos.', 'A brown precipitate forms.'], ['Nieko nepasikeičia, nes etenas yra inertiškas.', 'Nothing happens because ethene is inert.']],
           'Dvigubas ryšys reaguoja su bromu. Kokia yra produkto spalva?', 'The double bond reacts with bromine. What colour is the product?',
           'Bromo vanduo yra geltonas; etenas prijungia $Br2$ prie $C=C$ ir susidaro bespalvis dibromidas, todėl tirpalas išblunka.', 'Bromine water is yellow; ethene adds $Br2$ across the $C=C$ and a colourless dibromide forms, so the solution fades.')
       ],
-      why: t('Eteno gavimas iš etanolio yra dehidratacija, o spalvos išnykimas bromo vandenyje įrodo dvigubą ryšį.', 'Making ethene from ethanol is a dehydration, and the fading of bromine water proves a double bond.'),
+      why: t('Eteno gavimas iš etanolio yra dehidratacija, o spalvos išnykimas bromo vandenyje įrodo dvigubąjį ryšį.', 'Making ethene from ethanol is a dehydration, and the fading of bromine water proves a double bond.'),
       src: 'LW6 p1'
     },
     {
       id: 'u11.lab.2',
-      q: [{ p: t('Etenas praleidžiamas per rūgštinį kalio permanganato tirpalą.', 'Ethene is passed through a solution of potassium permanganate.') }],
+      q: [{ p: t('Etenas praleidžiamas per neutralų kalio permanganato tirpalą.', 'Ethene is passed through a neutral solution of potassium permanganate.') }],
       steps: [
         ch('Kas pastebima?', 'What is observed?',
           [['Violetinė spalva išnyksta ir iškrenta rudos $MnO2$ nuosėdos.', 'The violet colour disappears and brown $MnO2$ precipitates.'], ['Tirpalas pasidaro žalias.', 'The solution turns green.'], ['Iškrenta baltos nuosėdos.', 'A white precipitate forms.'], ['Spalva nesikeičia.', 'The colour does not change.']],
           'Permanganatas redukuojasi, o etenas oksiduojasi.', 'Permanganate is reduced and ethene is oxidised.',
-          '$KMnO4$ oksiduoja $C=C$ iki 1,2-diolio (etano-1,2-diolio), pats redukuodamasis į rudą $MnO2$.', '$KMnO4$ oxidises the $C=C$ to a 1,2-diol (ethane-1,2-diol) while being reduced to brown $MnO2$.'),
+          '$KMnO4$ oksiduoja $C=C$ iki 1,2-diolio (1,2-etandiolio), pats redukuodamasis į rudą $MnO2$.', '$KMnO4$ oxidises the $C=C$ to a 1,2-diol (ethane-1,2-diol) while being reduced to brown $MnO2$.'),
         ch('Ką įrodo abu bandymai (bromo vanduo ir permanganatas)?', 'What do the two tests (bromine water and permanganate) show together?',
           [['Dvigubo (arba trigubo) ryšio buvimą.', 'The presence of a double (or triple) bond.'], ['Alkoholio hidroksigrupės buvimą.', 'The presence of an alcohol hydroxyl group.'], ['Aromatinio žiedo buvimą.', 'The presence of an aromatic ring.'], ['Aldehido grupės buvimą.', 'The presence of an aldehyde group.']],
           'Abu reagentai prisijungia prie tos pačios struktūros.', 'Both reagents react with the same structural unit.',
-          'Tai nesotumo (dvigubo ar trigubo ryšio) požymis.', 'These reactions are used to detect double and triple bonds.')
+          'Tai nesotumo (dvigubojo ar trigubojo ryšio) požymis.', 'These reactions are used to detect double and triple bonds.')
       ],
       why: t('Du spalvų bandymai kartu patvirtina nesotumą: bromo vandens išblukimas ir permanganato spalvos išnykimas su rudomis nuosėdomis.', 'Two colour tests together confirm unsaturation: the fading of bromine water and the loss of permanganate colour with brown precipitate.'),
       src: 'LW6 p1, p2'
@@ -2095,9 +2168,9 @@
       q: [{ p: t('Norima atpažinti, ar etanolis yra sausas. Į mėgintuvėlį su etanoliu įberiama baltų bevandenio vario sulfato miltelių.', 'You want to know whether an ethanol sample is dry. White powder of anhydrous copper sulfate is added to the test tube with the ethanol.') }],
       steps: [
         ch('Ką rodo miltelių pamėlynavimas?', 'What does it mean when the powder turns blue?',
-          [['Etanolyje yra vandens: $CuSO4$ jį jungia ir sudaro mėlyną kristalohidratą.', 'The ethanol contains water: $CuSO4$ binds it and forms a blue crystal hydrate.'], ['Etanolis reagavo su $CuSO4$ ir susidarė alkoksidas.', 'The ethanol reacted with $CuSO4$ and formed an alkoxide.'], ['Etanolis oksidavosi.', 'The ethanol was oxidised.'], ['Susidarė kompleksas su $OH$ grupe.', 'A complex with the $OH$ group formed.']],
+          [['Etanolyje yra vandens: $CuSO4$ jį jungia ir sudaro mėlyną kristalhidratą.', 'The ethanol contains water: $CuSO4$ binds it and forms a blue crystal hydrate.'], ['Etanolis reagavo su $CuSO4$ ir susidarė alkoksidas.', 'The ethanol reacted with $CuSO4$ and formed an alkoxide.'], ['Etanolis oksidavosi.', 'The ethanol was oxidised.'], ['Susidarė kompleksas su $OH$ grupe.', 'A complex with the $OH$ group formed.']],
           'Bevandenė druska keičia spalvą, kai prisijungia vandenį.', 'The anhydrous salt changes colour when it takes up water.',
-          'Balti $CuSO4$ milteliai su vandeniu sudaro melsvą kristalohidratą $CuSO4·5H2O$, todėl jais galima surišti vandenį iš etanolio ir gauti absoliutų etanolį.', 'White $CuSO4$ powder forms the blue crystal hydrate $CuSO4·5H2O$ with water, so it can bind the water from ethanol and give absolute ethanol.'),
+          'Balti $CuSO4$ milteliai su vandeniu sudaro melsvą kristalhidratą $CuSO4·5H2O$, todėl jais galima surišti vandenį iš etanolio ir gauti absoliutų etanolį.', 'White $CuSO4$ powder forms the blue crystal hydrate $CuSO4·5H2O$ with water, so it can bind the water from ethanol and give absolute ethanol.'),
         ch('Kodėl vandens iš etanolio negalima visiškai pašalinti paprasta distiliacija?', 'Why can the water not be removed from ethanol completely by simple distillation?',
           [['Etanolis su vandeniu sudaro azeotropą (95,5 % etanolio), kuris distiliuojasi nekeisdamas sudėties.', 'Ethanol forms an azeotrope with water (95.5 % ethanol) which distils without changing its composition.'], ['Vandens virimo temperatūra žemesnė už etanolio.', 'Water boils lower than ethanol.'], ['Etanolis ir vanduo reaguoja ir sudaro eterį.', 'Ethanol and water react to form an ether.'], ['Vandens negalima distiliuoti.', 'Water cannot be distilled.']],
           'Mišinio sudėtis garuose ir skystyje gali tapti vienoda.', 'The composition of the vapour and the liquid can become the same.',
@@ -2114,7 +2187,7 @@
           [['Gaunami dujų burbuliukai, o dujos sudega (vandenilis, su pokšėjimu).', 'Gas bubbles form, and the gas burns (hydrogen, with a pop).'], ['Tirpalas pasidaro oranžinis, degtukas užgęsta.', 'The liquid turns orange and the splint goes out.'], ['Susidaro dūmai, degtukas užgęsta nuo $CO2$.', 'Fumes form and the splint is put out by $CO2$.'], ['Nieko nepastebima.', 'Nothing is observed.']],
           'Kuris iš produktų yra dujos, ir kaip jis dega?', 'Which product is a gas, and how does it burn?',
           'Alkoholio protonas ir natrio elektronas sudaro vandenilį, kuris dega.', 'The proton of the alcohol and the electron of sodium make hydrogen, which burns.'),
-        ch('Kodėl pastaboje sakoma, kad etanolis turi būti sausas?', 'Why must the ethanol be dry?',
+        ch('Kodėl etanolis turi būti bevandenis?', 'Why must the ethanol be anhydrous?',
           [['Natris reaguoja ir su vandeniu, todėl vandens priemaiša sudarytų $NaOH$ ir sugadintų stebėjimą.', 'Sodium also reacts with water, so a water impurity would give $NaOH$ and spoil the observation.'], ['Vanduo katalizuoja etanolio oksidaciją.', 'Water catalyses the oxidation of ethanol.'], ['Vanduo sudaro eterį su natriu.', 'Water forms an ether with sodium.'], ['Sausas etanolis neturi $OH$ grupės.', 'Dry ethanol has no $OH$ group.']],
           'Natris reaguoja su bet kuriuo rūgščiu protonu.', 'Sodium reacts with any acidic proton.',
           'Vanduo irgi turi $O-H$ ryšį ir su natriu reaguoja dar audringiau, todėl tik absoliutus etanolis rodo alkoholio reakciją.', 'Water also has an $O-H$ bond and reacts with sodium even more violently, so only absolute ethanol shows the reaction of the alcohol alone.')
@@ -2131,10 +2204,10 @@
           prompt: t('Su kuriais skysčiais susidaro ryškiai mėlynas tirpalas?', 'With which liquids does an intensely blue solution form?'),
           kind: 'multi', options: [tx('A', 'A'), tx('B', 'B'), tx('C', 'C'), tx('D', 'D')], answer: [1, 3],
           hint: t('Kompleksą sudaro dvi $OH$ grupės, prijungtos prie gretimų anglies atomų.', 'The complex is formed by two $OH$ groups on adjacent carbon atoms.'),
-          solution: t('Glicerolis (B) ir etano-1,2-diolis (D) turi $OH$ prie gretimų atomų ir sudaro mėlyną kompleksą su $Cu^2+^$. Etanolis (A) ir 1,3-propandiolis (C) tokio komplekso nesudaro.', 'Glycerol (B) and ethane-1,2-diol (D) have $OH$ on adjacent carbons and form a blue complex with $Cu^2+^$. Ethanol (A) and 1,3-propanediol (C) do not.')
+          solution: t('Glicerolis (B) ir 1,2-etandiolis (D) turi $OH$ prie gretimų atomų ir sudaro mėlyną kompleksą su $Cu^2+^$. Etanolis (A) ir 1,3-propandiolis (C) tokio komplekso nesudaro.', 'Glycerol (B) and ethane-1,2-diol (D) have $OH$ on adjacent carbons and form a blue complex with $Cu^2+^$. Ethanol (A) and 1,3-propanediol (C) do not.')
         }
       ],
-      why: t('Reakcija su $Cu(OH)2$ atpažįsta gretimas hidroksigrupes: polialkoholius, angliavandenius ir $α$-aminorūgštis. Paprastas alkoholis jos neduoda.', 'The reaction with $Cu(OH)2$ detects adjacent hydroxyl groups: polyols, carbohydrates and $α$-amino acids. A simple alcohol does not give it.'),
+      why: t('Reakcija su $Cu(OH)2$ atpažįsta gretimas hidroksigrupes: polialkoholius ir angliavandenius; mėlyną spalvą su juo duoda ir $α$-aminorūgštys. Paprastas alkoholis jos neduoda.', 'The reaction with $Cu(OH)2$ detects adjacent hydroxyl groups: polyols and carbohydrates; $α$-amino acids give similar blue complexes too. A simple alcohol does not give it.'),
       src: 'LW6 p2; LW6 p6 (explanations)'
     },
     {
@@ -2155,7 +2228,7 @@
     },
     {
       id: 'u11.lab.7',
-      q: [{ p: t('Du mėgintuvėliai: viename etanolis, kitame – 2-metil-2-propanolis. Į kiekvieną pilama rūgšti $K2Cr2O7$ tirpalo ir pašildoma.', 'Two test tubes: one with ethanol and one with 2-methyl-2-propanol. Acidic $K2Cr2O7$ solution is added to each, and the tubes are warmed.') },
+      q: [{ p: t('Du mėgintuvėliai: viename etanolis, kitame – 2-metil-2-propanolis. Į kiekvieną pilama rūgštaus $K2Cr2O7$ tirpalo ir pašildoma.', 'Two test tubes: one with ethanol and one with 2-methyl-2-propanol. Acidic $K2Cr2O7$ solution is added to each, and the tubes are warmed.') },
         { mol: [{ smi: 'CCO', caption: t('A', 'A') }, { smi: 'CC(C)(C)O', caption: t('B', 'B') }] }],
       steps: [
         ch('Kuris mėgintuvėlis pažaliuos?', 'Which tube turns green?',
@@ -2192,7 +2265,7 @@
   const bank = (id, title, mirrors, list) => ({ id, title, mirrors, bank: list });
   const TYPES = TYPES_GEN.concat([
     bank('u11.hb', t('Vandeniliniai ryšiai, virimo temperatūra ir tirpumas', 'Hydrogen bonds, boiling point and solubility'), [], HB),
-    bank('u11.acidwhy', t('Alkoholių rūgštingumas ir alkoksidų bazingumas', 'Acidity of alcohols and basicity of alkoxides'), [], ACID),
+    bank('u11.acidwhy', t('Alkoholių rūgštingumas ir alkoksidų bazingumas', 'Acidity of alcohols and basicity of alkoxides'), ['S5.3'], ACID),
     bank('u11.oxwhy', t('Oksidacija: kodėl ir kaip', 'Oxidation: why and how'), [], OXW),
     bank('u11.lab', t('Alkoholių bandymai 6 laboratoriniame darbe', 'The alcohol tests of lab 6'), [], LAB)
   ]);
@@ -2203,10 +2276,10 @@
     summary: SUMMARY,
     types: TYPES,
     coverage: {
-      'S5.3': ['u11.acid'],
+      'S5.3': ['u11.acid', 'u11.acidwhy'],
       'S5.4': ['u11.elim'],
       'S5.7': ['u11.ox'],
-      'S5.12': ['u11.react4', 'u11.hx', 'u11.elim', 'u11.ox', 'u11.acid'],
+      'S5.12': ['u11.react4', 'u11.hx', 'u11.elim', 'u11.ox'],
       'S5.15': ['u11.chain'],
       'S5.16': ['u11.multi']
     }
