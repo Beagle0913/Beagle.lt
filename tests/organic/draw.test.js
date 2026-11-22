@@ -472,3 +472,38 @@ test('lone pairs and a charge on one atom do not share a direction', () => {
     assert.ok(da > 0.7, 'lone pair ' + da.toFixed(2) + ' rad from the charge');
   });
 });
+
+// ---- radicals and small inorganic molecules ---------------------------------
+test('radicals show one dot per unpaired electron', () => {
+  const dots = (smi) => find(D.molecule(smi, {}), 'rad').length;
+  assert.strictEqual(dots('[Cl]'), 1);
+  assert.strictEqual(dots('[CH3]'), 1);
+  assert.strictEqual(dots('[CH2]C=C'), 1);
+  assert.strictEqual(dots('C[CH]C'), 1);
+  assert.strictEqual(dots('[O]C'), 1);
+  assert.strictEqual(dots('CCC'), 0);
+  assert.strictEqual(dots('[NH4+]'), 0);
+  assert.strictEqual(dots('C[N+](C)(C)C'), 0);
+  assert.strictEqual(dots('c1cc[nH]c1'), 0);
+  assert.strictEqual(dots('C[C@H](N)O'), 0);
+  assert.strictEqual(D.molecule('[CH2]C=C', {}).atoms[0].radical, 1);
+  assert.strictEqual(D.molecule('CCC', {}).atoms[0].radical, undefined);
+  for (const smi of ['[CH2]C=C', 'C[CH]C', '[O]C', '[Cl]']) {
+    const d = D.molecule(smi, {});
+    assert.deepEqual(P(D.quality(C.parse(smi), d.atoms)), { overlaps: 0, crossings: 0, labelClashes: 0 }, smi);
+  }
+});
+
+test('small inorganic molecules read the conventional way', () => {
+  const t = (smi) => atomTexts(D.molecule(smi, {})).join('');
+  assert.strictEqual(t('Br'), 'HBr');
+  assert.strictEqual(t('Cl'), 'HCl');
+  assert.strictEqual(t('I'), 'HI');
+  assert.strictEqual(t('F'), 'HF');
+  assert.strictEqual(t('O'), 'H2O');
+  assert.strictEqual(t('S'), 'H2S');
+  assert.strictEqual(t('N'), 'NH3');
+  assert.strictEqual(t('C'), 'CH4');
+  assert.strictEqual(t('[NH4+]'), 'NH4');
+  assert.strictEqual(t('CCO'), 'OH');
+});

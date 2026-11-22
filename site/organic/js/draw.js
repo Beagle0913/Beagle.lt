@@ -74,6 +74,16 @@
   // The drawing graph: heavy atoms plus the hydrogens drawn as atoms
   // ------------------------------------------------------------------
 
+  const NORMAL_VALENCE = { C: 4, N: 3, O: 2, S: 2, P: 3, B: 3, F: 1, Cl: 1, Br: 1, I: 1 };
+  // unpaired electrons of an uncharged bracket atom that has fewer bonds + H than its valence
+  function radicalCount(mol, i) {
+    const a = mol.atoms[i];
+    if (!a.bracket || a.charge !== 0 || !NORMAL_VALENCE[a.el]) return 0;
+    let sum = a.h;
+    mol.nbr[i].forEach((w) => { sum += mol.bondAt(i, w).kek; });
+    return Math.max(0, NORMAL_VALENCE[a.el] - sum);
+  }
+
   function validCentre(a) {
     return !!a.chiral && a.ord && a.ord.length === 4 && new Set(a.ord).size === 4;
   }
@@ -454,7 +464,8 @@
       sx += (pos[w].x - p.x) / d;
       cnt++;
     });
-    const side = forced || (hN > 0 && cnt > 0 && sx > 0.3 ? 'left' : 'right');
+    const hFirst = cnt === 0 && ['O', 'S', 'F', 'Cl', 'Br', 'I'].indexOf(sym) >= 0; // HCl, H2O
+    const side = forced || (hN > 0 && (hFirst || (cnt > 0 && sx > 0.3)) ? 'left' : 'right');
     const lab = {
       node: i, sym, hN, side, mainW, x: p.x, y: p.y, boxes: [], cls: 'atom el-' + sym,
     };
@@ -1661,6 +1672,41 @@
       });
     });
 
+    // radicals: one dot per unpaired electron, in the freest direction
+    mol.atoms.forEach((a, i) => {
+      const cnt = radicalCount(mol, i);
+      if (!cnt) return;
+      const obst = blocked(i);
+      if (lab[i] && lab[i].hN > 0) {
+        const hs = lab[i].side === 'right' ? 0 : PI;
+        obst.push(hs - 0.45, hs + 0.45);
+      }
+      const grid = [];
+      for (let k = 0; k < 24; k++) grid.push(-PI / 2 + (TAU * k) / 24);
+      let best = null;
+      const rec = (start, chosen) => {
+        if (chosen.length === cnt) {
+          let m = PI;
+          chosen.forEach((c, x) => {
+            obst.forEach((o) => { m = Math.min(m, Math.abs(wrap(o - c))); });
+            chosen.forEach((d, y) => { if (y > x) m = Math.min(m, Math.abs(wrap(d - c))); });
+          });
+          if (!best || m > best.m + 1e-9) best = { m, set: chosen.slice() };
+          return;
+        }
+        for (let g = start; g < grid.length; g++) { chosen.push(grid[g]); rec(g + 1, chosen); chosen.pop(); }
+      };
+      rec(0, []);
+      best.set.forEach((th) => {
+        const r = labelReach(lab[i], th) + 5;
+        const cx = pos[i].x + Math.cos(th) * r;
+        const cy = pos[i].y + Math.sin(th) * r;
+        lpPts.push({ x: cx, y: cy });
+        grow(cx - 3, cy - 3, cx + 3, cy + 3);
+        emit(items.lps, (dx, dy) => node('circle', { class: 'rad', fill: 'currentColor', cx: num(cx + dx), cy: num(cy + dy), r: 2.1 }));
+      });
+    });
+
     // numbers and delta labels
     placeTexts(G, pos, opts, an, lpPts).items.forEach((t) => {
       grow(t.box.x0, t.box.y0, t.box.x1, t.box.y1);
@@ -1800,6 +1846,7 @@
     const atoms = pos.map((p, i) => {
       const r = { x: num(p.x + ox), y: num(p.y + oy) };
       if (i >= G.n) r.h = G.parent[i];
+      else if (radicalCount(mol, i)) r.radical = radicalCount(mol, i);
       return r;
     });
     w = num(w * scale);
