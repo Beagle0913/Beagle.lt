@@ -507,3 +507,24 @@ test('small inorganic molecules read the conventional way', () => {
   assert.strictEqual(t('[NH4+]'), 'NH4');
   assert.strictEqual(t('CCO'), 'OH');
 });
+
+test('a charge is a superscript after the whole label', () => {
+  for (const smi of ['[CH2+]C', 'C[OH+]C', '[OH2+]', 'C[N+](C)(C)C', 'CC(=O)[O-]', 'C[NH3+]', '[CH3-]']) {
+    const d = D.molecule(smi, {});
+    const ch = find(d, 'charge');
+    assert.strictEqual(ch.length, 1, smi);
+    const lbl = find(d, 'atom').find((n) => Number(n.a.y) - 6 === d.atoms.find((p, i) => i === Number(ch[0].a['data-n'] || -1))?.y) || find(d, 'atom').filter((n) => Math.abs(Number(n.a.y) - Number(ch[0].a.y)) < 30).sort((a, b) => Math.abs(Number(a.a.x) - Number(ch[0].a.x)) - Math.abs(Number(b.a.x) - Number(ch[0].a.x)))[0];
+    assert.ok(lbl, smi);
+    assert.ok(Number(ch[0].a.y) <= Number(lbl.a.y) - 6, smi + ': sign baseline ' + ch[0].a.y + ' label baseline ' + lbl.a.y);
+    const q = D.quality(C.parse(smi), d.atoms);
+    assert.deepEqual(P(q), { overlaps: 0, crossings: 0, labelClashes: 0 }, smi);
+  }
+});
+
+test('allH on ethene draws H2C=CH2 cleanly', () => {
+  const d = D.molecule('C=C', { allH: true });
+  assert.strictEqual(atomTexts(d).filter((x) => x === 'H').length, 4);
+  assert.strictEqual(atomTexts(d).filter((x) => x === 'C').length, 2);
+  assert.deepEqual(P(D.quality(C.parse('C=C'), D.layout(C.parse('C=C'), { allH: true }).pos, { allH: true })), { overlaps: 0, crossings: 0, labelClashes: 0 });
+  assert.ok(find(D.molecule('C=C', { allH: true }), 'bond').length >= 6);
+});

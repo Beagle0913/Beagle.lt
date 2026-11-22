@@ -485,12 +485,10 @@
     if (a && a.charge !== 0) {
       const t = chargeText(a.charge);
       const cw = t.length * 8.5 + 1;
-      // candidate corners: upper right, upper left, lower right, lower left
+      // a charge is a superscript after the whole label: upper right, else upper left
       const cands = [
         { x: x1 + 0.5, y: p.y - 6, ang: -PI / 4 },
         { x: x0 - cw - 0.5, y: p.y - 6, ang: (-3 * PI) / 4 },
-        { x: x1 + 0.5, y: p.y + 14, ang: PI / 4 },
-        { x: x0 - cw - 0.5, y: p.y + 14, ang: (3 * PI) / 4 },
       ];
       let pick = null;
       cands.forEach((c) => {
@@ -500,7 +498,7 @@
           const bd = Math.atan2(pos[w].y - p.y, pos[w].x - p.x);
           clear = Math.min(clear, Math.abs(wrap(bd - c.ang)));
         });
-        if (!pick || clear > pick.clear + 0.35) pick = Object.assign({ clear }, c);
+        if (!pick || (pick.clear < 0.35 && clear > pick.clear)) pick = Object.assign({ clear }, c);
       });
       lab.charge = { text: t, x: pick.x, y: pick.y, w: cw, box: { x0: pick.x, x1: pick.x + cw, y0: pick.y - 10, y1: pick.y + 2 } };
     }
