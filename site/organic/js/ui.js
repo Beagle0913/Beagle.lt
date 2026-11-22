@@ -37,7 +37,7 @@
       examNote: 'Užuominų nėra. Kiekvienas žingsnis tikrinamas vieną kartą, sprendimus pamatysite pabaigoje.', examLoading: 'Renkami uždaviniai…', examFewer: n => `Kai kurių skyrių (${n}) nepavyko įkelti, todėl uždavinių mažiau.`, examNone: 'Egzamino uždavinių sudaryti nepavyko: skyriai dar neparengti arba neįkelti.',
       nextProblem: 'Kitas uždavinys', seeResult: 'Rezultatas', result: 'Rezultatas', scoreOf: (s, m) => `${dec(s)} iš ${dec(m)} balų`,
       passMt2: 'Antram tarpiniam egzaminui išlaikyti reikia ne mažiau kaip 1,7 balo.', passYes: 'Šio bandymo rezultato pakanka.', passNo: 'Šio bandymo rezultato nepakanka.',
-      perProblem: 'Uždaviniai ir sprendimai', stepsRight: (a, b) => `${a} iš ${b} žingsnių`, newTry: 'Naujas bandymas', toReview: 'Klaidos', gotRight: 'teisingai', gotWrong: 'neteisingai', lost: 'Nepavyko sudaryti uždavinio.', preparing: 'Skyriai dar ruošiami.', molLabel: 'Molekulės struktūra',
+      perProblem: 'Uždaviniai ir sprendimai', stepsRight: (a, b) => `${a} iš ${b} žingsnių`, newTry: 'Naujas bandymas', toReview: 'Klaidos', gotRight: 'teisingai', gotWrong: 'neteisingai', lost: 'Nepavyko sudaryti uždavinio.', zoom: 'Padidinti', unzoom: 'Pritaikyti prie ekrano', preparing: 'Skyriai dar ruošiami.', molLabel: 'Molekulės struktūra',
       reviewHead: 'Klaidos', reviewEmpty: 'Klaidų sąrašas tuolaik tuščias. Neteisingai išspręsti uždaviniai atsiras čia.', reviewLeft: n => `Liko uždavinių: ${n}`, reviewDone: n => n ? `Peržiūra baigta. Sąraše dar liko: ${n}.` : 'Peržiūra baigta. Klaidų sąrašas tuščias.', nextMissed: 'Kitas uždavinys',
       noscript: 'Šiam treniruokliui reikia „JavaScript“.'
     },
@@ -59,7 +59,7 @@
       examNote: 'No hints. Each step is checked once, and the solutions are shown at the end.', examLoading: 'Choosing problems…', examFewer: n => `${n} unit(s) could not be loaded, so there are fewer problems.`, examNone: 'No exam problems could be made: the units are not ready or could not be loaded.',
       nextProblem: 'Next problem', seeResult: 'Result', result: 'Result', scoreOf: (s, m) => `${dec(s)} out of ${dec(m)} points`,
       passMt2: 'Midterm 2 needs at least 1.7 points to pass.', passYes: 'This attempt is enough.', passNo: 'This attempt is not enough.',
-      perProblem: 'Problems and solutions', stepsRight: (a, b) => `${a} of ${b} steps`, newTry: 'New attempt', toReview: 'Mistakes', gotRight: 'right', gotWrong: 'wrong', lost: 'Could not make a problem.', preparing: 'The units are still being prepared.', molLabel: 'Molecule structure',
+      perProblem: 'Problems and solutions', stepsRight: (a, b) => `${a} of ${b} steps`, newTry: 'New attempt', toReview: 'Mistakes', gotRight: 'right', gotWrong: 'wrong', lost: 'Could not make a problem.', zoom: 'Enlarge', unzoom: 'Fit to screen', preparing: 'The units are still being prepared.', molLabel: 'Molecule structure',
       reviewHead: 'Mistakes', reviewEmpty: 'The list of mistakes is empty. Problems you get wrong will appear here.', reviewLeft: n => `Left in this round: ${n}`, reviewDone: n => n ? `Review finished. Still on the list: ${n}.` : 'Review finished. The list of mistakes is empty.', nextMissed: 'Next problem',
       noscript: 'This trainer needs JavaScript.'
     }
@@ -91,7 +91,7 @@
   function drawing(mol, extra) {
     const D = ORG.draw;
     if (!D || typeof D.molecule !== 'function' || typeof D.toDom !== 'function') return null;
-    const opts = Object.assign({}, mol.opts || {}, extra || {});
+    const opts = Object.assign({ maxWidth: colW() }, mol.opts || {}, extra || {});
     const key = mol.smi + '|' + JSON.stringify(opts);
     try {
       let d = dcache.get(key);
@@ -99,9 +99,18 @@
       return { d, svg: fit(D.toDom(d.svg, doc), d) };
     } catch (e) { return null; }
   }
-  function fit(svg, d) {
+  // width available to a drawing in the column it is placed in (the drawer and the views shrink to it)
+  let inset = 0;
+  const narrow = () => window.innerWidth <= 700;
+  function colW() {
+    const cs = window.getComputedStyle(app);
+    const w = app.clientWidth - (parseFloat(cs.paddingLeft) || 0) - (parseFloat(cs.paddingRight) || 0) - inset;
+    return Math.max(160, Math.floor(w));
+  }
+  function fit(svg, d, zoom) {
     if (!svg.getAttribute('viewBox') && d && d.width && d.height) svg.setAttribute('viewBox', `0 0 ${d.width} ${d.height}`);
-    if (d && d.width && d.height) { svg.setAttribute('width', String(d.width)); svg.setAttribute('height', String(d.height)); }
+    if (d && d.width && d.height) { const k = zoom || 1; svg.setAttribute('width', String(Math.round(d.width * k))); svg.setAttribute('height', String(Math.round(d.height * k))); }
+    if (zoom) svg.classList.add('zoomed');
     svg.classList.add('drawn');
     return svg;
   }
@@ -122,8 +131,15 @@
     const box = el('div', 'viewbox');
     try {
       if (V && D && typeof D.toDom === 'function' && typeof V[VIEW_FN[kind]] === 'function') {
-        const arg = kind === 'resonance' ? spec : Object.assign({ lang }, spec);
-        const d = V[VIEW_FN[kind]](arg);
+        const mw = colW();
+        let d;
+        if (kind === 'resonance') {
+          const items = [];
+          (spec || []).forEach((m, i) => { if (i) items.push({ arrow: '↔' }); items.push(m); });
+          d = V.scheme({ items, lang, maxWidth: mw });
+        } else if (kind === 'scheme') d = V.scheme(Object.assign({ lang, maxWidth: mw }, spec));
+        else if (kind === 'mech') d = V.mechanism(Object.assign({ lang }, spec, { scheme: Object.assign({ maxWidth: mw }, spec.scheme) }));
+        else d = V[VIEW_FN[kind]](Object.assign({ lang }, spec));
         box.append(fit(D.toDom(d.svg, doc), d));
         return box;
       }
@@ -195,6 +211,7 @@
     }
   }
   function example(parent, ex, path) {
+    inset += 34;
     const box = el('div', 'example');
     box.append(el('span', 'boxlabel', S.example));
     const q = el('div', 'exq'); blocks(q, ex.q, path + '/q'); box.append(q);
@@ -210,6 +227,7 @@
     const all = button(S.showAll, 'btn ghost', () => { revealed[path] = ex.steps.length; draw(); next.focus(); });
     bar.append(next, all); box.append(bar); draw();
     parent.append(box);
+    inset -= 34;
   }
 
   /* ---------- unit loading ---------- */
@@ -259,6 +277,7 @@
   function render() {
     const my = ++token;
     S = STR[lang];
+    inset = 0;
     clear(app);
     const draw = { home: renderHome, unit: renderUnit, type: renderType, mix: renderMix, exam: renderExam, review: renderReview, notfound: renderNotFound }[route.view];
     draw(my);
@@ -337,6 +356,7 @@
   }
   function learnView(body, u, unit) {
     if (unit.lectureMissing) body.append(el('p', 'notice soft', S.lectureMissing));
+    inset = narrow() ? 26 : 42;
     const opened = new Set((prog.sections && prog.sections[u.id]) || []);
     const readNote = el('p', 'readnote');
     const upd = () => { readNote.textContent = S.readOf(unit.notes.filter(s => opened.has(s.id)).length, unit.notes.length); };
@@ -557,9 +577,15 @@
       node.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(node, v); } });
       targets.push({ node, v }); paint(node, v);
     };
-    const r = drawing(step.mol, { targets: bonds ? 'bonds' : 'atoms' });
+    const zoom = !!st.zoom;
+    const r = drawing(step.mol, zoom ? { targets: bonds ? 'bonds' : 'atoms', maxWidth: 0 } : { targets: bonds ? 'bonds' : 'atoms' });
     if (r) {
-      const box = el('div', 'molbox tap'); box.append(r.svg); wrap.append(box);
+      if (zoom) fit(r.svg, r.d, 1.6);
+      if (!locked && (narrow() || (r.d && r.d.scale && r.d.scale < 1) || zoom)) {
+        const z = button(zoom ? S.unzoom : S.zoom, 'btn zoombtn', () => { st.zoom = !st.zoom; p.focus = 'zoom'; if (p.hooks) p.hooks.redraw(); });
+        z.dataset.fid = 'zoom'; z.setAttribute('aria-pressed', zoom ? 'true' : 'false'); wrap.append(z);
+      }
+      const box = el('div', 'molbox tap' + (zoom ? ' zoombox' : '')); box.append(r.svg); wrap.append(box);
       r.svg.querySelectorAll(bonds ? '[data-bond]' : '[data-atom]').forEach(n => {
         const v = bonds ? String(n.getAttribute('data-bond')).split('-').map(Number) : Number(n.getAttribute('data-atom'));
         if (bonds ? v.length === 2 && v.every(isInt) : isInt(v)) wire(n, v);
@@ -585,9 +611,12 @@
     return [S.right, 'yes'];
   }
   function renderSheet(p, host, hooks) {
-    try { renderSheetUnsafe(p, host, hooks); } catch (e) { clear(host); host.append(lostBox()); }
+    try { renderSheetUnsafe(p, host, hooks); } catch (e) { inset = 0; clear(host); host.append(lostBox()); }
   }
   function renderSheetUnsafe(p, host, hooks) {
+    p.hooks = hooks;
+    const base = narrow() ? 28 : 52;
+    inset = base;
     clear(host);
     const prob = p.problem;
     const sheet = el('div', 'sheet');
@@ -598,9 +627,11 @@
     sheet.append(head);
     if (prob.q && prob.q.length) { const stmt = el('div', 'stmt'); blocks(stmt, prob.q, 'q'); sheet.append(stmt); }
     const ol = el('ol', 'steps');
-    p.steps.forEach(st => ol.append(stepLi(p, st, hooks)));
+    p.steps.forEach(st => { inset = base + (narrow() ? 38 : 46); ol.append(stepLi(p, st, hooks)); });
+    inset = base;
     sheet.append(ol);
     if (p.finished) sheet.append(finishBar(p, hooks));
+    inset = 0;
     host.append(sheet);
     // focus: the first control of the active step, or a named control
     const f = p.focus; p.focus = null;
@@ -874,6 +905,7 @@
   function examResult(host, s, kind, info, rebuild) {
     const results = s.plays.map(p => p && !p.lost ? { right: p.right || 0, steps: p.steps.length } : { right: 0, steps: 1 });
     const sc = P.examScore(results, kind);
+    inset = narrow() ? 50 : 70;
     const box = el('section', 'result');
     const h = el('h3', 'resulttitle', S.result); h.tabIndex = -1; box.append(h);
     box.append(el('p', 'score', S.scoreOf(sc.score, sc.max)));
@@ -898,6 +930,7 @@
     bar.append(button(S.newTry, 'btn primary', () => { sess = null; rebuild(); }), link('#/review', S.toReview, 'btn'), link('#/', S.home, 'btn ghost'));
     box.append(bar);
     host.append(box);
+    inset = 0;
     h.focus({ preventScroll: true });
     window.scrollTo(0, 0);
   }
@@ -930,6 +963,15 @@
     sess = null; render();
   });
 
+  let resizeTimer = 0, lastW = app.clientWidth;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => {
+      if (Math.abs(app.clientWidth - lastW) < 8) return;
+      lastW = app.clientWidth;
+      const y = window.scrollY; render(); window.scrollTo(0, y);
+    }, 200);
+  });
   window.addEventListener('hashchange', () => { go(false); window.scrollTo(0, 0); });
   applyLang();
   go(true);

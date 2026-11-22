@@ -240,6 +240,8 @@ line.hit { stroke: transparent; stroke-width: 22; stroke-linecap: round; fill: n
 line.hit:hover { stroke: color-mix(in srgb, var(--accent) 22%, transparent); }
 .hit.sel { fill: color-mix(in srgb, var(--accent) 30%, transparent); stroke: var(--accent); stroke-width: 2; }
 line.hit.sel { stroke: color-mix(in srgb, var(--accent) 45%, transparent); }
+line.hit.sel, line.hit.ok, line.hit.bad, line.hit.shownsel { stroke-width: 22; fill: none; }
+line.hit.shownsel { stroke: color-mix(in srgb, var(--ink2) 45%, transparent); }
 .hit.ok { fill: color-mix(in srgb, var(--good) 35%, transparent); stroke: var(--good); }
 line.hit.ok { stroke: color-mix(in srgb, var(--good) 55%, transparent); }
 .hit.shownsel { fill: color-mix(in srgb, var(--ink2) 30%, transparent); stroke: var(--ink2); }
@@ -271,6 +273,11 @@ line.hit.bad { stroke: color-mix(in srgb, var(--bad) 50%, transparent); }
   .step.active { animation: rise .18s ease-out; }
   @keyframes rise { from { transform: translateY(4px); } to { transform: none; } }
 }
+
+/* tap steps: enlarged view in a box that scrolls inside the column */
+.zoombox { display: block; overflow: auto; max-width: 100%; border: 1px dashed var(--line); border-radius: 4px; padding: 4px; }
+.zoombox svg.zoomed, .molbox svg.zoomed { max-width: none; height: auto; }
+.zoombtn { margin: 2px 0 6px; }
 
 /* molecules (draw.js) */
 .mol { overflow: visible; }
