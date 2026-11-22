@@ -253,7 +253,7 @@ function smilesLike(text) {
   const out = [];
   for (const raw of text.replace(/\$[^$]*\$/g, ' ').split(/\s+/)) {
     const tok = raw.replace(/[.,;:!?"'”“]+$/, '');
-    if (/^[A-Za-z0-9=#()[\]@+\-\/%]{4,}$/.test(tok) && /[=#()[\]@]/.test(tok) && (tok.match(/[A-Z]/g) || []).length >= 2) out.push(tok);
+    if (/^[A-Za-z0-9=#()[\]@+\-\/%]{4,}$/.test(tok) && /([=#[\]@]|[A-Za-z0-9]\([^)]*\))/.test(tok) &&(tok.match(/[A-Z]/g) || []).length >= 2) out.push(tok);
   }
   return out;
 }
@@ -839,7 +839,7 @@ test('validator: claims on notes blocks, numbered examples, text lint', () => {
   // 3: SMILES in learner text, genitive of -enas / -inas / -anas
   only(withBlock({ p: T('Junginys CC(C)C=CC yra alkenas.', 'The compound is an alkene.') }), /lt text shows a formula or SMILES to the learner \("CC\(C\)C=CC"\)/);
   only(withBlock({ p: T('Junginys yra alkenas.', 'The compound CC(C)C=CC is an alkene.') }), /en text shows a formula or SMILES/);
-  for (const ok of ['Junginys $CC(C)C=CC$ yra alkenas.', 'Žiūrėkite (E)-2-butenas ir (R)-alaninas, C=O ryšys.', 'Naudokite pH ir SN2 bei NaOH.']) assert.deepEqual(run(withBlock({ p: T(ok, ok + ' (en)') })).errors, [], ok);
+  for (const ok of ['Junginys $CC(C)C=CC$ yra alkenas.', 'Žiūrėkite (E)-2-butenas ir (R)-alaninas, C=O ryšys.', 'Naudokite pH ir SN2 bei NaOH.', 'Elektrofilinė jungimosi (AE) reakcija su HBr) ir (SR).']) assert.deepEqual(run(withBlock({ p: T(ok, ok + ' (en)') })).errors, [], ok);
   only(withBlock({ p: T('Butenos molekulė.', 'The butene molecule.') }), /genitive of -enas is -eno \("Butenos"\)/);
   only(withBlock({ p: T('Pentinos formulė.', 'The pentyne formula.') }), /genitive of -inas is -ino/);
   only(withBlock({ p: T('Propanos formulė.', 'The propane formula.') }), /genitive of -anas is -ano/);
