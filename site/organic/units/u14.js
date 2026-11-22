@@ -92,6 +92,8 @@
     const opts = molOptions(ctx, [salt], wrongs, 3);
     opts.push(tx('Reakcija nevyksta: rūgštis su šarmu nereaguoja.', 'No reaction: an acid does not react with an alkali.'));
     const base = M === 'Na' ? 'NaOH' : 'KOH';
+    const equiv = r === 'Oc1ccccc1' || r === 'CC(O)';
+    const halo = r === 'ClC' || r === 'CC(Cl)';
     const lt = name_(ctx, salt);
     const mechIdx = 'H' + O;
     const steps = [
@@ -123,10 +125,10 @@
       });
     }
     return {
-      q: [{ scheme: { items: [{ smi: acid }, { plus: true }, { smi: M === 'Na' ? '[OH-].[Na+]' : '[OH-].[K+]' }, { arrow: '→' }] } }],
+      q: [{ scheme: { items: [{ smi: acid }, { plus: true }, { smi: M === 'Na' ? '[OH-].[Na+]' : '[OH-].[K+]' }, equiv ? { arrow: '→', above: t('1 ekv.', '1 equiv.') } : { arrow: '→' }] } }],
       steps,
-      why: t('Karboksirūgštis yra pakankamai stipri rūgštis, kad hidroksidas ją visiškai neutralizuotų: anijono krūvis pasiskirsto tarp dviejų deguonų, o susidaro druska ir vanduo. Redukcija ar dekarboksilinimas vyksta kitomis sąlygomis.',
-        'A carboxylic acid is acidic enough for hydroxide to neutralise it completely: the charge of the anion is shared by two oxygens, and a salt and water form. Reduction or decarboxylation need different conditions.'),
+      why: t('Karboksirūgštis yra pakankamai stipri rūgštis, kad hidroksidas ją visiškai neutralizuotų: anijono krūvis pasiskirsto tarp dviejų deguonų, o susidaro druska ir vanduo. Redukcija ar dekarboksilinimas vyksta kitomis sąlygomis.' + (halo ? ' (Šaltame tirpale halogenas nesikeičia; kaitinant pakeičiamas OH.)' : ''),
+        'A carboxylic acid is acidic enough for hydroxide to neutralise it completely: the charge of the anion is shared by two oxygens, and a salt and water form. Reduction or decarboxylation need different conditions.' + (halo ? ' (In the cold the halogen stays; on heating it is replaced by OH.)' : '')),
       src: 'S6.15'
     };
   }
@@ -142,7 +144,8 @@
     const salt = X.rs + 'C(=O)[O-].[Na+]';
     const alkoxide = Q.qe + '[O-].[Na+]';
     let F;
-    const isoEster = () => isoWrongs(ctx, ester, 'ester').slice(0, 2);
+    const swapped = 'O=C(' + Q.qs + ')O' + X.rs;          // the ester with the two alkyl groups swapped
+    const isoEster = () => [swapped];
     switch (fam) {
       case 'cl-alc':
         F = { reag: [chlor, alc], run: ['acyl.nu', [chlor, alc], { nu: 'alcohol' }], tap: chlor, leave: 'Cl', rights: [ester], wrongs: isoEster().concat([acid, Q.qe + 'Cl', anh]) };
@@ -153,7 +156,7 @@
         F.why = t('Amoniakas puola chlorido karbonilo anglį, išeina $Cl-$. Antras amoniako ekvivalentas suriša išsiskyrusį HCl, todėl gaunamas amidas ir amonio chloridas, o ne rūgštis ar jos druska.', 'Ammonia attacks the carbonyl carbon of the chloride and $Cl-$ leaves. A second equivalent of ammonia takes up the HCl, so an amide and ammonium chloride result, not an acid or its salt.');
         break;
       case 'cl-am': {
-        F = { reag: [chlor, A], arrow: t('2 ekv.', '2 equiv.'), run: ['acyl.nu', [chlor, A], { nu: 'amine' }], tap: chlor, leave: 'Cl', rights: null, wrongs: [acid, amide, X.rs + 'C(=O)[O-].[Na+]'] };
+        F = { reag: [chlor, A], arrow: t('2 ekv.', '2 equiv.'), run: ['acyl.nu', [chlor, A], { nu: 'amine' }], tap: chlor, leave: 'Cl', rights: null, wrongs: [acid, amide] };
         const maj = react.run('acyl.nu', [chlor, A], { nu: 'amine' }).products.filter((p) => p.major);
         if (maj.length !== 1) throw new Error('u14.nu: amide');
         F.rights = [maj[0].smi];
@@ -162,12 +165,12 @@
         break;
       }
       case 'anh-w':
-        F = { reag: [anh, 'O'], run: ['acyl.nu', [anh], { nu: 'water' }], tap: anh, leave: 'RCOO', two: true, rights: [acid, acid], wrongSets: [[acid], [acid, X.rs + 'CO'], [acid, X.rs + 'C=O'], [X.rs + 'C(=O)[O-].[Na+]', acid]], skipCheck: true };
+        F = { reag: [anh, 'O'], run: ['acyl.nu', [anh], { nu: 'water' }], tap: anh, leave: 'RCOO', two: true, rights: [acid, acid], wrongSets: [[acid], [acid, 'OC' + X.rs], [acid, 'O=C' + X.rs], [X.rs + 'C(=O)[O-].[Na+]', acid]], skipCheck: true };
         F.why = t('Vanduo puola anhidrido karbonilo anglį; išeina karboksilatas, kuris tampa kita rūgšties molekule. Iš vienos anhidrido molekulės gaunamos dvi rūgšties molekulės.', 'Water attacks a carbonyl carbon of the anhydride; a carboxylate leaves and becomes a second acid molecule. One anhydride molecule gives two molecules of the acid.');
         break;
       case 'anh-nh3':
         F = { reag: [anh, 'N'], run: ['acyl.nu', [anh, 'N'], { nu: 'ammonia' }], tap: anh, leave: 'RCOO', two: true, rights: [amide, acid], wrongSets: [[amide, amide], [acid, acid], [nitr, acid]] };
-        F.why = t('Amoniakas puola vieną anhidrido karbonilo anglį. Viena acilo dalis lieka amide, kita išeina kaip karboksilatas ir virsta rūgštimi.', 'Ammonia attacks one carbonyl carbon of the anhydride. One acyl part stays in the amide and the other leaves as a carboxylate and becomes the acid.');
+        F.why = t('Amoniakas puola vieną anhidrido karbonilo anglį. Viena acilo dalis lieka amide, kita išeina kaip karboksilatas ir virsta rūgštimi. Su amoniako pertekliumi rūgštis lieka amonio druska.', 'Ammonia attacks one carbonyl carbon of the anhydride. One acyl part stays in the amide and the other leaves as a carboxylate and becomes the acid. With an excess of ammonia the acid is present as its ammonium salt.');
         break;
       case 'anh-alc':
         F = { reag: [anh, alc], run: ['acyl.nu', [anh, alc], { nu: 'alcohol' }], tap: anh, leave: 'RCOO', two: true, rights: [ester, acid], wrongSets: [[ester, ester], [acid, acid], [Q.qe + 'O' + Q.qe, acid]] };
@@ -186,12 +189,12 @@
         F.why = t('Rūgštinė hidrolizė yra esterinimo priešingybė: protonuotą karbonilą puola vanduo, ir gaunama rūgštis bei alkoholis. Reakcija grįžtamoji, todėl vandens reikia pertekliaus; druskos rūgštyje nesusidaro.', 'Acid hydrolysis is the reverse of esterification: water attacks the protonated carbonyl and the acid and the alcohol form. The reaction is reversible, so an excess of water is used; no salt forms in acid.');
         break;
       case 'ac-socl2':
-        F = { reag: [acid, 'ClS(Cl)=O'], run: ['acid.socl2', [acid], null], tap: acid, leave: null, rights: [chlor], wrongs: [anh, 'Cl' + X.rs, ester] };
+        F = { reag: [acid, 'ClS(Cl)=O'], run: ['acid.socl2', [acid], null], tap: acid, leave: null, rights: [chlor], wrongs: [anh, 'Cl' + X.rs, 'O=S(Cl)OC(=O)' + X.rs] };
         F.why = t('Tionilchloridas pakeičia rūgšties OH grupę chloru (išsiskiria $SO2$ ir HCl): gaunamas aktyvintas darinys – rūgšties chloridas. Jis vėliau su alkoholiu ar aminu duoda esterį ar amidą.', 'Thionyl chloride replaces the OH of the acid by chlorine ($SO2$ and HCl are released) and gives an activated derivative, the acyl chloride, which later gives an ester or amide with an alcohol or amine.');
         break;
       default:
-        F = { reag: [nitr, 'O'], arrow: f('H2O, H+, t°'), run: ['nitrile.hydrolysis', [nitr], null], tap: nitr, leave: null, rights: [acid], wrongs: [amide, X.rs + 'C(=O)[O-].[NH4+]', X.rs + 'CN'] };
-        F.why = t('Nitrilas hidrolizuojamas rūgštyje per amidą iki karboksirūgšties (ir $NH4+$). Hidrolizės produktas yra rūgštis, todėl nitrilai priskiriami rūgščių dariniams.', 'A nitrile is hydrolysed in acid through the amide to the carboxylic acid (and $NH4+$). The product of hydrolysis is the acid, which is why nitriles count as acid derivatives.');
+        F = { reag: [nitr, 'O'], arrow: t('H2O, H+, t° (ilgai)', 'H2O, H+, t° (prolonged)'), run: ['nitrile.hydrolysis', [nitr], null], tap: nitr, leave: null, rights: [acid], wrongs: [amide, X.rs + 'C(=O)[O-].[NH4+]', 'NC' + X.rs] };
+        F.why = t('Nitrilas hidrolizuojamas rūgštyje per amidą iki karboksirūgšties (ir $NH4+$). Hidrolizės produktas yra rūgštis, todėl nitrilai priskiriami rūgščių dariniams. Amidas yra tik tarpinis junginys; kaitinant rūgštyje hidrolizė eina iki rūgšties.', 'A nitrile is hydrolysed in acid through the amide to the carboxylic acid (and $NH4+$). The product of hydrolysis is the acid, which is why nitriles count as acid derivatives. The amide is only an intermediate; on heating in acid hydrolysis goes on to the acid.');
     }
     // the engine must agree with the intended product
     if (!F.skipCheck && F.run) {
@@ -213,7 +216,8 @@
     if (options.length < 3) throw new Error('u14.nu: too few options');
     const reagItems = [];
     F.reag.forEach((s, i) => { if (i) reagItems.push({ plus: true }); reagItems.push({ smi: s }); });
-    reagItems.push(F.arrow ? { arrow: '→', above: F.arrow } : { arrow: '→' });
+    const arrowSym = fam === 'ac-alc' || fam === 'es-acid' ? '⇌' : '→';
+    reagItems.push(F.arrow ? { arrow: arrowSym, above: F.arrow } : { arrow: arrowSym });
     const steps = [
       tap(carbons.length > 1 ? t('Bakstelėkite anglies atomus, kuriuos gali pulti nukleofilas.', 'Tap the carbon atoms that a nucleophile can attack.') : t('Bakstelėkite anglies atomą, kurį puola nukleofilas.', 'Tap the carbon atom that the nucleophile attacks.'),
         { smi: F.tap, opts: { numbers: 'all' } }, carbons,
@@ -370,6 +374,9 @@
 
 
 
+  // lithocholic acid skeleton: E is the side-chain end (carbon 24 and its groups), A the group at C3 (ring A)
+  const ster = (E, A) => 'CC(CC' + E + ')C1CCC2C1(C)CCC1C2CCC2C' + A + 'CCC12C';
+
   ORG.unit({
     id: 'u14',
     lectureMissing: true,
@@ -381,8 +388,8 @@
         blocks: [
           { h: t('Karboksigrupė', 'The carboxyl group') },
           {
-            p: t('Karboksirūgštyse yra karboksigrupė –COOH. Tai ne paprasta karbonilo ir hidroksigrupės suma, o nauja funkcinė grupė: karbonilo anglies atomas poliarizuotas (δ+) ir traukia O–H ryšio elektronus, todėl vandenilis gali atsiskirti protono pavidalu.',
-              'Carboxylic acids contain the carboxyl group –COOH. It is not simply a carbonyl plus a hydroxy group but a functional group of its own: the carbonyl carbon is polarised (δ+) and pulls on the electrons of the O–H bond, so the hydrogen can leave as a proton.'),
+            p: t('Karboksigrupė –COOH turi savų savybių, kurių neturi atskirai paimti $C=O$ ir –OH: karbonilo anglis (δ+) traukia hidroksigrupės elektronus, todėl O–H ryšys susilpnėja ir vandenilis atsiskiria kaip protonas.',
+              'The carboxyl group –COOH has properties that a separate $C=O$ and –OH do not have: the carbonyl carbon (δ+) pulls on the hydroxyl electrons, so the O–H bond weakens and the hydrogen leaves as a proton.'),
             src: 'T p87'
           },
           {
@@ -394,7 +401,7 @@
           },
           { h: t('Kodėl stipresnės už alkoholius?', 'Why stronger than alcohols?') },
           {
-            p: t('Atskilus protonui lieka karboksilato anijonas: jo krūvį dalijasi du deguonies atomai, ir tai užrašoma dviem rezonansinėmis formulėmis. Alkoksido krūvis lieka ant vieno atomo, todėl alkoholiai daug silpnesni.',
+            p: t('Kai protonas atsiskiria, lieka karboksilato anijonas: jo krūvį dalijasi du deguonies atomai, ir tai užrašoma dviem rezonansinėmis formulėmis. Alkoksido krūvis lieka ant vieno atomo, todėl alkoholiai daug silpnesni.',
               'When the proton leaves, a carboxylate anion remains: two oxygens share its charge, which is written with two resonance structures. The charge of an alkoxide stays on one atom, so alcohols are much weaker acids.'),
             src: 'T p87'
           },
@@ -423,7 +430,7 @@
                 [{ smi: 'ClCC(=O)O' }, t('2,86', '2.86'), t('Cl −I', 'Cl is −I')],
                 [{ smi: 'ClC(Cl)C(=O)O' }, t('1,29', '1.29'), t('du Cl', 'two Cl atoms')],
                 [{ smi: 'ClC(Cl)(Cl)C(=O)O' }, t('0,65', '0.65'), t('trys Cl', 'three Cl atoms')],
-                [{ smi: 'OC(=O)c1ccccc1' }, t('4,20', '4.20'), t('sp² žiedas', 'sp² ring')]
+                [{ smi: 'OC(=O)c1ccccc1' }, t('4,20', '4.20'), t('sp² C labiau elektroneigiama už sp³', 'an sp² carbon is more electron-withdrawing than sp³')]
               ]
             },
             src: 'Klein'
@@ -432,6 +439,11 @@
             p: t('−I efektas silpnėja tolstant nuo karboksigrupės: 2-chlorbutano rūgštis (pKa 2,86) stipresnė už 3- (4,05) ir 4-chlorbutano (4,52), o ši artima butano rūgščiai (4,82). α-Hidroksirūgštys – stipriausios iš hidroksirūgščių.',
               'The −I effect fades with distance from the carboxyl group: 2-chlorobutanoic acid (pKa 2.86) is stronger than the 3- (4.05) and 4-chloro (4.52) acids, which are close to butanoic acid (4.82). α-Hydroxy acids are the strongest of the hydroxy acids.'),
             src: 'Klein; T p93'
+          },
+          {
+            p: t('Žiede nitrogrupė ($−I$, $−M$) rūgštį stiprina, o metilas ($+I$) silpnina: 4-nitrobenzenkarboksirūgštis stipresnė, o 4-metilbenzenkarboksirūgštis silpnesnė už benzenkarboksirūgštį.',
+              'On the ring a nitro group ($−I$, $−M$) strengthens the acid and methyl ($+I$) weakens it: 4-nitrobenzoic acid is stronger and 4-methylbenzoic acid weaker than benzoic acid.'),
+            src: 'Klein'
           },
           {
             pitfall: t('Rūgštį vertinkite pagal anijoną ir skaičiuokite atstumą: vienas Cl prie α-anglies stiprina rūgštį labiau nei Cl už trijų anglies atomų.',
@@ -492,8 +504,14 @@
             src: 'T p88'
           },
           {
-            scheme: { items: [{ smi: 'CC(=O)[O-]' }, { arrow: '→', above: f('<') }, { smi: 'CC(=O)N' }, { arrow: '→', above: f('<') }, { smi: 'CC(=O)OC' }, { arrow: '→', above: f('<') }, { smi: 'CC(=O)OC(C)=O' }, { arrow: '→', above: f('<') }, { smi: 'CC(=O)Cl' }] },
-            caption: t('Reaktingumas auga iš kairės į dešinę.', 'Reactivity rises from left to right.'),
+            mol: [
+              { smi: 'CC(=O)[O-]', caption: t('karboksilatas', 'carboxylate') },
+              { smi: 'CC(=O)N', caption: t('amidas', 'amide') },
+              { smi: 'CC(=O)OC', caption: t('esteris', 'ester') },
+              { smi: 'CC(=O)OC(C)=O', caption: t('anhidridas', 'anhydride') },
+              { smi: 'CC(=O)Cl', caption: t('chloridas', 'chloride') }
+            ],
+            caption: t('Reaktingumas auga iš kairės į dešinę: karboksilatas < amidas < esteris < anhidridas < chloridas.', 'Reactivity rises from left to right: carboxylate < amide < ester < anhydride < chloride.'),
             src: 'T p88'
           },
           {
@@ -510,6 +528,25 @@
             p: t('Rūgščioje terpėje karbonilo deguonis protonuojamas, ir net silpnas nukleofilas (alkoholis) gali pulti anglį: tai rūgštinė katalizė.',
               'In acid the carbonyl oxygen is protonated and even a weak nucleophile (an alcohol) can attack the carbon: acid catalysis.'),
             src: 'T p88'
+          },
+          {
+            example: {
+              q: [
+                { p: t('Ar etanamidą galima vienu virsmu paversti etanoilchloridu? Kaip tai padaryti?', 'Can ethanamide be turned into ethanoyl chloride in one conversion? How can it be done?') },
+                { scheme: { items: [{ smi: 'CC(=O)N', name: t('etanamidas', 'ethanamide') }, { arrow: '→' }, { smi: 'CC(=O)Cl', name: t('etanoilchloridas', 'ethanoyl chloride') }] } }
+              ],
+              steps: [
+                [{ p: t('Amidas yra mažiau reaktingas už chloridą, o iš mažiau reaktingo darinio į reaktingesnį tiesiogiai nepereinama.', 'The amide is less reactive than the chloride, and a less reactive derivative does not convert directly into a more reactive one.') }],
+                [{ p: t('Amidas hidrolizuojamas iki rūgšties ($H2O$, $H+$, $t°$).', 'The amide is hydrolysed to the acid ($H2O$, $H+$, $t°$).') }, { mol: { smi: 'CC(=O)O', name: t('etano rūgštis', 'ethanoic acid') } }],
+                [{ p: t('Rūgštis su $SOCl2$ virsta chloridu.', 'The acid becomes the chloride with $SOCl2$.') }, { mol: { smi: 'CC(=O)Cl', name: t('etanoilchloridas', 'ethanoyl chloride') } }]
+              ]
+            },
+            claims: [
+              { react: ['acid.socl2', ['CC(=O)O'], null, 'CC(=O)Cl'] },
+              { name: ['CC(=O)N', t('etanamidas', 'ethanamide')] },
+              { name: ['CC(=O)O', t('etano rūgštis', 'ethanoic acid')] },
+              { name: ['CC(=O)Cl', t('etanoilchloridas', 'ethanoyl chloride')] }
+            ]
           },
           { practice: 'u14.reactivity' }
         ]
@@ -538,7 +575,7 @@
                 note: t('II st.: deguonies pora atkuria $C=O$, o $C-Cl$ elektronai pereina chloridui.', 'Stage II: an oxygen lone pair restores $C=O$ and the $C-Cl$ electrons go to chloride.')
               }
             ],
-            caption: t('Etanoilchloridas ir amoniakas.', 'Ethanoyl chloride and ammonia.'),
+            caption: t('Etanoilchloridas ir amoniakas. Galutinė stadija: antras $NH3$ atplėšia protoną nuo $N$.', 'Ethanoyl chloride and ammonia. Last stage: a second $NH3$ removes a proton from $N$.'),
             src: 'T p88'
           },
           {
@@ -571,6 +608,36 @@
             scheme: { items: [{ smi: 'CC(=O)O' }, { plus: true }, { smi: 'CC(=O)O' }, { arrow: '→', above: f('P2O5, t°') }, { smi: 'CC(=O)OC(C)=O' }, { plus: true }, { smi: 'O' }] },
             caption: t('Anhidridas gaunamas atskeliant vandenį.', 'The anhydride forms by removing water.'),
             src: 'T p89; S6.17'
+          },
+          {
+            p: t('Chloridas su karboksilato druska duoda anhidridą, ir pagal tą pačią taisyklę (reaktingesnis → mažiau reaktingas) susidaro visi kiti virsmai; rūgštis su amoniaku sudaro tik druską, o ją kaitinant gaunamas amidas.',
+              'A chloride with a carboxylate gives the anhydride, and every other conversion follows the same rule (more reactive → less reactive); an acid with ammonia only forms a salt, which on heating gives the amide.'),
+            src: 'T p89'
+          },
+          {
+            scheme: { items: [{ smi: 'CC(=O)Cl' }, { plus: true }, { smi: 'CC(=O)[O-].[Na+]' }, { arrow: '→' }, { smi: 'CC(=O)OC(C)=O' }, { plus: true }, { smi: '[Na+].[Cl-]' }] },
+            caption: t('Chloridas + karboksilatas: anhidridas.', 'Chloride + carboxylate: the anhydride.'),
+            src: 'T p89; S6.16'
+          },
+          {
+            scheme: { items: [{ smi: 'CC(=O)OC(C)=O' }, { plus: true }, { smi: 'CCO' }, { arrow: '→' }, { smi: 'CC(=O)OCC' }, { plus: true }, { smi: 'CC(=O)O' }] },
+            caption: t('Anhidridas + alkoholis: esteris ir rūgštis.', 'Anhydride + alcohol: an ester and an acid.'),
+            src: 'T p89'
+          },
+          {
+            scheme: { items: [{ smi: 'CC(=O)OC' }, { plus: true }, { smi: 'N' }, { arrow: '→' }, { smi: 'CC(=O)N' }, { plus: true }, { smi: 'CO' }] },
+            caption: t('Esteris + amoniakas: amidas ir alkoholis.', 'Ester + ammonia: an amide and an alcohol.'),
+            src: 'T p89'
+          },
+          {
+            scheme: { items: [{ smi: 'CC(=O)O' }, { plus: true }, { smi: 'N' }, { arrow: '→', above: t('kambario temperatūra', 'room temperature') }, { smi: 'CC(=O)[O-].[NH4+]' }, { arrow: '→', above: f('t°') }, { smi: 'CC(=O)N' }, { plus: true }, { smi: 'O' }] },
+            caption: t('Rūgštis + amoniakas: pirmiausia druska, kaitinant – amidas.', 'Acid + ammonia: first the salt, on heating the amide.'),
+            src: 'T p89'
+          },
+          {
+            scheme: { items: [{ smi: 'CC(=O)[O-].[Na+]' }, { plus: true }, { smi: 'Cl' }, { arrow: '→' }, { smi: 'CC(=O)O' }, { plus: true }, { smi: '[Na+].[Cl-]' }] },
+            caption: t('Druska + HCl: laisva rūgštis (reikalinga po muilinimo).', 'Salt + HCl: the free acid (needed in the work-up after saponification).'),
+            src: 'T p89'
           },
           {
             example: {
@@ -792,8 +859,8 @@
         blocks: [
           { h: t('Redukcija ir dekarboksilinimas', 'Reduction and decarboxylation') },
           {
-            p: t('$LiAlH4$ redukuoja rūgštį iki pirminio alkoholio, o esterį – iki dviejų alkoholių. Kaitinamos rūgštys dekarboksilinasi: $RCOOH → RH + CO2$.',
-              '$LiAlH4$ reduces an acid to a primary alcohol and an ester to two alcohols. Heated acids decarboxylate: $RCOOH → RH + CO2$.'),
+            p: t('$LiAlH4$ redukuoja rūgštį iki pirminio alkoholio, o esterį – iki dviejų alkoholių. Kaitinamos rūgštys dekarboksilinasi: $RCOOH → RH + CO2$. Paprastos rūgštys dekarboksilinasi sunkiai: dažniausiai kaitinamos jų druskos su $NaOH$.',
+              '$LiAlH4$ reduces an acid to a primary alcohol and an ester to two alcohols. Heated acids decarboxylate: $RCOOH → RH + CO2$. Simple acids decarboxylate with difficulty: usually their salts are heated with $NaOH$.'),
             src: 'T p90; S6.21'
           },
           {
@@ -806,8 +873,8 @@
           },
           { h: t('α-Halogeninimas ir nesočiosios rūgštys', 'α-Halogenation and unsaturated acids') },
           {
-            p: t('Su $Br2$ ar $Cl2$ ir fosforu (Helio–Volhardo–Zelinskio reakcija) rūgštys halogeninamos tik α-padėtyje; α-halogenrūgštys duoda α-hidroksi- ir α-aminorūgštis. Propeno rūgšties $C=C$ konjuguotas su karbonilu, todėl HX prisijungia prieš Markovnikovo taisyklę.',
-              'With $Br2$ or $Cl2$ and phosphorus (Hell–Volhard–Zelinsky) acids are halogenated only at the α-position; α-halo acids give α-hydroxy and α-amino acids. In propenoic acid the $C=C$ is conjugated with the carbonyl, so HX adds against Markovnikov\'s rule.'),
+            p: t('Su $Br2$ ar $Cl2$ ir fosforu (Helio–Volhardo–Zelinskio reakcija) rūgštys halogeninamos tik α-padėtyje; α-halogenrūgštys duoda α-hidroksi- ir α-aminorūgštis. Su $Br2$ pertekliumi halogeninimas gali pasikartoti: α-anglis gali gauti du ar tris halogenus; $α$-bromrūgštis su $K2CO3/H2O$ (100 °C) virsta $α$-hidroksirūgštimi. Propeno (akrilo) rūgšties $C=C$ konjuguotas su karbonilu, todėl HX prisijungia prieš Markovnikovo taisyklę.',
+              'With $Br2$ or $Cl2$ and phosphorus (Hell–Volhard–Zelinsky) acids are halogenated only at the α-position; α-halo acids give α-hydroxy and α-amino acids. With excess $Br2$ the halogenation can repeat: the α-carbon can take two or three halogens; an $α$-bromo acid gives the $α$-hydroxy acid with $K2CO3/H2O$ (100 °C). In propenoic (acrylic) acid the $C=C$ is conjugated with the carbonyl, so HX adds against Markovnikov\'s rule.'),
             src: 'T p90, p91, p92'
           },
           {
@@ -818,6 +885,24 @@
             scheme: { items: [{ smi: 'C=CC(=O)O' }, { plus: true }, { smi: 'Cl' }, { arrow: '→' }, { smi: 'ClCCC(=O)O', name: t('3-chlorpropano rūgštis', '3-chloropropanoic acid') }] },
             caption: t('H eina prie α-anglies, X – prie β.', 'H goes to the α-carbon, X to the β-carbon.'),
             src: 'T p92'
+          },
+          {
+            example: {
+              q: [
+                { p: t('Kaip iš butano rūgšties gauti 2-hidroksibutano rūgštį?', 'How is 2-hydroxybutanoic acid made from butanoic acid?') },
+                { mol: { smi: 'CCCC(=O)O', name: t('butano rūgštis', 'butanoic acid') } }
+              ],
+              steps: [
+                [{ p: t('OH reikia α-padėtyje, o α-anglį galima halogeninti: $Br2$, $P$ (HVZ).', 'The OH is needed at the α-position, and the α-carbon can be halogenated: $Br2$, $P$ (HVZ).') }, { mol: { smi: 'CCC(Br)C(=O)O', name: t('2-brombutano rūgštis', '2-bromobutanoic acid') } }],
+                [{ p: t('Bromas pakeičiamas hidroksigrupe: $K2CO3$, $H2O$, 100 °C, po to $H3O+$.', 'The bromine is replaced by a hydroxy group: $K2CO3$, $H2O$, 100 °C, then $H3O+$.') }, { mol: { smi: 'CCC(O)C(=O)O', name: t('2-hidroksibutano rūgštis', '2-hydroxybutanoic acid') } }]
+              ]
+            },
+            claims: [
+              { name: ['CCCC(=O)O', t('butano rūgštis', 'butanoic acid')] },
+              { name: ['CCC(Br)C(=O)O', t('2-brombutano rūgštis', '2-bromobutanoic acid')] },
+              { name: ['CCC(O)C(=O)O', t('2-hidroksibutano rūgštis', '2-hydroxybutanoic acid')] },
+              { formula: ['CCC(O)C(=O)O', 'C4H8O3'] }
+            ]
           },
           { practice: 'u14.reagents' }
         ]
@@ -858,6 +943,29 @@
               'Count the ring members including the ester oxygen: 4-hydroxybutanoic acid gives a 5-membered ring (4 C + O).'),
             src: 'T p94'
           },
+          {
+            p: t('Jei $OH$ ir $COOH$ atskirtos daugiau nei trimis anglies atomais, kiekviena grupė elgiasi savarankiškai: $OH$ kaip alkoholio (oksiduojasi, esterinasi, keičiama halogenu), $COOH$ kaip rūgšties.',
+              'If $OH$ and $COOH$ are separated by more than three carbons, each group behaves independently: the $OH$ like an alcohol (oxidised, esterified, replaced by halogen), the $COOH$ like an acid.'),
+            src: 'T p93'
+          },
+          {
+            example: {
+              q: [
+                { p: t('5-hidroksipentano rūgštis šildoma su $H+$. Kas susidaro?', '5-hydroxypentanoic acid is heated with $H+$. What forms?') },
+                { mol: { smi: 'OCCCCC(=O)O', name: t('5-hidroksipentano rūgštis', '5-hydroxypentanoic acid') } }
+              ],
+              steps: [
+                [{ p: t('Hidroksigrupės deguonis puola savo paties molekulės karboksigrupės anglį: vidumolekulinis esterinimas.', 'The oxygen of the hydroxy group attacks the carbon of the carboxyl group of the same molecule: intramolecular esterification.') }],
+                [{ p: t('Žiede būtų penkios anglys ir esterio deguonis: 6 nariai, o tai stabilu.', 'The ring would contain five carbons and the ester oxygen: 6 members, which is stable.') }],
+                [{ p: t('Atsiskiria $H2O$, susidaro laktonas.', '$H2O$ is lost and a lactone forms.') }, { mol: { smi: 'O=C1CCCCO1', caption: t('δ-valerolaktonas', 'δ-valerolactone') } }]
+              ]
+            },
+            claims: [
+              { react: ['lactone', ['OCCCCC(=O)O'], null, 'O=C1CCCCO1'] },
+              { name: ['OCCCCC(=O)O', t('5-hidroksipentano rūgštis', '5-hydroxypentanoic acid')] },
+              { formula: ['O=C1CCCCO1', 'C5H8O2'] }
+            ]
+          },
           { h: t('Oksorūgštys ir biologiškai svarbios rūgštys', 'Oxo acids and biologically important acids') },
           {
             mol: [
@@ -880,13 +988,12 @@
             src: 'T p94'
           },
           {
-            mech: [
-              {
-                scheme: { items: [{ smi: 'CC(=O)CC(=O)O', opts: { lonePairs: [6] } }] },
-                arrows: [{ from: { m: 0, lp: 6 }, to: { m: 0, mid: [4, 6] } }, { from: { m: 0, b: [3, 4] }, to: { m: 0, mid: [1, 3] } }, { from: { m: 0, b: [1, 2] }, to: { m: 0, a: 2 } }],
-                note: t('Vienu metu: karboksilo OH vandenilis pereina prie ketono deguonies, $C-C$ ryšys nutrūksta, išsiskiria $CO2$ ir lieka enolis.', 'In one concerted movement: the carboxyl OH hydrogen shifts to the ketone oxygen, the $C-C$ bond breaks, $CO2$ is released and an enol remains.')
-              }
-            ],
+            p: t('Vienu metu per šešių narių žiedą: karboksilo O–H vandenilis pereina ketono deguoniui, nutrūksta $C-C$ ryšys, išsiskiria $CO2$ ir lieka enolis.',
+              'All at once through a six-membered ring: the carboxyl O–H hydrogen moves to the ketone oxygen, the $C-C$ bond breaks, $CO2$ is released and an enol remains.'),
+            src: 'Klein'
+          },
+          {
+            scheme: { items: [{ smi: 'CC(=O)CC(=O)O' }, { arrow: '→', above: f('t°') }, { smi: 'C=C(C)O' }, { plus: true }, { smi: 'O=C=O' }, { arrow: '⇌' }, { smi: 'CC(C)=O' }] },
             caption: t('Acetoacto rūgštis → enolis + $CO2$; enolis tautomerizuojasi į propanoną.', 'Acetoacetic acid → enol + $CO2$; the enol tautomerises to propanone.'),
             src: 'Klein'
           },
@@ -974,6 +1081,10 @@
             [t('rūgštis → esteris', 'acid → ester'), f('R′OH, H+'), t('$RCOOR′$ + $H2O$ (grįžtamoji)', '$RCOOR′$ + $H2O$ (reversible)')],
             [t('chloridas → esteris / amidas', 'chloride → ester / amide'), f('R′OH ;  2 NH3, 2 RNH2'), t('esteris ar amidas + HCl (suriša antras ekv.)', 'ester or amide + HCl (taken up by the second equiv.)')],
             [t('anhidridas → esteris / amidas / rūgštis', 'anhydride → ester / amide / acid'), f('R′OH ;  NH3 ;  H2O'), t('darinys + rūgštis', 'derivative + acid')],
+            [t('chloridas + karboksilatas', 'chloride + carboxylate'), t('nėra', 'none'), t('anhidridas + chloridas', 'anhydride + chloride')],
+            [t('anhidridas / esteris → esteris / amidas', 'anhydride / ester → ester / amide'), f('R′OH ;  NH3'), t('esteris + rūgštis ;  amidas + alkoholis', 'ester + acid ;  amide + alcohol')],
+            [t('rūgštis → amidas', 'acid → amide'), t('$NH3$, tada $t°$', '$NH3$, then $t°$'), t('amonio druska → amidas + $H2O$', 'ammonium salt → amide + $H2O$')],
+            [t('druska → rūgštis', 'salt → acid'), f('HCl'), t('laisva rūgštis + druska', 'free acid + salt')],
             [t('esteris → rūgštis', 'ester → acid'), f('H2O, H+  ;  NaOH, H2O'), t('rūgštis + alkoholis ;  druska + alkoholis', 'acid + alcohol ;  salt + alcohol')],
             [t('amidas → rūgštis', 'amide → acid'), f('H2O, H+, t°'), t('rūgštis + $NH4+$', 'acid + $NH4+$')],
             [t('nitrilas ⇄ amidas', 'nitrile ⇄ amide'), f('H2O, H+  ;  P2O5, t°'), t('amidas ; nitrilas', 'amide ; nitrile')],
@@ -1086,7 +1197,7 @@
             q: [{ p: t('Kuri iš šių rūgščių yra stipriausia?', 'Which of these acids is the strongest?') }],
             steps: [
               cho(t('Pasirinkite stipriausią rūgštį.', 'Choose the strongest acid.'), [mo('OC(=O)C(F)(F)F'), mo('CC(=O)O'), mo('CCC(=O)O'), mo('CC(C)(C)C(=O)O')], 0,
-                t('Raskite rūgštį, kuri turi daugiausia elektronų traukiančių atomų prie α-anglies.', 'Find the acid with the most electron-withdrawing atoms on the α-carbon.'),
+                t('Kurie pakaitai prie α-anglies traukia elektronus ir kuris – stipriausiai?', 'Which substituents on the α-carbon withdraw electrons, and which does so most strongly?'),
                 t('Trifluoretano rūgštis (pKa apie 0,5): trys F stipriai traukia elektronus ir stabilizuoja anijoną. Alkilai (CH₃, C₂H₅, t-Bu) elektronus stumia.', 'Trifluoroethanoic acid (pKa about 0.5): three F atoms withdraw electrons strongly and stabilise the anion. Alkyl groups (CH₃, C₂H₅, t-Bu) donate electrons.')),
               cho(t('Kodėl fluoras čia veikia stipriai?', 'Why is fluorine so effective here?'), [
                 tx('Fluoras yra elektroneigiamiausias elementas, jo −I efektas stipriausias.', 'Fluorine is the most electronegative element and has the strongest −I effect.'),
@@ -1100,7 +1211,7 @@
           },
           {
             id: 'u14.acidity.6',
-            q: [{ p: t('Etano rūgštis yra apie 11 eilių didesnio stiprumo rūgštis nei etanolis.', 'Ethanoic acid is about eleven orders of magnitude more acidic than ethanol.') }, { mol: [{ smi: 'CC(=O)O', name: t('etano rūgštis', 'ethanoic acid') }, { smi: 'CCO', name: t('etanolis', 'ethanol') }] }],
+            q: [{ p: t('Etano rūgšties rūgštingumo konstanta $Ka$ maždaug 11 eilių didesnė už etanolio.', 'Ethanoic acid is about eleven orders of magnitude more acidic than ethanol.') }, { mol: [{ smi: 'CC(=O)O', name: t('etano rūgštis', 'ethanoic acid') }, { smi: 'CCO', name: t('etanolis', 'ethanol') }] }],
             steps: [
               cho(t('Kuri priežastis svarbiausia?', 'Which reason matters most?'), [
                 tx('Karboksilato krūvis pasiskirsto tarp dviejų deguonų (rezonansas), o etoksido krūvis lieka vienam deguoniui.', 'The carboxylate charge is shared by two oxygens (resonance), while the ethoxide charge stays on one oxygen.'),
@@ -1159,7 +1270,7 @@
               ord(t('Išdėstykite nuo reaktingiausio iki mažiausiai reaktingo nukleofilų atžvilgiu.', 'Put them in order from the most to the least reactive towards nucleophiles.'),
                 [tx('etanoilchloridas', 'ethanoyl chloride'), tx('anhidridas', 'anhydride'), tx('esteris', 'ester'), tx('amidas', 'amide'), tx('karboksilatas', 'carboxylate')],
                 t('Kuo geresnė nueinančioji grupė ir kuo stipresnis −I, tuo reaktingesnis darinys.', 'The better the leaving group and the stronger the −I effect, the more reactive the derivative.'),
-                t('Chloridas > anhidridas > esteris > amidas > karboksilatas (knygos eilė).', 'Chloride > anhydride > ester > amide > carboxylate (the book\'s order).')),
+                t('Chloridas > anhidridas > esteris > amidas > karboksilatas (kurso eilė).', 'Chloride > anhydride > ester > amide > carboxylate (the usual order).')),
               cho(t('Kodėl amidas mažiau reaktingas nei esteris?', 'Why is the amide less reactive than the ester?'), [
                 tx('Azotas stipriau duoda elektronų porą karbonilui (+M), todėl C atomo $δ+$ mažesnis, o $NH2-$ yra labai bloga nueinančioji grupė.', 'Nitrogen donates its lone pair to the carbonyl more strongly (+M), so the carbon\'s $δ+$ is smaller, and $NH2-$ is a very poor leaving group.'),
                 tx('Azotas elektroneigiamesnis už deguonį ir stipriau traukia elektronus (−I).', 'Nitrogen is more electronegative than oxygen and withdraws electrons more strongly (−I).'),
@@ -1185,7 +1296,7 @@
           },
           {
             id: 'u14.reactivity.3',
-            q: [{ p: t('Kiekviena rodyklė rodo vieną nukleofilinio acilpakeitimo žingsnį be papildomų reagentų parinkimo.', 'Each arrow shows a single nucleophilic acyl substitution step; the reagent is not stated.') }],
+            q: [{ p: t('Kiekviena rodyklė rodo vieną nukleofilinio acilpakeitimo virsmą, reagentas nenurodytas.', 'Each arrow shows a single nucleophilic acyl substitution conversion; the reagent is not stated.') }],
             steps: [
               mul(t('Pažymėkite virsmus, kuriuos tiesiogiai galima atlikti nukleofilu (reaktingesnis → mažiau reaktingas).', 'Pick the conversions that can be done directly with a nucleophile (more reactive → less reactive).'), [
                 sc({ smi: 'CC(=O)Cl' }, { arrow: '→' }, { smi: 'CC(=O)OC' }),
@@ -1195,7 +1306,7 @@
                 sc({ smi: 'CC(=O)OC' }, { arrow: '→' }, { smi: 'CC(=O)N' })
               ], [0, 3, 4],
               t('Pagal rodyklės kryptį palyginkite darinio reaktingumą prieš ir po.', 'Compare the reactivity of the derivative before and after along the arrow.'),
-              t('Galimi: chloridas → esteris (alkoholis), anhidridas → amidas ($NH3$), esteris → amidas ($NH3$). Neįmanomi žingsniai „į viršų“: esteris → chloridas, amidas → anhidridas.', 'Possible: chloride → ester (alcohol), anhydride → amide ($NH3$), ester → amide ($NH3$). Steps "uphill" are impossible: ester → chloride, amide → anhydride.'))
+              t('Galimi: chloridas → esteris (alkoholis), anhidridas → amidas ($NH3$), esteris → amidas ($NH3$). Neįmanomi virsmai „į viršų“: esteris → chloridas, amidas → anhidridas.', 'Possible: chloride → ester (alcohol), anhydride → amide ($NH3$), ester → amide ($NH3$). Conversions "uphill" are impossible: ester → chloride, amide → anhydride.'))
             ],
             why: t('Nukleofilas pakeičia nueinančiąją grupę tik tada, kai ji yra geresnė už nukleofilą. Atgal „į viršų“ reikia pereiti per rūgštį ir ją aktyvinti $SOCl2$.', 'A nucleophile replaces the leaving group only when that group is better than the nucleophile. Going back "uphill" requires the acid and activation with $SOCl2$.'),
             src: 'T p89'
@@ -1234,14 +1345,14 @@
           },
           {
             id: 'u14.reactivity.6',
-            q: [{ p: t('Molekulėje yra du acilo dariniai. Ją veikia vienas ekvivalentas amoniako.', 'The molecule contains two acyl derivatives. It is treated with one equivalent of ammonia.') }, { mol: { smi: 'COC(=O)CCC(=O)Cl', opts: { numbers: 'all' } } }],
+            q: [{ p: t('Molekulėje yra du acilo dariniai. Ją veikia amoniakas (2 ekv.).', 'The molecule contains two acyl derivatives. It is treated with ammonia (2 equiv.).') }, { mol: { smi: 'COC(=O)CCC(=O)Cl', opts: { numbers: 'all' } } }],
             steps: [
               tap(t('Bakstelėkite karbonilo anglį, kurią amoniakas pirmiausia atakuos.', 'Tap the carbonyl carbon that ammonia attacks first.'), { smi: 'COC(=O)CCC(=O)Cl', opts: { numbers: 'all' } }, [6],
                 t('Palyginkite abu karbonilus: prie kurio prisijungusi geresnė nueinančioji grupė?', 'Compare the two carbonyls: which one carries the better leaving group?'),
                 t('Atakuojama chlorido karbonilo anglis (Nr. 7): $Cl-$ yra daug geresnė nueinančioji grupė už $CH3O-$.', 'The carbonyl carbon of the chloride (no. 7) is attacked: $Cl-$ is a far better leaving group than $CH3O-$.')),
               prod(t('Koks produktas?', 'What is the product?'), 'COC(=O)CCC(N)=O', ['NC(=O)CCC(N)=O', 'NC(=O)CCC(=O)Cl', 'COC(=O)CCC(=O)O'],
                 t('Reaguoja tik reaktingesnis darinys.', 'Only the more reactive derivative reacts.'),
-                t('Chloridas virsta amidu, esteris lieka. Antras ekvivalentas amoniako suriša HCl, todėl ekvivalentų reikia 2, bet esteris nepaliečiamas.', 'The chloride becomes an amide and the ester stays. A second equivalent of ammonia would take up HCl, but the ester is left alone.'))
+                t('Chloridas virsta amidu, esteris lieka. (Amoniako imama 2 ekv.: antras suriša HCl.)', 'The chloride becomes an amide and the ester stays. (Two equivalents of ammonia are used: the second takes up the HCl.)'))
             ],
             why: t('Kai molekulėje yra du acilo dariniai, pirmiau reaguoja reaktingesnis; tai leidžia selektyviai modifikuoti vieną grupę.', 'When a molecule has two acyl derivatives the more reactive one reacts first; this lets one group be modified selectively.'),
             src: 'T p88',
@@ -1711,7 +1822,7 @@
             q: [{ p: t('Pabaikite reakciją, pavadinkite produktą ir nurodykite jo klasę.', 'Complete the reaction, name the product and give its class.') }, { scheme: { items: [{ smi: 'CCC(=O)O', name: t('propano rūgštis', 'propanoic acid') }, { arrow: '⇌', above: f('CH3OH, H+') }] } }],
             steps: [
               prod(t('Koks produktas?', 'What is the product?'), 'CCC(=O)OC', ['CC(=O)OCC', 'CCC(=O)OC(=O)CC', 'COCCC'],
-                t('Rūgštis netenka OH, alkoholis – H.', 'The acid loses OH and the alcohol loses H.'),
+                t('Kas išeina kaip vanduo?', 'What leaves as water?'),
                 t('Esterinimas: OH atsiskiria nuo rūgšties, o H – nuo alkoholio; susidaro metilpropanoatas ir vanduo.', 'Esterification: OH leaves the acid and H leaves the alcohol; methyl propanoate and water form.')),
               cho(t('Kokiai klasei priklauso produktas?', 'Which class does the product belong to?'), [tx('esteris', 'ester'), tx('anhidridas', 'anhydride'), tx('eteris', 'ether'), tx('amidas', 'amide')], 0,
                 t('Pažiūrėkite į grupę prie karbonilo anglies.', 'Look at the group on the carbonyl carbon.'), t('$R-CO-OR′$ yra esteris; eteris neturėtų karbonilo.', '$R-CO-OR′$ is an ester; an ether would have no carbonyl.')),
@@ -1741,8 +1852,8 @@
             q: [{ p: t('Pabaikite reakciją ir pavadinkite organinį produktą.', 'Complete the reaction and name the organic product.') }, { scheme: { items: [{ smi: 'CCC(C)C(Cl)=O', name: t('2-metilbutanoilchloridas', '2-methylbutanoyl chloride') }, { plus: true }, { smi: 'N' }, { arrow: '→', above: t('2 ekv.', '2 equiv.') }] } }],
             steps: [
               prod(t('Koks organinis produktas?', 'What is the organic product?'), 'CCC(C)C(N)=O', ['CCC(C)C(=O)[O-].[NH4+]', 'CCC(C)C(=O)O', 'CCC(C)C#N'],
-                t('Kas pakeičia chlorą, ir kam reikalingas antras ekvivalentas?', 'What replaces the chlorine, and what is the second equivalent for?'),
-                t('Amoniakas pakeičia $Cl-$, susidaro amidas; antras ekvivalentas suriša HCl ir tampa $NH4Cl$.', 'Ammonia replaces $Cl-$ and an amide forms; the second equivalent takes up HCl and becomes $NH4Cl$.')),
+                t('Kas pakeičia chlorą?', 'What replaces the chlorine?'),
+                t('Amoniakas pakeičia $Cl-$ ir susidaro amidas.', 'Ammonia replaces $Cl-$ and an amide forms.')),
               cho(t('Kodėl reikia dviejų ekvivalentų amoniako?', 'Why are two equivalents of ammonia needed?'), [
                 tx('Antras ekvivalentas suriša išsiskyrusį HCl.', 'The second equivalent binds the HCl that is released.'),
                 tx('Antras ekvivalentas prisijungia prie karbonilo ir sudaro dvigubą amidą.', 'The second equivalent adds to the carbonyl and gives a double amide.'),
@@ -1762,8 +1873,8 @@
                 t('Koncentruota $H2SO4$ ir kaitinimas dehidratuoja alkoholį; kurį alkeną pirmenybę teikia Zaicevo taisyklė?', 'Concentrated $H2SO4$ and heat dehydrate the alcohol; which alkene does Zaitsev\'s rule favour?'),
                 t('Dehidratacija duoda labiau pakeistą alkeną: 2-butenas (Zaicevo taisyklė), o ne 1-butenas.', 'Dehydration gives the more substituted alkene: but-2-ene (Zaitsev\'s rule), not but-1-ene.')),
               prod(t('C yra:', 'C is:'), 'CC(=O)O', ['CCC(=O)O', 'CC(=O)CC', 'CC=O'],
-                t('Stiprus oksidatorius skelia dvigubąjį ryšį.', 'A strong oxidant cleaves the double bond.'),
-                t('$CrO3$ skelia $C=C$ ir kiekvieną dvigubojo ryšio anglį oksiduoja iki karboksirūgšties: iš simetriško 2-butano – dvi etano rūgšties molekulės.', '$CrO3$ cleaves $C=C$ and oxidises each double-bond carbon to a carboxylic acid: the symmetric but-2-ene gives two molecules of ethanoic acid.')),
+                t('Pažiūrėkite, kas vėliau vyksta su C: $P2O5$ ir $NH3$ ima tik rūgšties darinius.', 'Look at what later happens to C: $P2O5$ and $NH3$ act on acid derivatives only.'),
+                t('Iš tolesnių stadijų matyti, kad C yra karboksirūgštis ($P2O5$ atskiria vandenį nuo dviejų rūgšties molekulių, o $D + NH3$ duoda $E + C$). Taigi šioje schemoje stiprus oksidatorius suskelia $C=C$ ryšį, ir kiekviena dvigubojo ryšio anglis virsta karboksigrupe: iš simetriško 2-butano gaunamos dvi etano rūgšties molekulės. (Alkenus įprastai skaldo $KMnO4$ ar $O3$; čia reikia priimti schemos sąlygą.)', 'The later stages show that C is a carboxylic acid ($P2O5$ removes water from two acid molecules, and $D + NH3$ gives $E + C$). So in this scheme the strong oxidant cleaves the $C=C$ bond and each double-bond carbon becomes a carboxyl group: the symmetric but-2-ene gives two molecules of ethanoic acid. (Alkenes are normally cleaved by $KMnO4$ or $O3$; here the scheme\'s conditions have to be accepted.)')),
               prod(t('D (C, $P2O5$, t°) yra:', 'D (C, $P2O5$, t°) is:'), 'CC(=O)OC(C)=O', ['CC(=O)Cl', 'CC(=O)OCC', 'CC(=O)N'],
                 t('$P2O5$ atskiria vandenį nuo dviejų rūgšties molekulių.', '$P2O5$ removes water from two acid molecules.'),
                 t('Dvi etano rūgšties molekulės netenka vandens: susidaro etano rūgšties anhidridas.', 'Two molecules of ethanoic acid lose water: ethanoic anhydride forms.')),
@@ -1916,8 +2027,8 @@
             id: 'u14.reagents.7',
             q: [{ p: t('Norima gauti keto rūgštį, nepaveikiant karboksigrupės.', 'The aim is the keto acid, without touching the carboxyl group.') }, { scheme: { items: [{ smi: 'OC1CCC(CC1)CCC(=O)O' }, { arrow: '→', above: f('?') }, { smi: 'O=C1CCC(CC1)CCC(=O)O' }] } }],
             steps: [
-              cho(t('Kuris reagentas tinka?', 'Which reagent works?'), [tx('$CrO3$, $H3O+$', '$CrO3$, $H3O+$'), tx('1. $LiAlH4$ 2. $H3O+$', '1. $LiAlH4$ 2. $H3O+$'), tx('$CH3OH$, $H+$', '$CH3OH$, $H+$'), tx('$NaOH$', '$NaOH$')], 0,
-                t('Reikia oksidatoriaus.', 'An oxidant is needed.'), t('Tik $CrO3$ yra oksidatorius: jis OH paverčia $C=O$. $LiAlH4$ yra reduktorius, $CH3OH/H+$ esterina, $NaOH$ duoda druską.', 'Only $CrO3$ is an oxidant: it turns OH into $C=O$. $LiAlH4$ is a reductant, $CH3OH/H+$ esterifies and $NaOH$ gives the salt.'))
+              cho(t('Kuris reagentas tinka?', 'Which reagent works?'), [tx('$CrO3$, $H3O+$', '$CrO3$, $H3O+$'), tx('1. $LiAlH4$ 2. $H3O+$', '1. $LiAlH4$ 2. $H3O+$'), tx('$NaBH4$', '$NaBH4$'), tx('$H2$, $Pd$', '$H2$, $Pd$'), tx('$CH3OH$, $H+$', '$CH3OH$, $H+$')], 0,
+                t('Kokia redokso kryptimi keičiasi alkoholio anglis?', 'In which redox direction does the alcohol carbon change?'), t('Tik $CrO3$ yra oksidatorius: jis OH paverčia $C=O$. $LiAlH4$, $NaBH4$ ir $H2/Pd$ yra reduktoriai, $CH3OH/H+$ esterina.', 'Only $CrO3$ is an oxidant: it turns OH into $C=O$. $LiAlH4$, $NaBH4$ and $H2/Pd$ are reductants, and $CH3OH/H+$ esterifies.'))
             ],
             why: t('Reagentą parenka transformacijos tipas: oksidacija – $CrO3$, redukcija – hidridas, esterinimas – alkoholis su H+, neutralizacija – šarmas.', 'The type of change picks the reagent: oxidation with $CrO3$, reduction with a hydride, esterification with an alcohol and H+, neutralisation with an alkali.'),
             src: 'S6.21'
@@ -1933,6 +2044,27 @@
             why: t('Esterinimo pusiausvyrą į produktą stumia alkoholio perteklius; abi karboksigrupės reaguoja nepriklausomai.', 'An excess of alcohol drives esterification to the products; both carboxyl groups react independently.'),
             src: 'T p89',
             claims: [{ react: ['acid.ester', ['OC(=O)CCCCC(=O)O', 'CO'], null, 'COC(=O)CCCCC(=O)OC'] }, { name: ['OC(=O)CCCCC(=O)O', t('heksano dirūgštis', 'hexanedioic acid')] }]
+          },
+          {
+            id: 'u14.reagents.9',
+            q: [{ p: t('Litocholio rūgštis yra tulžies rūgštis: ji turi antrinį alkoholį žiede (3-oje padėtyje) ir karboksirūgštį šoninėje grandinėje. Ją veikia keturi reagentai, kiekvienas atskirai.', 'Lithocholic acid is a bile acid with a secondary alcohol in the ring (position 3) and a carboxylic acid in the side chain. It is treated with four reagents, each separately.') }, { mol: { smi: ster('C(=O)O', 'C(O)') } }],
+            steps: [
+              prod(t('Su $LiAlH4$, po to $H3O+$, gaunama:', 'With $LiAlH4$ and then $H3O+$ the product is:'), ster('CO', 'C(O)'), [ster('C=O', 'C(O)'), ster('CO', 'C(=O)'), ster('C(=O)OC', 'C(O)')],
+                t('Kuri grupė redukuojama, o kuri jau yra alkoholis?', 'Which group is reduced, and which is already an alcohol?'),
+                t('Karboksigrupė redukuojama iki pirminio alkoholio ($-CH2OH$), o antrinis $OH$ lieka: gaunamas diolis.', 'The carboxyl group is reduced to a primary alcohol ($-CH2OH$) and the secondary $OH$ stays: a diol results.')),
+              prod(t('Su $CH3OH$, $H+$ gaunama:', 'With $CH3OH$, $H+$ the product is:'), ster('C(=O)OC', 'C(O)'), [ster('C(=O)O', 'C(OC)'), ster('C(=O)OC', 'C(=O)'), ster('CO', 'C(O)')],
+                t('Kuri grupė yra acilo donoras?', 'Which group is the acyl donor?'),
+                t('Esterinama karboksigrupė: susidaro metilo esteris, o 3-OH lieka.', 'The carboxyl group is esterified: the methyl ester forms and the 3-OH stays.')),
+              prod(t('Su $NaOH$ gaunama:', 'With $NaOH$ the product is:'), ster('C(=O)[O-]', 'C(O)') + '.[Na+]', [ster('C(=O)[O-]', 'C([O-])') + '.[Na+].[Na+]', ster('C(=O)O', 'C([O-])') + '.[Na+]', ster('C(=O)OC', 'C(O)')],
+                t('Kuris O–H protonas rūgštesnis?', 'Which O–H proton is more acidic?'),
+                t('Hidroksidas deprotonuoja tik karboksigrupę: susidaro natrio karboksilatas, o alkoholio OH lieka.', 'Hydroxide deprotonates only the carboxyl group: the sodium carboxylate forms and the alcohol OH stays.')),
+              prod(t('Su $CrO3$, $H3O+$ gaunama:', 'With $CrO3$, $H3O+$ the product is:'), ster('C(=O)O', 'C(=O)'), [ster('C(=O)O', 'C(O)'), ster('CO', 'C(=O)'), ster('C=O', 'C(=O)')],
+                t('Kuri grupė gali būti oksiduota, o kuri jau yra aukščiausios oksidacijos būsenos?', 'Which group can be oxidised, and which is already at its highest oxidation level?'),
+                t('Antrinis alkoholis oksiduojamas iki ketono, o karboksigrupė lieka.', 'The secondary alcohol is oxidised to the ketone and the carboxyl group stays.'))
+            ],
+            why: t('Kiekvienas reagentas pasirenka vieną iš dviejų grupių: hidridas redukuoja karboksigrupę, alkoholis ir $H+$ ją esterina, šarmas ją neutralizuoja, o $CrO3$ oksiduoja alkoholį.', 'Each reagent picks one of the two groups: the hydride reduces the carboxyl group, an alcohol with $H+$ esterifies it, alkali neutralises it and $CrO3$ oxidises the alcohol.'),
+            src: 'S6.21; T p90, p93',
+            claims: [{ formula: [ster('C(=O)O', 'C(O)'), 'C24H40O3'] }, { formula: [ster('CO', 'C(O)'), 'C24H42O2'] }, { formula: [ster('C(=O)OC', 'C(O)'), 'C25H42O3'] }, { formula: [ster('C(=O)O', 'C(=O)'), 'C24H38O3'] }]
           }
         ]
       },
@@ -1960,7 +2092,7 @@
             steps: [
               prod(t('Koks yra organinis produktas?', 'What is the organic product?'), 'CCN(CC)C(=O)c1cccc(C)c1', ['Cc1cccc(c1)C(=O)[O-].CC[NH2+]CC', 'CCNC(=O)c1cccc(C)c1', 'CCOC(=O)c1cccc(C)c1'],
                 t('Azotas turi du etilus ir vieną H. Kuris iš jų pakeičiamas?', 'Nitrogen has two ethyl groups and one H. Which is replaced?'),
-                t('Aminas yra nukleofilas: N–H pakeičiamas acilu, susidaro tretinis amidas DEET. Antras ekvivalentas amino suriša HCl.', 'The amine is the nucleophile: N–H is replaced by the acyl group and the tertiary amide DEET forms. A second equivalent of amine takes up HCl.')),
+                t('Aminas yra nukleofilas: N–H pakeičiamas acilu, susidaro tretinis amidas DEET.', 'The amine is the nucleophile: N–H is replaced by the acyl group and the tertiary amide DEET forms.')),
               cho(t('Kodėl naudojami du ekvivalentai?', 'Why are two equivalents used?'), [
                 tx('Antras ekvivalentas suriša išsiskiriantį HCl.', 'The second equivalent binds the released HCl.'),
                 tx('Antras ekvivalentas veikia kaip rūgštinis katalizatorius.', 'The second equivalent acts as an acid catalyst.'),
