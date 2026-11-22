@@ -140,14 +140,14 @@
     { p: 'CCCCCCC', iso: ['CCCCCC(C)', 'CCCCC(CC)', 'CCCC(CCC)'] }
   ];
   const NUC = {
-    OH: { frag: 'O', salt: 'NaOH', cls: t('alkoholis', 'alcohol'), basic: true },
-    SH: { frag: 'S', salt: 'NaSH', cls: t('tiolis', 'thiol') },
-    CN: { frag: 'C#N', salt: 'NaCN', cls: t('nitrilas', 'nitrile') },
-    OC: { frag: 'OC', salt: 'NaOCH3', cls: t('eteris', 'ether'), basic: true },
-    OCC: { frag: 'OCC', salt: 'NaOC2H5', cls: t('eteris', 'ether'), basic: true },
-    SC: { frag: 'SC', salt: 'NaSCH3', cls: t('sulfidas', 'sulfide') },
-    'C#CC': { frag: 'C#CC', salt: 'NaC≡CCH3', cls: t('alkinas', 'alkyne'), basic: true },
-    I: { frag: 'I', salt: 'NaI', cls: t('jodidas', 'iodide') }
+    OH: { nm: t('hidroksidas', 'hydroxide'), frag: 'O', salt: 'NaOH', cls: t('alkoholis', 'alcohol'), basic: true },
+    SH: { nm: t('hidrosulfidas', 'hydrosulfide'), frag: 'S', salt: 'NaSH', cls: t('tiolis', 'thiol') },
+    CN: { nm: t('cianidas', 'cyanide'), frag: 'C#N', salt: 'NaCN', cls: t('nitrilas', 'nitrile') },
+    OC: { nm: t('metoksidas', 'methoxide'), frag: 'OC', salt: 'NaOCH3', cls: t('eteris', 'ether'), basic: true },
+    OCC: { nm: t('etoksidas', 'ethoxide'), frag: 'OCC', salt: 'NaOC2H5', cls: t('eteris', 'ether'), basic: true },
+    SC: { nm: t('metiltiolatas', 'methanethiolate'), frag: 'SC', salt: 'NaSCH3', cls: t('sulfidas', 'sulfide') },
+    'C#CC': { nm: t('propinidas', 'propynide'), frag: 'C#CC', salt: 'NaC≡CCH3', cls: t('alkinas', 'alkyne'), basic: true },
+    I: { nm: t('jodidas', 'iodide'), frag: 'I', salt: 'NaI', cls: t('jodidas', 'iodide') }
   };
 
   ORG.unit({
@@ -158,9 +158,9 @@
         id: 'halides',
         title: t('Halogenalkanai ir jų reakcijų tipai', 'Alkyl halides and their reaction types'),
         blocks: [
-          { h: t('Poliarinis C–Hal ryšys', 'The polar C–Hal bond') },
+          { h: t('Polinis C–Hal ryšys', 'The polar C–Hal bond') },
           {
-            p: t('Halogenas elektroneigiamesnis už anglį, todėl C–Hal ryšys polinis: anglis turi dalinį teigiamą krūvį (δ+), halogenas – neigiamą (δ−). Ryšys lengvai poliarizuojasi ir gali skilti heterolitiškai, todėl nukleofilas gali pulti anglį ir išstumti halogenido joną, nueinančiąją grupę.',
+            p: t('Halogenas elektroneigiamesnis už anglį, todėl C–Hal ryšys polinis: anglis tampa δ+, o halogenas δ−. Ryšys lengvai poliarizuojasi ir gali skilti heterolitiškai, todėl nukleofilas gali pulti anglį ir išstumti halogenido joną, nueinančiąją grupę.',
               'Halogen is more electronegative than carbon, so the C–Hal bond is polar: carbon is δ+ and halogen δ−. The bond is easily polarised and can break heterolytically, so a nucleophile can attack the carbon and push out the halide ion, the leaving group.'),
             src: 'L10 p3'
           },
@@ -188,7 +188,7 @@
             src: 'L10 p2, p21'
           },
           {
-            pitfall: t('Klasę rodo tik halogeną turinčio atomo kaimynai, o ne molekulės šakotumas. Šis halogenalkanas stipriai šakotas, bet halogenas prisijungęs prie $CH2$ grupės, todėl jis pirminis.',
+            pitfall: t('Klasę rodo tik halogeną turinčio atomo kaimynai, o ne molekulės šakotumas. Šis halogenalkanas šakotas, bet halogenas prisijungęs prie $CH2$ grupės, todėl jis pirminis.',
               'Only the neighbours of the carbon that bears the halogen matter, not how branched the molecule is. This halide is strongly branched, but the halogen sits on a $CH2$ group, so it is primary.'),
             src: 'L10 p2'
           },
@@ -242,7 +242,7 @@
           },
           {
             scheme: { items: [{ smi: 'CC[C@H](C)Br' }, { plus: true }, { smi: '[SH-]' }, { arrow: '→' }, { smi: 'CC[C@@H](C)S' }, { plus: true }, { smi: '[Br-]' }] },
-            caption: t('Stereocentras apsiverčia: (S)-2-brombutanas virsta (R)-2-butantioliu.', 'The stereocentre is inverted: (S)-2-bromobutane becomes (R)-butane-2-thiol.'),
+            caption: t('Stereocentras apsiverčia: (S)-2-brombutanas virsta (R)-2-butantioliu. Pastaba: produktas pasuktas; HS pateko priešingoje pusėje nei Br.', 'The stereocentre is inverted: (S)-2-bromobutane becomes (R)-butane-2-thiol. Note: the product is redrawn; HS entered on the side opposite Br.'),
             src: 'L10 p6'
           },
           {
@@ -312,8 +312,8 @@
           },
           { h: t('Kodėl tretiniai? Hiperkonjugacija', 'Why tertiary? Hyperconjugation') },
           {
-            p: t('Katijono anglis turi tuščią p orbitalę. Gretimų alkilgrupių C–H ryšių elektronai iš dalies persiklauso su ja – tai hiperkonjugacija. Kuo daugiau alkilgrupių, tuo stabilesnis katijonas, todėl SN1 vyksta per tretinius katijonus.',
-              'The cationic carbon has an empty p orbital. Electrons of C–H bonds in neighbouring alkyl groups overlap with it partly: hyperconjugation. The more alkyl groups, the more stable the cation, so SN1 goes through tertiary cations.'),
+            p: t('Katijono anglis turi tuščią p orbitalę. Gretimų alkilgrupių C–H ryšių elektronai iš dalies persiklauso su ja – tai hiperkonjugacija. Kiekviena gretima alkilgrupė gali nukreipti vieną C–H ryšį į tuščią p orbitalę: pirminiame katijone tokių ryšių vienas, antriniame – du, tretiniame – trys. Todėl SN1 vyksta per tretinius katijonus.',
+              'The cationic carbon has an empty p orbital. Electrons of C–H bonds in neighbouring alkyl groups overlap with it partly: hyperconjugation. Each neighbouring alkyl group can align one C–H bond with the empty p orbital: one such bond in a primary cation, two in a secondary, three in a tertiary. So SN1 goes through tertiary cations.'),
             src: 'L10 p7, p8'
           },
           {
@@ -321,7 +321,7 @@
               { smi: 'C[C+](C)C', caption: t('tretinis', 'tertiary') },
               { smi: 'C[CH+]C', caption: t('antrinis', 'secondary') },
               { smi: 'C[CH2+]', caption: t('pirminis', 'primary') },
-              { smi: '[CH3+]', caption: t('metilo', 'methyl') }
+              { smi: '[CH3+]', caption: t('metilkatijonas', 'methyl') }
             ],
             caption: t('Stabilumas mažėja iš kairės į dešinę.', 'Stability decreases from left to right.'),
             src: 'L10 p8'
@@ -333,7 +333,7 @@
             src: 'L10 p6'
           },
           {
-            scheme: { items: [{ smi: 'CCC[C@](C)(Br)CC' }, { plus: true }, { smi: 'O' }, { arrow: '→', above: f('H2O') }, { smi: 'CCC[C@](C)(O)CC' }, { plus: true }, { smi: 'CCC[C@@](C)(O)CC' }], maxWidth: 900 },
+            scheme: { items: [{ smi: 'CCC[C@](C)(Br)CC' }, { plus: true }, { smi: 'O' }, { arrow: '→' }, { smi: 'CCC[C@](C)(O)CC' }, { plus: true }, { smi: 'CCC[C@@](C)(O)CC' }] },
             caption: t('3-brom-3-metilheksanas su vandeniu: du enantiomerai, (R) ir (S), maždaug po lygiai.', '3-bromo-3-methylhexane with water: two enantiomers, (R) and (S), in roughly equal amounts.'),
             src: 'L10 p6'
           },
@@ -351,7 +351,7 @@
               steps: [
                 [{ p: t('Halogenas prisijungęs prie tretinio atomo, nukleofilas silpnas (etanolis), tirpiklis polinis protoninis: SN1.', 'The halogen sits on a tertiary carbon, the nucleophile is weak (ethanol) and the solvent is polar protic: SN1.') }],
                 [{ p: t('I st.: bromidas atsiskiria, lieka tretinis karbokatijonas.', 'Stage I: bromide leaves and a tertiary carbocation remains.') }, { mol: { smi: 'CC[C+](C)C' } }],
-                [{ p: t('II st.: etanolio deguonis prisijungia prie katijono, o oksonio jonas atiduoda protoną tirpikliui. Gaunamas eteris.', 'Stage II: the oxygen of ethanol bonds to the cation and the oxonium ion gives a proton to the solvent. An ether results.') }, { mol: { smi: 'CCC(C)(C)OCC', name: t('2-etoksi-2-metilbutanas', '2-ethoxy-2-methylbutane') } }],
+                [{ p: t('II st.: etanolio deguonis prisijungia prie katijono, o oksonio jonas atiduoda protoną tirpikliui. Gaunamas eteris; šalutiniai produktai – alkenai (E1).', 'Stage II: the oxygen of ethanol bonds to the cation and the oxonium ion gives a proton to the solvent. An ether results; alkenes (E1) are by-products.') }, { mol: { smi: 'CCC(C)(C)OCC', name: t('2-etoksi-2-metilbutanas', '2-ethoxy-2-methylbutane') } }],
               ]
             },
             claims: [
@@ -405,7 +405,7 @@
                 { mol: [{ smi: 'CBr', name: t('brommetanas', 'bromomethane') }, { smi: 'CC(C)(C)Br', name: t('2-brom-2-metilpropanas', '2-bromo-2-methylpropane') }] }
               ],
               steps: [
-                [{ p: t('Metoksidas – stiprus nukleofilas ir stipri bazė; abu substratai skirtingi.', 'Methoxide is a strong nucleophile and a strong base; the two substrates differ.') }],
+                [{ p: t('Sprendžia substrato klasė: metilo anglis atvira, tretinė užstota.', 'The class of the substrate decides: a methyl carbon is open, a tertiary one is shielded.') }],
                 [{ p: t('(a) Metilo katijonas nestabilus, o anglis atvira puolimui iš nugaros: SN2, susidaro eteris.', '(a) A methyl cation is unstable and the carbon is open to backside attack: SN2, an ether forms.') }, { mol: { smi: 'COC', name: t('metoksimetanas', 'methoxymethane') } }],
                 [{ p: t('(b) Tretinio atomo iš nugaros užstoja trys alkilgrupės, SN2 neįmanomas; stipri bazė atplėšia protoną: E2, susidaro alkenas.', '(b) Three alkyl groups shield the tertiary carbon from the back, so SN2 is impossible; the strong base removes a proton: E2, an alkene forms.') }, { mol: { smi: 'CC(C)=C', name: t('2-metilpropenas', '2-methylpropene') } }]
               ]
@@ -455,9 +455,24 @@
             src: 'L10 p12, p15'
           },
           {
-            p: t('Gyvuose organizmuose metilina S-adenozilmetioninas (SN2 prie sulfonio grupės, pavyzdžiui, noradrenalinas virsta adrenalinu), o dehalogenazės fermentai SN2 būdu šalina halogeną iš toksiškų halogenalkanų.',
-              'In living organisms S-adenosylmethionine methylates (SN2 at the sulfonium group, e.g. noradrenaline becomes adrenaline), and dehalogenase enzymes remove halogen from toxic alkyl halides by SN2.'),
+            p: t('Gyvuose organizmuose metilina S-adenozilmetioninas (SAM) ir N⁵-metiltetrahidrofolatas: nukleofilas, pavyzdžiui, noradrenalino aminogrupė, SN2 būdu puola sulfonio grupės metilo anglį, o nueinančioji grupė yra neutralus S-adenozilhomocisteinas. Taip noradrenalinas virsta adrenalinu. Panašiai dehalogenazės fermentai SN2 būdu šalina halogeną iš toksiškų halogenalkanų.',
+              'In living organisms S-adenosylmethionine (SAM) and N⁵-methyltetrahydrofolate methylate: a nucleophile such as the amino group of noradrenaline attacks the methyl carbon of the sulfonium group by SN2, and the leaving group is neutral S-adenosylhomocysteine. This is how noradrenaline becomes adrenaline. Likewise dehalogenase enzymes remove halogen from toxic alkyl halides by SN2.'),
             src: 'L10 p15, p16, p17'
+          },
+          {
+            scheme: { items: [{ smi: 'NCC(O)c1ccc(O)c(O)c1' }, { plus: true }, { smi: 'C[S+](C)C' }, { arrow: '→' }, { smi: 'CNCC(O)c1ccc(O)c(O)c1' }, { plus: true }, { smi: 'CSC' }, { plus: true }, { smi: '[H+]' }] },
+            caption: t('Modelis: trimetilsulfonis vietoje SAM; noradrenalino aminogrupė gauna CH₃ grupę (SN2) ir susidaro adrenalinas.', 'Model: trimethylsulfonium in place of SAM; the amino group of noradrenaline receives a CH₃ group (SN2) and adrenaline forms.'),
+            src: 'L10 p16'
+          },
+          {
+            scheme: { items: [{ smi: 'CC(=O)[O-]' }, { plus: true }, { smi: 'ClCCCl', name: t('1,2-dichloretanas', '1,2-dichloroethane') }, { arrow: '→' }, { smi: 'CC(=O)OCCCl' }, { plus: true }, { smi: '[Cl-]' }] },
+            caption: t('Dehalogenazė (modelis: acetatas): karboksilato deguonis pakeičia vieną chlorą (SN2).', 'Dehalogenase (model: acetate): the carboxylate oxygen replaces one chlorine (SN2).'),
+            src: 'L10 p17'
+          },
+          {
+            scheme: { items: [{ smi: 'CC(=O)OCCCl' }, { plus: true }, { smi: 'O' }, { arrow: '→' }, { smi: 'CC(=O)[O-]' }, { plus: true }, { smi: 'OCCCl', name: t('2-chloretanolis', '2-chloroethanol') }, { plus: true }, { smi: '[H+]' }] },
+            caption: t('Antroji dalis: esterio hidrolizė atkuria fermentą ir duoda 2-chloretanolį.', 'Second part: hydrolysis of the ester regenerates the enzyme and gives 2-chloroethanol.'),
+            src: 'L10 p17'
           },
           { h: t('Intramolekulinė SN2', 'Intramolecular SN2') },
           {
@@ -475,11 +490,11 @@
             ],
             src: 'S5.9'
           },
-          { scheme: { items: [{ smi: '[O-]CCCCBr' }, { arrow: '→' }, { smi: 'C1CCOC1', name: t('tetrahidrofuranas (oksolanas)', 'tetrahydrofuran (oxolane)') }, { plus: true }, { smi: '[Br-]' }] }, caption: t('4-brombutanoksidas virsta tetrahidrofuranu.', '4-bromobutoxide becomes tetrahydrofuran.') },
+          { scheme: { items: [{ smi: '[O-]CCCCBr' }, { arrow: '→' }, { smi: 'C1CCOC1', name: t('tetrahidrofuranas (oksolanas)', 'tetrahydrofuran (oxolane)') }, { plus: true }, { smi: '[Br-]' }] }, caption: t('4-brombutoksidas virsta tetrahidrofuranu.', '4-bromobutoxide becomes tetrahydrofuran.') },
           {
             example: {
               q: [
-                { p: t('Kokį heterociklą sudaro 5-brompentanoksidas?', 'Which heterocycle does 5-bromopentoxide form?') },
+                { p: t('Kokį heterociklą sudaro 5-brompentoksidas?', 'Which heterocycle does 5-bromopentoxide form?') },
                 { mol: { smi: '[O-]CCCCCBr' } }
               ],
               steps: [
@@ -517,7 +532,7 @@
             caption: t('Brometanas ir hidroksidas.', 'Bromoethane and hydroxide.'),
             src: 'L10 p19'
           },
-          { scheme: { items: [{ smi: 'CC(C)(C)Br', name: t('2-brom-2-metilpropanas', '2-bromo-2-methylpropane') }, { plus: true }, { smi: '[OH-]' }, { arrow: '→' }, { smi: 'CC(C)=C', name: t('2-metilpropenas', '2-methylpropene') }, { plus: true }, { smi: 'O' }, { plus: true }, { smi: '[Br-]' }], maxWidth: 700 }, caption: t('Tretinis halogenalkanas su hidroksidu taip pat eliminuojasi (E2).', 'A tertiary alkyl halide also eliminates with hydroxide (E2).'), src: 'L10 p19' },
+          { scheme: { items: [{ smi: 'CC(C)(C)Br', name: t('2-brom-2-metilpropanas', '2-bromo-2-methylpropane') }, { plus: true }, { smi: '[OH-]' }, { arrow: '→' }, { smi: 'CC(C)=C', name: t('2-metilpropenas', '2-methylpropene') }, { plus: true }, { smi: 'O' }, { plus: true }, { smi: '[Br-]' }] }, caption: t('Tretinis halogenalkanas su hidroksidu taip pat eliminuojasi (E2).', 'A tertiary alkyl halide also eliminates with hydroxide (E2).'), src: 'L10 p19' },
           { h: t('E1: dvi stadijos', 'E1: two stages') },
           {
             p: t('E1 turi tą pačią lėtąją I stadiją kaip SN1. Antrojoje stadijoje silpna bazė (vanduo, alkoholis) atplėšia protoną nuo kaimyninio atomo ir susidaro $C=C$. Todėl E1 ir SN1 vyksta kartu.',
@@ -529,7 +544,7 @@
               {
                 scheme: { items: [{ smi: 'O', opts: { lonePairs: true } }, { plus: true }, { smi: 'C[CH+]C', opts: { allH: true } }] },
                 arrows: [{ from: { m: 0, lp: 0 }, to: { m: 1, a: 'H0' } }, { from: { m: 1, b: [0, 'H0'] }, to: { m: 1, mid: [0, 1] } }],
-                note: t('II st.: vanduo atplėšia protoną nuo β anglies, elektronai sudaro dvigubąjį ryšį.', 'Stage II: water removes a proton from the β carbon and the electrons form the double bond.')
+                note: t('II st.: vanduo atplėšia protoną nuo β anglies, elektronai sudaro dvigubąjį ryšį. Pavyzdyje – supaprastintas antrinis katijonas; tretiniam tas pats mechanizmas.', 'Stage II: water removes a proton from the β carbon and the electrons form the double bond. The picture shows a simplified secondary cation; a tertiary one follows the same mechanism.')
               }
             ],
             src: 'L10 p19'
@@ -579,8 +594,8 @@
         blocks: [
           { h: t('Konkurencija', 'Competition') },
           {
-            scheme: { items: [{ smi: 'CC(C)(C)Cl' }, { arrow: '→', above: f('80 % C2H5OH'), below: f('20 % H2O, 25 °C') }, { smi: 'CC(C)(C)O' }, { plus: true }, { smi: 'CC(C)(C)OCC' }, { plus: true }, { smi: 'CC(C)=C' }], maxWidth: 700 },
-            caption: t('Tretinis chloridas silpnuose nukleofiluose: SN1 (83 %) ir E1 (17 %).', 'A tertiary chloride in weak nucleophiles: SN1 (83 %) and E1 (17 %).'),
+            scheme: { items: [{ smi: 'CC(C)(C)Cl' }, { arrow: '→', above: f('80 % C2H5OH'), below: f('20 % H2O, 25 °C') }, { smi: 'CC(C)(C)O' }, { plus: true }, { smi: 'CC(C)(C)OCC' }, { plus: true }, { smi: 'CC(C)=C' }] },
+            caption: t('Tretinis chloridas vandeniniame etanolyje (silpni nukleofilai): SN1 (83 %) ir E1 (17 %).', 'A tertiary chloride in aqueous ethanol (weak nucleophiles): SN1 (83 %) and E1 (17 %).'),
             src: 'L10 p22'
           },
           {
@@ -600,13 +615,13 @@
             src: 'L10 p23'
           },
           {
-            rule: t('Santrauka: metilo, pirminis – SN2; tretinis silpname nukleofile – SN1 (+E1); tretinis su stipria baze – E2; antrinis su stipria baze – daugiausia E2.',
-              'Summary: methyl, primary: SN2; tertiary in a weak nucleophile: SN1 (+E1); tertiary with a strong base: E2; secondary with a strong base: mostly E2.'),
-            src: 'L10 p21, p23'
+            rule: t('Santrauka: metilo ir pirminiai – SN2. Tretiniai: su stipria baze – E2; su silpnu nukleofilu ($H2O$, $ROH$) arba geru, bet silpnai baziniu nukleofilu ($HS-$, $RS-$, $I-$) poliniame protoniniame tirpiklyje – SN1 (kartu šiek tiek E1). Antriniai: su stipria baze – daugiausia E2; su geru, bet silpnai baziniu nukleofilu poliniame aprotoniniame tirpiklyje – SN2.',
+              'Summary: methyl and primary: SN2. Tertiary: with a strong base E2; with a weak nucleophile ($H2O$, $ROH$) or a good but weakly basic nucleophile ($HS-$, $RS-$, $I-$) in a polar protic solvent SN1 (with a little E1). Secondary: with a strong base mostly E2; with a good but weakly basic nucleophile in a polar aprotic solvent SN2.'),
+            src: 'L10 p21, p23, S5.8, Klein'
           },
           {
-            pitfall: t('Tretiniuose halogenalkanuose SN2 nevyksta: stipri bazė juos eliminuoja, o silpnas nukleofilas jonizuoja SN1 būdu.',
-              'SN2 does not occur in tertiary halides: a strong base eliminates them and a weak nucleophile ionises them by SN1.'),
+            pitfall: t('Tretiniuose halogenalkanuose SN2 nevyksta. Su stipria baze jie eliminuojasi (E2), o su silpnu ar silpnai baziniu nukleofilu poliniame protoniniame tirpiklyje jonizuojasi (SN1).',
+              'SN2 does not occur at a tertiary carbon. With a strong base the halide eliminates (E2); with a weak or weakly basic nucleophile in a polar protic solvent it ionises (SN1).'),
             src: 'L10 p23'
           },
           {
@@ -618,6 +633,7 @@
               steps: [
                 [{ p: t('Antrinis halogenalkanas, o etoksidas – stipri bazė: pagrindinis kelias E2.', 'A secondary halide and ethoxide is a strong base: the main path is E2.') }],
                 [{ p: t('Bazė atplėšia vandenilį nuo vieno iš dviejų metilų, susidaro propenas.', 'The base removes a hydrogen from one of the two methyl groups and propene forms.') }, { mol: { smi: 'CC=C', name: t('propenas', 'propene') } }],
+                [{ p: t('Šalutinis kelias – SN2: susidaro 2-etoksipropanas (apie 21 %).', 'The side path is SN2: 2-ethoxypropane forms (about 21 %).') }, { mol: { smi: 'CCOC(C)C', name: t('2-etoksipropanas', '2-ethoxypropane') } }],
               ]
             },
             claims: [
@@ -636,17 +652,17 @@
         blocks: [
           { h: t('Stabilizuoti karbokatijonai', 'Stabilised carbocations') },
           {
-            p: t('Jei halogenas prijungtas prie anglies šalia $C=C$ (alilo) ar benzeno žiedo (benzilo), jonizacija lengva: katijono krūvis delokalizuojasi konjugacijos būdu. Stabilumo eilė: benzilo > alilo > tretinis > antrinis > pirminis > metilo.',
+            p: t('Jei halogenas prijungtas prie anglies šalia $C=C$ (alilo) ar benzeno žiedo (benzilo), jonizacija lengva: katijono krūvis delokalizuojasi konjugacijos būdu. Stabilumo eilė: benzilkatijonas > alilkatijonas > tretinis > antrinis > pirminis > metilkatijonas.',
               'If the halogen sits on a carbon next to a $C=C$ (allylic) or a benzene ring (benzylic), ionisation is easy: the charge of the cation is delocalised by conjugation. Stability order: benzylic > allylic > tertiary > secondary > primary > methyl.'),
             src: 'L7 p9, S5.11'
           },
           {
             resonance: [{ smi: 'C=C[CH+]C' }, { smi: '[CH2+]C=CC' }],
-            caption: t('Alilo katijonas: du galai turi dalį teigiamo krūvio.', 'The allyl cation: both ends carry part of the positive charge.')
+            caption: t('Alilkatijonas: du galai turi dalį teigiamo krūvio.', 'The allyl cation: both ends carry part of the positive charge.')
           },
           {
             resonance: [{ smi: '[CH2+]c1ccccc1' }, { smi: 'C=C1C=CC=C[CH+]1' }, { smi: 'C=C1C=C[CH+]C=C1' }],
-            caption: t('Benzilo katijonas: krūvis pasiskirsto orto ir para padėtyse.', 'The benzyl cation: the charge is spread to the ortho and para positions.')
+            caption: t('Benzilkatijonas: krūvis pasiskirsto orto ir para padėtyse.', 'The benzyl cation: the charge is spread to the ortho and para positions.')
           },
           { h: t('Du skirtingi halogenidai, vienas katijonas', 'Two different halides, one cation') },
           {
@@ -668,8 +684,8 @@
             caption: t('Du produktai: antrinis ir pirminis alilo alkoholis.', 'Two products: a secondary and a primary allylic alcohol.')
           },
           {
-            pitfall: t('Alilo halogenidas (halogenas prie $sp3$ anglies šalia $C=C$) reaktyvus, o vinilo (halogenas pačiame $C=C$) – ne.',
-              'An allylic halide (halogen on an $sp3$ carbon next to $C=C$) is reactive, a vinylic one (halogen on the $C=C$ itself) is not.'),
+            pitfall: t('Alilo halogenidas (halogenas prie sp³ anglies šalia $C=C$) reaktyvus, o vinilo (halogenas pačiame $C=C$) – ne.',
+              'An allylic halide (halogen on an sp³ carbon next to $C=C$) is reactive, a vinylic one (halogen on the $C=C$ itself) is not.'),
             src: 'L10 p24'
           },
           {
@@ -705,7 +721,7 @@
           },
           {
             resonance: [{ smi: 'C=CCl', opts: { lonePairs: [2] } }, { smi: '[CH2-]C=[Cl+]' }],
-            caption: t('Chlorą susieja su dvigubuoju ryšiu rezonansas.', 'Resonance ties chlorine to the double bond.'),
+            caption: t('Chloro laisvoji pora konjuguota su dvigubuoju ryšiu (rezonansinės formulės).', 'The chlorine lone pair is conjugated with the double bond (resonance structures).'),
             src: 'L10 p24'
           },
           { h: t('Kada jie vis dėlto reaguoja', 'When they do react') },
@@ -715,7 +731,7 @@
             src: 'L10 p25'
           },
           {
-            scheme: { items: [{ smi: 'CC=C(Br)C' }, { plus: true }, { smi: '[OH-]' }, { arrow: '→', below: t('koncentruotas šarmas', 'concentrated alkali') }, { smi: 'CC#CC' }, { plus: true }, { smi: '[Br-]' }, { plus: true }, { smi: 'O' }], maxWidth: 700 },
+            scheme: { items: [{ smi: 'CC=C(Br)C' }, { plus: true }, { smi: '[OH-]' }, { arrow: '→', below: t('koncentruotas šarmas', 'concentrated alkali') }, { smi: 'CC#CC' }, { plus: true }, { smi: '[Br-]' }, { plus: true }, { smi: 'O' }] },
             caption: t('Halogenalkenas su H prie $C=C$ ir koncentruotas šarmas: HX atskyla, susidaro alkinas.', 'A haloalkene with H on the $C=C$ and concentrated alkali: HX is lost and an alkyne forms.'),
             src: 'L10 p25'
           },
@@ -725,7 +741,12 @@
             src: 'L10 p26'
           },
           {
-            scheme: { items: [{ smi: 'Clc1c([N+](=O)[O-])cc([N+](=O)[O-])cc1[N+](=O)[O-]' }, { arrow: '→', above: f('1. −OH'), below: f('2. H3O+') }, { smi: 'Oc1c([N+](=O)[O-])cc([N+](=O)[O-])cc1[N+](=O)[O-]', name: t('2,4,6-trinitrofenolis', '2,4,6-trinitrophenol') }], maxWidth: 700 },
+            scheme: { items: [{ smi: 'Clc1c([N+](=O)[O-])cc([N+](=O)[O-])cc1[N+](=O)[O-]' }, { arrow: '→', above: f('1. OH-'), below: f('2. H3O+') }, { smi: 'Oc1c([N+](=O)[O-])cc([N+](=O)[O-])cc1[N+](=O)[O-]', name: t('2,4,6-trinitrofenolis', '2,4,6-trinitrophenol') }] },
+            src: 'L10 p26'
+          },
+          {
+            scheme: { items: [{ smi: 'Fc1ccc(cc1[N+](=O)[O-])[N+](=O)[O-]', name: t('1-fluor-2,4-dinitrobenzenas', '1-fluoro-2,4-dinitrobenzene') }, { plus: true }, { smi: 'NCC(=O)NCC(=O)O' }, { arrow: '→' }, { smi: 'OC(=O)CNC(=O)CNc1ccc(cc1[N+](=O)[O-])[N+](=O)[O-]' }, { plus: true }, { smi: 'F' }] },
+            caption: t('Sangerio reagentas su dipeptido N-galo aminogrupe.', 'Sanger’s reagent with the N-terminal amino group of a dipeptide.'),
             src: 'L10 p26'
           },
           {
@@ -748,7 +769,7 @@
             [t('substratas', 'substrate'), t('metilo, pirminis', 'methyl, primary'), t('tretinis, alilo, benzilo', 'tertiary, allylic, benzylic'), t('antrinis, tretinis (ir pirminis)', 'secondary, tertiary (and primary)'), t('tretinis, alilo, benzilo', 'tertiary, allylic, benzylic')],
             [t('reagentas', 'reagent'), t('stiprus nukleofilas', 'strong nucleophile'), t('silpnas nukleofilas ($H2O$, $ROH$)', 'weak nucleophile ($H2O$, $ROH$)'), t('stipri bazė ($RO-$, $HO-$)', 'strong base ($RO-$, $HO-$)'), t('silpna bazė ($H2O$, $ROH$)', 'weak base ($H2O$, $ROH$)')],
             [t('tirpiklis', 'solvent'), t('poliniai aprotoniniai', 'polar aprotic'), t('poliniai protoniniai', 'polar protic'), t('nėra svarbus', 'not decisive'), t('poliniai protoniniai', 'polar protic')],
-            [t('tarpinis junginys', 'intermediate'), t('pereinamoji būsena', 'transition state'), t('karbokatijonas', 'carbocation'), t('pereinamoji būsena', 'transition state'), t('karbokatijonas', 'carbocation')],
+            [t('tarpinis junginys', 'intermediate'), t('nėra (tik pereinamoji būsena)', 'none (transition state only)'), t('karbokatijonas', 'carbocation'), t('nėra (tik pereinamoji būsena)', 'none (transition state only)'), t('karbokatijonas', 'carbocation')],
             [t('rezultatas', 'result'), t('inversija', 'inversion'), t('racematas', 'racemate'), t('Zaicevo taisyklė', 'Zaitsev’s rule'), t('Zaicevo taisyklė', 'Zaitsev’s rule')]
           ]
         },
@@ -758,10 +779,10 @@
         list: [
           t('Nueinančioji grupė: RI > RBr > RCl > RF (silpniausia bazė išeina geriausiai).', 'Leaving group: RI > RBr > RCl > RF (the weakest base leaves best).'),
           t('Nukleofilas: alkoksidas > hidroksidas >> karboksilatas > alkoholis > vanduo; anijonas stipresnis už konjuguotąją rūgštį.', 'Nucleophile: alkoxide > hydroxide >> carboxylate > alcohol > water; an anion is stronger than its conjugate acid.'),
-          t('Katijono stabilumas: benzilo > alilo > tretinis > antrinis > pirminis > metilo.', 'Cation stability: benzylic > allylic > tertiary > secondary > primary > methyl.'),
-          t('Pirminiai: SN2 (ir E2); tretiniai: SN1 ir E1, su stipria baze – E2; antriniai: abu keliai, su stipria baze daugiausia E2.', 'Primary: SN2 (and E2); tertiary: SN1 and E1, with a strong base E2; secondary: both paths, mostly E2 with a strong base.'),
+          t('Katijono stabilumas: benzilkatijonas > alilkatijonas > tretinis > antrinis > pirminis > metilkatijonas.', 'Cation stability: benzylic > allylic > tertiary > secondary > primary > methyl.'),
+          t('Pirminiai: SN2 (ir E2). Tretiniai: su stipria baze E2, kitaip SN1 ir E1. Antriniai: su stipria baze daugiausia E2, su silpnai baziniu nukleofilu aprotoniniame tirpiklyje SN2.', 'Primary: SN2 (and E2). Tertiary: E2 with a strong base, otherwise SN1 and E1. Secondary: mostly E2 with a strong base, SN2 with a weakly basic nucleophile in an aprotic solvent.'),
           t('Zaicevo taisyklė: dominuoja alkenas, kurio prie $C=C$ daugiau alkilgrupių.', 'Zaitsev’s rule: the alkene with more alkyl groups on the $C=C$ predominates.'),
-          t('Vinilo ir arilo halogenidai SN1 ir SN2 būdu nereaguoja; alilo ir benzilo halogenidai SN1 reaguoja lengvai.', 'Vinyl and aryl halides do not react by SN1 or SN2; allylic and benzylic halides undergo SN1 readily.'),,
+          t('Vinilo ir arilo halogenidai SN1 ir SN2 būdu nereaguoja; alilo ir benzilo halogenidai SN1 reaguoja lengvai.', 'Vinyl and aryl halides do not react by SN1 or SN2; allylic and benzylic halides undergo SN1 readily.'),
           t('Intramolekulinė SN2 suriša molekulės galus į žiedą (geriausiai 5–6 narių).', 'Intramolecular SN2 closes the ends of a molecule into a ring (best with 5 or 6 members).')
         ]
       }
@@ -797,13 +818,15 @@
           if (!s) throw new Error('u10.class: bad template ' + smi);
           const k = KIND[key];
           const nbs = cNb(s.m, s.c).length;
-          const label = s.c + 1;
+          const NBW = [['neturi kaimyninių anglies atomų', 'has no neighbouring carbon'], ['turi vieną kaimyninį anglies atomą', 'has one neighbouring carbon'], ['turi du kaimyninius anglies atomus', 'has two neighbouring carbons'], ['turi tris kaimyninius anglies atomus', 'has three neighbouring carbons']];
           const steps = [
             {
-              prompt: t('Bakstelėkite anglies atomą, prie kurio prisijungęs halogenas.', 'Tap the carbon atom that bears the halogen.'),
-              kind: 'atoms', mol: { smi, opts: { numbers: 'all' } }, answer: [s.c],
-              hint: t('Raskite halogeno atomą ir pažiūrėkite, su kuriuo atomu jis sujungtas.', 'Find the halogen atom and see which atom it is bonded to.'),
-              solution: t('Halogenas sujungtas su atomu Nr. ' + label + '.', 'The halogen is bonded to atom no. ' + label + '.')
+              prompt: t('Kokia yra halogeną turinčios anglies hibridizacija?', 'What is the hybridisation of the carbon that bears the halogen?'),
+              kind: 'choice', options: [tx('sp³', 'sp³'), tx('sp²', 'sp²'), tx('sp', 'sp')], answer: (key === 'vinyl' || key === 'aryl') ? 1 : 0,
+              hint: t('Ar halogeno anglis turi dvigubąjį ryšį arba priklauso benzeno žiedui?', 'Does the halogen carbon have a double bond, or belong to a benzene ring?'),
+              solution: (key === 'vinyl' || key === 'aryl')
+                ? t('Halogeno anglis priklauso dvigubajam ryšiui ar aromatiniam žiedui, todėl ji sp² hibridizuota.', 'The halogen carbon belongs to a double bond or an aromatic ring, so it is sp².')
+                : t('Halogeno anglis turi tik vienkartinius ryšius, todėl ji sp³ hibridizuota.', 'The halogen carbon has only single bonds, so it is sp³.')
             },
             {
               prompt: t('Kokio tipo šis halogenidas?', 'What kind of halide is this?'),
@@ -811,16 +834,16 @@
               options: [tx('metilo halogenidas', 'methyl halide'), tx('pirminis halogenalkanas', 'primary alkyl halide'), tx('antrinis halogenalkanas', 'secondary alkyl halide'),
                 tx('tretinis halogenalkanas', 'tertiary alkyl halide'), tx('halogenalkenas (halogenas prie $C=C$ anglies)', 'haloalkene (halogen on a $C=C$ carbon)'), tx('halogenarenas (halogenas prie benzeno žiedo)', 'haloarene (halogen on the benzene ring)')],
               answer: k.opt,
-              hint: t('Pirmiausia nustatykite, ar halogeno anglis yra $sp3$ hibridizuota. Jei taip, suskaičiuokite jos kaimynus, kurie yra anglies atomai.', 'First decide whether the halogen carbon is $sp3$. If it is, count its neighbours that are carbon atoms.'),
+              hint: t('Pirmiausia nustatykite, ar halogeno anglis yra sp³ hibridizuota. Jei taip, suskaičiuokite jos kaimynus, kurie yra anglies atomai.', 'First decide whether the halogen carbon is sp³. If it is, count its neighbours that are carbon atoms.'),
               solution: key === 'vinyl' || key === 'aryl'
-                ? t('Atomas Nr. ' + label + ' yra $sp2$ hibridizuotas: tai ' + k.lt + '.', 'Atom no. ' + label + ' is $sp2$: this is ' + k.en + '.')
-                : t('Atomas Nr. ' + label + ' turi ' + nbs + ' kaimyninius anglies atomus: tai ' + k.lt + '.', 'Atom no. ' + label + ' has ' + nbs + ' neighbouring carbons: this is ' + k.en + '.')
+                ? t('Halogeno anglis yra sp² hibridizuota: tai ' + k.lt + '.', 'The halogen carbon is sp²: this is ' + k.en + '.')
+                : t('Halogeno anglis ' + NBW[nbs][0] + ': tai ' + k.lt + '.', 'The halogen carbon ' + NBW[nbs][1] + ': this is ' + k.en + '.')
             },
             {
               prompt: t('Kuris teiginys apie šio junginio nukleofilinį pakeitimą teisingas?', 'Which statement about nucleophilic substitution of this compound is right?'),
               kind: 'choice',
               options: [
-                tx('Būdingas SN2 (taip pat E2): halogeno anglis atvira puolimui iš nugaros, o katijonas nestabilus.', 'SN2 is typical (also E2): the carbon is open to backside attack and the cation is unstable.'),
+                tx('Būdingas SN2: halogeno anglis atvira puolimui iš nugaros, o katijonas nestabilus.', 'SN2 is typical: the carbon is open to backside attack and the cation is unstable.'),
                 tx('Būdingi SN1 ir E1: susidaro stabilus tretinis karbokatijonas.', 'SN1 and E1 are typical: a stable tertiary carbocation forms.'),
                 tx('Galimi ir SN1, ir SN2: tai lemia nukleofilas ir tirpiklis.', 'Both SN1 and SN2 are possible: the nucleophile and the solvent decide.'),
                 tx('SN1 ir SN2 nevyksta įprastomis sąlygomis: $p,π$-konjugacija sustiprina C–Hal ryšį.', 'SN1 and SN2 do not occur under ordinary conditions: $p,π$ conjugation strengthens the C–Hal bond.')
@@ -852,8 +875,8 @@
           return {
             q: [{ p: t('Pateiktas halogenidas.', 'Here is a halide.') }, { mol: { smi } }],
             steps,
-            why: t('Halogenalkano klasę nusako halogeno anglies kaimynai: vienas – pirminis, du – antrinis, trys – tretinis. Pirminis ir metilo halogenidai reaguoja SN2, tretinis – SN1 ir E1 per stabilų karbokatijoną. Jei halogenas prie $sp2$ anglies, SN1 ir SN2 nevyksta.',
-              'The class of an alkyl halide is set by the neighbours of the halogen carbon: one is primary, two secondary, three tertiary. Primary and methyl halides react by SN2, tertiary ones by SN1 and E1 through a stable carbocation. If the halogen is on an $sp2$ carbon, neither SN1 nor SN2 takes place.'),
+            why: t('Halogenalkano klasę nusako halogeno anglies kaimynai: vienas – pirminis, du – antrinis, trys – tretinis. Pirminis ir metilo halogenidai reaguoja SN2, tretinis – SN1 ir E1 per stabilų karbokatijoną. Jei halogenas prie sp² anglies, SN1 ir SN2 nevyksta.',
+              'The class of an alkyl halide is set by the neighbours of the halogen carbon: one is primary, two secondary, three tertiary. Primary and methyl halides react by SN2, tertiary ones by SN1 and E1 through a stable carbocation. If the halogen is on an sp² carbon, neither SN1 nor SN2 takes place.'),
             src: 'L10 p2, p7, p21, p24'
           };
         }
@@ -866,11 +889,11 @@
         bank: [
           {
             id: 'u10.pick.1',
-            q: [{ p: t('1-bromobutanas reaguoja su natrio cianidu dimetilsulfokside.', '1-bromobutane reacts with sodium cyanide in dimethyl sulfoxide.') }, { scheme: { items: [{ smi: 'CCCCBr', name: t('1-brombutanas', '1-bromobutane') }, { arrow: '→', above: f('NaCN'), below: f('(CH3)2SO') }] } }],
+            q: [{ p: t('1-brombutanas reaguoja su natrio cianidu dimetilsulfokside.', '1-bromobutane reacts with sodium cyanide in dimethyl sulfoxide.') }, { scheme: { items: [{ smi: 'CCCCBr', name: t('1-brombutanas', '1-bromobutane') }, { arrow: '→', above: f('NaCN'), below: f('(CH3)2SO') }] } }],
             steps: [
               cho(t('Kuris mechanizmas vyrauja?', 'Which mechanism predominates?'), MECH4.concat([NOSN]), 1,
                 t('Įvertinkite substrato klasę, nukleofilą ir tirpiklį.', 'Consider the class of the substrate, the nucleophile and the solvent.'),
-                t('SN2: pirminis substratas, stiprus nukleofilas, poliarinis aprotoninis tirpiklis.', 'SN2: a primary substrate, a strong nucleophile and a polar aprotic solvent.')),
+                t('SN2: pirminis substratas, stiprus nukleofilas, polinis aprotoninis tirpiklis.', 'SN2: a primary substrate, a strong nucleophile and a polar aprotic solvent.')),
               cho(t('Kuris paaiškinimas teisingas?', 'Which explanation is right?'), [
                 tx('Pirminis katijonas nestabilus, o anglis atvira puolimui iš nugaros; cianidas stiprus, o aprotoninis tirpiklis jo nesilpnina.', 'A primary cation is unstable and the carbon is open to backside attack; cyanide is strong and an aprotic solvent does not weaken it.'),
                 tx('Pirminis katijonas stabilus, todėl vyksta SN1, o cianidas prisijungia antroje stadijoje.', 'A primary cation is stable, so SN1 takes place and cyanide bonds in the second stage.'),
@@ -899,8 +922,8 @@
               ], 0, t('Kuri stadija lėta?', 'Which stage is slow?'),
                 t('Lėtoji I stadija yra jonizacija; po jos viskas vyksta greitai.', 'The slow stage I is ionisation; everything after it is fast.'))
             ],
-            why: t('Tretinis halogenalkanas gali sudaryti stabilų karbokatijoną, o protoninis tirpiklis jį stabilizuoja. Silpnas nukleofilas nespėja puolti iš nugaros, todėl vyksta SN1; greitį lemia tik halogenalkano.',
-              'A tertiary alkyl halide can form a stable carbocation and a protic solvent stabilises it. A weak nucleophile cannot attack from the back, so SN1 takes place; the rate depends on the halide only.'),
+            why: t('Tretinis halogenalkanas gali sudaryti stabilų karbokatijoną, o protoninis tirpiklis jį stabilizuoja. Puolimą iš nugaros užstoja trys alkilgrupės, todėl vyksta SN1; greitį lemia tik halogenalkano koncentracija.',
+              'A tertiary alkyl halide forms a stable carbocation, which the protic solvent stabilises further. Three alkyl groups block attack from the back, so SN1 takes place; the rate depends only on the alkyl halide concentration.'),
             src: 'L10 p4, p7, p10',
             claims: [{ react: ['sn1', ['CC(C)(Br)CC'], { nu: 'OC' }, 'CCC(C)(C)OC'] }]
           },
@@ -931,7 +954,7 @@
               {
                 prompt: t('Bakstelėkite anglies atomą, kuris pirmoje stadijoje taps teigiamu.', 'Tap the carbon that becomes positive in the first stage.'),
                 kind: 'atoms', mol: { smi: 'CC1(Br)CCCC1', opts: { numbers: 'all' } }, answer: [1],
-                hint: t('Teigiamas krūvis lieka ten, kur buvo halogenas.', 'The positive charge stays where the halogen was.'),
+                hint: t('Kuris atomas lieka be ryšio elektronų, kai halogenas išeina su jais?', 'Which atom is left without the bonding electrons when the halogen leaves with them?'),
                 solution: t('Atomas Nr. 2 turi tris anglies kaimynus, todėl tai tretinis karbokatijonas.', 'Atom no. 2 has three carbon neighbours, so this is a tertiary carbocation.')
               },
               cho(t('Kuris mechanizmas vyrauja?', 'Which mechanism predominates?'), MECH4, 0,
@@ -983,26 +1006,26 @@
           },
           {
             id: 'u10.pick.7',
-            q: [{ p: t('Šie junginiai veikiami vandeniu kambario temperatūroje.', 'These compounds are treated with water at room temperature.') },
-              { mol: [{ smi: 'CC1(Br)CCCCC1', caption: t('a', 'a') }, { smi: 'Brc1ccc2CCCc2c1', caption: t('b', 'b') }, { smi: 'BrC1=CCCCC1', caption: t('c', 'c') }, { smi: 'CC(C)CCCBr', caption: t('d', 'd') }] }],
+            q: [{ p: t('Šie halogenidai yra nukleofilinio pakeitimo substratai.', 'These halides are substrates for nucleophilic substitution.') },
+              { mol: [{ smi: 'CCC(C)(C)Br', caption: t('a', 'a') }, { smi: 'Cc1ccc(Br)cc1', caption: t('b', 'b') }, { smi: 'CC(Br)=C', caption: t('c', 'c') }, { smi: 'CC(C)CCBr', caption: t('d', 'd') }] }],
             steps: [{
-              prompt: t('Priskirkite kiekvienam substratui labiausiai tikėtiną elgesį.', 'Match each substrate with its most likely behaviour.'),
+              prompt: t('Priskirkite kiekvienam substratui jam būdingą mechanizmą.', 'Match each substrate with the mechanism typical of it.'),
               kind: 'match',
               answer: {
-                left: [mo('CC1(Br)CCCCC1'), mo('Brc1ccc2CCCc2c1'), mo('BrC1=CCCCC1'), mo('CC(C)CCCBr')],
-                right: [tx('SN1', 'SN1'), tx('SN2 (su stipriu nukleofilu)', 'SN2 (with a strong nucleophile)'), NOSN],
+                left: [mo('CCC(C)(C)Br'), mo('Cc1ccc(Br)cc1'), mo('CC(Br)=C'), mo('CC(C)CCBr')],
+                right: [tx('SN1 (su silpnu nukleofilu, pvz., vandeniu)', 'SN1 (with a weak nucleophile such as water)'), tx('SN2 (su stipriu nukleofilu)', 'SN2 (with a strong nucleophile)'), NOSN],
                 pairs: [0, 2, 2, 1]
               },
-              hint: t('Pirmiausia pažiūrėkite, ar halogenas prie $sp3$ anglies.', 'First check whether the halogen is on an $sp3$ carbon.'),
+              hint: t('Pirmiausia pažiūrėkite, ar halogenas prie sp³ anglies.', 'First check whether the halogen is on an sp³ carbon.'),
               solution: t('a – tretinis: SN1; b – arilo halogenidas, c – vinilo halogenidas: SN nevyksta; d – pirminis: SN2.', 'a is tertiary: SN1; b is an aryl halide and c a vinyl halide: no SN; d is primary: SN2.')
             }],
-            why: t('Pirmiausia ieškoma halogeno anglies hibridizacija: $sp2$ anglis reiškia, kad SN nevyksta. Tada sprendžia klasė: tretinis – SN1, pirminis – SN2.',
-              'First look at the hybridisation of the halogen carbon: an $sp2$ carbon means no SN. Then the class decides: tertiary gives SN1, primary gives SN2.'),
+            why: t('Pirmiausia ieškoma halogeno anglies hibridizacija: sp² anglis reiškia, kad SN nevyksta. Tada sprendžia klasė: tretinis – SN1, pirminis – SN2.',
+              'First look at the hybridisation of the halogen carbon: an sp² carbon means no SN. Then the class decides: tertiary gives SN1, primary gives SN2.'),
             src: 'L10 p24, p29'
           },
           {
             id: 'u10.pick.8',
-            q: [{ p: t('2-chlor-2,3-dimetilbutanas reaguoja su natrio hidrosulfidu.', '2-chloro-2,3-dimethylbutane reacts with sodium hydrosulfide.') }, { scheme: { items: [{ smi: 'CC(C)C(C)(C)Cl', name: t('2-chlor-2,3-dimetilbutanas', '2-chloro-2,3-dimethylbutane') }, { arrow: '→', above: f('NaSH') }, { smi: 'CC(C)C(C)(C)S' }] } }],
+            q: [{ p: t('2-chlor-2,3-dimetilbutanas reaguoja su natrio hidrosulfidu etanolyje.', '2-chloro-2,3-dimethylbutane reacts with sodium hydrosulfide in ethanol.') }, { scheme: { items: [{ smi: 'CC(C)C(C)(C)Cl', name: t('2-chlor-2,3-dimetilbutanas', '2-chloro-2,3-dimethylbutane') }, { arrow: '→', above: f('NaSH'), below: f('C2H5OH') }, { smi: 'CC(C)C(C)(C)S' }] } }],
             steps: [
               cho(t('Pagal kokį mechanizmą susidaro tiolis?', 'By which mechanism does the thiol form?'), MECH4, 0,
                 t('Pažiūrėkite, ar iš tokio halogenalkano gali susidaryti stabilus katijonas.', 'See whether a stable cation can form from such a halide.'),
@@ -1015,8 +1038,8 @@
               ], 0, t('Atsiminkite, kaip nukleofilas turi pulti SN2 metu.', 'Recall how the nucleophile must attack in SN2.'),
                 t('Puolimas iš nugaros prie tretinio atomo užkertamas erdviškai.', 'Backside attack at a tertiary carbon is blocked sterically.'))
             ],
-            why: t('Tretinis halogenalkanas su silpnai baziniu nukleofilu reaguoja SN1 būdu: pirma lėtai susidaro karbokatijonas, paskui greitai prisijungia nukleofilas.',
-              'A tertiary alkyl halide with a weakly basic nucleophile reacts by SN1: first the carbocation forms slowly, then the nucleophile bonds quickly.'),
+            why: t('Tretinis halogenalkanas su geru, bet silpnai baziniu nukleofilu protoniniame tirpiklyje reaguoja SN1 būdu: SN2 užstotas, o E2 reikia stiprios bazės. Pirma lėtai susidaro karbokatijonas, paskui greitai prisijungia $HS-$.',
+              'A tertiary alkyl halide with a good but weakly basic nucleophile in a protic solvent reacts by SN1: SN2 is blocked and E2 needs a strong base. The carbocation forms slowly, then $HS-$ bonds quickly.'),
             src: 'L10 p4, p7, S5.8',
             claims: [{ carbon: ['CC(C)C(C)(C)Cl', 3, 3] }]
           }
@@ -1054,28 +1077,32 @@
           }
           if (!pick) throw new Error('u10.sn2: no usable pair');
           const { g, nu, smi, right, nuKey, options } = pick;
-          const s = site(ctx, smi);
+          const alk = react.run('elim', [smi], { base: 'strong' }).products.find((p) => p.major);
+          const ALL5 = ['OH', 'SH', 'CN', 'C#CC', 'OC'];
+          const right5 = ALL5.map((k) => mo(g.p + NUC[k].frag));
+          if (alk) right5.push(mo(alk.smi));
           const steps = [
             {
-              prompt: t('Bakstelėkite anglies atomą, kurį puola nukleofilas.', 'Tap the carbon atom that the nucleophile attacks.'),
-              kind: 'atoms', mol: { smi, opts: { numbers: 'all' } }, answer: [s.c],
-              hint: t('Nukleofilas puola teigiamai poliarizuotą atomą.', 'The nucleophile attacks the atom with the partial positive charge.'),
-              solution: t('Anglis Nr. ' + (s.c + 1) + ' sujungta su halogenu, todėl ji turi dalinį teigiamą krūvį.', 'Carbon no. ' + (s.c + 1) + ' is bonded to the halogen, so it carries a partial positive charge.')
+              prompt: t('Tą patį halogenalkaną veikiant pakaitomis penkiais reagentais, kokį produktą duoda kiekvienas?', 'If the same alkyl halide is treated in turn with five reagents, which product does each give?'),
+              kind: 'match',
+              answer: { left: ALL5.map((k) => ({ text: f(NUC[k].salt) })), right: right5, pairs: [0, 1, 2, 3, 4] },
+              hint: t('Palyginkite, kuris nukleofilo atomas lieka prijungtas prie alkilo grupės.', 'Compare which atom of the nucleophile stays bonded to the alkyl group.'),
+              solution: t('NaOH duoda alkoholį, NaSH – tiolį, NaCN – nitrilą, NaC≡CCH3 – alkiną, NaOCH3 – eterį. Alkenas būtų eliminavimo produktas, o ne pakeitimo.', 'NaOH gives an alcohol, NaSH a thiol, NaCN a nitrile, NaC≡CCH3 an alkyne and NaOCH3 an ether. The alkene would be an elimination product, not a substitution product.')
             },
             {
               prompt: t('Koks yra pagrindinis produktas?', 'What is the main product?'),
               kind: 'choice', options, answer: 0,
-              hint: t('Nukleofilas pakeičia halogeną toje pačioje vietoje; anglies skeletas nesikeičia.', 'The nucleophile replaces the halogen at the same place; the carbon skeleton does not change.'),
+              hint: t('Pažiūrėkite, prie kurio anglies atomo buvo prisijungęs halogenas ir kas užima jo vietą.', 'See which carbon the halogen was bonded to and what takes its place.'),
               solution: [{ p: t('Halogenido jonas pakeičiamas nukleofilu tame pačiame anglies atome; susidaro ' + nu.cls.lt + '.', 'The halide ion is replaced by the nucleophile on the same carbon; a ' + nu.cls.en + ' forms.') }, { mol: { smi: right } }]
             },
             {
-              prompt: t('Pagal kokį mechanizmą ir kodėl vyksta ši reakcija?', 'By which mechanism, and why, does this reaction take place?'),
+              prompt: t('Kuris mechanizmas čia veikia ir kuo tai pagrįsta?', 'Which mechanism operates here, and what supports it?'),
               kind: 'choice',
               options: [
-                tx('SN2: pirminis substratas, nestabilus katijonas, nukleofilas puola iš nugaros.', 'SN2: a primary substrate, an unstable cation, the nucleophile attacks from the back.'),
+                tx('SN2: pirminis substratas, nestabilus katijonas, o ' + nu.nm.lt + ' puola iš nugaros.', 'SN2: a primary substrate, an unstable cation, and ' + nu.nm.en + ' attacks from the back.'),
                 tx('SN1: pirminis katijonas yra stabilus, todėl halogenas pirma atsiskiria.', 'SN1: a primary cation is stable, so the halogen leaves first.'),
                 tx('E2: bet kuris anijonas pirmiausia atplėšia β protoną.', 'E2: any anion first removes a β proton.'),
-                tx('SN1: stiprus nukleofilas greitina jonizaciją.', 'SN1: a strong nucleophile speeds up ionisation.')
+                tx('SN1: ' + nu.nm.lt + ' greitina jonizaciją.', 'SN1: ' + nu.nm.en + ' speeds up ionisation.')
               ],
               answer: 0,
               hint: t('Palyginkite, ar iš pirminio halogenalkano galėtų susidaryti stabilus katijonas.', 'Consider whether a stable cation could form from a primary alkyl halide.'),
@@ -1087,7 +1114,7 @@
             steps.push({
               prompt: t('Pavadinkite produktą.', 'Name the product.'),
               kind: 'name', mol: { smi: right }, answer: { smi: right },
-              hint: t('Raskite pagrindinę grandinę su pagrindine grupe ir sunumeruokite ją nuo arčiausios galo.', 'Find the parent chain with the principal group and number it from the nearest end.'),
+              hint: t('Raskite pagrindinę grandinę su pagrindine grupe ir sunumeruokite ją nuo galo, arčiausio pagrindinės grupės.', 'Find the parent chain with the principal group and number it from the nearest end.'),
               solution: t(lt.name, en.name)
             });
           }
@@ -1109,45 +1136,47 @@
         bank: [
           {
             id: 'u10.draw.1',
-            q: [{ p: t('Propilo jodidas reaguoja su natrio metoksidu. Išanalizuokite mechanizmą.', 'Propyl iodide reacts with sodium methoxide. Analyse the mechanism.') },
-              { scheme: { items: [{ smi: 'CCCI', name: t('1-jodpropanas', '1-iodopropane'), opts: { numbers: 'all' } }, { plus: true }, { smi: 'C[O-]' }, { arrow: '→' }, { smi: 'CCCOC' }, { plus: true }, { smi: '[I-]' }] } }],
+            q: [{ p: t('1-jodbutanas reaguoja su natrio etoksidu. Išanalizuokite mechanizmą.', '1-iodobutane reacts with sodium ethoxide. Analyse the mechanism.') },
+              { scheme: { items: [{ smi: 'CCCCI', name: t('1-jodbutanas', '1-iodobutane'), opts: { numbers: 'all' } }, { plus: true }, { smi: 'CC[O-]' }, { arrow: '→' }, { smi: 'CCCCOCC' }, { plus: true }, { smi: '[I-]' }] } }],
             steps: [
               {
-                prompt: t('Bakstelėkite anglį, kurią puola metoksidas.', 'Tap the carbon that methoxide attacks.'),
-                kind: 'atoms', mol: { smi: 'CCCI', opts: { numbers: 'all' } }, answer: [2],
-                hint: t('Pažiūrėkite, kuris atomas turi dalinį teigiamą krūvį.', 'See which atom carries the partial positive charge.'),
-                solution: t('Atakuojama anglis Nr. 3, nes ji sujungta su elektroneigiamu jodu.', 'Carbon no. 3 is attacked because it is bonded to electronegative iodine.')
+                prompt: t('Bakstelėkite ryšį, kuris nutrūksta reakcijos metu.', 'Tap the bond that breaks during the reaction.'),
+                kind: 'atoms', bonds: true, mol: { smi: 'CCCCI', opts: { numbers: 'all' } }, answer: [[3, 4]],
+                hint: t('Kuris ryšys jungia anglį su atomu, kuris išeis pasiimdamas ryšio elektronus?', 'Which bond joins carbon to the atom that will leave with the bonding electrons?'),
+                solution: t('Nutrūksta C–I ryšys (atomai Nr. 4 ir Nr. 5): jodas išeina su ryšio elektronų pora.', 'The C–I bond (atoms no. 4 and no. 5) breaks: iodine leaves with the bonding electron pair.')
               },
               cho(t('Koks šios reakcijos mechanizmas?', 'What is the mechanism of this reaction?'), MECH4, 1,
                 t('Pirminis halogenalkanas, stiprus nukleofilas.', 'A primary alkyl halide and a strong nucleophile.'),
                 [{ p: t('SN2: viena stadija, nukleofilas puola iš nugaros, kartu išstumiamas jodidas.', 'SN2: one stage, the nucleophile attacks from the back and pushes out iodide at the same moment.') },
-                  { mech: [{ scheme: { items: [{ smi: 'C[O-]', opts: { lonePairs: true } }, { plus: true }, { smi: 'CCCI', opts: { lonePairs: [3] } }] }, arrows: [{ from: { m: 0, lp: 1 }, to: { m: 1, a: 2 } }, { from: { m: 1, b: [2, 3] }, to: { m: 1, a: 3 } }] }] }]),
-              cho(t('Kaip pakistų reakcijos greitis, jei padvigubintume ir halogenalkano, ir metoksido koncentracijas?', 'How would the rate change if both the alkyl halide and methoxide concentrations were doubled?'), [
+                  { mech: [{ scheme: { items: [{ smi: 'CC[O-]', opts: { lonePairs: true } }, { plus: true }, { smi: 'CCCCI', opts: { lonePairs: [4] } }] }, arrows: [{ from: { m: 0, lp: 2 }, to: { m: 1, a: 3 } }, { from: { m: 1, b: [3, 4] }, to: { m: 1, a: 4 } }] }] }]),
+              cho(t('Kaip pakistų reakcijos greitis, jei padvigubintume ir halogenalkano, ir etoksido koncentracijas?', 'How would the rate change if both the alkyl halide and ethoxide concentrations were doubled?'), [
                 tx('Padidėtų keturis kartus', 'It would rise four times'),
                 tx('Padidėtų du kartus', 'It would double'),
                 tx('Nepakistų', 'It would not change'),
                 tx('Sumažėtų per pusę', 'It would be halved')
               ], 0, t('Greičio lygtyje yra abu reagentai.', 'Both reagents appear in the rate law.'), t('Greitis = $k[RX][Nu]$: du kartus × du kartus = keturis kartus.', 'Rate = $k[RX][Nu]$: two times two is four times.'))
             ],
-            why: t('SN2 – bimolekulinė vienos stadijos reakcija. Metoksido deguonies laisva pora sudaro naują ryšį su anglimi, o C–I elektronai pereina jodui. Greitis priklauso nuo abiejų reagentų.',
-              'SN2 is a bimolecular one-stage reaction. A lone pair of methoxide oxygen forms a new bond to carbon while the C–I electrons go to iodine. The rate depends on both reagents.'),
+            why: t('SN2 – bimolekulinė vienos stadijos reakcija. Etoksido deguonies laisva pora sudaro naują ryšį su anglimi, o C–I elektronai pereina jodui. Greitis priklauso nuo abiejų reagentų.',
+              'SN2 is a bimolecular one-stage reaction. A lone pair of ethoxide oxygen forms a new bond to carbon while the C–I electrons go to iodine. The rate depends on both reagents.'),
             src: 'L10 p5, S5.8',
-            claims: [{ react: ['sn2', ['CCCI'], { nu: 'OC' }, 'CCCOC'] }]
+            claims: [{ react: ['sn2', ['CCCCI'], { nu: 'OCC' }, 'CCCCOCC'] }]
           },
           {
             id: 'u10.draw.2',
-            q: [{ p: t('2-chlor-2,3-dimetilbutanas reaguoja su natrio hidrosulfidu ir susidaro tiolis. Išanalizuokite mechanizmą.', '2-chloro-2,3-dimethylbutane reacts with sodium hydrosulfide and a thiol forms. Analyse the mechanism.') },
-              { scheme: { items: [{ smi: 'CC(C)C(C)(C)Cl', name: t('2-chlor-2,3-dimetilbutanas', '2-chloro-2,3-dimethylbutane') }, { plus: true }, { smi: '[SH-]' }, { arrow: '→' }, { smi: 'CC(C)C(C)(C)S' }, { plus: true }, { smi: '[Cl-]' }] } }],
+            q: [{ p: t('2-chlor-2,3-dimetilbutanas reaguoja su natrio hidrosulfidu etanolyje ir susidaro tiolis. Išanalizuokite mechanizmą.', '2-chloro-2,3-dimethylbutane reacts with sodium hydrosulfide in ethanol and a thiol forms. Analyse the mechanism.') },
+              { scheme: { items: [{ smi: 'CC(C)C(C)(C)Cl', name: t('2-chlor-2,3-dimetilbutanas', '2-chloro-2,3-dimethylbutane') }, { plus: true }, { smi: '[SH-]' }, { arrow: '→', below: f('C2H5OH') }, { smi: 'CC(C)C(C)(C)S' }, { plus: true }, { smi: '[Cl-]' }] } }],
             steps: [
               {
-                prompt: t('Sudėkite mechanizmo stadijas teisinga tvarka.', 'Put the stages of the mechanism in the right order.'),
-                kind: 'order',
+                prompt: t('Kuri mechanizmo stadija lėta ir kodėl?', 'Which stage of the mechanism is slow, and why?'),
+                kind: 'choice',
                 options: [
-                  tx('Lėtai: C–Cl ryšys skyla heterolitiškai, susidaro tretinis karbokatijonas.', 'Slowly: the C–Cl bond breaks heterolytically and a tertiary carbocation forms.'),
-                  tx('Greitai: hidrosulfido laisva elektronų pora sudaro ryšį su katijonu.', 'Fast: a lone pair of hydrosulfide bonds to the cation.'),
-                  tx('Pasibaigus abiem stadijoms: susidaręs tiolis ir chloridas.', 'After both stages: the thiol and chloride have formed.')
+                  tx('I stadija – C–Cl ryšio skilimas: jis sudaro nestabilų karbokatijoną, todėl lėtas, o nukleofilo puolimas vyksta greitai.', 'Stage I, the C–Cl bond breaking: it forms an unstable carbocation, so it is slow, while the attack of the nucleophile is fast.'),
+                  tx('II stadija – $HS-$ puolimas: dideli nukleofilai artėja lėtai.', 'Stage II, the attack of $HS-$: large nucleophiles approach slowly.'),
+                  tx('Abi stadijos vienodai greitos, nes reakcija vienstadijė.', 'Both stages are equally fast because the reaction is a one-stage process.'),
+                  tx('I stadija – $HS-$ atplėšia protoną, todėl reakcija lėta.', 'Stage I, $HS-$ removing a proton, so the reaction is slow.')
                 ],
-                hint: t('Kuri stadija turi būti pirma: nukleofilo puolimas ar halogenido atskilimas?', 'Which comes first: the attack of the nucleophile or the loss of the halide?'),
+                answer: 0,
+                hint: t('Kuri stadija reikalauja energijos jonams sudaryti?', 'Which stage needs energy to create ions?'),
                 solution: [{ p: t('Pirmoji, lėtoji stadija – jonizacija; antroji, greitoji – nukleofilo prisijungimas.', 'The first, slow stage is ionisation; the second, fast stage is bonding of the nucleophile.') },
                   { mech: [
                     { scheme: { items: [{ smi: 'CC(C)C(C)(C)Cl', opts: { lonePairs: [6] } }] }, arrows: [{ from: { m: 0, b: [3, 6] }, to: { m: 0, a: 6 } }], note: t('I st.: C–Cl ryšys skyla.', 'Stage I: the C–Cl bond breaks.') },
@@ -1157,7 +1186,7 @@
               cho(t('Kuris mechanizmo simbolis tinka?', 'Which mechanism symbol fits?'), MECH4, 0,
                 t('Pažiūrėkite, kiek stadijų turi reakcija.', 'See how many stages the reaction has.'),
                 t('SN1: dvi stadijos, monomolekulinė lėtoji stadija.', 'SN1: two stages and a unimolecular slow stage.')),
-              cho(t('Kuri išraiška aprašo greitį?', 'Which expression describes the rate?'), [tx('$v = k[RX]$','$v = k[RX]$'), tx('$v = k[RX][Nu]$','$v = k[RX][Nu]$'), tx('$v = k[Nu]$','$v = k[Nu]$'), tx('$v = k[RX][Nu]2$','$v = k[RX][Nu]2$')], 0,
+              cho(t('Kuri išraiška aprašo greitį?', 'Which expression describes the rate?'), [tx('$v = k[RX]$','$v = k[RX]$'), tx('$v = k[RX][Nu]$','$v = k[RX][Nu]$'), tx('$v = k[Nu]$','$v = k[Nu]$'), tx('$v = k[RX][Nu]^2^$','$v = k[RX][Nu]^2^$')], 0,
                 t('Greitį lemia lėtoji stadija.', 'The slow stage sets the rate.'), t('Lėtoji stadija – tik halogenalkano jonizacija, todėl nukleofilo koncentracija neįeina.', 'The slow stage is only the ionisation of the halide, so the nucleophile concentration does not appear.'))
             ],
             why: t('Tretinis halogenalkanas pirmiausia jonizuojasi į stabilų karbokatijoną; tik tada prisijungia nukleofilas. Pakeitimo greitį lemia tik halogenalkano koncentracija.',
@@ -1167,8 +1196,8 @@
           },
           {
             id: 'u10.draw.3',
-            q: [{ p: t('2-brombutanas reaguoja su natrio etoksidu ir susidaro butenas.', '2-bromobutane reacts with sodium ethoxide and butene forms.') },
-              { scheme: { items: [{ smi: 'CC(CC)Br', name: t('2-brombutanas', '2-bromobutane'), opts: { numbers: 'all' } }, { plus: true }, { smi: 'CC[O-]' }, { arrow: '→' }, { smi: 'CC=CC' }] } }],
+            q: [{ p: t('2-brombutanas reaguoja su natrio etoksidu, ir susidaro alkenai.', '2-Bromobutane reacts with sodium ethoxide and alkenes form.') },
+              { scheme: { items: [{ smi: 'CC(CC)Br', name: t('2-brombutanas', '2-bromobutane'), opts: { numbers: 'all' } }, { plus: true }, { smi: 'CC[O-]' }, { arrow: '→' }] } }],
             steps: [
               {
                 prompt: t('Bakstelėkite anglies atomus, nuo kurių gali būti atplėštas protonas ($β$ atomai).', 'Tap the carbons from which a proton can be removed (the $β$ carbons).'),
@@ -1181,7 +1210,7 @@
                 tx('Nuo atomo Nr. 1 ($CH3$): susidaro 1-butenas', 'From carbon no. 1 ($CH3$): but-1-ene forms'),
                 tx('Nuo abiejų lygiai po pusę', 'From both, half each'),
                 tx('Nuo atomo Nr. 2, nes jis turi halogeną', 'From carbon no. 2, because it bears the halogen')
-              ], 0, t('Paskaitykite Zaicevo taisyklę: kuris β atomas turi mažiau vandenilių?', 'Recall Zaitsev’s rule: which β carbon has fewer hydrogens?'),
+              ], 0, t('Prisiminkite Zaicevo taisyklę: kuris β atomas turi mažiau vandenilių?', 'Recall Zaitsev’s rule: which β carbon has fewer hydrogens?'),
                 [{ p: t('Pagal Zaicevo taisyklę H atskyla nuo β atomo, turinčio mažiausiai vandenilių, ir susidaro labiau pakeistas alkenas.', 'By Zaitsev’s rule H leaves from the β carbon with the fewest hydrogens and the more substituted alkene forms.') },
                   { mech: [{ scheme: { items: [{ smi: 'CC[O-]', opts: { lonePairs: [2] } }, { plus: true }, { smi: 'CC(CC)Br', opts: { allH: true, lonePairs: [4] } }] },
                     arrows: [{ from: { m: 0, lp: 2 }, to: { m: 1, a: 'H2' } }, { from: { m: 1, b: [2, 'H2'] }, to: { m: 1, mid: [1, 2] } }, { from: { m: 1, b: [1, 4] }, to: { m: 1, a: 4 } }],
@@ -1198,17 +1227,19 @@
           {
             id: 'u10.draw.4',
             q: [{ p: t('2-chlor-2-metilbutanas tirpsta etanolyje, ir kartu su eteriu susidaro alkenas.', '2-chloro-2-methylbutane dissolves in ethanol, and an alkene forms along with the ether.') },
-              { scheme: { items: [{ smi: 'CC(C)(Cl)CC', name: t('2-chlor-2-metilbutanas', '2-chloro-2-methylbutane') }, { arrow: '→', above: f('C2H5OH') }, { smi: 'CCC(C)(C)OCC' }, { plus: true }, { smi: 'CC=C(C)C' }] } }],
+              { scheme: { items: [{ smi: 'CC(C)(Cl)CC', name: t('2-chlor-2-metilbutanas', '2-chloro-2-methylbutane') }, { arrow: '→', above: f('C2H5OH') }, { smi: 'CCC(C)(C)OCC' }] } }],
             steps: [
               {
-                prompt: t('Sudėkite E1 reakcijos stadijas teisinga tvarka.', 'Put the stages of the E1 reaction in the right order.'),
-                kind: 'order',
+                prompt: t('Kuri E1 stadija lėta ir kodėl?', 'Which E1 stage is slow, and why?'),
+                kind: 'choice',
                 options: [
-                  tx('Lėtai: halogenalkanas jonizuojasi į tretinį karbokatijoną.', 'Slowly: the alkyl halide ionises to a tertiary carbocation.'),
-                  tx('Greitai: etanolis atplėšia protoną nuo β anglies atomo.', 'Fast: ethanol removes a proton from a β carbon.'),
-                  tx('Susidaro alkenas ir oksonio jonas.', 'The alkene and the oxonium ion form.')
+                  tx('I stadija – jonizacija: C–Cl ryšys nutrūksta ir susidaro karbokatijonas, todėl ji lėta, o protono atplėšimas vyksta greitai.', 'Stage I, ionisation: the C–Cl bond breaks and a carbocation forms, so it is slow, while removal of the proton is fast.'),
+                  tx('II stadija – protono atplėšimas: silpna bazė atplėšia protoną lėtai.', 'Stage II, removal of the proton: a weak base removes the proton slowly.'),
+                  tx('Abi stadijos vienodai greitos.', 'Both stages are equally fast.'),
+                  tx('I stadija – etanolis atplėšia protoną, o chloridas išeina vėliau.', 'Stage I, ethanol removes the proton and chloride leaves later.')
                 ],
-                hint: t('Pirma stadija ta pati kaip SN1.', 'The first stage is the same as in SN1.'),
+                answer: 0,
+                hint: t('Pirma stadija ta pati kaip SN1: kas joje nutinka su ryšiu?', 'The first stage is the same as in SN1: what happens to the bond in it?'),
                 solution: t('I st.: jonizacija; II st.: bazė (etanolis) atplėšia $H+$ nuo gretimo atomo, ir elektronų pora sudaro $C=C$.', 'Stage I: ionisation; stage II: the base (ethanol) removes $H+$ from a neighbouring carbon and the electron pair forms the $C=C$.')
               },
               cho(t('Kuris alkenas dominuos?', 'Which alkene will dominate?'), [
@@ -1226,14 +1257,14 @@
           },
           {
             id: 'u10.draw.5',
-            q: [{ p: t('Ištyrus tretinio halogenalkano reakciją su vandeniu, rasta: greitis padvigubėja, kai padvigubinama halogenalkano koncentracija, ir nesikeičia, kai padvigubinama nukleofilo (vandens ir bazės) koncentracija.', 'In a study of a tertiary alkyl halide with water the rate doubles when the alkyl halide concentration is doubled and does not change when the nucleophile (water and base) concentration is doubled.') }],
+            q: [{ p: t('Tiriant 2-brom-2-metilpropano reakciją su vandeniu nustatyta: padvigubinus halogenalkano koncentraciją, greitis padvigubėja, o padvigubinus hidroksido koncentraciją, nepasikeičia.', 'In a study of 2-bromo-2-methylpropane with water, doubling the alkyl halide concentration doubles the rate, while doubling the hydroxide concentration leaves it unchanged.') }],
             steps: [
-              cho(t('Kuris mechanizmas atitinka šiuos duomenis?', 'Which mechanism fits these data?'), MECH4, 0,
-                t('Kokie reagentai įeina į lėtąją stadiją?', 'Which reagents take part in the slow stage?'),
-                t('SN1 (arba E1): lėtoji stadija – tik jonizacija.', 'SN1 (or E1): the slow stage is ionisation only.')),
+              { prompt: t('Kurie mechanizmai atitinka šiuos duomenis?', 'Which mechanisms fit these data?'), kind: 'multi', options: MECH4, answer: [0, 2],
+                hint: t('Kokie reagentai įeina į lėtąją stadiją?', 'Which reagents take part in the slow stage?'),
+                solution: t('SN1 ir E1: abiejų lėtoji stadija – tik halogenalkano jonizacija, todėl greitis = $k[RX]$. SN2 ir E2 greitis priklausytų ir nuo nukleofilo (bazės) koncentracijos.', 'SN1 and E1: in both the slow stage is the ionisation of the alkyl halide alone, so rate = $k[RX]$. The SN2 and E2 rates would also depend on the nucleophile (base) concentration.') },
               cho(t('Kuris tarpinis junginys susidaro?', 'Which intermediate forms?'), [mo('C[C+](C)C'), mo('CC(C)(C)O'), mo('CC(C)[CH2+]'), mo('[CH3+]')], 0,
                 t('Tretinis halogenalkanas praranda halogenido joną.', 'A tertiary alkyl halide loses the halide ion.'),
-                t('Susidaro stabiliausias – tretinis – katijonas (šiame pavyzdyje $(CH3)3C+$).', 'The most stable, tertiary, cation forms (here $(CH3)3C+$).'))
+                t('Susidaro stabiliausias – tretinis – katijonas (iš 2-brom-2-metilpropano susidaro $(CH3)3C+$).', 'The most stable, tertiary, cation forms (here from 2-bromo-2-methylpropane, $(CH3)3C+$).'))
             ],
             why: t('Greičio lygtis rodo, kokios dalelės dalyvauja lėtoje stadijoje. Jei nukleofilo koncentracija neįeina, jis prisijungia vėliau, jau po karbokatijono susidarymo.',
               'The rate law shows which particles take part in the slow stage. If the nucleophile concentration does not appear, it bonds later, after the carbocation has formed.'),
@@ -1264,13 +1295,14 @@
           {
             id: 'u10.draw.7',
             q: [{ p: t('Natrio benzentiolatas reaguoja su jodmetanu.', 'Sodium benzenethiolate reacts with iodomethane.') },
-              { scheme: { items: [{ smi: '[S-]c1ccccc1', opts: { numbers: [1] } }, { plus: true }, { smi: 'CI', name: t('jodmetanas', 'iodomethane') }, { arrow: '→' }, { smi: 'CSc1ccccc1' }, { plus: true }, { smi: '[I-]' }] } }],
+              { scheme: { items: [{ smi: '[S-]c1ccccc1' }, { plus: true }, { smi: 'CI', name: t('jodmetanas', 'iodomethane') }, { arrow: '→' }, { smi: 'CSc1ccccc1' }, { plus: true }, { smi: '[I-]' }] } }],
             steps: [
               {
-                prompt: t('Bakstelėkite nukleofilinį atomą.', 'Tap the nucleophilic atom.'),
-                kind: 'atoms', mol: { smi: '[S-]c1ccccc1', opts: { numbers: 'all' } }, answer: [0],
-                hint: t('Nukleofilas turi laisvą elektronų porą ir neigiamą krūvį.', 'A nucleophile has a lone pair and a negative charge.'),
-                solution: t('Siera Nr. 1 turi neigiamą krūvį ir laisvas poras.', 'Sulfur no. 1 has the negative charge and lone pairs.')
+                prompt: t('Priskirkite reagentams jų vaidmenį.', 'Assign each reagent its role.'),
+                kind: 'match',
+                answer: { left: [mo('[S-]c1ccccc1'), mo('CI')], right: [tx('nukleofilas', 'nucleophile'), tx('elektrofilas (substratas)', 'electrophile (substrate)')], pairs: [0, 1] },
+                hint: t('Kuris reagentas turi neigiamą krūvį ir laisvų elektronų porų, o kuris – dalinį teigiamą krūvį ant anglies?', 'Which reagent has a negative charge and lone pairs, and which has a partial positive charge on carbon?'),
+                solution: t('Tiolatas (S⁻) dovanoja elektronų porą, todėl yra nukleofilas; jodmetano anglis turi δ+, todėl jis – elektrofilas.', 'The thiolate (S⁻) donates an electron pair, so it is the nucleophile; the carbon of iodomethane is δ+, so it is the electrophile.')
               },
               cho(t('Kuris mechanizmas?', 'Which mechanism?'), MECH4, 1,
                 t('Metilo halogenidas.', 'A methyl halide.'),
@@ -1287,18 +1319,19 @@
             why: t('Metilinimas – tipiška SN2 reakcija. Gyvuose organizmuose tą patį daro S-adenozilmetioninas: nukleofilas puola metilgrupę, o sulfonio siera išeina kaip nueinančioji grupė.',
               'Methylation is a typical SN2 reaction. In living organisms S-adenosylmethionine does the same: a nucleophile attacks the methyl group and the sulfonium sulfur leaves as the leaving group.'),
             src: 'L10 p13, p15, p16',
-            claims: [{ react: ['sn2', ['CI'], { nu: 'SC' }, 'CSC'] }, { name: ['CSc1ccccc1', t('metiltiobenzenas', '(methylsulfanyl)benzene')] }]
+            claims: [{ name: ['CSc1ccccc1', t('metiltiobenzenas', '(methylsulfanyl)benzene')] }]
           },
           {
             id: 'u10.draw.8',
             q: [{ p: t('Fermento halogenalkanų dehalogenazės aktyvioje vietoje yra karboksilato grupė. Ji reaguoja su 1,2-dichloretanu ir pakeičia vieną chlorą. Karboksilatas modeliuojamas acetatu.', 'In the active site of the enzyme haloalkane dehalogenase there is a carboxylate group. It reacts with 1,2-dichloroethane and replaces one chlorine. The carboxylate is modelled by acetate.') },
-              { scheme: { items: [{ smi: 'CC(=O)[O-]', opts: { numbers: 'all' } }, { plus: true }, { smi: 'ClCCCl', name: t('1,2-dichloretanas', '1,2-dichloroethane') }, { arrow: '→' }, { smi: 'CC(=O)OCCCl' }, { plus: true }, { smi: '[Cl-]' }] } }],
+              { scheme: { items: [{ smi: 'CC(=O)[O-]' }, { plus: true }, { smi: 'ClCCCl', name: t('1,2-dichloretanas', '1,2-dichloroethane') }, { arrow: '→' }, { smi: 'CC(=O)OCCCl' }, { plus: true }, { smi: '[Cl-]' }] } }],
             steps: [
               {
-                prompt: t('Bakstelėkite nukleofilinį atomą.', 'Tap the nucleophilic atom.'),
-                kind: 'atoms', mol: { smi: 'CC(=O)[O-]', opts: { numbers: 'all' } }, answer: [3],
-                hint: t('Nukleofilas turi neigiamą krūvį.', 'The nucleophile carries the negative charge.'),
-                solution: t('Neigiamą krūvį turi deguonis Nr. 4.', 'Oxygen no. 4 carries the negative charge.')
+                prompt: t('Priskirkite reagentams jų vaidmenį.', 'Assign each reagent its role.'),
+                kind: 'match',
+                answer: { left: [mo('CC(=O)[O-]'), mo('ClCCCl')], right: [tx('nukleofilas', 'nucleophile'), tx('elektrofilas (substratas)', 'electrophile (substrate)')], pairs: [0, 1] },
+                hint: t('Kuris reagentas turi neigiamą krūvį, o kuris – anglį, sujungtą su elektroneigiamu chloru?', 'Which reagent carries the negative charge, and which has a carbon bonded to electronegative chlorine?'),
+                solution: t('Karboksilato deguonis turi neigiamą krūvį ir laisvų porų – tai nukleofilas; dichloretano anglis turi δ+, todėl tai elektrofilas.', 'The carboxylate oxygen carries the negative charge and lone pairs, so it is the nucleophile; the carbon of dichloroethane is δ+, so it is the electrophile.')
               },
               cho(t('Pagal kokį mechanizmą deguonis pakeičia chlorą?', 'By which mechanism does oxygen replace chlorine?'), MECH4, 1,
                 t('Pirminis halogenalkanas, anijonas kaip nukleofilas.', 'A primary alkyl halide and an anion as the nucleophile.'),
@@ -1395,7 +1428,7 @@
                 ? t('Bakstelėkite anglies atomus, tarp kurių pasidalija teigiamas krūvis tarpiniame katijone.', 'Tap the carbons that share the positive charge in the intermediate cation.')
                 : t('Bakstelėkite anglies atomą, kuris taps teigiamas tarpiniame katijone.', 'Tap the carbon that becomes positive in the intermediate cation.'),
               kind: 'atoms', mol: { smi, opts: { numbers: 'all' } }, answer: ends,
-              hint: key === 'allylic' ? t('Pažiūrėkite, su kuo konjuguotas katijono centras.', 'See what the cationic centre is conjugated with.') : t('Teigiamas krūvis lieka ten, kur buvo halogenas.', 'The positive charge stays where the halogen was.'),
+              hint: key === 'allylic' ? t('Pažiūrėkite, su kuo konjuguotas katijono centras.', 'See what the cationic centre is conjugated with.') : t('Kuris atomas lieka be ryšio elektronų, kai halogenas išeina su jais?', 'Which atom is left without the bonding electrons when the halogen leaves with them?'),
               solution: key === 'allylic'
                 ? t('Katijonas alilo tipo: krūvis delokalizuotas tarp atomų Nr. ' + (ends[0] + 1) + ' ir Nr. ' + (ends[1] + 1) + '.', 'The cation is allylic: the charge is delocalised over carbons no. ' + (ends[0] + 1) + ' and no. ' + (ends[1] + 1) + '.')
                 : t('Po halogeno atskilimo teigiamas krūvis lieka ant atomo Nr. ' + (s.c + 1) + ': ' + CAT[key].lt + '.', 'After the halogen leaves, the positive charge stays on carbon no. ' + (s.c + 1) + ': a ' + CAT[key].en + '.')
@@ -1423,7 +1456,7 @@
               prompt: t('Kuris teiginys apie šios reakcijos greitį teisingas?', 'Which statement about the rate of this reaction is right?'),
               kind: 'choice',
               options: [
-                tx('Greitis priklauso tik nuo halogenalkano koncentracijos.', 'The rate depends only on the concentration of the alkyl halide.'),
+                tx('Greitį lemia vien halogenalkano koncentracija.', 'The rate is set by the concentration of the alkyl halide alone.'),
                 tx('Greitis priklauso nuo halogenalkano ir nukleofilo koncentracijų.', 'The rate depends on the concentrations of the alkyl halide and the nucleophile.'),
                 tx('Greitis priklauso tik nuo nukleofilo koncentracijos.', 'The rate depends only on the concentration of the nucleophile.'),
                 tx('Greitis nepriklauso nei nuo vieno reagento.', 'The rate depends on neither reagent.')
@@ -1471,7 +1504,7 @@
             const TPL = ['CC[C@H](C)X', 'CCC[C@H](C)X', 'CCCC[C@H](C)X', 'CCCCC[C@H](C)X', 'CCCCCC[C@H](C)X', 'CCC[C@H](CC)X', 'CCCC[C@H](CC)X', 'CCCC[C@H](CCC)X'];
             let tpl = ctx.pick(TPL);
             if (mirror) tpl = flip(tpl);
-            const nuKey = ctx.pick(['SH', 'CN', 'SC', 'I']);
+            const nuKey = ctx.pick(['SH', 'CN', 'SC']);
             if (nuKey === 'I' && X === 'I') return null; //(' skip');
             const nu = NUC[nuKey];
             const sub = putHalogen(tpl, X);
@@ -1489,7 +1522,7 @@
             const desc = (c) => '(' + c + ')';
             const steps = [
               cho(t('Kuris mechanizmas vyrauja?', 'Which mechanism predominates?'), MECH4, 1,
-                t('Antrinis halogenalkanas, stiprus nukleofilas, aprotoninis tirpiklis.', 'A secondary alkyl halide, a strong nucleophile, an aprotic solvent.'),
+                t('Kokį kelią lemia substrato klasė, nukleofilo stiprumas ir tirpiklio tipas?', 'Which path is decided by the class of the substrate, the strength of the nucleophile and the type of solvent?'),
                 t('SN2: stiprus, silpnai bazinis nukleofilas poliniame aprotoniniame tirpiklyje puola iš nugaros.', 'SN2: a strong, weakly basic nucleophile in a polar aprotic solvent attacks from the back.')),
               {
                 prompt: t('Kuris produktas susidaro?', 'Which product forms?'),
@@ -1544,7 +1577,7 @@
                 prompt: t('Kokia produkto stereochemija?', 'What is the stereochemistry of the product?'),
                 kind: 'choice', options: [mo(inv), mo(ret), tx('Racematas: lygiai po pusę abiejų enantiomerų', 'A racemate: equal amounts of both enantiomers')], answer: 2,
                 hint: t('Kokia yra karbokatijono geometrija jo centre?', 'What is the geometry of the carbocation at its centre?'),
-                solution: [{ p: t('Plokščias $sp2$ katijonas gali būti atakuojamas iš abiejų pusių, todėl susidaro ' + desc(cRet) + ' ir ' + desc(cInv) + ' enantiomerai maždaug po lygiai.', 'The flat $sp2$ cation can be attacked from either face, so the ' + desc(cRet) + ' and ' + desc(cInv) + ' enantiomers form in roughly equal amounts.') }, { mol: [{ smi: ret, caption: t(desc(cRet), desc(cRet)) }, { smi: inv, caption: t(desc(cInv), desc(cInv)) }] }]
+                solution: [{ p: t('Plokščias sp² katijonas gali būti atakuojamas iš abiejų pusių, todėl susidaro ' + desc(cRet) + ' ir ' + desc(cInv) + ' enantiomerai maždaug po lygiai.', 'The flat sp² cation can be attacked from either face, so the ' + desc(cRet) + ' and ' + desc(cInv) + ' enantiomers form in roughly equal amounts.') }, { mol: [{ smi: ret, caption: t(desc(cRet), desc(cRet)) }, { smi: inv, caption: t(desc(cInv), desc(cInv)) }] }]
               },
               cho(t('Ar produktų mišinys sukamas poliarizuotą šviesą?', 'Does the product mixture rotate plane-polarised light?'), [
                 tx('Ne: racematas optiškai neaktyvus.', 'No: a racemate is optically inactive.'),
@@ -1589,7 +1622,7 @@
           },
           {
             id: 'u10.rank.2',
-            q: [{ p: t('Penkios deguonies dalelės gali veikti kaip nukleofilai.', 'Five oxygen species can act as nucleophiles.') }],
+            q: [{ p: t('Penki deguonies nukleofilai.', 'Five oxygen nucleophiles.') }],
             steps: [
               {
                 prompt: t('Sudėkite nukleofilus pagal stiprumą: nuo stipriausio iki silpniausio.', 'Put the nucleophiles in order of strength: from the strongest to the weakest.'),
@@ -1614,7 +1647,7 @@
             steps: [
               {
                 prompt: t('Sudėkite katijonus pagal stabilumą: nuo stabiliausio iki nestabiliausio.', 'Put the cations in order of stability: from the most stable to the least stable.'),
-                kind: 'order', options: [tx('tretinis', 'tertiary'), tx('antrinis', 'secondary'), tx('pirminis', 'primary'), tx('metilo', 'methyl')],
+                kind: 'order', options: [tx('tretinis', 'tertiary'), tx('antrinis', 'secondary'), tx('pirminis', 'primary'), tx('metilkatijonas', 'methyl cation')],
                 hint: t('Kiek alkilgrupių stabilizuoja teigiamą anglį?', 'How many alkyl groups stabilise the positive carbon?'),
                 solution: t('Tretinis > antrinis > pirminis > metilo.', 'Tertiary > secondary > primary > methyl.')
               },
@@ -1652,7 +1685,7 @@
           },
           {
             id: 'u10.rank.5',
-            q: [{ p: t('Šie halogenidai ionizuojasi SN1 reakcijose.', 'These halides ionise in SN1 reactions.') }, { mol: [{ smi: 'BrCc1ccccc1' }, { smi: 'C=CCBr' }, { smi: 'CC(C)(C)Br' }, { smi: 'CC(C)Br' }, { smi: 'CCBr' }] }],
+            q: [{ p: t('Šie halogenidai jonizuojasi SN1 reakcijose.', 'These halides ionise in SN1 reactions.') }, { mol: [{ smi: 'BrCc1ccccc1' }, { smi: 'C=CCBr' }, { smi: 'CC(C)(C)Br' }, { smi: 'CC(C)Br' }, { smi: 'CCBr' }] }],
             steps: [
               {
                 prompt: t('Sudėkite halogenidus pagal SN1 reaktingumą: nuo didžiausio iki mažiausio.', 'Put the halides in order of SN1 reactivity: from the highest to the lowest.'),
@@ -1697,13 +1730,13 @@
           },
           {
             id: 'u10.rank.7',
-            q: [{ p: t('Du pirminiai halogenalkanai reaguoja su natrio hidroksidu acetone.', 'Two primary alkyl halides react with sodium hydroxide in acetone.') }, { mol: [{ smi: 'CCCCCl', caption: t('a', 'a') }, { smi: 'CCCCI', caption: t('b', 'b') }] }],
+            q: [{ p: t('Du pirminiai halogenalkanai reaguoja su natrio hidroksidu vandeniniame etanolyje.', 'Two primary alkyl halides react with sodium hydroxide in aqueous ethanol.') }, { mol: [{ smi: 'CCCCCl', caption: t('a', 'a') }, { smi: 'CCCCI', caption: t('b', 'b') }] }],
             steps: [
               cho(t('Kuris halogenalkanas reaguoja greičiau?', 'Which alkyl halide reacts faster?'), [
                 tx('b: jodbutanas', 'b: iodobutane'), tx('a: chlorbutanas', 'a: chlorobutane'), tx('Greičiai vienodi', 'The rates are equal'), tx('Nė vienas nereaguoja', 'Neither reacts')], 0,
                 t('Palyginkite nueinančiąsias grupes.', 'Compare the leaving groups.'),
                 t('Substratai vienodi, skiriasi tik halogenas; jodidas geriau išeina.', 'The substrates are the same except for the halogen; iodide leaves better.')),
-              cho(t('Kaip pasikeistų greitis, jei vietoje $HO-$ būtų naudojamas $H2O$ ($SN2$)?', 'How would the rate change if $H2O$ replaced $HO-$ (SN2)?'), [
+              cho(t('Kaip pasikeistų greitis, jei vietoje $HO-$ būtų naudojamas $H2O$ (SN2)?', 'How would the rate change if $H2O$ replaced $HO-$ (SN2)?'), [
                 tx('Sumažėtų: vanduo – daug silpnesnis nukleofilas.', 'It would fall: water is a much weaker nucleophile.'),
                 tx('Padidėtų: vanduo yra neutralus.', 'It would rise: water is neutral.'),
                 tx('Nepasikeistų.', 'It would not change.'),
@@ -1720,7 +1753,7 @@
             steps: [
               {
                 prompt: t('Sudėkite halogenalkanus pagal eliminavimo produkto dalį: nuo mažiausios iki didžiausios.', 'Put the alkyl halides in order of the share of elimination product: from the smallest to the largest.'),
-                kind: 'order', options: [tx('a: brommetanas (eliminavimas neįmanomas)', 'a: bromomethane (elimination impossible)'), tx('b: brometanas (10 %)', 'b: bromoethane (10 %)'), tx('c: 2-brompropanas (79 %)', 'c: 2-bromopropane (79 %)'), tx('d: 2-brom-2-metilpropanas (100 %)', 'd: 2-bromo-2-methylpropane (100 %)')],
+                kind: 'order', options: [tx('a: brommetanas', 'a: bromomethane'), tx('b: brometanas', 'b: bromoethane'), tx('c: 2-brompropanas', 'c: 2-bromopropane'), tx('d: 2-brom-2-metilpropanas', 'd: 2-bromo-2-methylpropane')],
                 hint: t('Eliminavimui reikia β vandenilio; didėjant klasei, SN2 vis labiau užstojamas.', 'Elimination needs a β hydrogen; as the class rises SN2 is increasingly shielded.'),
                 solution: t('Brommetanas neturi β atomo, pirminis duoda 10 % alkeno, antrinis – 79 %, tretinis – 100 %.', 'Bromomethane has no β carbon, a primary halide gives 10 % alkene, a secondary one 79 %, a tertiary one 100 %.')
               }
@@ -1826,7 +1859,7 @@
           function attempt(ctx) {
           const { react } = ctx;
           const SUBS = {
-            primary: ['CCCX', 'CCCCX', 'CC(C)CX', 'CCCCCX'],
+            primary: ['CCCX', 'CCCCX', 'CCCCCX'],
             secondary: ['CC(X)C', 'CCC(X)C', 'XC1CCCCC1', 'CC(X)CC(C)C', 'CCCC(X)C'],
             tertiary: ['CC(C)(C)X', 'CCC(C)(C)X', 'XC1(C)CCCCC1', 'CCC(C)(X)CC', 'CC(C)(X)CCC']
           };
@@ -1847,7 +1880,7 @@
           let pick = null;
           for (let tries = 0; tries < 80 && !pick; tries++) {
             const scen = ctx.pick(['strong', 'strong', 'good', 'weak']);
-            const cls = scen === 'weak' ? 'tertiary' : ctx.pick(['primary', 'secondary', 'tertiary']);
+            const cls = scen === 'weak' ? 'tertiary' : scen === 'good' ? ctx.pick(['primary', 'secondary']) : ctx.pick(['primary', 'secondary', 'tertiary']);
             const X = ctx.pick(['Cl', 'Br', 'I']);
             const smi = putHalogen(ctx.pick(SUBS[cls]), X);
             const nuKey = scen === 'strong' ? ctx.pick(Object.keys(STRONG)) : scen === 'good' ? ctx.pick(Object.keys(GOOD)) : ctx.pick(Object.keys(WEAK));
@@ -1877,7 +1910,7 @@
           const seenC = new Set(prodOpts.map((o) => canon(ctx, o.mol.smi)));
           const alk = react.run('elim', [smi], { base: 'strong' }).products.find((p) => p.major);
           [isE ? sn : (alk && alk.smi)].concat(otherPositions(ctx, smi, frag)).forEach((x) => {
-            if (!x || prodOpts.length >= 4 || (prodOpts.length >= 3 && Math.random() < 0)) return;
+            if (!x || prodOpts.length >= 4) return;
             const k = canon(ctx, x);
             if (!seenC.has(k)) { seenC.add(k); prodOpts.push({ mol: { smi: x } }); }
           });
@@ -1948,12 +1981,12 @@
           },
           {
             id: 'u10.allyl.2',
-            q: [{ p: t('Benzilo chloridas ($C6H5CH2Cl$) tirpsta etanolyje daug greičiau už 1-chlorbutaną, nors abu yra pirminiai.', 'Benzyl chloride ($C6H5CH2Cl$) dissolves in ethanol much faster than 1-chlorobutane, although both are primary.') }],
+            q: [{ p: t('Benzilo chloridas ($C6H5CH2Cl$) su etanoliu reaguoja (SN1, solvolizė) daug greičiau už 1-chlorbutaną, nors abu yra pirminiai.', 'Benzyl chloride ($C6H5CH2Cl$) reacts with ethanol (SN1 solvolysis) much faster than 1-chlorobutane, although both are primary.') }],
             steps: [
               {
                 prompt: t('Bakstelėkite atomus, kuriems tenka teigiamas krūvis benzilo katijone.', 'Tap the atoms that carry the positive charge in the benzyl cation.'),
                 kind: 'atoms', mol: { smi: '[CH2+]c1ccccc1', opts: { numbers: 'all' } }, answer: [0, 2, 4, 6],
-                hint: t('Krūvis delokalizuojasi per žiedą orto ir para padėtyse.', 'The charge is delocalised in the ring at the ortho and para positions.'),
+                hint: t('Nupieškite rezonansines formules: į kuriuos žiedo atomus gali pereiti krūvis?', 'Draw the resonance structures: to which ring atoms can the charge move?'),
                 solution: [{ p: t('Be benzilo anglies Nr. 1, krūvis pasiskirsto orto (Nr. 3 ir Nr. 7) ir para (Nr. 5) atomuose.', 'Besides benzylic carbon no. 1 the charge is spread over the ortho (no. 3 and no. 7) and para (no. 5) carbons.') }, { resonance: [{ smi: '[CH2+]c1ccccc1' }, { smi: 'C=C1C=CC=C[CH+]1' }, { smi: 'C=C1C=C[CH+]C=C1' }] }]
               },
               cho(t('Kuris paaiškinimas tinka?', 'Which explanation fits?'), [
@@ -1964,7 +1997,7 @@
               ], 0, t('Nueinančioji grupė abiem ta pati; kuo skiriasi katijonai?', 'The leaving group is the same in both; how do the cations differ?'),
                 t('Chloridas tas pats; skiriasi susidarančio katijono stabilumas.', 'The chloride is the same; what differs is the stability of the cation.'))
             ],
-            why: t('Benzilo katijonas stabiliausias iš pirminių-antrinių-tretinių katijonų, nes krūvis delokalizuotas per aromatinį žiedą. Todėl benzilo halogenidai lengvai reaguoja SN1, nors yra pirminiai.', 'The benzyl cation is more stable than the primary, secondary or tertiary alkyl cations because its charge is delocalised over the aromatic ring. Benzylic halides therefore undergo SN1 readily even though they are primary.'),
+            why: t('Benzilkatijonas stabilesnis už pirminius, antrinius ir net tretinius alkilkatijonus (kurso eilė, L7 p9), nes krūvis delokalizuotas per aromatinį žiedą. Todėl benzilo halogenidai lengvai reaguoja SN1, nors yra pirminiai.', 'The benzyl cation is more stable than primary, secondary and even tertiary alkyl cations (the course order, L7 p9) because its charge is delocalised over the aromatic ring. Benzylic halides therefore undergo SN1 readily even though they are primary.'),
             src: 'L7 p9, S5.11',
             claims: [{ react: ['sn1', ['ClCc1ccccc1'], { nu: 'OCC' }, 'CCOCc1ccccc1'] }]
           },
@@ -1987,27 +2020,27 @@
               ], 0, t('Ką galima pasakyti apie brome esančią laisvą elektronų porą?', 'What can be said about the lone pair on bromine?'),
                 t('Halogeno laisva pora dalyvauja konjugacijoje, todėl ryšys trumpesnis ir sunkiau nutraukiamas.', 'The lone pair of the halogen takes part in conjugation, so the bond is shorter and harder to break.'))
             ],
-            why: t('Svarbu, ar halogenas prie $sp3$ anglies šalia $C=C$ (alilo – reaktyvus), ar pačiame $C=C$ (vinilo – nereaktyvus). Pirmajame jonizacija duoda stabilų katijoną, antrajame ryšys sustiprėja.', 'What matters is whether the halogen is on an $sp3$ carbon next to a $C=C$ (allylic, reactive) or on the $C=C$ itself (vinylic, unreactive). In the first, ionisation gives a stable cation; in the second the bond is strengthened.'),
+            why: t('Svarbu, ar halogenas prie sp³ anglies šalia $C=C$ (alilo – reaktyvus), ar pačiame $C=C$ (vinilo – nereaktyvus). Pirmajame jonizacija duoda stabilų katijoną, antrajame ryšys sustiprėja.', 'What matters is whether the halogen is on an sp³ carbon next to a $C=C$ (allylic, reactive) or on the $C=C$ itself (vinylic, unreactive). In the first, ionisation gives a stable cation; in the second the bond is strengthened.'),
             src: 'L10 p24, L7 p9'
           },
           {
             id: 'u10.allyl.4',
-            q: [{ p: t('1-brom-3-metil-2-butenas tirpinamas vandenyje.', '1-bromo-3-methylbut-2-ene is dissolved in water.') }, { mol: { smi: 'CC(C)=CCBr', name: t('1-brom-3-metil-2-butenas', '1-bromo-3-methylbut-2-ene') } }],
+            q: [{ p: t('1-chlor-3-metil-2-pentenas tirpinamas vandenyje.', '1-chloro-3-methylpent-2-ene is dissolved in water.') }, { mol: { smi: 'ClCC=C(C)CC', name: t('1-chlor-3-metil-2-pentenas', '1-chloro-3-methylpent-2-ene') } }],
             steps: [
               cho(t('Koks katijonas susidaro?', 'Which cation forms?'), [
-                mo('CC(C)=C[CH2+]'), mo('CC(C)[CH+]C'), mo('[CH2+]CC(C)C'), tx('Katijonas nesusidaro.', 'No cation forms.')
-              ], 0, t('Atskilkite bromidą ir nieko daugiau nekeiskite.', 'Remove bromide and change nothing else.'),
-                [{ p: t('Susidaro alilkatijonas: krūvis dalijasi tarp pirminio ir tretinio atomų.', 'An allyl cation forms: the charge is shared between a primary and a tertiary carbon.') }, { resonance: [{ smi: 'CC(C)=C[CH2+]' }, { smi: 'C[C+](C)C=C' }] }]),
+                mo('[CH2+]C=C(C)CC'), mo('[CH2+]C(C)=CCC'), mo('CC=C(C)[CH+]C'), tx('Katijonas nesusidaro.', 'No cation forms.')
+              ], 0, t('Kas išeina jonizacijos metu ir ar keičiasi anglies skeletas?', 'What leaves in ionisation, and does the carbon skeleton change?'),
+                [{ p: t('Susidaro alilkatijonas: krūvis dalijasi tarp pirminio ir tretinio atomų.', 'An allyl cation forms: the charge is shared between a primary and a tertiary carbon.') }, { resonance: [{ smi: '[CH2+]C=C(C)CC' }, { smi: 'C=C[C+](C)CC' }] }]),
               {
                 prompt: t('Pažymėkite visus susidarančius alkoholius.', 'Pick every alcohol that forms.'),
-                kind: 'multi', options: [mo('CC(C)=CCO'), mo('CC(C)(O)C=C'), mo('CC(C)CCO'), mo('CC(C)C(O)C')], answer: [0, 1],
+                kind: 'multi', options: [mo('OCC=C(C)CC'), mo('C=CC(C)(O)CC'), mo('C=C(CC)CCO'), mo('C=CC(C)C(C)O')], answer: [0, 1],
                 hint: t('Vanduo gali jungtis prie abiejų galų, kur yra dalis teigiamo krūvio.', 'Water can bond at both ends that carry part of the positive charge.'),
-                solution: t('Gaunami pirminis (prie CH₂) ir tretinis (prie $C(CH3)2$) alilo alkoholiai; sotieji alkoholiai neturi atitikties katijone.', 'A primary alcohol (on the CH₂) and a tertiary one (on $C(CH3)2$) form, both allylic; the saturated alcohols do not correspond to the cation.')
+                solution: t('Gaunami pirminis (prie CH₂) ir tretinis alilo alkoholiai; kiti du turi kitokį anglies skeletą ar OH vietą.', 'A primary (on the CH₂) and a tertiary allylic alcohol form; the other two have a different carbon skeleton or OH position.')
               }
             ],
-            why: t('Alilo katijonas turi du reaktyvius galus. Kai galai nevienodi, gaunamas dviejų izomerų mišinys; santykį lemia katijono stabilumas ir erdvinė kliūtis.', 'An allyl cation has two reactive ends. When the ends are different a mixture of two isomers results; the ratio depends on the stability of the cation and on steric hindrance.'),
+            why: t('Alilkatijonas turi du reaktyvius galus. Kai galai nevienodi, gaunamas dviejų izomerų mišinys; santykį lemia katijono stabilumas ir erdvinė kliūtis.', 'An allyl cation has two reactive ends. When the ends are different a mixture of two isomers results; the ratio depends on the stability of the cation and on steric hindrance.'),
             src: 'S5.11, L7 p9',
-            claims: [{ react: ['sn1', ['CC(C)=CCBr'], { nu: 'OH' }, 'CC(C)=CCO'] }, { react: ['sn1', ['CC(C)=CCBr'], { nu: 'OH' }, 'CC(C)(O)C=C'] }]
+            claims: [{ react: ['sn1', ['ClCC=C(C)CC'], { nu: 'OH' }, 'OCC=C(C)CC'] }, { react: ['sn1', ['ClCC=C(C)CC'], { nu: 'OH' }, 'C=CC(C)(O)CC'] }]
           },
           {
             id: 'u10.allyl.5',
@@ -2040,8 +2073,8 @@
                 tx('Tik (S) enantiomeras (inversija).', 'Only the (S) enantiomer (inversion).'),
                 tx('Tik (R) enantiomeras (konfigūracija išlieka).', 'Only the (R) enantiomer (the configuration is retained).'),
                 tx('Produktas achiralinis.', 'The product is achiral.')
-              ], 0, t('Koks yra katijono centrinio atomo hibridizacija ir geometrija?', 'What are the hybridisation and geometry of the central atom of the cation?'),
-                t('SN1 per plokščią $sp2$ centrą iš chiralinio substrato duoda racematą.', 'SN1 through a flat $sp2$ centre gives a racemate from a chiral substrate.'))
+              ], 0, t('Kokia yra katijono centrinio atomo hibridizacija ir geometrija?', 'What are the hybridisation and geometry of the central atom of the cation?'),
+                t('SN1 per plokščią sp² centrą iš chiralinio substrato duoda racematą.', 'SN1 through a flat sp² centre gives a racemate from a chiral substrate.'))
             ],
             why: t('Benzilo (kaip ir alilo) halogenidai reaguoja SN1 būdu, todėl iš jų gaunami racematai. SN2 apverstų konfigūraciją, bet su silpnu nukleofilu ir protoniniu tirpikliu SN2 neįvyksta.', 'Benzylic (like allylic) halides react by SN1, so they give racemates. SN2 would invert the configuration, but with a weak nucleophile and a protic solvent SN2 does not take place.'),
             src: 'L10 p6, L7 p9',
@@ -2057,24 +2090,24 @@
               hint: t('Kuriuos katijonus stabilizuoja rezonansas?', 'Which cations are stabilised by resonance?'),
               solution: t('a duoda benzilo, c – alilo katijoną: rezonansas stabilizuoja stipriau už alkilgrupes. b duotų antrinį, d – pirminį alkilo katijoną.', 'a gives a benzylic and c an allylic cation: resonance stabilises more than alkyl groups do. b would give a secondary and d a primary alkyl cation.')
             }],
-            why: t('Katijonų stabilumo eilė: benzilo > alilo > tretinis > antrinis > pirminis > metilo. Pirminis benzilo halogenidas gali jonizuotis lengviau už tretinį alkilo.', 'The order of cation stability is benzylic > allylic > tertiary > secondary > primary > methyl. A primary benzylic halide can ionise more readily than a tertiary alkyl one.'),
+            why: t('Pagal kurso katijonų stabilumo eilę benzilkatijonas > alilkatijonas > tretinis > antrinis > pirminis > metilkatijonas, benzilo ir alilo halogenidai jonizuojasi lengviausiai.', 'By the course’s order of cation stability, benzylic > allylic > tertiary > secondary > primary > methyl, benzylic and allylic halides ionise most readily.'),
             src: 'L7 p9, S5.11'
           },
           {
             id: 'u10.allyl.8',
             q: [{ p: t('3-chlor-3-metil-1-butenas tirpinamas vandenyje.', '3-chloro-3-methylbut-1-ene is dissolved in water.') }, { mol: { smi: 'C=CC(C)(C)Cl', name: t('3-chlor-3-metil-1-butenas', '3-chloro-3-methylbut-1-ene'), caption: t('tretinis alilo halogenidas', 'tertiary allylic halide') } }],
             steps: [
-              cho(t('Koks katijonas susidaro?', 'Which cation forms?'), [mo('C=C[C+](C)C'), mo('CC(C)[CH+]C'), mo('C=CC(C)[CH2+]'), tx('Nesusidaro joks katijonas.', 'No cation forms.')], 0,
+              cho(t('Koks katijonas susidaro?', 'Which cation forms?'), [mo('C=C[C+](C)C'), mo('C=C(C)[CH+]C'), mo('[CH2+]C(C)=CC'), tx('Nesusidaro joks katijonas.', 'No cation forms.')], 0,
                 t('Išeina tik chloridas.', 'Only chloride leaves.'),
                 [{ p: t('Susidaro tretinis alilo katijonas, kurio krūvis dalijasi su pirminiu atomu.', 'A tertiary allylic cation forms whose charge is shared with a primary carbon.') }, { resonance: [{ smi: 'C=C[C+](C)C' }, { smi: '[CH2+]C=C(C)C' }] }]),
               {
                 prompt: t('Pažymėkite abu pakeitimo produktus.', 'Pick both substitution products.'),
-                kind: 'multi', options: [mo('C=CC(C)(C)O'), mo('OCC=C(C)C'), mo('CC(C)CCO'), mo('CC(C)C(C)O')], answer: [0, 1],
+                kind: 'multi', options: [mo('C=CC(C)(C)O'), mo('OCC=C(C)C'), mo('C=C(C)CCO'), mo('C=C(C)C(C)O')], answer: [0, 1],
                 hint: t('Kiekvienas katijono galas gali prisijungti vandenį.', 'Each end of the cation can bond water.'),
                 solution: t('Vanduo prisijungia prie tretinio galo (tretinis alkoholis) ir prie pirminio galo (pirminis alkoholis).', 'Water bonds at the tertiary end (a tertiary alcohol) and at the primary end (a primary alcohol).')
               }
             ],
-            why: t('Tas pats katijonas susidaro ir iš šio halogenido, ir iš 1-brom-3-metil-2-butenas izomero. Alilo perskirstymas leidžia nukleofilui atsidurti kitame molekulės gale nei halogenas.', 'The same cation forms from this halide and from the isomer 1-bromo-3-methylbut-2-ene. Allylic transposition allows the nucleophile to end up at the other end of the molecule than the halogen was.'),
+            why: t('Tas pats katijonas susidaro ir iš šio halogenido, ir iš jo izomero 1-chlor-3-metil-2-buteno. Teigiamas krūvis pasiskirsto per alilo sistemą, todėl nukleofilas gali prisijungti prie kito galo, nei buvo halogenas (alilinis persigrupavimas).', 'The same cation forms from this halide and from its isomer 1-chloro-3-methylbut-2-ene. The positive charge is spread over the allylic system, so the nucleophile can bond at the other end from where the halogen was (allylic rearrangement).'),
             src: 'S5.11',
             claims: [{ react: ['sn1', ['C=CC(C)(C)Cl'], { nu: 'OH' }, 'C=CC(C)(C)O'] }, { react: ['sn1', ['C=CC(C)(C)Cl'], { nu: 'OH' }, 'OCC=C(C)C'] }]
           }
@@ -2102,7 +2135,8 @@
             O: { 3: ['oksetanas', 'oxetane'], 4: ['tetrahidrofuranas (oksolanas)', 'tetrahydrofuran (oxolane)'], 5: ['tetrahidropiranas (oksanas)', 'tetrahydropyran (oxane)'], 6: ['oksepanas', 'oxepane'] },
             S: { 3: ['tietanas', 'thietane'], 4: ['tiolanas', 'thiolane'], 5: ['tianas', 'thiane'], 6: ['tiepanas', 'thiepane'] }
           };
-          const nm = names[Z][n];
+          const ME = { 4: ['2-metiltetrahidrofuranas (2-metiloksolanas)', '2-methyltetrahydrofuran (2-methyloxolane)'], 5: ['2-metiltetrahidropiranas (2-metiloksanas)', '2-methyltetrahydropyran (2-methyloxane)'], 6: ['2-metiloksepanas', '2-methyloxepane'] };
+          const nm = me ? ME[n] : names[Z][n];
           const sizeWord = { 4: 'keturnaris', 5: 'penkianaris', 6: 'šešianaris', 7: 'septynnaris' }[rsize];
           const sizeEn = { 4: 'four-membered', 5: 'five-membered', 6: 'six-membered', 7: 'seven-membered' }[rsize];
           const nucAtom = 0;
@@ -2113,16 +2147,10 @@
           if (ringOpts.length < 2) throw new Error('u10.intra: options');
           const steps = [
             {
-              prompt: t('Bakstelėkite nukleofilinį atomą.', 'Tap the nucleophilic atom.'),
-              kind: 'atoms', mol: { smi: open, opts: { numbers: 'all' } }, answer: [nucAtom],
-              hint: t('Nukleofilas turi neigiamą krūvį ir laisvas elektronų poras.', 'The nucleophile carries a negative charge and lone pairs.'),
-              solution: t('Neigiamą krūvį turi ' + (Z === 'O' ? 'deguonis' : 'siera') + ' Nr. 1.', 'The ' + (Z === 'O' ? 'oxygen' : 'sulfur') + ' no. 1 carries the negative charge.')
-            },
-            {
-              prompt: t('Bakstelėkite anglį, kurią jis puola.', 'Tap the carbon that it attacks.'),
-              kind: 'atoms', mol: { smi: open, opts: { numbers: 'all' } }, answer: [cIdx],
-              hint: t('Elektrofilinis centras yra anglis su nueinančiąja grupe.', 'The electrophilic centre is the carbon with the leaving group.'),
-              solution: t('Puolama anglis Nr. ' + (cIdx + 1) + ', sujungta su halogenu.', 'The attacked carbon is no. ' + (cIdx + 1) + ', bonded to the halogen.')
+              prompt: t('Kiek narių turės susidaręs žiedas?', 'How many members will the ring have?'),
+              kind: 'number', answer: { value: rsize, tol: 0 },
+              hint: t('Žiedą sudaro nukleofilinis atomas ir visi anglies atomai grandinėje iki anglies su halogenu.', 'The ring consists of the nucleophilic atom and all the chain carbons up to the carbon with the halogen.'),
+              solution: t('Žiede yra nukleofilinis atomas ir ' + n + ' grandinės anglies atomai: ' + rsize + ' nariai.', 'The ring contains the nucleophilic atom and ' + n + ' chain carbons: ' + rsize + ' members.')
             },
             {
               prompt: t('Kuris produktas susidaro?', 'Which product forms?'),
@@ -2132,9 +2160,9 @@
             }
           ];
           return {
-            q: [{ p: t('Šioje molekulėje yra ir nukleofilinis, ir elektrofilinis centras.', 'This molecule has both a nucleophilic and an electrophilic centre.') }, { scheme: { items: [{ smi: open }, { arrow: '→' }] } }],
+            q: [{ p: t('Viena molekulė turi ir nukleofilinę, ir elektrofilinę dalį.', 'One molecule has both a nucleophilic and an electrophilic part.') }, { scheme: { items: [{ smi: open }, { arrow: '→' }] } }],
             steps,
-            why: t('Kai nukleofilas ir elektrofilas yra toje pačioje molekulėje, SN2 vyksta intramolekuliškai, o produktas yra žiedas. Šiame pavyzdyje susidaro ' + sizeWord + ' žiedas; penkianariai ir šešianariai žiedai susidaro lengviausiai.', 'When the nucleophile and the electrophile are in the same molecule, SN2 takes place intramolecularly and the product is a ring. Here a ' + sizeEn + ' ring forms; five- and six-membered rings form most easily.'),
+            why: t('Kai nukleofilas ir elektrofilas yra toje pačioje molekulėje, SN2 vyksta intramolekuliškai, o produktas yra žiedas. Šiame pavyzdyje susidaro ' + sizeWord + ' žiedas; penkianariai ir šešianariai žiedai susidaro lengviausiai.' + (rsize === 4 || rsize === 7 ? ' Šis žiedas susidaro lėčiau.' : ''), 'When the nucleophile and the electrophile are in the same molecule, SN2 takes place intramolecularly and the product is a ring. Here a ' + sizeEn + ' ring forms; five- and six-membered rings form most easily.' + (rsize === 4 || rsize === 7 ? ' This ring forms more slowly.' : '')),
             src: 'S5.9, L10 p5',
             claims: [{ formula: [ring, (Z === 'O' ? 'C' + nC + 'H' + (2 * nC) + 'O' : 'C' + nC + 'H' + (2 * nC) + 'S')] }]
           };
@@ -2148,15 +2176,15 @@
         bank: [
           {
             id: 'u10.unreact.1',
-            q: [{ p: t('Keturi halogenidai kaitinami kambario temperatūroje su vandeniniu natrio hidroksidu.', 'Four halides are treated with aqueous sodium hydroxide at moderate temperature.') },
+            q: [{ p: t('Keturi halogenidai veikiami vandeniniu natrio hidroksido tirpalu, švelniai pašildžius.', 'Four halides are treated with aqueous sodium hydroxide with gentle warming.') },
               { mol: [{ smi: 'CCCl', caption: t('a', 'a') }, { smi: 'C=CCl', caption: t('b', 'b') }, { smi: 'Clc1ccccc1', caption: t('c', 'c') }, { smi: 'C=CCCl', caption: t('d', 'd') }] }],
             steps: [{
               prompt: t('Pažymėkite junginius, kurie lengvai pakeičia halogeną (SN).', 'Pick the compounds in which the halogen is replaced easily (SN).'),
               kind: 'multi', options: [tx('a: chloretanas', 'a: chloroethane'), tx('b: chloretenas', 'b: chloroethene'), tx('c: chlorbenzenas', 'c: chlorobenzene'), tx('d: 3-chlorpropenas', 'd: 3-chloroprop-1-ene')], answer: [0, 3],
-              hint: t('Pažiūrėkite, ar halogenas prie $sp3$ anglies.', 'See whether the halogen is on an $sp3$ carbon.'),
-              solution: t('Chloretanas (pirminis) ir 3-chlorpropenas (alilo) turi halogeną prie $sp3$ anglies. Chloretenas ir chlorbenzenas turi halogeną prie $sp2$ anglies, todėl SN nevyksta.', 'Chloroethane (primary) and 3-chloroprop-1-ene (allylic) have the halogen on an $sp3$ carbon. Chloroethene and chlorobenzene have it on an $sp2$ carbon, so SN does not take place.')
+              hint: t('Pažiūrėkite, ar halogenas prie sp³ anglies.', 'See whether the halogen is on an sp³ carbon.'),
+              solution: t('Chloretanas (pirminis) ir 3-chlorpropenas (alilo) turi halogeną prie sp³ anglies. Chloretenas ir chlorbenzenas turi halogeną prie sp² anglies, todėl SN nevyksta.', 'Chloroethane (primary) and 3-chloroprop-1-ene (allylic) have the halogen on an sp³ carbon. Chloroethene and chlorobenzene have it on an sp² carbon, so SN does not take place.')
             }],
-            why: t('Halogeno laisva pora konjuguota su $C=C$ ar benzeno žiedu, todėl C–Hal ryšys tvirtesnis ir SN nevyksta įprastomis sąlygomis. Alilo junginys konjugacijos nesudaro, nes halogenas prie $sp3$ anglies.', 'The lone pair of the halogen is conjugated with the $C=C$ or the benzene ring, so the C–Hal bond is stronger and SN does not take place under ordinary conditions. The allylic compound has no such conjugation because its halogen is on an $sp3$ carbon.'),
+            why: t('Halogeno laisva pora konjuguota su $C=C$ ar benzeno žiedu, todėl C–Hal ryšys tvirtesnis ir SN nevyksta įprastomis sąlygomis. Alilo junginys konjugacijos nesudaro, nes halogenas prie sp³ anglies.', 'The lone pair of the halogen is conjugated with the $C=C$ or the benzene ring, so the C–Hal bond is stronger and SN does not take place under ordinary conditions. The allylic compound has no such conjugation because its halogen is on an sp³ carbon.'),
             src: 'L10 p24'
           },
           {
@@ -2176,8 +2204,8 @@
           {
             id: 'u10.unreact.3',
             q: [{ p: t('Chlorbenzenas kaitinamas su natrio hidroksidu 300 °C temperatūroje, po to parūgštinamas.', 'Chlorobenzene is heated with sodium hydroxide at 300 °C and then acidified.') }, { scheme: { items: [{ smi: 'Clc1ccccc1', name: t('chlorbenzenas', 'chlorobenzene') }, { arrow: '→', above: f('NaOH'), below: f('300 °C') }] } }],
-            steps: [cho(t('Koks yra produktas?', 'What is the product?'), [mo('Oc1ccccc1'), mo('C1CCCCC1'), mo('OC1CCCCC1'), mo('Cc1ccccc1')], 0,
-              t('Chloras pakeičiamas nukleofilu.', 'Chlorine is replaced by the nucleophile.'),
+            steps: [cho(t('Koks yra produktas?', 'What is the product?'), [mo('Oc1ccccc1'), tx('Reakcija nevyksta', 'No reaction'), mo('[O-]c1ccccc1.[Na+]'), mo('c1ccc(Oc2ccccc2)cc1')], 0,
+              t('Kuris atomas jungiasi prie žiedo, kai chloras išeina, ir kas atsitinka po parūgštinimo?', 'Which atom bonds to the ring when chlorine leaves, and what does acidification do?'),
               t('Susidaro fenolis: hidroksidas pakeičia chlorą, o parūgštinimas paverčia fenoksidą fenoliu.', 'Phenol forms: hydroxide replaces chlorine and acidification turns phenoxide into phenol.'))],
             why: t('Halogenarenai reaguoja su nukleofilais tik aukštesnėje nei 200 °C temperatūroje. Taip pramonėje galima iš chlorbenzeno gauti fenolį.', 'Haloarenes react with nucleophiles only above 200 °C. This is how phenol can be made from chlorobenzene in industry.'),
             src: 'L10 p25',
@@ -2187,17 +2215,17 @@
             id: 'u10.unreact.4',
             q: [{ p: t('1-brompropenas veikiamas koncentruotu šarmų tirpalu.', '1-bromopropene is treated with a concentrated alkali solution.') }, { scheme: { items: [{ smi: 'CC=CBr', name: t('1-brompropenas', '1-bromopropene') }, { arrow: '→', above: f('NaOH') }] } }],
             steps: [cho(t('Kas susidaro?', 'What forms?'), [mo('CC#C'), mo('C=C=C'), mo('CC=CO'), mo('CCC#N')], 0,
-              t('Halogenalkenas su H prie $C=C$ atskelia HX.', 'A haloalkene with H on the $C=C$ loses HX.'),
+              t('Ką stipri bazė gali atplėšti nuo kito dvigubojo ryšio atomo?', 'What can a strong base remove from the other carbon of the double bond?'),
               [{ p: t('Bazė atplėšia vandenilį nuo kito $C=C$ atomo, o bromidas išeina; dvigubasis ryšys virsta trigubuoju.', 'The base removes the hydrogen from the other $C=C$ carbon and bromide leaves; the double bond becomes a triple bond.') }, { mol: { smi: 'CC#C', name: t('propinas', 'propyne') } }])],
-            why: t('Halogenalkenas su vandeniliu prie dvigubojo ryšio koncentruotame šarme eliminuojasi į alkiną: tai dehidrohalogeninimas, kurio metu antrą kartą atskeliamas HX.', 'A haloalkene with hydrogen on the double bond eliminates in concentrated alkali to an alkyne: this is a dehydrohalogenation in which HX is lost a second time.'),
+            why: t('Halogenalkenas su vandeniliu prie dvigubojo ryšio koncentruotame šarme eliminuojasi į alkiną: tai dehidrohalogeninimas: atskeliamas HX ir dvigubasis ryšys virsta trigubuoju.', 'A haloalkene with hydrogen on the double bond eliminates in concentrated alkali to an alkyne: this is dehydrohalogenation: HX is lost and the double bond becomes a triple bond.'),
             src: 'L10 p25',
             claims: [{ formula: ['CC#C', 'C3H4'] }]
           },
           {
             id: 'u10.unreact.5',
-            q: [{ p: t('1-chlor-2,4-dinitrobenzenas reaguoja su hidroksido jonu net kambario temperatūroje.', '1-chloro-2,4-dinitrobenzene reacts with hydroxide even at room temperature.') }, { scheme: { items: [{ smi: 'Clc1ccc([N+](=O)[O-])cc1[N+](=O)[O-]', name: t('1-chlor-2,4-dinitrobenzenas', '1-chloro-2,4-dinitrobenzene') }, { plus: true }, { smi: '[OH-]' }, { arrow: '→' }] } }],
+            q: [{ p: t('1-chlor-2,4-dinitrobenzenas reaguoja su hidroksido jonu lengvai, šiek tiek pašildžius.', '1-chloro-2,4-dinitrobenzene reacts with hydroxide readily on gentle warming.') }, { scheme: { items: [{ smi: 'Clc1ccc([N+](=O)[O-])cc1[N+](=O)[O-]', name: t('1-chlor-2,4-dinitrobenzenas', '1-chloro-2,4-dinitrobenzene') }, { plus: true }, { smi: '[OH-]' }, { arrow: '→' }] } }],
             steps: [
-              cho(t('Koks yra produktas?', 'What is the product?'), [mo('Oc1ccc([N+](=O)[O-])cc1[N+](=O)[O-]'), mo('Clc1ccc([N+](=O)[O-])cc1'), mo('O=C1C=CC([N+](=O)[O-])=CC1[N+](=O)[O-]'), mo('Clc1ccc(N)cc1N')], 0,
+              cho(t('Koks yra produktas?', 'What is the product?'), [mo('Oc1ccc([N+](=O)[O-])cc1[N+](=O)[O-]'), mo('Oc1cc([N+](=O)[O-])cc([N+](=O)[O-])c1'), mo('Oc1c([N+](=O)[O-])cccc1[N+](=O)[O-]'), tx('Reakcija vyksta tik virš 200 °C', 'The reaction takes place only above 200 °C')], 0,
                 t('Halogenas pakeičiamas nukleofilu.', 'The halogen is replaced by the nucleophile.'),
                 t('Susidaro 2,4-dinitrofenolis.', '2,4-dinitrophenol forms.')),
               cho(t('Kodėl šis halogenarenas reaguoja lengviau už chlorbenzeną?', 'Why does this haloarene react more easily than chlorobenzene?'), [
@@ -2219,15 +2247,15 @@
               {
                 prompt: t('Bakstelėkite atomą, kurį pakeičia nukleofilas.', 'Tap the atom that the nucleophile replaces.'),
                 kind: 'atoms', mol: { smi: 'Fc1ccc([N+](=O)[O-])cc1[N+](=O)[O-]', opts: { numbers: 'all' } }, answer: [0],
-                hint: t('Pakeičiamas halogenas.', 'The halogen is replaced.'),
+                hint: t('Kuris atomas išeina kaip anijonas, kai nukleofilas jungiasi prie žiedo?', 'Which atom leaves as an anion when the nucleophile bonds to the ring?'),
                 solution: t('Fluoras Nr. 1 išeina kaip fluoridas, o jo vietą užima aminorūgšties azotas.', 'Fluorine no. 1 leaves as fluoride and the nitrogen of the amino acid takes its place.')
               },
               cho(t('Kuris peptido atomas veikia kaip nukleofilas?', 'Which atom of the peptide acts as the nucleophile?'), [
                 tx('N-galinės aminogrupės azotas, turintis laisvą elektronų porą.', 'The nitrogen of the N-terminal amino group, which has a lone pair.'),
-                tx('Karbonilo deguonies anglis.', 'The carbon of a carbonyl group.'),
+                tx('Amido azotas (jo laisvoji pora konjuguota su $C=O$).', 'The amide nitrogen (its lone pair is conjugated with $C=O$).'),
                 tx('Amido karbonilo anglis.', 'The carbonyl carbon of an amide.'),
                 tx('C-galinės karboksigrupės vandenilis.', 'The hydrogen of the C-terminal carboxyl group.')
-              ], 0, t('Kuris atomas turi laisvą elektronų porą ir yra nukleofilinis?', 'Which atom has a lone pair and is nucleophilic?'),
+              ], 0, t('Kuris peptido atomas gali dovanoti elektronų porą naujam ryšiui?', 'Which atom of the peptide can donate an electron pair to a new bond?'),
                 t('Laisva azoto elektronų pora sudaro naują C–N ryšį.', 'The lone pair of nitrogen forms the new C–N bond.'))
             ],
             why: t('Nitrogrupės aktyvuoja žiedą nukleofiliniam pakeitimui, todėl net silpnas nukleofilas (aminogrupė) išstumia fluoridą. Gautas dinitrofenilo darinys žymi N-galinę aminorūgštį.', 'Nitro groups activate the ring for nucleophilic substitution, so even a weak nucleophile (an amino group) pushes out fluoride. The resulting dinitrophenyl derivative marks the N-terminal amino acid.'),
@@ -2253,10 +2281,10 @@
             steps: [{
               prompt: t('Pažymėkite junginius, kurie pagrindinį produktą duoda SN2 būdu.', 'Pick the compounds whose main product forms by SN2.'),
               kind: 'multi', options: ['a', 'b', 'c', 'd', 'e', 'f'].map((x) => tx(x, x)), answer: [0, 3, 5],
-              hint: t('SN2 reikia $sp3$ anglies, kuri nėra tretinė.', 'SN2 needs an $sp3$ carbon that is not tertiary.'),
-              solution: t('a, d ir f turi halogeną prie pirminės $sp3$ anglies. b ir e – halogenas prie $sp2$ anglies, SN nevyksta. c – tretinis, su baziniu cianidu vyksta E2.', 'a, d and f have the halogen on a primary $sp3$ carbon. In b and e the halogen is on an $sp2$ carbon, so no SN. c is tertiary and gives E2 with basic cyanide.')
+              hint: t('SN2 reikia sp³ anglies, kuri nėra tretinė.', 'SN2 needs an sp³ carbon that is not tertiary.'),
+              solution: t('a ir d – halogenas prie pirminės sp³ anglies, f – prie metilo anglies: vyksta SN2. b ir e – halogenas prie sp² anglies, SN nevyksta. c – tretinis: puolimas iš nugaros užstotas, SN2 neįmanomas.', 'a and d have the halogen on a primary sp³ carbon and f on a methyl carbon: SN2 takes place. In b and e the halogen is on an sp² carbon, so no SN. c is tertiary: backside attack is blocked, so SN2 is impossible.')
             }],
-            why: t('SN2 tinka pirminiams (ir metilo) $sp3$ halogenidams. Tretinis užstotas, o $sp2$ halogenidai konjuguoti, todėl šiems halogenidams SN2 neįprastas.', 'SN2 suits primary (and methyl) $sp3$ halides. A tertiary one is shielded and $sp2$ halides are conjugated, so SN2 is unusual for these.'),
+            why: t('SN2 tinka pirminiams (ir metilo) sp³ halogenidams. Tretinis užstotas, o sp² halogenidai konjuguoti, todėl šiems halogenidams SN2 neįprastas.', 'SN2 suits primary (and methyl) sp³ halides. A tertiary one is shielded and sp² halides are conjugated, so SN2 is unusual for these.'),
             src: 'L10 p14, p24'
           }
         ]
