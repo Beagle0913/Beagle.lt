@@ -336,3 +336,13 @@ test('only ready units are listed', () => {
     assert.equal(ORG.readyUnit('u06'), null);
   } finally { set('u07', false); set('l2', false); }
 });
+
+test('normName: primes are part of the name', () => {
+  const k = x => C.normName(x).key;
+  assert.notEqual(k('N,N-dimetil-1,2-etandiaminas'), k("N,N'-dimetil-1,2-etandiaminas"));
+  assert.equal(k('N,N′-dimetil-1,2-etandiaminas'), k("N,N'-dimetil-1,2-etandiaminas"));
+  assert.equal(k("N, N' dimetil 1,2 etandiaminas"), k("N,N'-dimetil-1,2-etandiaminas"));
+  assert.equal(k('N,N’-dimetil-1,2-etandiaminas'), k("N,N'-dimetil-1,2-etandiaminas"));
+  assert.notEqual(k("N,N'-dimetil"), k("N,N''-dimetil"));
+  assert.equal(k('N,N″-dimetil'), k("N,N''-dimetil"));
+});

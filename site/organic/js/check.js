@@ -78,8 +78,9 @@
   // key: lower case, with spaces, dashes and brackets removed (letters, digits and commas stay). folded: the same without Lithuanian letters.
   function normName(s) {
     let x = (typeof s === 'string' ? s : '').normalize('NFC').toLowerCase();
-    // every separator (spaces, any dash or minus, brackets) is dropped on both sides, so "N metil", "N-metil" and "(E)-2-" compare equal
-    x = x.replace(/[‐-―−﹘﹣－­]/g, '').replace(/[-()\[\]{}'\s  -​]/g, '');
+    // every separator (spaces, any dash or minus, brackets) is dropped; primes are kept on both sides, so "N metil", "N-metil" and "(E)-2-" compare equal
+    x = x.replace(/″/g, "''").replace(/[′’‘`´]/g, "'"); // primes (N,N') are part of the name
+    x = x.replace(/[‐-―−﹘﹣－­]/g, '').replace(/[-()\[\]{}\s  -​]/g, '');
     x = x.replace(/;/g, ',').replace(/,{2,}/g, ',').replace(/^,+|,+$/g, '');
     return { key: x, folded: fold(x) };
   }
