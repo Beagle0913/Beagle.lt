@@ -46,90 +46,113 @@
     base: [
       {
         scheme: { items: [{ smi: 'CC(=O)C', opts: { lonePairs: [2] } }, { plus: true }, { smi: '[C-]#N', opts: { lonePairs: [0] } }, { arrow: '→' }, { smi: 'CC([O-])(C)C#N', opts: { lonePairs: [2] } }] },
-        arrows: [{ from: { m: 1, lp: 0 }, to: { m: 0, a: 1 } }, { from: { m: 0, b: [1, 2] }, to: { m: 0, a: 2 } }]
+        arrows: [{ from: { m: 1, lp: 0 }, to: { m: 0, a: 1 } }, { from: { m: 0, b: [1, 2] }, to: { m: 0, a: 2 } }],
+        note: t('1 stadija: nukleofilas atakuoja karbonilo anglį, $π$ ryšio elektronai pereina deguoniui.', 'Stage 1: the nucleophile attacks the carbonyl carbon and the $π$ electrons move onto oxygen.')
       },
       {
         scheme: { items: [{ smi: 'CC([O-])(C)C#N', opts: { lonePairs: [2] } }, { plus: true }, { smi: 'O', opts: { allH: true, lonePairs: true } }, { arrow: '→' }, { smi: 'CC(O)(C)C#N' }, { plus: true }, { smi: '[OH-]' }] },
-        arrows: [{ from: { m: 0, lp: 2 }, to: { m: 1, a: 'H0' } }, { from: { m: 1, b: [0, 'H0'] }, to: { m: 1, a: 0 } }]
+        arrows: [{ from: { m: 0, lp: 2 }, to: { m: 1, a: 'H0' } }, { from: { m: 1, b: [0, 'H0'] }, to: { m: 1, a: 0 } }],
+        note: t('2 stadija: alkoksido jonas paima protoną iš vandens.', 'Stage 2: the alkoxide ion takes a proton from water.')
       }
     ],
     // acid-catalysed hydration of ethanal (L13 p13)
     hydration: [
       {
         scheme: { items: [{ smi: 'CC=O', opts: { lonePairs: [2] } }, { plus: true }, { smi: '[H+]' }, { arrow: '→' }, { smi: 'CC=[OH+]' }] },
-        arrows: [{ from: { m: 0, lp: 2 }, to: { m: 1, a: 0 } }]
+        arrows: [{ from: { m: 0, lp: 2 }, to: { m: 1, a: 0 } }],
+        note: t('Deguonis protonizuojamas: anglies $δ+$ padidėja.', 'Oxygen is protonated: the $δ+$ on carbon grows.')
       },
       {
         scheme: { items: [{ smi: 'CC=[OH+]' }, { plus: true }, { smi: 'O', opts: { allH: true, lonePairs: [0] } }, { arrow: '→' }, { smi: 'CC(O)[OH2+]' }] },
-        arrows: [{ from: { m: 1, lp: 0 }, to: { m: 0, a: 1 } }, { from: { m: 0, b: [1, 2] }, to: { m: 0, a: 2 } }]
+        arrows: [{ from: { m: 1, lp: 0 }, to: { m: 0, a: 1 } }, { from: { m: 0, b: [1, 2] }, to: { m: 0, a: 2 } }],
+        note: t('Vanduo atakuoja protonuotą karbonilą.', 'Water attacks the protonated carbonyl.')
       },
       {
         scheme: { items: [{ smi: 'CC(O)[OH2+]', opts: { allH: true, coords: [[0, 0], [0.87, 0.5], [1.73, 0], [0.87, 1.5]] } }, { arrow: '→' }, { smi: 'CC(O)O' }, { plus: true }, { smi: '[H+]' }] },
-        arrows: [{ from: { m: 0, b: [3, 'H3'] }, to: { m: 0, a: 3 } }]
+        arrows: [{ from: { m: 0, b: [3, 'H3'] }, to: { m: 0, a: 3 } }],
+        note: t('Oksonio jonas netenka protono: susidaro hidratas.', 'The oxonium ion loses a proton: the hydrate forms.')
       }
     ],
     // hydride reduction (L13 p10)
     hydride: [
       {
         scheme: { items: [{ smi: 'CC(=O)C', opts: { lonePairs: [2] } }, { plus: true }, { smi: '[BH4-]', opts: { allH: true } }, { arrow: '→' }, { smi: 'CC(C)[O-]' }, { plus: true }, { smi: 'B' }] },
-        arrows: [{ from: { m: 1, b: [0, 'H0'] }, to: { m: 0, a: 1 } }, { from: { m: 0, b: [1, 2] }, to: { m: 0, a: 2 } }]
+        arrows: [{ from: { m: 1, b: [0, 'H0'] }, to: { m: 0, a: 1 } }, { from: { m: 0, b: [1, 2] }, to: { m: 0, a: 2 } }],
+        note: t('1 stadija: hidrido jonas $H-$ atakuoja karbonilo anglį.', 'Stage 1: the hydride ion $H-$ attacks the carbonyl carbon.')
       },
       {
         scheme: { items: [{ smi: 'CC(C)[O-]' }, { plus: true }, { smi: 'O', opts: { allH: true, lonePairs: [0] } }, { arrow: '→' }, { smi: 'CC(C)O' }, { plus: true }, { smi: '[OH-]' }] },
-        arrows: [{ from: { m: 0, lp: 3 }, to: { m: 1, a: 'H0' } }, { from: { m: 1, b: [0, 'H0'] }, to: { m: 1, a: 0 } }]
+        arrows: [{ from: { m: 0, lp: 3 }, to: { m: 1, a: 'H0' } }, { from: { m: 1, b: [0, 'H0'] }, to: { m: 1, a: 0 } }],
+        note: t('2 stadija: alkoksidas protonuojamas vandeniu: gaunamas antrinis alkoholis.', 'Stage 2: water protonates the alkoxide: a secondary alcohol results.')
       }
     ],
     // hemiacetal formation in acid (L13 p16)
     hemi: [
       {
         scheme: { items: [{ smi: 'CCC=O', opts: { lonePairs: [3] } }, { plus: true }, { smi: '[H+]' }, { arrow: '→' }, { smi: 'CCC=[OH+]' }] },
-        arrows: [{ from: { m: 0, lp: 3 }, to: { m: 1, a: 0 } }]
+        arrows: [{ from: { m: 0, lp: 3 }, to: { m: 1, a: 0 } }],
+        note: t('1 stadija: karbonilo deguonis protonizuojamas.', 'Stage 1: the carbonyl oxygen is protonated.')
       },
       {
         scheme: { items: [{ smi: 'CCC=[OH+]' }, { plus: true }, { smi: 'CO', opts: { lonePairs: [1] } }, { arrow: '→' }, { smi: 'CCC(O)[OH+]C' }] },
-        arrows: [{ from: { m: 1, lp: 1 }, to: { m: 0, a: 2 } }, { from: { m: 0, b: [2, 3] }, to: { m: 0, a: 3 } }]
+        arrows: [{ from: { m: 1, lp: 1 }, to: { m: 0, a: 2 } }, { from: { m: 0, b: [2, 3] }, to: { m: 0, a: 3 } }],
+        note: t('2 stadija: alkoholio deguonies elektronų pora atakuoja anglį.', 'Stage 2: a lone pair of the alcohol oxygen attacks the carbon.')
       },
       {
         scheme: { items: [{ smi: 'CCC(O)[OH+]C', opts: { allH: true } }, { arrow: '→' }, { smi: 'CCC(O)OC' }, { plus: true }, { smi: '[H+]' }] },
-        arrows: [{ from: { m: 0, b: [4, 'H4'] }, to: { m: 0, a: 4 } }]
+        arrows: [{ from: { m: 0, b: [4, 'H4'] }, to: { m: 0, a: 4 } }],
+        note: t('3 stadija: protonas atsiskiria: susidaro hemiacetalis.', 'Stage 3: a proton is lost: the hemiacetal forms.')
       }
     ],
     // acetal formation from the hemiacetal in acid (L13 p16)
     acetal: [
       {
         scheme: { items: [{ smi: 'CCC(O)OC', opts: { lonePairs: [3] } }, { plus: true }, { smi: '[H+]' }, { arrow: '→' }, { smi: 'CCC([OH2+])OC' }] },
-        arrows: [{ from: { m: 0, lp: 3 }, to: { m: 1, a: 0 } }]
+        arrows: [{ from: { m: 0, lp: 3 }, to: { m: 1, a: 0 } }],
+        note: t('1 stadija: hidroksigrupė protonizuojama, kad galėtų išeiti kaip vanduo.', 'Stage 1: the hydroxy group is protonated so that it can leave as water.')
       },
       {
         scheme: { items: [{ smi: 'CCC([OH2+])OC', opts: { lonePairs: [4] } }, { arrow: '→' }, { smi: 'CCC=[O+]C' }, { plus: true }, { smi: 'O' }] },
-        arrows: [{ from: { m: 0, lp: 4 }, to: { m: 0, mid: [2, 4] } }, { from: { m: 0, b: [2, 3] }, to: { m: 0, a: 3 } }]
+        arrows: [{ from: { m: 0, lp: 4 }, to: { m: 0, mid: [2, 4] } }, { from: { m: 0, b: [2, 3] }, to: { m: 0, a: 3 } }],
+        note: t('2 stadija: atskyla vanduo; metoksigrupės deguonis stabilizuoja teigiamą krūvį.', 'Stage 2: water leaves; the methoxy oxygen stabilises the positive charge.')
       },
       {
         scheme: { items: [{ smi: 'CCC=[O+]C' }, { plus: true }, { smi: 'CO', opts: { lonePairs: [1] } }, { arrow: '→' }, { smi: 'CCC(OC)[OH+]C' }] },
-        arrows: [{ from: { m: 1, lp: 1 }, to: { m: 0, a: 2 } }, { from: { m: 0, b: [2, 3] }, to: { m: 0, a: 3 } }]
+        arrows: [{ from: { m: 1, lp: 1 }, to: { m: 0, a: 2 } }, { from: { m: 0, b: [2, 3] }, to: { m: 0, a: 3 } }],
+        note: t('3 stadija: antra alkoholio molekulė atakuoja katijoną.', 'Stage 3: a second alcohol molecule attacks the cation.')
       },
       {
         scheme: { items: [{ smi: 'CCC(OC)[OH+]C', opts: { allH: true } }, { arrow: '→' }, { smi: 'CCC(OC)OC' }, { plus: true }, { smi: '[H+]' }] },
-        arrows: [{ from: { m: 0, b: [5, 'H5'] }, to: { m: 0, a: 5 } }]
+        arrows: [{ from: { m: 0, b: [5, 'H5'] }, to: { m: 0, a: 5 } }],
+        note: t('4 stadija: protonas atsiskiria: susidaro acetalis.', 'Stage 4: a proton is lost: the acetal forms.')
       }
     ],
     // imine formation, simplified (L13 p25, p27)
     imine: [
       {
-        scheme: { items: [{ smi: 'CC(=O)C', opts: { lonePairs: [2] } }, { plus: true }, { smi: 'CN', opts: { lonePairs: [1] } }, { arrow: '→' }, { smi: 'CC(O)(C)NC' }] },
-        arrows: [{ from: { m: 1, lp: 1 }, to: { m: 0, a: 1 } }, { from: { m: 0, b: [1, 2] }, to: { m: 0, a: 2 } }]
+        scheme: { items: [{ smi: 'CC(=O)C', opts: { lonePairs: [2] } }, { plus: true }, { smi: 'CN', opts: { lonePairs: [1] } }, { arrow: '→' }, { smi: 'CC([O-])(C)[NH2+]C' }] },
+        arrows: [{ from: { m: 1, lp: 1 }, to: { m: 0, a: 1 } }, { from: { m: 0, b: [1, 2] }, to: { m: 0, a: 2 } }],
+        note: t('1 stadija (AN): azoto elektronų pora atakuoja karbonilo anglį; susidaro dipolinis jonas.', 'Stage 1 (AN): the nitrogen lone pair attacks the carbonyl carbon; a zwitterion forms.')
+      },
+      {
+        scheme: { items: [{ smi: 'CC([O-])(C)[NH2+]C' }, { arrow: '→' }, { smi: 'CC(O)(C)NC' }] },
+        arrows: [{ from: { m: 0, lp: 2 }, to: { m: 0, mid: [2, 4] } }],
+        note: t('Protonas persikelia nuo azoto prie deguonies (tirpiklio padedamas): susidaro karbinolaminas. Rodyklė žymi protono pernašos kryptį.', 'A proton moves from nitrogen to oxygen (helped by the solvent): the carbinolamine forms. The arrow marks the direction of the proton transfer.')
       },
       {
         scheme: { items: [{ smi: 'CC(O)(C)NC', opts: { lonePairs: [2, 4] } }, { plus: true }, { smi: '[H+]' }, { arrow: '→' }, { smi: 'CC([OH2+])(C)NC', opts: { lonePairs: [4] } }] },
-        arrows: [{ from: { m: 0, lp: 2 }, to: { m: 1, a: 0 } }]
+        arrows: [{ from: { m: 0, lp: 2 }, to: { m: 1, a: 0 } }],
+        note: t('Rūgštyje hidroksigrupė protonizuojama.', 'In acid the hydroxy group is protonated.')
       },
       {
         scheme: { items: [{ smi: 'CC([OH2+])(C)NC', opts: { lonePairs: [4] } }, { arrow: '→' }, { smi: 'CC(C)=[NH+]C' }, { plus: true }, { smi: 'O' }] },
-        arrows: [{ from: { m: 0, lp: 4 }, to: { m: 0, mid: [1, 4] } }, { from: { m: 0, b: [1, 2] }, to: { m: 0, a: 2 } }]
+        arrows: [{ from: { m: 0, lp: 4 }, to: { m: 0, mid: [1, 4] } }, { from: { m: 0, b: [1, 2] }, to: { m: 0, a: 2 } }],
+        note: t('E stadija: atskyla vanduo, azotas sudaro $C=N$ ryšį.', 'Stage E: water leaves and nitrogen forms the $C=N$ bond.')
       },
       {
         scheme: { items: [{ smi: 'CC(C)=[NH+]C', opts: { allH: true, coords: [[-0.87, -0.5], [0, 0], [0.87, -0.5], [0, 1], [0, 2]] } }, { arrow: '→' }, { smi: 'CC(C)=NC' }, { plus: true }, { smi: '[H+]' }] },
-        arrows: [{ from: { m: 0, b: [3, 'H3'] }, to: { m: 0, a: 3 } }]
+        arrows: [{ from: { m: 0, b: [3, 'H3'] }, to: { m: 0, a: 3 } }],
+        note: t('Protonas atsiskiria: susidaro iminas.', 'A proton is lost: the imine forms.')
       }
     ],
     // Cannizzaro reaction of methanal (L13 p33-34)
@@ -172,11 +195,13 @@
     cond: [
       {
         scheme: { items: [{ smi: 'CC(O)CC=O', opts: { allH: true } }, { plus: true }, { smi: '[OH-]', opts: { lonePairs: [0] } }, { arrow: '→' }, { smi: 'CC(O)C=C[O-]' }, { plus: true }, { smi: 'O' }] },
-        arrows: [{ from: { m: 1, lp: 0 }, to: { m: 0, a: 'H3' } }, { from: { m: 0, b: [3, 'H3'] }, to: { m: 0, mid: [3, 4] } }, { from: { m: 0, b: [4, 5] }, to: { m: 0, a: 5 } }]
+        arrows: [{ from: { m: 1, lp: 0 }, to: { m: 0, a: 'H3' } }, { from: { m: 0, b: [3, 'H3'] }, to: { m: 0, mid: [3, 4] } }, { from: { m: 0, b: [4, 5] }, to: { m: 0, a: 5 } }],
+        note: t('1 stadija: bazė atplėšia kitą $α$-protoną: vėl susidaro enoliatas (pavyzdys su 3-hidroksibutanaliu).', 'Stage 1: the base removes the other $α$ proton: an enolate forms again (example with 3-hydroxybutanal).')
       },
       {
         scheme: { items: [{ smi: 'CC(O)C=C[O-]', opts: { lonePairs: [5] } }, { arrow: '→' }, { smi: 'CC=CC=O' }, { plus: true }, { smi: '[OH-]' }] },
-        arrows: [{ from: { m: 0, lp: 5 }, to: { m: 0, mid: [4, 5] } }, { from: { m: 0, b: [3, 4] }, to: { m: 0, mid: [1, 3] } }, { from: { m: 0, b: [1, 2] }, to: { m: 0, a: 2 } }]
+        arrows: [{ from: { m: 0, lp: 5 }, to: { m: 0, mid: [4, 5] } }, { from: { m: 0, b: [3, 4] }, to: { m: 0, mid: [1, 3] } }, { from: { m: 0, b: [1, 2] }, to: { m: 0, a: 2 } }],
+        note: t('2 stadija: iš enoliato išeina hidroksido jonas: susidaro $α,β$-nesotusis aldehidas.', 'Stage 2: hydroxide leaves the enolate: the $α,β$-unsaturated aldehyde forms.')
       }
     ]
   };
@@ -258,10 +283,10 @@
             caption: t('Iš kairės į dešinę $δ+$ ir reaktingumas mažėja.', 'From left to right the $δ+$ and the reactivity decrease.'),
             src: 'L13 p6'
           },
-          { p: t('Rūgštyje deguonis protonizuojamas ir $δ+$ dar padidėja.', 'In acid the oxygen is protonated and $δ+$ grows further.') },
+          { p: t('Alkilgrupė stumia elektronus ($+I$) ir yra didelė, todėl ketonas turi du tokius pakaitus, o aldehidas – tik vieną. Rūgščioje terpėje deguonis protonizuojamas ir anglies $δ+$ dar padidėja.', 'An alkyl group pushes electrons ($+I$) and is bulky; a ketone has two of them, an aldehyde only one. In acid the oxygen is protonated and the $δ+$ on carbon grows further.') },
           { resonance: [{ smi: 'CC(=[OH+])C' }, { smi: 'C[C+](O)C' }], caption: t('Protonuotas karbonilas: teigiamas krūvis daugiausia ant anglies.', 'Protonated carbonyl: the positive charge sits largely on carbon.'), src: 'L13 p6' },
           {
-            pitfall: t('Ketonų lėtumą lemia ir elektronai ($+I$), ir erdvė: nagrinėkite abu veiksnius.', 'The slowness of ketones has an electronic ($+I$) and a steric cause: consider both.')
+            pitfall: t('Ketonai mažiau reaktingi dėl dviejų priežasčių kartu: elektroninės ($+I$ mažina $δ+$) ir erdvinės. Norėdami palyginti du junginius, nagrinėkite abi.', 'Ketones are less reactive for two reasons at once: electronic ($+I$ lowers $δ+$) and steric. When you compare two compounds, look at both.')
           },
           {
             example: {
@@ -320,6 +345,9 @@
             caption: t('Trichloretanalis (chloralis) ir vanduo. Chloralhidratas senais laikais buvo naudojamas kaip migdomasis.', 'Trichloroethanal (chloral) and water: chloral hydrate, one of the first sedative drugs.'),
             src: 'L13 p12'
           },
+          {
+            pitfall: t('Hidratas nėra „šlapias aldehidas“: tai atskiras junginys su dviem $OH$ prie vienos anglies. Ketonų hidratacijos pusiausvyra paprastai pasislinkusi į karbonilo pusę.', 'A hydrate is not a "wet aldehyde": it is a separate compound with two $OH$ groups on one carbon. For ketones the hydration equilibrium usually lies on the carbonyl side.')
+          },
           { practice: 'u13.hydrate' }
         ]
       },
@@ -350,6 +378,7 @@
               '$NaBH4$ reduces only the carbonyl group of aldehydes and ketones. The stronger $LiAlH4$ also reduces esters and acids. Neither touches an isolated $C=C$, whereas $H2$ over $Pd$ reduces $C=C$ (and usually leaves the carbonyl alone).'),
             src: 'L13 p9, p19'
           },
+          { p: t('Gyvuose organizmuose karbonilgrupę redukuoja hidrido donoras NADH.', 'In living organisms the hydride donor NADH reduces the carbonyl group.'), src: 'L13 p11' },
           { practice: 'u13.nu' }
         ]
       },
@@ -397,8 +426,8 @@
           },
           { h: t('Ciklinis hemiacetalis', 'Cyclic hemiacetals') },
           {
-            p: t('Jei hidroksi- ir karbonilgrupė yra vienoje molekulėje ir tarp jų tinka atstumas, vyksta intramolekulinė ciklizacija. Susidaro penkių ar šešių narių ciklas, ir toks hemiacetalis patvarus. ',
-              'If a hydroxy group and a carbonyl group are in one molecule at a suitable distance, intramolecular cyclisation occurs. A five- or six-membered ring forms, and such a hemiacetal is stable.'),
+            p: t('Jei hidroksi- ir karbonilgrupė yra vienoje molekulėje ir tarp jų tinka atstumas, vyksta intramolekulinė ciklizacija. Susidaro penkių ar šešių narių ciklas, ir toks hemiacetalis patvarus. Taip ciklizuojasi ir gliukozė. ',
+              'If a hydroxy group and a carbonyl group are in one molecule at a suitable distance, intramolecular cyclisation occurs. A five- or six-membered ring forms, and such a hemiacetal is stable. Glucose cyclises in this way.'),
             src: 'L13 p20, p21'
           },
           { scheme: { items: [{ smi: 'OCCCCC=O', name: t('5-hidroksipentanalis', '5-hydroxypentanal') }, { arrow: '⇌', above: f('H+') }, { smi: 'OC1CCCCO1' }] }, caption: t('5-hidroksipentanalis: beveik vien ciklinė forma.', '5-hydroxypentanal: almost entirely the cyclic form.'), src: 'L13 p20' },
@@ -633,8 +662,8 @@
           },
           { h: t('Haloformo reakcija', 'The haloform reaction') },
           {
-            p: t('Su halogenais šarminėje terpėje metilketono (acetilgrupės) trys $α$ vandeniliai pakeičiami halogenu, o $CX3−C$ ryšys skyla: gaunamas haloformas ir karboksilatas. Su jodu susidaro geltonos $CHI3$ nuosėdos.',
-              'With halogens in alkali the three $α$ hydrogens of a methyl ketone (an acetyl group) are replaced by halogen and the $CX3−C$ bond breaks: a haloform and a carboxylate result. With iodine yellow $CHI3$ precipitates.'),
+            p: t('Su halogenais šarminėje terpėje metilketono (acetilgrupės) trys $α$ vandeniliai pakeičiami halogenu, o $CX3−C$ ryšys skyla: gaunamas haloformas ir karboksilatas. Su jodu susidaro geltonos $CHI3$ nuosėdos. Taip reaguoja ir alkoholiai, kurie oksiduojami į acetilgrupės junginius.',
+              'With halogens in alkali the three $α$ hydrogens of a methyl ketone (an acetyl group) are replaced by halogen and the $CX3−C$ bond breaks: a haloform and a carboxylate result. With iodine yellow $CHI3$ precipitates. Alcohols that are oxidised to acetyl compounds react too.'),
             src: 'L13 p49'
           },
           {
@@ -678,6 +707,9 @@
         id: 'multi',
         title: t('Molekulė su keliomis funkcinėmis grupėmis', 'A molecule with several functional groups'),
         blocks: [
+          {
+            p: t('Realiose molekulėse yra ne viena grupė, todėl reikia žinoti, su kuria reaguoja reagentas. Karvonas turi karbonilgrupę ir du $C=C$.', 'Real molecules have more than one group, so you must know which one a reagent attacks. Carvone has a carbonyl group and two $C=C$ bonds.')
+          },
           {
             mol: { smi: 'CC1=CCC(CC1=O)C(C)=C', caption: t('Karvonas (stereochemija nerodoma).', 'Carvone (stereochemistry not shown).') },
             caption: t('Karvonas turi karbonilgrupę ir du $C=C$.', 'Carvone has a carbonyl group and two $C=C$ bonds.'),
@@ -2327,6 +2359,23 @@
               hint: t('AN ir paskui eliminavimas.', 'AN followed by elimination.'), solution: [{ mech: MECH.imine }]
             }],
             why: t('Azoto nukleofilų reakcija yra AN ir eliminavimas.', 'A nitrogen nucleophile gives AN followed by elimination.'), src: 'L13 p25, p27'
+          },
+          {
+            id: 'u13.mech.9',
+            q: [{ p: t('Studentas aprašė imino susidarymą iš acetono ir metilamino rūgštinėje terpėje, bet viena frazė klaidinga.', 'A student described imine formation from acetone and methylamine in acid, but one statement is wrong.') }, { scheme: { items: [{ smi: 'CC(=O)C' }, { plus: true }, { smi: 'CN' }, { arrow: '→', above: f('H+') }, { smi: 'CC(C)=NC' }] } }],
+            steps: [{
+              prompt: t('Raskite klaidingą teiginį.', 'Find the wrong statement.'), kind: 'choice',
+              options: [
+                { text: t('Azoto elektronų pora atakuoja karbonilo anglį, susidaro karbinolaminas.', 'The nitrogen lone pair attacks the carbonyl carbon and a carbinolamine forms.') },
+                { text: t('Karbinolamino hidroksigrupė išeina kaip $OH-$ be jokio protonavimo, nes tai geras nueinančioji grupė.', 'The hydroxy group of the carbinolamine leaves as $OH-$ without any protonation because it is a good leaving group.') },
+                { text: t('Hidroksigrupė protonizuojama ir išeina kaip vanduo.', 'The hydroxy group is protonated and leaves as water.') },
+                { text: t('Galiausiai protonas atsiskiria nuo azoto ir susidaro $C=N$ iminas.', 'Finally a proton leaves the nitrogen and the $C=N$ imine results.') }
+              ],
+              answer: 1,
+              hint: t('Palyginkite, kuri grupė gali išeiti lengviau: $OH-$ ar $H2O$.', 'Compare which leaving group is easier: $OH-$ or $H2O$.'),
+              solution: [{ p: t('$OH-$ yra stipri bazė, todėl prasta nueinančioji grupė. Rūgštyje ji pirmiausia protonizuojama ir išeina kaip vanduo.', '$OH-$ is a strong base and therefore a poor leaving group. In acid it is protonated first and leaves as water.') }, { mech: MECH.imine }]
+            }],
+            why: t('Rūgštyje kiekviena stadija pradedama protonavimu: tai ir aktyvina karbonilą, ir paverčia hidroksigrupę gera nueinančiąja grupe.', 'In acid each stage starts with a protonation: it both activates the carbonyl group and turns the hydroxy group into a good leaving group.'), src: 'L13 p27'
           },
           {
             id: 'u13.mech.8',
