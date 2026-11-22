@@ -153,14 +153,14 @@
       blocks: [
         { h: t('Kodėl benzenas nesijungia kaip alkenas?', 'Why does benzene not add reagents like an alkene?') },
         {
-          p: t('Benzenas $C6H6$ yra nesotusis junginys, bet bromo jis neprijungia, $KMnO4$ jo neoksiduoja, o vanduo rūgštinėje terpėje nesijungia. Tik esant aukštai temperatūrai ir slėgiui benzenas hidrinamas iki cikloheksano.',
+          p: t('Benzenas $C6H6$ yra nesotusis junginys, bet bromo jis neprijungia, $KMnO4$ jo neoksiduoja, o vanduo rūgščioje terpėje nesijungia. Tik esant aukštai temperatūrai ir slėgiui benzenas hidrinamas iki cikloheksano.',
             'Benzene $C6H6$ is unsaturated, yet it does not take up bromine, $KMnO4$ does not oxidise it, and water does not add in acid. Hydrogen adds only at high temperature and pressure, giving cyclohexane.'),
           src: 'L9 p4'
         },
         { scheme: { items: [{ smi: 'c1ccccc1', opts: { circle: true } }, { arrow: '→', above: f('H2, Ni'), below: t('aukšta t° ir slėgis', 'high t° and pressure') }, { smi: 'C1CCCCC1' }] }, src: 'L9 p4' },
         {
-          p: t('Priežastis slypi elektronų sandaroje. Visi šeši C atomai yra $sp2$ hibridizuoti ir guli vienoje plokštumoje, o šeši $p$ elektronai sudaro vientisą delokalizuotą debesį virš žiedo ir po juo. Kekulės formulė su trimis dvigubaisiais ryšiais yra tik rezonansinė formulė: tikrajame žiede visi C–C ryšiai vienodo ilgio.',
-            'The reason is the electronic structure. All six carbons are $sp2$ hybridised and lie in one plane, and the six $p$ electrons form one continuous delocalised cloud above and below the ring. Kekulé’s formula with three double bonds is only a resonance structure: in the real ring all C–C bonds are equally long.'),
+          p: t('Priežastis slypi elektronų sandaroje. Kiekvienas iš šešių anglies atomų hibridizuotas sp² būdu ir guli vienoje plokštumoje, o šeši $p$ elektronai sudaro vientisą delokalizuotą debesį virš žiedo ir po juo. Kekulės formulė su trimis dvigubaisiais ryšiais yra tik rezonansinė formulė: tikrajame žiede visi C–C ryšiai vienodo ilgio.',
+            'The reason is the electronic structure. All six carbons are sp² hybridised and lie in one plane, and the six $p$ electrons form one continuous delocalised cloud above and below the ring. Kekulé’s formula with three double bonds is only a resonance structure: in the real ring all C–C bonds are equally long.'),
           src: 'L9 p5'
         },
         {
@@ -193,14 +193,14 @@
           caption: t('Ciklopentadienilo ir cikloheptatrienilo dariniai: π elektronų skaičius priklauso nuo krūvio.', 'Cyclopentadienyl and cycloheptatrienyl species: the number of π electrons depends on the charge.'), src: 'L9 p7'
         },
         {
-          pitfall: t('Į π sistemą įeina tik elektronai, esantys $p$ orbitalėse. Piridino azoto laisvoji pora yra žiedo plokštumoje ir neskaičiuojama (6 π elektronai iš trijų $C=C$), o pirolio azoto pora yra $p$ orbitalėje ir skaičiuojama (4 + 2). Žiedas su vienu $sp3$ atomu (ciklopentadienas) nėra vientisai konjuguotas, todėl nearomatinis.',
-            'Only electrons in $p$ orbitals belong to the π system. The lone pair of pyridine nitrogen lies in the ring plane and is not counted (6 π electrons from three $C=C$), while the pyrrole nitrogen pair sits in a $p$ orbital and is counted (4 + 2). A ring with one $sp3$ atom (cyclopentadiene) is not continuously conjugated, so it is not aromatic.')
+          pitfall: t('Į π sistemą įeina tik elektronai, esantys $p$ orbitalėse. Piridino azoto laisvoji pora yra žiedo plokštumoje ir neskaičiuojama (6 π elektronai iš trijų dvigubųjų ryšių: dviejų $C=C$ ir vieno $C=N$), o pirolio azoto pora yra $p$ orbitalėje ir skaičiuojama (4 + 2). Žiedas su vienu sp³ atomu (ciklopentadienas) nėra vientisai konjuguotas, todėl nearomatinis.',
+            'Only electrons in $p$ orbitals belong to the π system. The lone pair of pyridine nitrogen lies in the ring plane and is not counted (6 π electrons from three double bonds: two $C=C$ and one $C=N$), while the pyrrole nitrogen pair sits in a $p$ orbital and is counted (4 + 2). A ring with one sp³ atom (cyclopentadiene) is not continuously conjugated, so it is not aromatic.')
         },
         {
           example: {
-            q: [{ p: t('Ar ciklopentadienilanijonas yra aromatinis?', 'Is the cyclopentadienyl anion aromatic?') }, { mol: { smi: '[CH-]1C=CC=C1', opts: { lonePairs: [0] } } }],
+            q: [{ p: t('Ar ciklopentadienilo anijonas aromatinis?', 'Is the cyclopentadienyl anion aromatic?') }, { mol: { smi: '[CH-]1C=CC=C1', opts: { lonePairs: [0] } } }],
             steps: [
-              [{ p: t('Visi penki žiedo atomai yra $sp2$: dviejose C=C yra 4 π elektronai, o neigiamo C laisvoji pora guli $p$ orbitalėje.', 'All five ring atoms are $sp2$: the two C=C contain 4 π electrons, and the lone pair of the negative carbon sits in a $p$ orbital.') }],
+              [{ p: t('Visi penki žiedo atomai yra sp²: dviejose C=C yra 4 π elektronai, o neigiamo C laisvoji pora guli $p$ orbitalėje.', 'All five ring atoms are sp²: the two C=C contain 4 π electrons, and the lone pair of the negative carbon sits in a $p$ orbital.') }],
               [{ p: t('Iš viso π elektronų: 4 + 2 = 6. Žiedas ciklinis, plokščias ir vientisai konjuguotas.', 'Total π electrons: 4 + 2 = 6. The ring is cyclic, planar and continuously conjugated.') }],
               [{ p: t('6 = 4 · 1 + 2, todėl Hiukelio taisyklė tenkinama: anijonas aromatinis.', '6 = 4 · 1 + 2, so Hückel’s rule is met: the anion is aromatic.') }]
             ]
@@ -225,8 +225,8 @@
         {
           list: [
             t('**I stadija** – elektrofilinės dalelės susidarymas: reagentas $E-A$ poliarizuojasi ir skyla į $E+$ ir $A-$, dažniausiai veikiamas katalizatoriaus.', '**Stage I** – formation of the electrophile: the reagent $E-A$ is polarised and splits into $E+$ and $A-$, usually with the help of a catalyst.'),
-            t('**II stadija (lėtoji)** – susidaro arenio jonas (σ-kompleksas): π elektronai sudaro ryšį su $E+$. Atsiranda nearomatinis karbokatijonas: vienas žiedo atomas $sp3$, penki $sp2$, o 4 π elektronai pasiskirsto penkiose $p$ orbitalėse.', '**Stage II (slow)** – formation of the arenium ion (σ complex): the π electrons bond to $E+$. A non-aromatic carbocation forms: one ring atom is $sp3$, five are $sp2$, and 4 π electrons are spread over five $p$ orbitals.'),
-            t('**III stadija (greitoji)** – protono atskilimas: bazė atplėšia $H+$ nuo $sp3$ atomo, C–H ryšio elektronai grįžta į π sistemą ir aromatiškumas atsistato.', '**Stage III (fast)** – loss of the proton: a base removes $H+$ from the $sp3$ carbon, the C–H electrons return to the π system and aromaticity is restored.')
+            t('**II stadija (lėtoji)** – susidaro arenio jonas (σ-kompleksas): žiedo π elektronų pora sujungia žiedą su $E+$. Atsiranda nearomatinis karbokatijonas: vienas žiedo atomas sp³, penki sp², o 4 π elektronai pasiskirsto penkiose $p$ orbitalėse.', '**Stage II (slow)** – formation of the arenium ion (σ complex): the π electrons bond to $E+$. A non-aromatic carbocation forms: one ring atom is sp³, five are sp², and 4 π electrons are spread over five $p$ orbitals.'),
+            t('**III stadija (greitoji)** – protono atskilimas: bazė atplėšia $H+$ nuo sp³ atomo, C–H ryšio elektronai grįžta į π sistemą ir aromatiškumas atsistato.', '**Stage III (fast)** – loss of the proton: a base removes $H+$ from the sp³ carbon, the C–H electrons return to the π system and aromaticity is restored.')
           ],
           src: 'L9 p8–10'
         },
@@ -246,7 +246,7 @@
           caption: t('Benzeno brominimas: šioje schemoje $E+$ yra $Br+$.', 'Bromination of benzene: here $E+$ is $Br+$.'),
           src: 'L9 p9–11'
         },
-        { scheme: { items: [{ smi: 'BrC1[CH+]C=CC=C1' }, { plus: true }, { smi: '[Br-]' }, { arrow: '→' }, { smi: 'Brc1ccccc1' }, { plus: true }, { smi: 'Br' }] }, caption: t('Rezultatas: bromobenzenas ir $HBr$.', 'Result: bromobenzene and $HBr$.') },
+        { scheme: { items: [{ smi: 'BrC1[CH+]C=CC=C1' }, { plus: true }, { smi: '[Br-]' }, { arrow: '→' }, { smi: 'Brc1ccccc1' }, { plus: true }, { smi: 'Br' }] }, caption: t('Rezultatas: brombenzenas ir $HBr$.', 'Result: bromobenzene and $HBr$.') },
         {
           resonance: [{ smi: 'BrC1[CH+]C=CC=C1' }, { smi: 'BrC1C=C[CH+]C=C1' }, { smi: 'BrC1C=CC=C[CH+]1' }],
           caption: t('Arenio jono rezonansinės formulės: teigiamas krūvis dalijamas tarp trijų atomų (dviejų gretimų sp³ atomui ir priešingo jam).', 'Resonance structures of the arenium ion: the positive charge is shared by three carbons (the two next to the sp³ carbon and the one opposite it).'),
@@ -258,8 +258,19 @@
           src: 'L9 p9'
         },
         {
-          pitfall: t('Arenio jonas nėra aromatinis, todėl jis nelieka žiede: jis aromatiškumą atgauna netekdamas $H+$, o ne prijungdamas nukleofilą. Prijungimas duotų nearomatinį produktą, todėl nevyksta.',
-            'The arenium ion is not aromatic and does not stay: it regains aromaticity by losing $H+$, not by adding a nucleophile. Addition would give a non-aromatic product, so it does not happen.')
+          pitfall: t('Arenio jonas nėra aromatinis ir ilgai neišlieka: aromatiškumą jis atgauna netekdamas $H+$, o ne prijungdamas nukleofilą. Prijungimo produktas būtų nearomatinis, todėl prijungimas nevyksta.',
+            'The arenium ion is not aromatic and is short-lived: it regains aromaticity by losing $H+$, not by adding a nucleophile. The addition product would not be aromatic, so addition does not happen.')
+        },
+        {
+          example: {
+            q: [{ p: t('Parašykite benzeno chlorinimo ($Cl2$, $FeCl3$) mechanizmą.', 'Write the mechanism of the chlorination of benzene ($Cl2$, $FeCl3$).') }],
+            steps: [
+              [{ p: t('I stadija: $FeCl3$ poliarizuoja $Cl-Cl$ ryšį, ir susidaro elektrofilas $Cl+$ (kartu su $FeCl4-$).', 'Stage I: $FeCl3$ polarises the $Cl-Cl$ bond and the electrophile $Cl+$ forms (together with $FeCl4-$).') }],
+              [{ p: t('II stadija (lėtoji): π elektronai atakuoja $Cl+$, susidaro arenio jonas.', 'Stage II (slow): the π electrons attack $Cl+$ and the arenium ion forms.') }, { scheme: { items: [{ smi: 'c1ccccc1' }, { plus: true }, { smi: '[Cl+]' }, { arrow: '→' }, { smi: 'ClC1[CH+]C=CC=C1' }] } }],
+              [{ p: t('III stadija (greitoji): $FeCl4-$ paima protoną, atsistato aromatiškumas ir katalizatorius.', 'Stage III (fast): $FeCl4-$ takes the proton, aromaticity and the catalyst are restored.') }, { mol: { smi: 'Clc1ccccc1', name: t('chlorbenzenas', 'chlorobenzene') } }]
+            ]
+          },
+          claims: [{ react: ['sear', ['c1ccccc1'], { E: 'Cl' }, 'Clc1ccccc1'] }, { name: ['Clc1ccccc1', t('chlorbenzenas', 'chlorobenzene')] }]
         },
         { practice: 'u09.mech' }
       ]
@@ -296,7 +307,7 @@
           caption: t('Elektrofilai.', 'The electrophiles.'), src: 'L9 p12–15'
         },
         {
-          p: t('Nitrogrupė paprastai redukuojama į aminogrupę: taip iš nitroarenų gaunami aromatiniai aminai (anilinai), kurių reikia dažams ir vaistams.',
+          p: t('Nitrogrupę lengva redukuoti į aminogrupę: taip iš nitroarenų gaminami aromatiniai aminai (anilinai), reikalingi dažų ir vaistų sintezei.',
             'A nitro group is easily reduced to an amino group: this is how aromatic amines (anilines) for dyes and drugs are made from nitroarenes.'),
           src: 'L9 p14'
         },
@@ -308,13 +319,48 @@
         },
         { scheme: { items: [{ smi: 'c1ccc2ccccc2c1' }, { arrow: '→', above: f('HNO3') }, { smi: '[O-][N+](=O)c1cccc2ccccc12', name: t('1-nitronaftalenas', '1-nitronaphthalene') }] } },
         {
-          pitfall: t('Aktyvi dalelė yra ne reagentas, o jo darinys: $HNO3$ pats nenitrina, nitrina nitronio jonas, kurį sukuria $H2SO4$. Be $FeBr3$ benzenas su $Br2$ nereaguoja.',
-            'The active particle is not the reagent itself but a derivative of it: $HNO3$ alone does not nitrate, the nitronium ion made by $H2SO4$ does. Without $FeBr3$ benzene does not react with $Br2$.')
+          pitfall: t('Benzeną nitrina ne pati $HNO3$ molekulė, o nitronio jonas $NO2+$; sieros rūgštis padidina jo koncentraciją. Reaktyvesni arenai (pvz., naftalenas) nitrinami ir vien koncentruota $HNO3$, nes joje irgi susidaro šiek tiek $NO2+$. Be $FeBr3$ benzenas su $Br2$ nereaguoja.',
+            'Benzene is nitrated not by the $HNO3$ molecule itself but by the nitronium ion $NO2+$; sulfuric acid raises its concentration. More reactive arenes (naphthalene) are nitrated by concentrated $HNO3$ alone, because it also contains a little $NO2+$. Without $FeBr3$ benzene does not react with $Br2$.')
         },
         {
-          p: t('SEAr vyksta ir gyvuosiuose organizmuose: tiroksino sintezėje tirozino žiedas jodinamas, o fermentas peroksidazė sukuria elektrofilą $I+$. Vitamino K1 sintezėje elektrofilas yra alilo tipo katijonas, alkilinantis naftaleno darinį.',
-            'SEAr also happens in living organisms: in thyroxine synthesis the ring of tyrosine is iodinated and the enzyme peroxidase makes the electrophile $I+$. In vitamin K1 synthesis the electrophile is an allyl-type cation that alkylates a naphthalene derivative.'),
+          mech: [
+            {
+              scheme: { items: [{ smi: 'O[N+](=O)[O-]', opts: { lonePairs: true } }, { plus: true }, { smi: 'OS(=O)(=O)O', opts: { allH: true } }] },
+              arrows: [{ from: { m: 0, lp: 0 }, to: { m: 1, a: 'H0' } }, { from: { m: 1, b: [0, 'H0'] }, to: { m: 1, a: 0 } }],
+              note: t('Sieros rūgštis protonizuoja azoto rūgštį.', 'Sulfuric acid protonates nitric acid.')
+            },
+            {
+              scheme: { items: [{ smi: '[OH2+][N+](=O)[O-]', opts: { lonePairs: true } }] },
+              arrows: [{ from: { m: 0, lp: 3 }, to: { m: 0, mid: [1, 3] } }, { from: { m: 0, b: [0, 1] }, to: { m: 0, a: 0 } }],
+              note: t('Netekęs vandens, jonas virsta nitronio jonu.', 'After losing water, the ion becomes the nitronium ion.')
+            }
+          ],
+          caption: t('I stadija nitrinant: nitronio jono susidarymas. Brominant ir alkilinant analogišką vaidmenį atlieka Liuiso rūgštis ($FeBr3$, $AlCl3$).', 'Stage I of nitration: formation of the nitronium ion. In bromination and alkylation a Lewis acid ($FeBr3$, $AlCl3$) plays the analogous role.'),
+          src: 'L9 p13, p14, p16'
+        },
+        {
+          example: {
+            q: [{ p: t('Kas atsitinka su nitronio jonu, kai jis sutinka benzeną?', 'What happens when the nitronium ion meets benzene?') }, { mol: { smi: 'O=[N+]=O', name: t('nitronio jonas', 'nitronium ion') } }],
+            steps: [
+              [{ p: t('π elektronų pora atakuoja teigiamą azotą: susidaro arenio jonas (lėtoji II stadija).', 'A π electron pair attacks the positive nitrogen: the arenium ion forms (slow stage II).') }],
+              [{ p: t('Bazė (pvz., $HSO4-$) atplėšia protoną nuo sp³ atomo (greitoji III stadija).', 'A base (for example $HSO4-$) removes the proton from the sp³ carbon (fast stage III).') }],
+              [{ p: t('Susidaro nitrobenzenas, o sieros rūgštis atsistato.', 'Nitrobenzene forms and sulfuric acid is regenerated.') }, { scheme: { items: [{ smi: 'c1ccccc1' }, { plus: true }, { smi: 'O=[N+]=O' }, { arrow: '→' }, { smi: '[O-][N+](=O)c1ccccc1', name: t('nitrobenzenas', 'nitrobenzene') }, { plus: true }, { smi: '[H+]' }] } }]
+            ]
+          },
+          claims: [{ react: ['sear', ['c1ccccc1'], { E: 'NO2' }, '[O-][N+](=O)c1ccccc1'] }, { formula: ['O=[N+]=O', 'NO2+'] }, { name: ['[O-][N+](=O)c1ccccc1', t('nitrobenzenas', 'nitrobenzene')] }]
+        },
+        {
+          p: t('SEAr vyksta ir gyvuosiuose organizmuose: tiroksino sintezėje tirozino žiedas jodinamas, o fermentas peroksidazė sukuria elektrofilą $I+$. Vitamino K₁ sintezėje elektrofilas yra alilo tipo katijonas, alkilinantis naftaleno darinį.',
+            'SEAr also happens in living organisms: in thyroxine synthesis the ring of tyrosine is iodinated and the enzyme peroxidase makes the electrophile $I+$. In vitamin K₁ synthesis the electrophile is an allyl-type cation that alkylates a naphthalene derivative.'),
           src: 'L9 p18–20'
+        },
+        {
+          scheme: { items: [{ smi: 'NC(Cc1ccc(O)cc1)C(=O)O' }, { arrow: '→', above: f('I+') }, { smi: 'NC(Cc1ccc(O)c(I)c1)C(=O)O' }, { arrow: '→', above: f('I+') }, { smi: 'NC(Cc1cc(I)c(O)c(I)c1)C(=O)O' }] },
+          caption: t('Tirozino jodinimas: $OH$ nukreipia jodą į savo orto padėtis.', 'Iodination of tyrosine: $OH$ directs iodine to its ortho positions.'), src: 'L9 p18–19'
+        },
+        {
+          scheme: { items: [{ smi: 'Oc1ccc(O)cc1' }, { plus: true }, { smi: 'CC(C)=C[CH2+]' }, { arrow: '→' }, { smi: 'CC(C)=CCc1cc(O)ccc1O' }] },
+          caption: t('Alkilinimas gyvajame organizme: alilo tipo katijonas pakeičia žiedo vandenilį.', 'Alkylation in a living organism: an allyl-type cation replaces a ring hydrogen.'), src: 'L9 p18, p20'
         },
         { practice: 'u09.sear' }
       ]
@@ -322,7 +368,7 @@
     /* ------------------------------------------------------------ 4 */
     {
       id: 'fc',
-      title: t('Friedelio ir Krafto reakcijos', 'Friedel–Crafts reactions'),
+      title: t('Friedelio ir Craftso reakcijos', 'Friedel–Crafts reactions'),
       blocks: [
         { h: t('Alkilinimas ir acilinimas', 'Alkylation and acylation') },
         {
@@ -338,40 +384,39 @@
           scheme: { items: [{ smi: 'c1ccccc1', opts: { circle: true } }, { plus: true }, { smi: 'CC(=O)Cl' }, { arrow: '→', above: f('1. AlCl3'), below: f('2. H2O') }, { smi: 'CC(=O)c1ccccc1' }, { plus: true }, { smi: 'Cl' }] },
           caption: t('Acilinimas: elektrofilas – acilio jonas.', 'Acylation: the electrophile is the acylium ion.'), src: 'L9 p17'
         },
-        { resonance: [{ smi: 'CC#[O+]' }, { smi: 'C[C+]=O' }], caption: t('Acilio jonas $R-C=O+$: du rezonansiniai pavidalai.', 'The acylium ion $R-C=O+$: two resonance structures.'), src: 'L9 p17' },
+        { resonance: [{ smi: 'CC#[O+]', opts: { numbers: { 0: 'CH3', 1: 'C' } } }, { smi: 'C[C+]=O', opts: { numbers: { 0: 'CH3', 1: 'C' } } }], caption: t('Acilio jonas $R-C=O+$: du rezonansiniai pavidalai.', 'The acylium ion $R-C=O+$: two resonance structures.'), src: 'L9 p17' },
         {
           list: [
-            t('Jei žiedą stipriai deaktyvuoja elektronus traukiantis pakaitas (pvz., $NO2$) arba jame yra aminogrupė, reakcijos nėra.', 'The reaction fails when the ring carries a strong electron-withdrawing group (for example $NO2$) or an amino group.'),
+            t('Reakcijos nėra, jei žiede yra m-orientantas (vidutiniškai ar stipriai deaktyvuojantis pakaitas, pvz., $NO2$, $COOH$) arba aminogrupė.', 'The reaction fails when the ring carries a meta director (a moderately or strongly deactivating group, for example $NO2$ or $COOH$) or an amino group.'),
             t('Alkilinant dažnai gaunami polialkilinti produktai, nes alkilgrupė aktyvuoja žiedą. Acilinant to nėra: acilgrupė žiedą deaktyvuoja.', 'Alkylation often gives polyalkylated products because an alkyl group activates the ring. Acylation does not: an acyl group deactivates the ring.'),
             t('Su ilgesnės grandinės halogenalkanais grandinė persigrupuoja, todėl susidaro ir šakotesnių produktų.', 'With longer alkyl halides the chain rearranges, so more branched products form as well.')
           ],
           src: 'L9 p16'
         },
         {
-          scheme: { items: [{ smi: 'c1ccccc1', opts: { circle: true } }, { plus: true }, { smi: 'CCCCCl' }, { arrow: '→', above: f('AlCl3') }, { smi: 'CCC(C)c1ccccc1' }, { plus: true }, { smi: 'CCCCc1ccccc1' }] },
-          caption: t('Pirminis katijonas persigrupuoja į stabilesnį antrinį, todėl gaunamas ir šakotas produktas.', 'The primary cation rearranges to the more stable secondary one, so a branched product forms too.'), src: 'L9 p16'
+          scheme: { items: [{ smi: 'c1ccccc1', opts: { circle: true } }, { plus: true }, { smi: 'CC(C)CCl', name: t('1-chlor-2-metilpropanas', '1-chloro-2-methylpropane') }, { arrow: '→', above: f('AlCl3') }, { smi: 'CC(C)(C)c1ccccc1' }] },
+          caption: t('Pirminis katijonas persigrupuoja į stabilesnį tretinį, todėl susidaro $tret$-butilbenzenas.', 'The primary cation rearranges to the more stable tertiary one, so tert-butylbenzene forms.'), src: 'L9 p16'
         },
         {
           scheme: { items: [{ smi: 'Cc1ccccc1' }, { arrow: '→', above: f('CH3COCl, AlCl3') }, { smi: 'CC(=O)c1ccccc1C' }, { plus: true }, { smi: 'CC(=O)c1ccc(C)cc1' }] },
           caption: t('Toluenas acilinamas į o- ir p- padėtis (toliau žr. kreipiamąjį pakaitų poveikį).', 'Toluene is acylated at the o and p positions (see the directing effects below).'), src: 'L9 p35'
         },
         {
-          rule: t('Friedelio–Krafto reakcijos: alkilinimas ($RCl$, $AlCl3$) ir acilinimas ($RCOCl$, $AlCl3$, paskui $H2O$). Jos nevyksta su stipriais akceptoriniais pakaitais ir aminogrupe; alkilinant galimas polialkilinimas ir persigrupavimas.',
-            'Friedel–Crafts reactions: alkylation ($RCl$, $AlCl3$) and acylation ($RCOCl$, $AlCl3$, then $H2O$). They fail with strong electron-withdrawing groups and with amino groups; alkylation can give polyalkylation and rearrangement.'),
+          rule: t('Friedelio ir Craftso reakcijos: alkilinimas ($RCl$, $AlCl3$) ir acilinimas ($RCOCl$, $AlCl3$, paskui $H2O$). Jos nevyksta, kai žiede yra m-orientantas (vidutiniškai ar stipriai deaktyvuojantis pakaitas: $C=O$, $COOH$, $CN$, $SO3H$, $NO2$, $CX3$) arba aminogrupė; alkilinant galimas polialkilinimas ir persigrupavimas.',
+            'Friedel–Crafts reactions: alkylation ($RCl$, $AlCl3$) and acylation ($RCOCl$, $AlCl3$, then $H2O$). They fail when the ring carries a meta director (a moderately or strongly deactivating group: $C=O$, $COOH$, $CN$, $SO3H$, $NO2$, $CX3$) or an amino group; alkylation can give polyalkylation and rearrangement.'),
           src: 'L9 p16'
         },
         {
-          pitfall: t('Iš benzeno ir 1-chlorpropano nepasigaminsite propilbenzeno: pirminis katijonas persigrupuos, ir daugiausia susidarys izopropilbenzenas. Norint gauti nešakotą grandinę, tinka acilinimas, nes acilio jonas nepersigrupuoja.',
-            'Benzene and 1-chloropropane do not give propylbenzene: the primary cation rearranges and isopropylbenzene is the main product. For an unbranched chain use acylation, because the acylium ion does not rearrange.'),
+          pitfall: t('Iš benzeno ir 1-chlorpropano propilbenzeno daugiausia negausite: pirminis katijonas persigrupuoja, ir susidaro daug izopropilbenzeno. Nešakotą grandinę įveda acilinimas, nes acilio jonas nepersigrupuoja, tačiau gaunamas ketonas (1-fenil-1-propanonas); propilbenzenui jo $C=O$ grupę dar reikia redukuoti iki $CH2$.',
+            'Benzene and 1-chloropropane give mostly not propylbenzene: the primary cation rearranges and much isopropylbenzene forms. Acylation attaches an unbranched chain, because the acylium ion does not rearrange, but the product is a ketone (1-phenylpropan-1-one); to reach propylbenzene its $C=O$ must still be reduced to $CH2$.'),
           src: 'L9 p16'
         },
         {
           example: {
             q: [{ p: t('Kas susidaro benzenkarboksirūgštį veikiant $CH3Cl$ ir $AlCl3$?', 'What forms when benzoic acid is treated with $CH3Cl$ and $AlCl3$?') }, { mol: { smi: 'OC(=O)c1ccccc1', name: t('benzenkarboksirūgštis', 'benzoic acid') } }],
             steps: [
-              [{ p: t('Žiede yra karboksigrupė – stiprus elektronų akceptorius.', 'The ring carries a carboxyl group, a strong electron-withdrawing substituent.') }],
-              [{ p: t('Alkilinimas nevyksta, nes žiedas pernelyg deaktyvuotas.', 'Alkylation does not take place because the ring is too deactivated.') }],
-              [{ p: t('Atsakymas: reakcijos nėra; benzenkarboksirūgštis lieka nepakitusi.', 'Answer: no reaction; the benzoic acid is left unchanged.') }]
+              [{ p: t('Karboksigrupė – m-orientantas, žiedą deaktyvuoja vidutiniškai (L9 p28). Friedelio ir Craftso reakcijai to jau pakanka.', 'The carboxyl group is a meta director that deactivates the ring moderately (L9 p28). That is already enough to stop a Friedel–Crafts reaction.') }],
+              [{ p: t('Alkilinimas nevyksta; benzenkarboksirūgštis lieka nepakitusi.', 'Alkylation does not take place; the benzoic acid is left unchanged.') }],
             ]
           },
           claims: [{ name: ['OC(=O)c1ccccc1', t('benzenkarboksirūgštis', 'benzoic acid')] }]
@@ -391,8 +436,8 @@
         },
         {
           list: [
-            t('**Pirmos eilės** pakaitai verčia naują grupę užimti orto (2) arba para (4) padėtį; paprastai tai elektronų donorai (ED).', '**First-order groups** direct the next group to positions 2 (ortho) and 4 (para). Most of them are electron donors (ED).'),
-            t('**Antros eilės** pakaitai verčia ją užimti meta (3) padėtį; tai elektronų akceptoriai (EA).', '**Second-order groups** direct the next group to position 3 (meta). They are electron acceptors (EA).')
+            t('**Pirmos eilės** pakaitai verčia naują grupę užimti orto (2) arba para (4) padėtį; paprastai tai elektronų donorai (ED).', '**First-order groups** (ortho/para directors) direct the next group to positions 2 (ortho) and 4 (para). Most of them are electron donors (ED).'),
+            t('**Antros eilės** pakaitai verčia ją užimti meta (3) padėtį; tai elektronų akceptoriai (EA).', '**Second-order groups** (meta directors) direct the next group to position 3 (meta). They are electron acceptors (EA).')
           ],
           src: 'L9 p24, p26'
         },
@@ -411,7 +456,12 @@
           caption: t('Aktyvuojantys ir deaktyvuojantys pakaitai.', 'Activating and deactivating substituents.'), src: 'L9 p28'
         },
         {
-          p: t('Elektronų donoras didina elektronų tankį žiede (ypač o- ir p- padėtyse), todėl žiedas aktyvesnis. Akceptorius elektronų tankį mažina, todėl žiedas deaktyvuojamas, o santykinai daugiausia elektronų lieka m- padėtyse.',
+          p: t('Pakaitų kreipiamąjį veikimą aiškina du veiksniai: arenio jonų stabilumas (dinaminis faktorius, nuo kurio priklauso reakcijos kryptis) ir krūvių pasiskirstymas dar nereagavusioje molekulėje (statinis faktorius).',
+            'Two factors explain the directing effect: the stability of the arenium ions (the dynamic factor, which decides the direction) and the charge distribution in the unreacted molecule (the static factor).'),
+          src: 'L9 p30, T p65'
+        },
+        {
+          p: t('Elektronų donoras didina elektronų tankį žiede (daugiausia o- ir p- padėtyse); dėl to žiedas aktyvesnis. Akceptorius elektronų tankį mažina, todėl žiedas deaktyvuojamas, o santykinai daugiausia elektronų lieka m- padėtyse.',
             'An electron donor raises the electron density in the ring (above all at the o and p positions), so the ring is more reactive. An acceptor lowers it, so the ring is deactivated and relatively the most electron density remains at the m positions.'),
           src: 'L9 p30'
         },
@@ -437,10 +487,15 @@
             'Halogens are the exception: they have lone pairs (+M), but their −I effect is stronger, so they deactivate the ring and still direct to o and p. Do not confuse “deactivates” with “directs meta”.'),
           src: 'L9 p25'
         },
+        {
+          pitfall: t('Labai aktyvuoti žiedai (fenolis, anilinas) halogeninami be katalizatoriaus ir iš karto į visas laisvas o- ir p- padėtis: fenolis su bromo vandeniu duoda baltas 2,4,6-tribromfenolio nuosėdas. Anilinas su Liuiso rūgštimis ($FeBr3$, $AlCl3$) sudaro kompleksą, o nitrinimo mišinyje protonizuojamas ir tampa m-orientantu.',
+            'Strongly activated rings (phenol, aniline) are halogenated without a catalyst and at once in every free o and p position: phenol with bromine water gives a white precipitate of 2,4,6-tribromophenol. Aniline forms a complex with Lewis acids ($FeBr3$, $AlCl3$), and in the nitrating mixture it is protonated and becomes a meta director.'),
+          src: 'LW6 p2, S4.22, L9 p16'
+        },
         { h: t('Keli pakaitai', 'Several substituents') },
         {
-          rule: t('Kai žiede keli pakaitai, žiūrima į kiekvieno kreipimą. Jei jie kreipia į tas pačias padėtis, nauja grupė patenka ten. Jei ne, lemia stipresnis elektronų donoras. Padėtis tarp dviejų pakaitų dėl kliūčių nepasirenkama.',
-            'With several substituents, look at the direction of each. If they point to the same positions, the new group goes there. If not, the stronger electron donor decides. The position between two substituents is avoided for steric reasons.'),
+          rule: t('Kai žiede keli pakaitai, pirmiausia nustatoma, į kurias padėtis kreipia kiekvienas iš jų. Jei jie kreipia į tas pačias padėtis, nauja grupė patenka ten. Jei ne, lemia stipresnis elektronų donoras. Padėtis tarp dviejų pakaitų dėl kliūčių nepasirenkama; didelė grupė (pvz., $C(CH3)3$) užstoja ir gretimas orto padėtis, todėl susidaro beveik vien p- izomeras.',
+            'With several substituents, first find the positions to which each of them points. If they point to the same positions, the new group goes there. If not, the stronger electron donor decides. The position between two substituents is avoided for steric reasons; a bulky group (for example $C(CH3)3$) also blocks the neighbouring ortho positions, so almost only the p isomer forms.'),
           src: 'L9 p34'
         },
         {
@@ -455,7 +510,7 @@
           example: {
             q: [{ p: t('Kur patenka bromas, brominant 1-metoksi-4-nitrobenzeną?', 'Where does bromine go when 1-methoxy-4-nitrobenzene is brominated?') }, { mol: { smi: 'COc1ccc(cc1)[N+](=O)[O-]', name: t('1-metoksi-4-nitrobenzenas', '1-methoxy-4-nitrobenzene') } }],
             steps: [
-              [{ p: t('$OCH3$ – stiprus elektronų donoras, o-/p- orientantas; $NO2$ – akceptorius, m- orientantas.', '$OCH3$ is a strong electron donor and an o/p director; $NO2$ is an acceptor and a meta director.') }],
+              [{ p: t('$OCH3$ – elektronų donoras (+M), o-/p- orientantas; $NO2$ – akceptorius, m- orientantas.', '$OCH3$ is an electron donor (+M) and an o/p director; $NO2$ is an acceptor and a meta director.') }],
               [{ p: t('Para padėtis jau užimta, todėl $OCH3$ kreipia į savo o- padėtis, o $NO2$ – į padėtis, esančias jo m- atžvilgiu. Tai tos pačios padėtys.', 'The para position is already taken, so $OCH3$ points to its ortho positions, and $NO2$ points to the positions meta to it. These are the same positions.') }],
               [{ p: t('Kreipimas suderintas: bromas patenka šalia $OCH3$ grupės.', 'The directions agree: bromine enters next to the $OCH3$ group.') }, { mol: { smi: 'COc1ccc(cc1Br)[N+](=O)[O-]', name: t('2-brom-1-metoksi-4-nitrobenzenas', '2-bromo-1-methoxy-4-nitrobenzene') } }]
             ]
@@ -473,7 +528,7 @@
       blocks: [
         { h: t('Stabilumas lemia kryptį', 'Stability decides the direction') },
         {
-          p: t('Elektrofilas gali pulti o-, m- ar p- padėtį. Kiekvienu atveju susidaro skirtingas arenio jonas, ir greičiausiai vyksta ta ataka, kurios jonas stabiliausias. Jo stabilumą rodo rezonansinės formulės: kuo labiau krūvis delokalizuotas, tuo jonas stabilesnis.',
+          p: t('Elektrofilas gali atakuoti o-, m- ar p- padėtį. Kiekvienu atveju susidaro skirtingas arenio jonas, ir greičiausiai vyksta ta ataka, kurios jonas stabiliausias. Jo stabilumą rodo rezonansinės formulės: kuo labiau krūvis delokalizuotas, tuo jonas stabilesnis.',
             'The electrophile can attack the o, m or p position. Each attack gives a different arenium ion, and the fastest attack is the one with the most stable ion. Its stability shows in its resonance structures: the more the charge is delocalised, the more stable the ion.'),
           src: 'L9 p29–33'
         },
@@ -492,7 +547,7 @@
         },
         {
           resonance: [{ smi: arenium('NO2', 3, 2, BR).smi }, { smi: '[C+]1([N+](=O)[O-])C=CC(Br)C=C1' }, { smi: arenium('NO2', 3, 4, BR).smi }],
-          caption: t('$NO2$ ir ataka į para padėtį: viena formulė turi $+$ ant atomo, sujungto su teigiamu azotu, – ji labai nepalanki.', '$NO2$ and attack at the para position: one structure has $+$ on the carbon bonded to the positive nitrogen, which is very unfavourable.'), src: 'L9 p33'
+          caption: t('$NO2$ ir ataka į para padėtį: viena formulė turi teigiamą krūvį ant atomo, sujungto su teigiamu azotu, – ji labai nepalanki.', '$NO2$ and attack at the para position: one structure has $+$ on the carbon bonded to the positive nitrogen, which is very unfavourable.'), src: 'L9 p33'
         },
         {
           list: [
@@ -505,6 +560,18 @@
         {
           pitfall: t('Akceptorius nepadaro m- atakos palankios, jis tik labiau pablogina o- ir p- ataką. Todėl su deaktyvuotu žiedu m- produktas susidaro lėčiau nei benzeno reakcijoje.',
             'An acceptor does not make m attack favourable; it only makes o and p attack worse. That is why the m product forms more slowly than in the reaction of benzene.')
+        },
+        {
+          example: {
+            q: [{ p: t('Kodėl nitrobenzenas brominamas į m- padėtį?', 'Why is nitrobenzene brominated at the m position?') }, { mol: { smi: '[O-][N+](=O)c1ccccc1', name: t('nitrobenzenas', 'nitrobenzene') } }],
+            steps: [
+              [{ p: t('Atakuojant o- padėtį, viena rezonansinė formulė turi teigiamą krūvį ant atomo su $NO2$, šalia teigiamo azoto.', 'In o attack one resonance structure has the positive charge on the carbon bearing $NO2$, next to the positive nitrogen.') }, { mol: { smi: arenium('NO2', 1, 0, BR).smi } }],
+              [{ p: t('Atakuojant p- padėtį, tokia pati nepalanki formulė atsiranda.', 'In p attack the same unfavourable structure appears.') }, { mol: { smi: '[C+]1([N+](=O)[O-])C=CC(Br)C=C1' } }],
+              [{ p: t('Atakuojant m- padėtį, krūvis niekada neatsiduria ant atomo su $NO2$.', 'In m attack the charge never sits on the carbon bearing $NO2$.') }, { mol: { smi: arenium('NO2', 2, 3, BR).smi } }],
+              [{ p: t('Todėl m ataka vienintelė išvengia šios formulės, ir susidaro m-izomeras.', 'So m attack is the only one that avoids this structure, and the m isomer forms.') }, { mol: { smi: '[O-][N+](=O)c1cccc(Br)c1', name: t('1-brom-3-nitrobenzenas', '1-bromo-3-nitrobenzene') } }]
+            ]
+          },
+          claims: [{ react: ['sear', ['[O-][N+](=O)c1ccccc1'], { E: 'Br' }, '[O-][N+](=O)c1cccc(Br)c1'] }, { name: ['[O-][N+](=O)c1cccc(Br)c1', t('1-brom-3-nitrobenzenas', '1-bromo-3-nitrobenzene')] }]
         },
         { practice: 'u09.sigma' }
       ]
@@ -580,28 +647,32 @@
           caption: t('Atvirkštinė tvarka duoda 3-nitrobenzenkarboksirūgštį.', 'The reverse order gives 3-nitrobenzoic acid.'), src: 'L9 p36'
         },
         {
-          p: t('Esant stiprių akceptorių, halogeną žiede gali pakeisti ir nukleofilas. Taip Sangerio reagentas (1-fluor-2,4-dinitrobenzenas) pažymi N-galinę amino rūgštį nustatant baltymo seką.',
+          p: t('Kai žiede yra stiprių akceptorių, halogeną gali pakeisti ir nukleofilas. Taip Sangerio reagentas (1-fluor-2,4-dinitrobenzenas) pažymi baltymo N-galinę aminorūgštį, kai nustatoma aminorūgščių seka.',
             'With strong acceptors on the ring, a halogen can also be replaced by a nucleophile. This is how Sanger’s reagent (1-fluoro-2,4-dinitrobenzene) labels the N-terminal amino acid when a protein sequence is determined.'),
           src: 'L9 p22'
+        },
+        {
+          scheme: { items: [{ smi: 'Fc1ccc(cc1[N+](=O)[O-])[N+](=O)[O-]' }, { plus: true }, { smi: 'NCC(=O)O' }, { arrow: '→' }, { smi: 'OC(=O)CNc1ccc(cc1[N+](=O)[O-])[N+](=O)[O-]' }, { plus: true }, { smi: 'F' }] },
+          caption: t('Sangerio reagentas su N-galine aminorūgštimi (glicinu).', 'Sanger’s reagent with the N-terminal amino acid (glycine).'), src: 'L9 p22'
         },
         {
           scheme: { items: [{ smi: 'Clc1c(cc(cc1[N+](=O)[O-])[N+](=O)[O-])[N+](=O)[O-]' }, { arrow: '→', above: f('1. HO−'), below: f('2. H3O+') }, { smi: 'Oc1c(cc(cc1[N+](=O)[O-])[N+](=O)[O-])[N+](=O)[O-]' }, { plus: true }, { smi: '[Cl-]' }] },
           caption: t('Halogenarenų nukleofilinis pakeitimas.', 'Nucleophilic substitution of a haloarene.'), src: 'L9 p22'
         },
         {
-          pitfall: t('Neplanuokite Friedelio–Krafto reakcijos po stiprios EA grupės įvedimo: žiedas deaktyvuotas. Taip pat 3-bromtolueno tiesiogiai iš tolueno nepagaminsite: bromas patenka tik į o- ir p- padėtis, todėl reikia kitos grupių tvarkos.',
-            'Do not plan a Friedel–Crafts reaction after a strong EA group is on the ring: the ring is deactivated. Likewise, 3-bromotoluene cannot be made by brominating toluene directly: bromine goes only to the o and p positions, so the groups have to come in another order.')
+          pitfall: t('Neplanuokite Friedelio ir Craftso reakcijos po m-orientanto įvedimo: žiedas deaktyvuotas. 3-bromtolueno iš tolueno tiesiogiai nepagaminsite, ir tvarkos pakeitimas nepadeda: $CH3$ ir $Br$ abu yra o-/p-orientantai, todėl ir alkilinant brombenzeną metilas patenka į o- ir p- padėtis. Tokiam m-izomerui reikia kito kelio.',
+            'Do not plan a Friedel–Crafts reaction after a meta director is on the ring: the ring is deactivated. 3-Bromotoluene cannot be made from toluene directly, and changing the order does not help: $CH3$ and $Br$ are both o/p directors, so methylating bromobenzene also puts the methyl o and p. Such a meta isomer needs another route.')
         },
         {
           example: {
             q: [{ p: t('Kaip iš benzeno gauti 3-brombenzenaminą?', 'How can 3-bromoaniline be made from benzene?') }, { mol: { smi: 'Nc1cccc(Br)c1', name: t('3-brombenzenaminas', '3-bromobenzenamine') } }],
             steps: [
               [{ p: t('Bromas ir aminogrupė yra m- vienas kito atžvilgiu. Aminogrupė (donoras) nukreiptų į o-/p-, todėl ją reikia įvesti paskutinę, iš $NO2$.', 'Bromine and the amino group are meta to each other. An amino group (donor) would direct o/p, so it must be introduced last, from $NO2$.') }],
-              [{ p: t('1) $HNO3$/$H2SO4$: nitrobenzenas. 2) $Br2$/$FeBr3$: $NO2$ kreipia į m- padėtį.', '1) $HNO3$/$H2SO4$: nitrobenzene. 2) $Br2$/$FeBr3$: $NO2$ directs to the m position.') }, { mol: { smi: '[O-][N+](=O)c1cccc(Br)c1' } }],
-              [{ p: t('3) $Fe$, $H3O+$, paskui $HO-$: nitrogrupė redukuojama į aminogrupę.', '3) $Fe$, $H3O+$, then $HO-$: the nitro group is reduced to an amino group.') }, { mol: { smi: 'Nc1cccc(Br)c1' } }]
+              [{ p: t('$HNO3$/$H2SO4$ duoda nitrobenzeną; paskui $Br2$/$FeBr3$: $NO2$ kreipia į m- padėtį.', '$HNO3$/$H2SO4$ gives nitrobenzene; then $Br2$/$FeBr3$: $NO2$ directs to the m position.') }, { mol: { smi: '[O-][N+](=O)c1cccc(Br)c1' } }],
+              [{ p: t('Galiausiai $Fe$, $H3O+$, paskui $HO-$: nitrogrupė redukuojama į aminogrupę.', 'Finally $Fe$, $H3O+$, then $HO-$: the nitro group is reduced to an amino group.') }, { mol: { smi: 'Nc1cccc(Br)c1' } }]
             ]
           },
-          claims: [{ react: ['sear', ['[O-][N+](=O)c1ccccc1'], { E: 'Br' }, '[O-][N+](=O)c1cccc(Br)c1'] }]
+          claims: [{ react: ['sear', ['[O-][N+](=O)c1ccccc1'], { E: 'Br' }, '[O-][N+](=O)c1cccc(Br)c1'] }, { react: ['nitro.reduce', ['[O-][N+](=O)c1cccc(Br)c1'], null, 'Nc1cccc(Br)c1'] }]
         },
         { practice: 'u09.synth' }
       ]
@@ -613,17 +684,17 @@
       blocks: [
         { h: t('Izomerų atpažinimas pagal mononitrinimą', 'Telling isomers apart by mononitration') },
         {
-          p: t('Tris izomerinius dibrombenzenus (o-, m- ir p-) galima atskirti pagal tai, kiek skirtingų mononitrojunginių kiekvienas duoda. Tam reikia suskaičiuoti laisvas C–H padėtis, kurios nėra lygiavertės pagal simetriją. Šis būdas vadinamas Kiornerio metodu.',
-            'The three isomeric dibromobenzenes (o, m and p) can be told apart by how many different mononitro products each gives. Count the free C–H positions that are not equivalent by symmetry. This is called Körner’s method.'),
+          p: t('Kiornerio metodas leidžia nustatyti, kuris iš trijų izomerų (o-, m- ar p-) yra mėgintuvėlyje, neturint jokių spektrų: junginys mononitrinamas ir suskaičiuojama, kiek skirtingų produktų susidarė. Šis skaičius lygus simetriškai nelygiaverčių laisvų C–H padėčių skaičiui.',
+            'Körner’s method tells which of the three isomers (o, m or p) is in the flask without any spectra: the compound is mononitrated and the different products are counted. That number equals the number of free C–H positions that are not equivalent by symmetry.'),
           src: 'S4.21'
         },
         {
           table: {
             head: [t('Izomeras', 'Isomer'), t('Skirtingų laisvų padėčių', 'Different free positions'), t('Mononitro produktų', 'Mononitro products')],
             rows: [
-              [{ smi: 'Brc1ccc(Br)cc1' }, t('visos keturios lygiavertės', 'all four equivalent'), t('1', '1')],
-              [{ smi: 'Brc1ccccc1Br' }, t('dvi poros: 3 = 6 ir 4 = 5', 'two pairs: 3 = 6 and 4 = 5'), t('2', '2')],
-              [{ smi: 'Brc1cccc(Br)c1' }, t('trys skirtingos: 2, 4 = 6 ir 5', 'three different: 2, 4 = 6 and 5'), t('3', '3')]
+              [{ smi: 'c1(Cl)ccc(Cl)cc1', opts: { numbers: { 0: '1', 2: '2', 3: '3', 4: '4', 6: '5', 7: '6' } } }, t('visos keturios lygiavertės', 'all four equivalent'), t('1', '1')],
+              [{ smi: 'c1(Cl)c(Cl)cccc1', opts: { numbers: { 0: '1', 2: '2', 4: '3', 5: '4', 6: '5', 7: '6' } } }, t('dvi poros: 3 = 6 ir 4 = 5', 'two pairs: 3 = 6 and 4 = 5'), t('2', '2')],
+              [{ smi: 'c1(Cl)cc(Cl)ccc1', opts: { numbers: { 0: '1', 2: '2', 3: '3', 5: '4', 6: '5', 7: '6' } } }, t('trys skirtingos: 2, 4 = 6 ir 5', 'three different: 2, 4 = 6 and 5'), t('3', '3')]
             ]
           },
           caption: t('Para – 1, orto – 2, meta – 3 produktai.', 'Para gives 1, ortho 2, meta 3 products.'), src: 'S4.21'
@@ -633,10 +704,10 @@
             'Körner’s method: the number of different mononitro products identifies the isomer: p gives 1, o gives 2, m gives 3. Count every symmetry-distinct position, not just the main product.'),
           src: 'S4.21'
         },
-        { h: t('Aminai rūgštinėje terpėje', 'Amines in acid') },
+        { h: t('Aminai rūgščioje terpėje', 'Amines in acid') },
         {
-          p: t('$N,N$-Dimetilanilinas yra stiprus donoras, todėl brominamas į o- ir p- padėtis. Nitrinimo mišinyje ($HNO3$, $H2SO4$) azoto laisvoji pora protonizuojama: susidariusi $-NH(CH3)2+$ grupė neturi laisvosios poros ir turi pilną teigiamą krūvį, taigi yra stiprus deaktyvuojantis m-orientantas, kaip $NR3+$.',
-            '$N,N$-Dimethylaniline is a strong donor, so it is brominated at the o and p positions. In the nitrating mixture ($HNO3$, $H2SO4$) the nitrogen lone pair is protonated: the resulting $-NH(CH3)2+$ group has no lone pair and a full positive charge, so it is a strongly deactivating meta director, like $NR3+$.'),
+          p: t('$N,N$-Dimetilanilino grupė $N(CH3)2$ yra stiprus donoras, todėl junginys brominamas į o- ir p- padėtis. Nitrinimo mišinyje ($HNO3$, $H2SO4$) azoto laisvoji pora protonizuojama: susidariusi $-NH(CH3)2+$ grupė neturi laisvosios poros ir turi pilną teigiamą krūvį, taigi yra stiprus deaktyvuojantis m-orientantas, kaip $NR3+$.',
+            'The $N(CH3)2$ group of $N,N$-dimethylaniline is a strong donor, so the compound is brominated at the o and p positions. In the nitrating mixture ($HNO3$, $H2SO4$) the nitrogen lone pair is protonated: the resulting $-NH(CH3)2+$ group has no lone pair and a full positive charge, so it is a strongly deactivating meta director, like $NR3+$.'),
           src: 'S4.22, L9 p28'
         },
         {
@@ -645,11 +716,33 @@
         },
         {
           scheme: { items: [{ smi: 'CN(C)c1ccccc1' }, { arrow: '⇌', above: f('H2SO4') }, { smi: 'C[NH+](C)c1ccccc1' }, { arrow: '→', above: f('HNO3') }, { smi: 'CN(C)c1cccc(c1)[N+](=O)[O-]' }] },
-          caption: t('Protonuotas aminas: m-orientantas. Po reakcijos aminas atgauna protoną, gaunamas 3-nitro darinys.', 'The protonated amine: a meta director. After the reaction the amine loses the proton again; the 3-nitro derivative results.'), src: 'S4.22'
+          caption: t('Protonuotas aminas: m-orientantas. Po reakcijos, pašarminus, aminas netenka protono ir gaunamas 3-nitro darinys.', 'The protonated amine: a meta director. After the reaction the amine loses the proton again; the 3-nitro derivative results.'), src: 'S4.22'
         },
         {
           pitfall: t('Žiūrėkite į terpę: ta pati aminogrupė rūgštyje ir neutralioje terpėje kreipia priešingai. Neutralioje – o-/p- (donoras su laisvąja pora), rūgščioje – m- (be laisvosios poros, teigiamas krūvis).',
             'Look at the medium: the same amino group directs oppositely in acid and in neutral conditions. Neutral: o/p (a donor with a lone pair); acidic: meta (no lone pair, positive charge).')
+        },
+        {
+          example: {
+            q: [{ p: t('Kiek mononitro produktų duoda 1,3-dichlorbenzenas?', 'How many mononitro products does 1,3-dichlorobenzene give?') }, { mol: { smi: 'Clc1cccc(Cl)c1', name: t('1,3-dichlorbenzenas', '1,3-dichlorobenzene'), opts: { numbers: 'all' } } }],
+            steps: [
+              [{ p: t('Laisvos padėtys: viena tarp chloro atomų, dvi greta vieno chloro ir viena priešais ją.', 'The free positions: one between the chlorines, two next to one chlorine each, and one opposite the first.') }],
+              [{ p: t('Dvi padėtys greta vieno chloro lygiavertės pagal simetriją.', 'The two positions next to one chlorine each are equivalent by symmetry.') }],
+              [{ p: t('Skirtingų padėčių yra trys, taigi susidaro trys mononitro produktai.', 'There are three different positions, so three mononitro products form.') }, { scheme: { items: [{ smi: 'Clc1cccc(Cl)c1' }, { arrow: '→', above: f('HNO3, H2SO4') }, { smi: 'Clc1cccc(Cl)c1[N+](=O)[O-]' }, { plus: true }, { smi: 'c1cc(c(cc1Cl)Cl)[N+](=O)[O-]' }, { plus: true }, { smi: 'Clc1cc(Cl)cc(c1)[N+](=O)[O-]' }] } }]
+            ]
+          },
+          claims: [{ formula: ['Clc1cccc(Cl)c1[N+](=O)[O-]', 'C6H3Cl2NO2'] }, { formula: ['c1cc(c(cc1Cl)Cl)[N+](=O)[O-]', 'C6H3Cl2NO2'] }, { formula: ['Clc1cc(Cl)cc(c1)[N+](=O)[O-]', 'C6H3Cl2NO2'] }, { react: ['sear', ['Clc1cccc(Cl)c1'], { E: 'NO2' }, 'c1cc(c(cc1Cl)Cl)[N+](=O)[O-]'] }]
+        },
+        {
+          example: {
+            q: [{ p: t('Kur patenka nitrogrupė, nitrinant $N,N,4$-trimetilanilino ($HNO3$, $H2SO4$)?', 'Where does the nitro group go when N,N,4-trimethylaniline is nitrated ($HNO3$, $H2SO4$)?') }, { mol: { smi: 'CN(C)c1ccc(C)cc1', name: t('N,N,4-trimetilbenzenaminas', 'N,N,4-trimethylbenzenamine') } }],
+            steps: [
+              [{ p: t('Rūgščioje terpėje aminogrupė protonizuojama: $-NH(CH3)2+$ yra m-orientantas.', 'In acid the amino group is protonated: $-NH(CH3)2+$ is a meta director.') }],
+              [{ p: t('$CH3$ yra o-/p-orientantas, o para padėtis užimta, todėl jis kreipia į savo o- padėtis.', '$CH3$ is an o/p director and its para position is taken, so it points to its ortho positions.') }],
+              [{ p: t('Šios padėtys yra ir m- aminogrupės atžvilgiu: kryptys sutampa.', 'These positions are also meta to the amino group: the directions agree.') }, { mol: { smi: 'CN(C)c1ccc(C)c(c1)[N+](=O)[O-]' } }]
+            ]
+          },
+          claims: [{ react: ['sear', ['CN(C)c1ccc(C)cc1'], { E: 'NO2' }, 'CN(C)c1ccc(C)c(c1)[N+](=O)[O-]'] }]
         },
         { practice: 'u09.korner' },
         { practice: 'u09.anil' }
@@ -683,7 +776,7 @@
         t('Kuo stabilesnis arenio jonas, tuo greitesnė reakcija.', 'The more stable the arenium ion, the faster the reaction.'),
         t('o-/p-orientantai: $NH2$, $OH$, $OR$, $NHCOR$, alkilai (aktyvuoja); halogenai (deaktyvuoja). m-orientantai: $NO2$, $CN$, $SO3H$, $C=O$, $COOH$, $CX3$, $NR3+$ (deaktyvuoja).', 'o/p directors: $NH2$, $OH$, $OR$, $NHCOR$, alkyls (activate); halogens (deactivate). m directors: $NO2$, $CN$, $SO3H$, $C=O$, $COOH$, $CX3$, $NR3+$ (deactivate).'),
         t('Keli pakaitai: suderinta kryptis laimi; kitaip – stipresnis donoras; padėtis tarp pakaitų neprieinama.', 'Several substituents: agreeing directions win; otherwise the stronger donor; the position between two substituents is avoided.'),
-        t('Friedelis–Kraftsas nevyksta su stipriais EA pakaitais ir $NH2$; alkilinimas – polialkilinimas, persigrupavimas; acilinimas – ne.', 'Friedel–Crafts fails with strong EA groups and $NH2$; alkylation – polyalkylation, rearrangement; acylation – neither.'),
+        t('Friedelio ir Craftso reakcijos nevyksta su m-orientantais ir $NH2$; alkilinimas – polialkilinimas, persigrupavimas; acilinimas – ne.', 'Friedel–Crafts fails with meta directors and $NH2$; alkylation – polyalkylation, rearrangement; acylation – neither.'),
         t('Šoninė grandinė: $Br2$/$hν$ – benzilinis $Br$; $KMnO4$ – $COOH$ (reikia benzilinio $H$).', 'Side chain: $Br2$/$hν$ – benzylic $Br$; $KMnO4$ – $COOH$ (needs a benzylic $H$).'),
         t('Kiornerio metodas: $p$ – 1, $o$ – 2, $m$ – 3 mononitro produktai.', 'Körner’s method: p gives 1, o gives 2, m gives 3 mononitro products.'),
         t('Aminas rūgštyje protonizuojamas: $-NHR2+$ yra m-orientantas; neutralus $-NR2$ – o-/p-.', 'An amine in acid is protonated: $-NHR2+$ is a meta director; the neutral $-NR2$ is o/p.')
@@ -730,7 +823,7 @@
   };
   const AROM = [
     ['c1ccccc1', 6, 'benz'], ['Cc1ccccc1', 6, 'benz'], ['Oc1ccccc1', 6, 'benz'], ['Nc1ccccc1', 6, 'benz'], ['CCc1ccccc1', 6, 'benz'],
-    ['COc1ccccc1', 6, 'benz'], ['OC(=O)c1ccccc1', 6, 'benz'], ['[O-][N+](=O)c1ccccc1', 6, 'benz'], ['Clc1ccccc1', 6, 'benz'], ['C=Cc1ccccc1', 6, 'benz'],
+    ['C=Cc1ccccc1', 6, 'benz'],
     ['O=Cc1ccccc1', 6, 'benz'], ['c1ccc2ccccc2c1', 10, 'naph'], ['Cc1cccc2ccccc12', 10, 'naph'], ['Cc1ccc2ccccc2c1', 10, 'naph'], ['c1ccc2cc3ccccc3cc2c1', 14, 'anthr'],
     ['c1ccncc1', 6, 'pyrid'], ['Cc1cccnc1', 6, 'pyrid'], ['Cc1ccncc1', 6, 'pyrid'], ['c1cncnc1', 6, 'pyrid'],
     ['c1cc[nH]c1', 6, 'five'], ['Cn1cccc1', 6, 'five'], ['c1ccoc1', 6, 'five'], ['Cc1ccco1', 6, 'five'], ['c1ccsc1', 6, 'five'], ['Cc1cccs1', 6, 'five'],
@@ -743,7 +836,7 @@
     ['C=CC=CC=C', 'acyc'], ['CC=CC=CC=CC', 'acyc'], ['C1CCC=CCC1', 'sp3']
   ];
   const AR_REASON = {
-    sp3: t('Ciklą pertraukia $sp3$ atomas (arba ne visi ciklo atomai turi $p$ orbitales), todėl π sistema nėra vientisa.', 'An $sp3$ atom interrupts the ring (or not every ring atom has a $p$ orbital), so the π system is not continuous.'),
+    sp3: t('Ciklą pertraukia sp³ atomas (arba kai kuriems ciklo atomams trūksta $p$ orbitalės), todėl π sistema nėra vientisa.', 'An sp³ atom interrupts the ring (or not every ring atom has a $p$ orbital), so the π system is not continuous.'),
     cnt4: t('Ciklas vientisai konjuguotas, bet π elektronų yra $4n$ (4 arba 8), o ne $4n + 2$.', 'The ring is continuously conjugated, but it has $4n$ π electrons (4 or 8), not $4n + 2$.'),
     het: t('Žiede yra heteroatomas, o aromatinis junginys gali turėti tik anglies atomų.', 'The ring contains a heteroatom, and an aromatic compound may contain carbon atoms only.'),
     acyc: t('Konjuguota sistema yra ne ciklinė, o grandinė.', 'The conjugated system is an open chain, not a ring.')
@@ -792,15 +885,15 @@
       return {
         q: [{ mol: { smi: e.smi } }],
         steps,
-        why: t('Aromatinis junginys turi būti ciklinis, plokščias, su vientisa konjuguota π sistema ir $4n + 2$ π elektronų (Hiukelio taisyklė). Pakaitai prie žiedo ir $sp3$ atomai sistemos nesudaro, o 4 ar 8 π elektronai aromatiškumo nesuteikia.',
-          'An aromatic compound must be cyclic, planar, with one continuous conjugated π system and $4n + 2$ π electrons (Hückel’s rule). Substituents on the ring and $sp3$ atoms are not part of the system, and 4 or 8 π electrons do not give aromaticity.'),
+        why: t('Aromatinis junginys turi būti ciklinis, plokščias, su vientisa konjuguota π sistema ir $4n + 2$ π elektronų (Hiukelio taisyklė). Pakaitai prie žiedo ir sp³ atomai sistemos nesudaro, o 4 ar 8 π elektronai aromatiškumo nesuteikia.',
+          'An aromatic compound must be cyclic, planar, with one continuous conjugated π system and $4n + 2$ π electrons (Hückel’s rule). Substituents on the ring and sp³ atoms are not part of the system, and 4 or 8 π electrons do not give aromaticity.'),
         src: 'L9 p6–7'
       };
     }
   });
 
   // ---- u09.sear: products of SEAr on substituted benzenes (S4.8 a-d, S4.18) ----
-  const SEAR_SUBS = ['Me', 'Et', 'iPr', 'tBu', 'OMe', 'OH', 'NHAc', 'F', 'Cl', 'Br', 'I', 'NO2', 'COOH', 'CN', 'CHO', 'COMe', 'COOMe', 'CF3', 'CCl3', 'SO3H', 'CONH2'];
+  const SEAR_SUBS = ['Me', 'Et', 'iPr', 'tBu', 'OMe', 'NHAc', 'F', 'Cl', 'Br', 'I', 'NO2', 'COOH', 'CN', 'CHO', 'COMe', 'COOMe', 'CF3', 'CCl3', 'SO3H', 'CONH2'];
   const SEAR_E = ['Cl', 'Br', 'NO2', 'SO3H', 'CH3', 'C(C)=O'];
   const NONE_OPT = { text: t('Reakcija nevyksta', 'No reaction') };
 
@@ -858,13 +951,13 @@
         steps.push({
           prompt: t('Koks yra produktas?', 'What is the product?'),
           kind: 'choice', options, answer: 3,
-          hint: t('Friedelio–Krafto reakcijoms būtinas pakankamai reaktyvus žiedas. Ar tokį žiedą galima alkilinti ar acilinti?', 'Friedel–Crafts reactions need a sufficiently reactive ring. Can a ring like this be alkylated or acylated?'),
-          solution: [{ p: t('Stiprus akceptorinis pakaitas deaktyvuoja žiedą, todėl Friedelio–Krafto reakcija nevyksta (L9 p16).', 'A strong electron-withdrawing group deactivates the ring, so the Friedel–Crafts reaction does not take place (L9 p16).') }]
+          hint: t('Friedelio ir Craftso reakcijoms būtinas pakankamai reaktyvus žiedas. Ar tokį žiedą galima alkilinti ar acilinti?', 'Friedel–Crafts reactions need a sufficiently reactive ring. Can a ring like this be alkylated or acylated?'),
+          solution: [{ p: t('Pakaitas yra m-orientantas ir deaktyvuoja žiedą, todėl Friedelio ir Craftso reakcija nevyksta.', 'The substituent is a meta director and deactivates the ring, so the Friedel–Crafts reaction does not take place.') }]
         });
         return {
           q: [head],
           steps,
-          why: t('Alkilinimas ir acilinimas reikalauja nesudeaktyvuoto žiedo. Karbonilo, nitro, ciano, sulfo ir trihalogenmetilo grupės žiedą sudeaktyvuoja, todėl $AlCl3$ ir $RCl$ ar $RCOCl$ jo nepakeičia.',
+          why: t('Alkilinimas ir acilinimas reikalauja nedeaktyvuoto žiedo. Karbonilo, nitro, ciano, sulfo ir trihalogenmetilo grupės (m-orientantai) žiedą deaktyvuoja, todėl $AlCl3$ ir $RCl$ ar $RCOCl$ jo nepakeičia.',
             'Alkylation and acylation need a ring that is not deactivated. Carbonyl, nitro, cyano, sulfo and trihalomethyl groups deactivate the ring, so $AlCl3$ with $RCl$ or $RCOCl$ does not substitute it.'),
           src: 'L9 p16'
         };
@@ -878,7 +971,7 @@
         hint: ELE[ek].fc
           ? t('Visų junginių formulė ta pati, skiriasi tik naujos grupės vieta. Pirmiausia nuspręskite, ar tokį žiedą apskritai galima keisti.', 'All the compounds have the same formula; only the position of the new group differs. First decide whether such a ring can react at all.')
           : t('Visų junginių formulė ta pati, skiriasi tik naujos grupės vieta. Kur ją kreipia pakaitas?', 'All the compounds have the same formula; only the position of the new group differs. Where does the substituent send it?'),
-        solution: [{ p: t('Pagrindinis produktas pagal SEAr ir pakaito orientaciją:', 'The main product by SEAr and the orientation of the substituent:') }, prodScheme(pick.smi, reag, majors.map((m) => m.smi))]
+        solution: [{ p: zk === 'tBu' ? t('Didelė $C(CH3)3$ grupė užstoja gretimas orto padėtis, todėl susidaro beveik vien p- izomeras.', 'The bulky $C(CH3)3$ group blocks the neighbouring ortho positions, so almost only the p isomer forms.') : t('Pagrindinis produktas pagal SEAr ir pakaito orientaciją:', 'The main product by SEAr and the orientation of the substituent:') }, prodScheme(pick.smi, reag, majors.map((m) => m.smi))]
       });
       // a name step for the para product (o/p) or the only product
       const target = tie ? (a.products.find((p) => p.major && p.pos.some((x) => relPos(0, x) === 'p')) || majors[0]) : majors[0];
@@ -894,7 +987,7 @@
       return {
         q: [head],
         steps,
-        why: t(whyClass[sub.kind].lt + ' Reakcija: ' + ELE[ek].lt + ', mechanizmas SEAr.', whyClass[sub.kind].en + ' The reaction is ' + ELE[ek].en + ', mechanism SEAr.'),
+        why: zk === 'tBu' ? t('Didelė $C(CH3)3$ grupė užstoja gretimas orto padėtis, todėl susidaro beveik vien p- izomeras. Reakcija: ' + ELE[ek].lt + ', mechanizmas SEAr.', 'The bulky $C(CH3)3$ group blocks the neighbouring ortho positions, so almost only the p isomer forms. The reaction is ' + ELE[ek].en + ', mechanism SEAr.') : t(whyClass[sub.kind].lt + ' Reakcija: ' + ELE[ek].lt + ', mechanizmas SEAr.', whyClass[sub.kind].en + ' The reaction is ' + ELE[ek].en + ', mechanism SEAr.'),
         src: 'L9 p24–28'
       };
     }
@@ -977,7 +1070,7 @@
             : t('$KMnO4$ karštyje oksiduoja šoninę alkilgrandinę.', 'Hot $KMnO4$ oxidises an alkyl side chain.'))
       }];
       if (none) {
-        const why1 = t('Nėra benzilinio vandenilio: benzilo anglis turi tris C atomus, todėl nei radikalas, nei oksidacija neįmanomi.', 'There is no benzylic hydrogen: the benzylic carbon carries three carbons, so neither a radical nor oxidation is possible.');
+        const why1 = t('Nėra benzilinio vandenilio: benzilo anglis turi tris C atomus, todėl nesusidaro benzilinis radikalas, o pirminių $CH3$ vandenilių bromas šviesoje beveik nepakeičia.', 'There is no benzylic hydrogen: the benzylic carbon carries three carbons, so no benzylic radical forms, and bromine in light hardly replaces the primary $CH3$ hydrogens.');
         steps[0].solution = why1;
         steps.push({
           prompt: t('Kodėl šoninė grandinė nereaguoja?', 'Why does the side chain not react?'),
@@ -1000,13 +1093,13 @@
         kind: tie ? 'multi' : 'choice', options, answer: tie ? [0, 1] : 0,
         hint: rk === 'OX' ? t('Šoninė alkilgrandinė oksiduojasi iki $COOH$ ties benzilo anglimi; kas lieka nuo ilgesnės grandinės, atskyla.', 'An alkyl side chain is oxidised to $COOH$ at the benzylic carbon; whatever is left of a longer chain is cleaved off.')
           : t('Visų variantų formulė ta pati: svarbu, kuris vandenilis pakeičiamas – žiedo ar grandinės, ir kuri grandinės anglis.', 'All options have the same formula: what matters is which hydrogen is replaced, on the ring or on the chain, and on which chain carbon.'),
-        solution: [{ p: rk === 'SEAr' ? t('Alkilas yra o-/p-orientantas: bromas patenka į žiedą.', 'An alkyl group is an o/p director: bromine goes onto the ring.')
+        solution: [{ p: rk === 'SEAr' ? t('Vietą lemia žiedo pakaitai: jei kryptys nesutampa, lemia stipresnis donoras (pvz., $OCH3$ stipresnis už $CH3$), o padėtis tarp dviejų pakaitų dėl kliūčių nepasirenkama.', 'The ring substituents decide the position: if their directions disagree, the stronger donor decides (for example $OCH3$ over $CH3$), and the position between two substituents is avoided for steric reasons.')
           : (rk === 'SR' ? t('Bromas pakeičia benzilinį vandenilį, nes benzilo radikalas stabiliausias.', 'Bromine replaces the benzylic hydrogen, because the benzyl radical is the most stable.')
-            : t('Visa alkilgrandinė virsta viena $COOH$ grupe.', 'The whole alkyl chain becomes one $COOH$ group.')) }].concat(right.map((s) => ({ mol: { smi: s } })))
+            : t('Kiekviena alkilgrandinė, turinti benzilinį H, virsta $COOH$ grupe.', 'Every alkyl chain with a benzylic H becomes a $COOH$ group.')) }].concat(right.map((s) => ({ mol: { smi: s } })))
       });
       return {
         q, steps,
-        why: rk === 'SEAr' ? t('$Br2$ su Liuiso rūgštimi $FeBr3$ elektrofiliškai pakeičia žiedo vandenilį; alkilas nukreipia į o- ir p- padėtis.', '$Br2$ with the Lewis acid $FeBr3$ replaces a ring hydrogen electrophilically; an alkyl group directs o and p.')
+        why: rk === 'SEAr' ? t('$Br2$ su Liuiso rūgštimi $FeBr3$ elektrofiliškai pakeičia žiedo vandenilį; vietą lemia žiedo pakaitai (jei kryptys nesutampa – stipresnis donoras), o šoninė grandinė be šviesos nereaguoja.', '$Br2$ with the Lewis acid $FeBr3$ replaces a ring hydrogen electrophilically; the position is set by the ring substituents (the stronger donor when they disagree), and the side chain does not react without light.')
           : (rk === 'SR' ? t('Šviesoje vyksta radikalinis brominimas: pakeičiamas benzilinis vandenilis, nes benzilo radikalas stabilizuotas rezonansu su žiedu. Žiedas lieka nepakeistas.', 'In light radical bromination takes place: the benzylic hydrogen is replaced because the benzyl radical is stabilised by resonance with the ring. The ring is left unchanged.')
             : t('Karštas $KMnO4$ benzeno žiedo nesuardo, o šoninę grandinę, turinčią benzilinį vandenilį, oksiduoja iki $COOH$ grupės.', 'Hot $KMnO4$ leaves the benzene ring intact but oxidises a side chain with a benzylic hydrogen to a $COOH$ group.')),
         src: 'L9 p21, p35'
@@ -1023,12 +1116,15 @@
     SO3H: { lab: 'SO3, H2SO4', rule: 'sear', o: { E: 'SO3H' }, el: 'SO3H+' },
     ME: { lab: 'CH3Cl, AlCl3', rule: 'sear', o: { E: 'CH3' }, el: 'CH3+' },
     AC: { lab: 'CH3COCl, AlCl3', rule: 'sear', o: { E: 'C(C)=O' }, el: 'CH3-C≡O+' },
-    OX: { lab: 'KMnO4, H2O, t°', rule: 'side.ox', o: null }
+    OX: { lab: 'KMnO4, H2O, t°', rule: 'side.ox', o: null },
+    OX25: { lab: 'KMnO4, H2O, 25 °C', rule: 'none', o: null }
   };
+  const NEAR = { BR: 'SR', SR: 'BR', CL: 'SR', ME: 'AC', AC: 'ME', OX: 'OX25', NO2: 'SO3H', SO3H: 'NO2' };
   const RE_SUBS = ['Me', 'Et', 'Pr', 'iPr', 'Cl', 'OMe', 'Br'];
   // the main product(s) of reagent r on substrate s (SMILES list), or null
   function reProducts(ctx, s, rk) {
     const r = REAG[rk];
+    if (r.rule === 'none') return null;
     const res = ctx.react.run(r.rule, [s], r.o || {});
     if (res.none) return null;
     if (r.rule === 'side.ox') {
@@ -1047,7 +1143,7 @@
       for (let tries = 0; tries < 100 && !pick; tries++) {
         const key = ctx.pick(RE_SUBS);
         const s = ringSmi(subsOf([key], [0])).smi;
-        const rk = ctx.pick(Object.keys(REAG));
+        const rk = ctx.pick(Object.keys(REAG).filter((k) => k !== 'OX25'));
         const ps = reProducts(ctx, s, rk);
         if (!ps || ps.length > 2) continue;
         // the target: the para product when o/p form, otherwise the only product
@@ -1070,14 +1166,15 @@
       // wrong options: prefer reagents that give an isomer of the target (the other mechanism), then the rest
       const sameForm = pick.others.filter((k) => { const pp = reProducts(ctx, s, k); return pp && chem.formulaString(chem.parse(pp[0])) === chem.formulaString(chem.parse(target)); });
       const rest = ctx.shuffle(pick.others.filter((k) => sameForm.indexOf(k) < 0));
-      const wrong = ctx.shuffle(sameForm).concat(rest).slice(0, 3);
+      const near = NEAR[rk];
+      const wrong = (pick.others.indexOf(near) >= 0 ? [near] : []).concat(ctx.shuffle(sameForm.filter((k) => k !== near)), rest.filter((k) => k !== near)).slice(0, 3);
       const keys = [rk].concat(wrong);
       const q = [{ scheme: { items: [{ smi: s }, { arrow: '→' }, { smi: target }] } }];
       const steps = [{
         prompt: t('Kuris reagentų rinkinys duoda šį produktą?', 'Which set of reagents gives this product?'),
         kind: 'choice', options: keys.map((k) => ({ text: f(REAG[k].lab) })), answer: 0,
         hint: t('Palyginkite produktą su pradiniu junginiu: kas pasikeitė – žiedas ar šoninė grandinė, ir kokia grupė įvesta?', 'Compare the product with the starting compound: what changed, the ring or the side chain, and which group was introduced?'),
-        solution: [{ p: t('Tinka šie reagentai:', 'These reagents fit:') }, { scheme: { items: [{ smi: s }, { arrow: '→', above: f(REAG[rk].lab) }, { smi: target }] } }]
+        solution: [{ p: REAG[rk].rule === 'sear' ? t('Pasikeitė žiedas, o grandinė nepakito, todėl reikia elektrofilo: reagentas su Liuiso rūgštimi, o ne šviesos.', 'The ring changed and the chain did not, so an electrophile is needed: a reagent with a Lewis acid, not light.') : (REAG[rk].rule === 'side.br' ? t('Pasikeitė šoninė grandinė (benzilinis H), o žiedas nepakito, todėl reikia radikalų: $Br2$ ir šviesa, o ne Liuiso rūgštis.', 'The side chain changed (benzylic H) and the ring did not, so radicals are needed: $Br2$ and light, not a Lewis acid.') : t('Grandinė virto $COOH$ grupe: reikia kaitinamo oksidatoriaus; šaltas $KMnO4$ benzeno darinio nepaveikia.', 'The chain became $COOH$: a heated oxidant is needed; cold $KMnO4$ does not affect a benzene derivative.')) }, { scheme: { items: [{ smi: s }, { arrow: '→', above: f(REAG[rk].lab) }, { smi: target }] } }]
       }];
       if (REAG[rk].rule === 'sear') {
         const els = ['Br+', 'Cl+', 'NO2+', 'SO3H+', 'CH3+', 'CH3-C≡O+'];
@@ -1124,7 +1221,8 @@
       for (let tries = 0; tries < 400 && !pick; tries++) {
         const n = rng() < 0.7 ? 2 : 3;
         const keys = [];
-        while (keys.length < n) { const k = ctx.pick(POS_G); if (keys.indexOf(k) < 0) keys.push(k); }
+        while (keys.length < n) { const k = ctx.pick(POS_G); if (keys.indexOf(k) < 0 || (SUB[k].kind === 'acc' && rng() < 0.4)) keys.push(k); }
+        if (keys.indexOf('iPr') >= 0 && keys.indexOf('CF3') >= 0) continue;
         const positions = [0];
         while (positions.length < n) { const p = ctx.int(1, 5); if (positions.indexOf(p) < 0) positions.push(p); }
         const subs = subsOf(keys, positions);
@@ -1152,7 +1250,8 @@
       if (!pick) throw new Error('u09.pos: no usable ring');
       const { keys, positions, a, coop, ctrl } = pick;
       const ringIdx = a.major.map((p) => a.ring[p]);
-      const lines = keys.map((k) => t('$' + SUB[k].f + '$: ' + ORIENT_T[SUB[k].kind].lt, '$' + SUB[k].f + '$: ' + ORIENT_T[SUB[k].kind].en));
+      const ukeys = keys.filter((k, i) => keys.indexOf(k) === i);
+      const lines = ukeys.map((k) => t('$' + SUB[k].f + '$: ' + ORIENT_T[SUB[k].kind].lt, '$' + SUB[k].f + '$: ' + ORIENT_T[SUB[k].kind].en));
       const verdict = coop
         ? t('Pakaitų kryptys sutampa, todėl nauja grupė patenka į pažymėtas padėtis.', 'The directions of the substituents agree, so the new group goes to the marked positions.')
         : t('Kryptys nesutampa, todėl lemia stipresnis donoras $' + SUB[ctrl].f + '$.', 'The directions disagree, so the stronger donor $' + SUB[ctrl].f + '$ decides.');
@@ -1164,17 +1263,18 @@
           prompt: t('Bakstelėkite žiedo anglies atomus, į kuriuos bus kreipiama elektrofilinė dalelė $E+$.', 'Tap the ring carbons to which the electrophile $E+$ is directed.'),
           kind: 'atoms', mol: { smi: a.smi, opts: { numbers: 'all' } }, answer: ringIdx,
           hint: t('Pirma nustatykite, ką kiekvienas pakaitas kreipia: o-/p- ar m- padėtis. Paskui palyginkite.', 'First decide what each substituent directs to, o/p or m positions. Then compare.'),
-          solution: [{ list: lines }, { p: t(verdict.lt + sterics.lt, verdict.en + sterics.en) }]
+          solution: pick.hindered ? [{ list: lines }, { p: t(sterics.lt.trim(), sterics.en.trim()) }] : [{ list: lines }]
         },
         {
           prompt: t('Kuris pakaitas nulemia atakos vietą?', 'Which substituent decides where the attack goes?'),
           kind: 'choice',
-          options: keys.map((k) => ({ text: t('$' + SUB[k].f + '$', '$' + SUB[k].f + '$') })).concat([{ text: t('visi pakaitai kreipia į tas pačias padėtis', 'all substituents point to the same positions') }]),
-          answer: coop ? keys.length : keys.indexOf(ctrl),
+          options: ukeys.map((k) => ({ text: t('$' + SUB[k].f + '$', '$' + SUB[k].f + '$') })).concat([{ text: t('visi pakaitai kreipia į tas pačias padėtis', 'all substituents point to the same positions') }]),
+          answer: coop ? ukeys.length : ukeys.indexOf(ctrl),
           hint: t('Palyginkite kiekvieno pakaito nurodytas padėtis: ar jos sutampa?', 'Compare the positions each substituent points to: do they coincide?'),
-          solution: t(verdict.lt, verdict.en)
+          solution: [{ list: lines }, { p: verdict }]
         }
       ];
+      steps.reverse();
       return {
         q: [{ p: t('Į kurias padėtis bus kreipiama elektrofilinė dalelė $E+$ vykstant SEAr reakcijai?', 'To which positions will the electrophile $E+$ be directed in an SEAr reaction?') }],
         steps,
@@ -1202,7 +1302,8 @@
       const zk = ctx.pick(SIG_Z);
       const k = ctx.pick([1, 2, 3, 4, 5]);
       const c = ctx.pick([(k + 1) % 6, (k + 5) % 6]);
-      const ef = ctx.pick(['Br', 'Cl', '[N+](=O)[O-]']);
+      let ef = ctx.pick(['Br', 'Cl', '[N+](=O)[O-]']);
+      if (zk === 'NO2' && ef === '[N+](=O)[O-]') ef = 'Br';
       const A = arenium(zk, k, c, ef);
       const sub = SUB[zk];
       const rel = relPos(0, k);
@@ -1217,7 +1318,7 @@
           prompt: t('Pavaizduota viena rezonansinė formulė. Bakstelėkite visus žiedo C atomus, ant kurių rezonansinėse formulėse gali būti teigiamas krūvis.', 'One resonance structure is shown. Tap every ring carbon that can carry the positive charge in some resonance structure.'),
           kind: 'atoms', mol: { smi: A.smi, opts: { numbers: 'all' } }, answer: plusIdx,
           hint: t('Krūvis juda per konjuguotą dienilo sistemą: perkelkite dvigubą ryšį gretimo atomo link ir pažiūrėkite, kur atsiranda $+$.', 'The charge moves through the conjugated diene part: shift a double bond toward the charged atom and see where the $+$ appears.'),
-          solution: [{ p: t('Teigiamas krūvis dalijasi tarp trijų atomų: dviejų, gretimų $sp3$ atomui, ir atomo, esančio jam priešais.', 'The positive charge is shared by three atoms: the two next to the $sp3$ carbon and the one opposite to it.') }]
+          solution: [{ p: t('Teigiamas krūvis dalijasi tarp trijų atomų: dviejų, gretimų sp³ atomui, ir atomo, esančio jam priešais.', 'The positive charge is shared by three atoms: the two next to the sp³ carbon and the one opposite to it.') }]
         },
         {
           prompt: t('Ar atomas, turintis pakaitą, yra tarp šių trijų, ir ką tai reiškia jonui?', 'Is the carbon that carries the substituent among these three, and what does that mean for the ion?'),
@@ -1226,7 +1327,7 @@
           solution: SIG_EFFECT[effect]
         },
         {
-          prompt: t('Kokias padėtis šis pakaitas kreips pagrindinai?', 'Which positions will this substituent mainly direct to?'),
+          prompt: t('Į kurias padėtis šis pakaitas daugiausia kreips naują grupę?', 'Which positions will this substituent mainly direct the new group to?'),
           kind: 'choice', options: [{ text: t('o- ir p- padėtis', 'the o and p positions') }, { text: t('m- padėtį', 'the m position') }, { text: t('visas padėtis vienodai', 'all positions equally') }], answer: finalAns,
           hint: t('Padėtis, kurių atakos jonas stabiliausias, bus pagrindinės. Kuriose atakose pakaito turintis atomas gauna krūvį?', 'The positions whose attack gives the most stable ion are the main ones. In which attacks does the substituent carbon get the charge?'),
           solution: sub.kind === 'acc'
@@ -1235,7 +1336,7 @@
         }
       ];
       return {
-        q: [{ p: t('Elektrofilas $E+$ atakuoja ' + relT.lt + ' padėtį benzeno darinio, turinčio pakaitą $' + sub.f + '$. Susidaręs arenio jonas parodytas pirmajame žingsnyje.', 'The electrophile $E+$ attacks the ' + relT.en + ' position of a benzene derivative that carries the substituent $' + sub.f + '$. The arenium ion that forms is shown in the first step.') },],
+        q: [{ p: t('Elektrofilas $E+$ atakuoja benzeno darinio, turinčio pakaitą $' + sub.f + '$, ' + relT.lt + ' padėtį. Susidaręs arenio jonas parodytas pirmajame žingsnyje.', 'The electrophile $E+$ attacks the ' + relT.en + ' position of a benzene derivative that carries the substituent $' + sub.f + '$. The arenium ion that forms is shown in the first step.') },],
         steps,
         why: t('Arenio jono teigiamas krūvis visada dalijamas tarp trijų atomų: dviejų gretimų ir vieno priešais atakuotą atomą. Pakaitas ant vieno iš jų (o- ar p- ataka) stipriai keičia jono stabilumą: donoras jį didina, akceptorius – mažina. Atakuojant m- padėtį pakaitas krūvio negauna.',
           'The positive charge of an arenium ion is always shared by three carbons: the two next to the attacked carbon and the one opposite. A substituent on one of them (o or p attack) changes the stability of the ion strongly: a donor raises it, an acceptor lowers it. In m attack the substituent never gets the charge.'),
@@ -1268,13 +1369,14 @@
     mirrors: ['S4.9'],
     gen(rng, ctx) {
       const n = rng() < 0.6 ? 2 : 3;
+      const ek = ctx.pick(['Br', 'Cl', 'NO2', 'SO3H']);
+      const rpool = RATE_K.filter((k) => !(k === 'NH2' && (ek === 'NO2' || ek === 'SO3H')));
       const ks = [];
       for (let tries = 0; tries < 60 && ks.length < n; tries++) {
-        const k = ctx.pick(RATE_K);
+        const k = ctx.pick(rpool);
         if (ks.every((x) => SUB[x].lvl !== SUB[k].lvl)) ks.push(k);
       }
       if (ks.length < n) throw new Error('u09.rate: no pool');
-      const ek = ctx.pick(['Br', 'Cl', 'NO2', 'SO3H']);
       const sorted = ks.slice().sort((x, y) => SUB[y].lvl - SUB[x].lvl);
       const nm = (k) => t(SUB[k].lt, SUB[k].en);
       const mols = ks.map((k) => ({ smi: arene(k), caption: nm(k) }));
@@ -1303,7 +1405,7 @@
         solution: RATE_REASON[0]
       });
       const fast = sorted[0];
-      const a = fast === 'H' ? null : attack(ctx, subsOf([fast], [0]), ek);
+      const a = (fast === 'H' || ((fast === 'NH2' || fast === 'OH') && (ek === 'Br' || ek === 'Cl'))) ? null : attack(ctx, subsOf([fast], [0]), ek);
       if (a) {
         const majors = a.products.filter((p) => p.major);
         if (majors.length >= 1 && majors.length <= 2) {
@@ -1312,7 +1414,7 @@
             prompt: tie ? t('Kokie yra greitesnės reakcijos pagrindiniai produktai?', 'What are the main products of the faster reaction?') : t('Koks yra greitesnės reakcijos pagrindinis produktas?', 'What is the main product of the faster reaction?'),
             kind: tie ? 'multi' : 'choice', options: a.products.slice().sort((x, y) => (y.major ? 1 : 0) - (x.major ? 1 : 0)).map((p) => ({ mol: { smi: p.smi } })),
             answer: tie ? [0, 1] : 0,
-            hint: t('Naudokite greitesnio arenų pakaito orientaciją.', 'Use the directing effect of the substituent of the faster arene.'),
+            hint: t('Naudokite greičiau reaguojančio areno pakaito orientaciją.', 'Use the directing effect of the substituent of the faster-reacting arene.'),
             solution: [{ p: t('Šio pakaito orientacija:', 'The directing effect of this substituent:') }, prodScheme(a.smi, ENV(ek), majors.map((m) => m.smi))]
           });
         }
@@ -1320,7 +1422,7 @@
       return {
         q: [{ p: t('Kuris iš šių arenų reaguoja greičiau su ' + rg + '? ' + (n === 2 ? 'Palyginkite du.' : 'Palyginkite visus tris.'), 'Which of these arenes reacts faster with ' + rg + '? ' + (n === 2 ? 'Compare the two.' : 'Compare all three.')) }, { mol: mols }],
         steps,
-        why: t('SEAr greitį lemia arenio jono susidarymas (lėtoji II stadija). Donorai jį stabilizuoja ir reakciją greitina, akceptoriai destabilizuoja ir lėtina; halogenai silpnai lėtina. Eilė: stiprūs aktyvatoriai > vidutiniai > silpni > benzenas > halogenai > vidutiniai deaktyvatoriai > stiprūs deaktyvatoriai.',
+        why: t('SEAr greitį lemia arenio jono susidarymas (lėtoji II stadija). Donorai jį stabilizuoja ir reakciją greitina, akceptoriai destabilizuoja ir lėtina; halogenai silpnai lėtina. Eilė: stipriai aktyvuojantys pakaitai > vidutiniškai > silpnai > benzenas > halogenai > vidutiniškai deaktyvuojantys > stipriai deaktyvuojantys.',
           'The SEAr rate is set by the formation of the arenium ion (the slow stage II). Donors stabilise it and speed the reaction up; acceptors destabilise it and slow it down; halogens slow it slightly. Order: strong activators > moderate > weak > benzene > halogens > moderate deactivators > strong deactivators.'),
         src: 'L9 p28, S4.9'
       };
@@ -1329,7 +1431,7 @@
 
   // ---- u09.korner: Körner's method (S4.21) ----
   const KOR_X = ['Br', 'Cl', 'I', 'F', 'Me', 'Et', 'OMe', 'OH'];
-  const nProd = (n) => t(n + (n === 1 ? ' mononitrojunginys' : ' mononitrojunginiai'), n + (n === 1 ? ' mononitro product' : ' mononitro products'));
+  const nProd = (n) => t(n === 1 ? 'gautas 1 mononitrojunginys' : 'gauti ' + n + ' mononitrojunginiai', 'gave ' + n + (n === 1 ? ' mononitro product' : ' mononitro products'));
   function nitroProducts(ctx, smi) {
     const res = ctx.react.run('sear', [smi], { E: 'NO2' });
     const seen = new Set();
@@ -1370,7 +1472,12 @@
               hint: t('Kiekvienai skirtingai padėčiai – vienas produktas. Kiti variantai yra kitų izomerų produktai.', 'Each different position gives one product. The other options are products of the other isomers.'),
               solution: [schemes[i]]
             }
-          ],
+          ].concat(nameT(ctx, right[0].s) ? [{
+            prompt: t('Pavadinkite pirmąjį iš šių produktų (jis pavaizduotas pirmoje parinktyje).', 'Name the first of these products (it is the first option shown).'),
+            kind: 'name', mol: { smi: right[0].s }, answer: { smi: right[0].s },
+            hint: t('Sunumeruokite žiedą taip, kad pakaitai gautų mažiausius numerius.', 'Number the ring so that the substituents get the lowest numbers.'),
+            solution: nameT(ctx, right[0].s)
+          }] : []),
           why: t('Nitrogrupė gali patekti į kiekvieną laisvą padėtį, bet pagal simetriją lygiavertės padėtys duoda tą patį produktą. Todėl produktų skaičius priklauso tik nuo izomero simetrijos.', 'The nitro group can enter any free position, but positions that are equivalent by symmetry give the same product. So the number of products depends only on the symmetry of the isomer.'),
           src: 'S4.21'
         };
@@ -1378,7 +1485,7 @@
       const order = ctx.shuffle([0, 1, 2]);
       const letters = ['A', 'B', 'C'];
       const perm = ctx.shuffle([0, 1, 2]);
-      const left = perm.map((k, l) => ({ text: t(letters[l] + ': nitrinant gautas ' + nProd(counts[k]).lt, letters[l] + ': nitration gave ' + nProd(counts[k]).en) }));
+      const left = perm.map((k, l) => ({ text: t(letters[l] + ': nitrinant ' + nProd(counts[k]).lt, letters[l] + ': nitration ' + nProd(counts[k]).en) }));
       const right = order.map((k) => ({ mol: { smi: iso[k] } }));
       const pairs = perm.map((k) => order.indexOf(k));
       const nameOf = variant === 'tri'
@@ -1459,7 +1566,7 @@
         steps.push({
           prompt: tie ? t('Pavadinkite para izomerą.', 'Name the para isomer.') : t('Pavadinkite pagrindinį produktą.', 'Name the main product.'),
           kind: 'name', mol: { smi: target.smi }, answer: { smi: target.smi },
-          hint: t('Pagrindinė grandinė – benzenaminas; azoto pakaitus žymėkite $N$.', 'The parent is the benzenamine; mark the nitrogen substituents with $N$.'),
+          hint: t('Pagrindinis junginys – benzenaminas; azoto pakaitų lokantas – $N$.', 'The parent is benzenamine; the locant of the nitrogen substituents is $N$.'),
           solution: nm
         });
       }
@@ -1493,9 +1600,7 @@
         steps: [
           ch(t('Kuris iš trijų darinių yra aromatinis?', 'Which of the three species is aromatic?'), [ml('[CH+]1C=CC=C1'), ml('[CH]1C=CC=C1'), ml('[CH-]1C=CC=C1')], 2,
             t('Suskaičiuokite π elektronus kiekviename: dvi C=C ir tas, kas lieka ant penktojo atomo.', 'Count the π electrons in each: two C=C and whatever sits on the fifth atom.'),
-            t('Katijonas turi 4, radikalas 5, anijonas 6 π elektronus. Tik 6 = 4n + 2 (n = 1).', 'The cation has 4, the radical 5, the anion 6 π electrons. Only 6 = 4n + 2 (n = 1).')),
-          { prompt: t('Kiek π elektronų turi aromatinis darinys?', 'How many π electrons does the aromatic species have?'), kind: 'number', answer: { value: 6, tol: 0 },
-            hint: t('Dvi C=C duoda 4 elektronus.', 'Two C=C give 4 electrons.'), solution: t('4 iš dviejų C=C ir 2 iš anijono laisvosios poros $p$ orbitalėje: 6.', '4 from the two C=C and 2 from the lone pair of the anion in a $p$ orbital: 6.') }
+            t('Katijonas turi 4, radikalas 5, anijonas 6 π elektronus. Tik 6 = 4n + 2 (n = 1).', 'The cation has 4, the radical 5, the anion 6 π electrons. Only 6 = 4n + 2 (n = 1).'))
         ],
         why: t('Aromatiškumą nusako π elektronų skaičius, o ne krūvis: ciklopentadienilo anijonas turi 6 π elektronus, todėl stabilus, o katijonas (4) – ne.', 'Aromaticity depends on the number of π electrons, not on the charge: the cyclopentadienyl anion has 6 π electrons and is stable, the cation (4) is not.'),
         src: 'L9 p7', claims: [{ aromatic: ['[CH-]1C=CC=C1', true] }, { aromatic: ['[CH+]1C=CC=C1', false] }]
@@ -1506,7 +1611,7 @@
         steps: [
           ch(t('Kuris darinys aromatinis?', 'Which species is aromatic?'), [ml('[CH+]1C=CC=CC=C1'), ml('[CH]1C=CC=CC=C1'), ml('[CH-]1C=CC=CC=C1'), ml('C1=CC=CCC=C1')], 0,
             t('Tuščia $p$ orbitalė elektronų neprideda.', 'An empty $p$ orbital adds no electrons.'),
-            t('Katijonas turi 3 C=C: 6 π elektronus. Radikalas turi 7, anijonas 8, o cikloheptatrienas turi $sp3$ atomą.', 'The cation has 3 C=C: 6 π electrons. The radical has 7, the anion 8, and cycloheptatriene has an $sp3$ carbon.'))
+            t('Katijonas turi 3 C=C: 6 π elektronus. Radikalas turi 7, anijonas 8, o cikloheptatrienas turi sp³ atomą.', 'The cation has 3 C=C: 6 π electrons. The radical has 7, the anion 8, and cycloheptatriene has an sp³ carbon.'))
         ],
         why: t('Septynių narių žiedas aromatinis tik kaip katijonas (6 π e−). Tropilio katijonas yra pavyzdys, kad aromatinis gali būti ir ne šešianaris žiedas.', 'A seven-membered ring is aromatic only as the cation (6 π e−). The tropylium cation shows that an aromatic ring need not be six-membered.'),
         src: 'L9 p7', claims: [{ aromatic: ['[CH+]1C=CC=CC=C1', true] }, { aromatic: ['[CH-]1C=CC=CC=C1', false] }]
@@ -1516,9 +1621,7 @@
         q: [{ p: t('Pirolis yra aromatinis.', 'Pyrrole is aromatic.') }, { mol: { smi: 'c1cc[nH]c1', name: t('pirolis', 'pyrrole'), opts: { numbers: 'all' } } }],
         steps: [
           { prompt: t('Bakstelėkite atomą, kurio laisvoji pora įeina į aromatinę π sistemą.', 'Tap the atom whose lone pair joins the aromatic π system.'), kind: 'atoms', mol: { smi: 'c1cc[nH]c1', opts: { numbers: 'all' } }, answer: [3],
-            hint: t('Dvi C=C duoda tik 4 elektronus, o reikia 6.', 'Two C=C give only 4 electrons, but 6 are needed.'), solution: t('Azoto laisvoji pora guli $p$ orbitalėje ir duoda likusius 2 elektronus: 4 + 2 = 6.', 'The nitrogen lone pair sits in a $p$ orbital and gives the remaining 2 electrons: 4 + 2 = 6.') },
-          { prompt: t('Kiek π elektronų turi pirolio žiedas?', 'How many π electrons does the pyrrole ring have?'), kind: 'number', answer: { value: 6, tol: 0 },
-            hint: t('Sudėkite elektronus iš dvigubųjų ryšių ir iš azoto poros.', 'Add the electrons from the double bonds and from the nitrogen pair.'), solution: t('4 + 2 = 6 ($n = 1$).', '4 + 2 = 6 ($n = 1$).') }
+            hint: t('Dvi C=C duoda tik 4 elektronus, o reikia 6.', 'Two C=C give only 4 electrons, but 6 are needed.'), solution: t('Azoto laisvoji pora guli $p$ orbitalėje ir duoda likusius 2 elektronus: 4 + 2 = 6.', 'The nitrogen lone pair sits in a $p$ orbital and gives the remaining 2 electrons: 4 + 2 = 6.') }
         ],
         why: t('Heteroatomo laisvoji pora skaičiuojama tik tada, kai ji yra $p$ orbitalėje, t. y. dalyvauja konjugacijoje.', 'A heteroatom lone pair counts only when it is in a $p$ orbital, that is, when it takes part in the conjugation.'),
         src: 'L9 p6', claims: [{ aromatic: ['c1cc[nH]c1', true] }, { formula: ['c1cc[nH]c1', 'C4H5N'] }]
@@ -1574,7 +1677,7 @@
         q: [{ p: t('Benzenas $KMnO4$ neoksiduoja ir bromo neprijungia.', 'Benzene is not oxidised by $KMnO4$ and does not add bromine.') }, { mol: { smi: 'c1ccccc1', opts: { circle: true } } }],
         steps: [
           ch(t('Kodėl benzenas nesijungia kaip alkenas?', 'Why does benzene not add reagents like an alkene?'),
-            [tx('prijungimas suardytų aromatinę sistemą ir prarastų jos stabilumą', 'addition would destroy the aromatic system and lose its stability'), tx('benzene nėra π elektronų', 'benzene has no π electrons'), tx('benzenas per mažai polinis', 'benzene is too non-polar'), tx('žiedo C atomai yra $sp3$', 'the ring carbons are $sp3$')], 0,
+            [tx('prijungimas suardytų aromatinę sistemą ir prarastų jos stabilumą', 'addition would destroy the aromatic system and lose its stability'), tx('benzene nėra π elektronų', 'benzene has no π electrons'), tx('benzenas per mažai polinis', 'benzene is too non-polar'), tx('žiedo C atomai yra sp³', 'the ring carbons are sp³')], 0,
             t('Palyginkite, kas lieka po prijungimo ir po pakeitimo.', 'Compare what is left after addition and after substitution.'),
             t('Po pakeitimo aromatinis žiedas išlieka, po prijungimo – ne.', 'After substitution the aromatic ring stays, after addition it does not.'))
         ],
@@ -1604,10 +1707,10 @@
       },
       {
         id: 'u09.mech.2',
-        q: [{ p: t('Benzeno nitrinimo energijos profilyje yra du pereinamieji taškai: arenio jono susidarymas ir protono atskilimas.', 'The energy profile of benzene nitration has two transition states: formation of the arenium ion and loss of the proton.') }],
+        q: [{ p: t('Benzeno nitrinimo energijos profilyje yra dvi pereinamosios būsenos: arenio jono susidarymas ir protono atskilimas.', 'The energy profile of benzene nitration has two transition states: formation of the arenium ion and loss of the proton.') }],
         steps: [
           ch(t('Kuri stadija lėtesnė ir lemia reakcijos greitį?', 'Which stage is slower and sets the reaction rate?'),
-            [tx('arenio jono susidarymas (II stadija)', 'formation of the arenium ion (stage II)'), tx('protono atskilimas (III stadija)', 'loss of the proton (stage III)'), tx('abi vienodai', 'both equally'), tx('jokia: reakcija vyksta vienu žingsniu', 'neither: the reaction goes in one step')], 0,
+            [tx('arenio jono susidarymas (II stadija)', 'formation of the arenium ion (stage II)'), tx('protono atskilimas (III stadija)', 'loss of the proton (stage III)'), tx('abi vienodai', 'both equally'), tx('jokia: reakcija vyksta viena stadija', 'neither: the reaction goes in one step')], 0,
             t('Kurioje stadijoje prarandamas aromatiškumas?', 'In which stage is aromaticity lost?'),
             t('Aromatiškumo praradimas brangus, todėl II stadija lėta; III stadijoje aromatiškumas atsistato, ji greita.', 'Losing aromaticity is costly, so stage II is slow; in stage III aromaticity returns and it is fast.')),
           ch(t('Ką tai reiškia pakaitui, stabilizuojančiam arenio joną?', 'What does this mean for a substituent that stabilises the arenium ion?'),
@@ -1638,21 +1741,21 @@
             t('Prisiminkite, ką $AlCl3$ daro su $RCl$.', 'Recall what $AlCl3$ does with $RCl$.'),
             t('$FeBr3$ priima elektronų porą iš bromo, todėl vienas bromo atomas tampa elektrofilu.', '$FeBr3$ accepts an electron pair from bromine, so one bromine atom becomes an electrophile.'))
         ],
-        why: t('Katalizatorius dalyvauja tik I stadijoje: jis sukuria elektrofilą, o pats išsiskiria nepakitęs.', 'The catalyst acts only in stage I: it makes the electrophile and is recovered unchanged.'),
+        why: t('Katalizatorius sukuria elektrofilą I stadijoje, o III stadijoje $FeBr4-$ atiduoda bromidą protonui ir $FeBr3$ atsikuria.', 'The catalyst makes the electrophile in stage I; in stage III $FeBr4-$ gives up bromide to the proton and $FeBr3$ is regenerated.'),
         src: 'L9 p8, p13'
       },
       {
         id: 'u09.mech.5',
         q: [{ p: t('Benzenui atakuojant $Br+$, susidaro arenio jonas.', 'When benzene attacks $Br+$, an arenium ion forms.') }, { mol: { smi: 'BrC1C=CC=C[CH+]1' } }],
         steps: [
-          { prompt: t('Bakstelėkite anglies atomą, kuris tapo $sp3$.', 'Tap the carbon that became $sp3$.'), kind: 'atoms', mol: { smi: 'BrC1C=CC=C[CH+]1', opts: { numbers: 'all' } }, answer: [1],
+          { prompt: t('Bakstelėkite anglies atomą, kuris tapo sp³.', 'Tap the carbon that became sp³.'), kind: 'atoms', mol: { smi: 'BrC1C=CC=C[CH+]1', opts: { numbers: 'all' } }, answer: [1],
             hint: t('Kuris žiedo atomas gavo naują ryšį ir nebeturi $p$ orbitalės π sistemoje?', 'Which ring atom got a new bond and no longer has a $p$ orbital in the π system?'),
-            solution: t('Atomas Nr. 2 (pririštas prie $Br$) turi keturis σ ryšius ir yra $sp3$.', 'Atom no. 2 (bonded to $Br$) has four σ bonds and is $sp3$.') },
-          ch(t('Kiek π elektronų yra penkiose $sp2$ anglyse?', 'How many π electrons are in the five $sp2$ carbons?'), [tx('4', '4'), tx('6', '6'), tx('5', '5'), tx('2', '2')], 0,
+            solution: t('Atomas Nr. 2 (pririštas prie $Br$) turi keturis σ ryšius ir yra sp³.', 'Atom no. 2 (bonded to $Br$) has four σ bonds and is sp³.') },
+          ch(t('Kiek π elektronų yra penkiose sp² anglyse?', 'How many π electrons are in the five sp² carbons?'), [tx('4', '4'), tx('6', '6'), tx('5', '5'), tx('2', '2')], 0,
             t('Du π elektronai panaudoti naujam $C-Br$ ryšiui.', 'Two π electrons were used for the new $C-Br$ bond.'),
             t('Iš šešių π elektronų du sudarė ryšį su $Br$, lieka 4, pasiskirstę penkiose $p$ orbitalėse.', 'Of the six π electrons two formed the bond to $Br$; 4 remain, spread over five $p$ orbitals.'))
         ],
-        why: t('Arenio jonas nearomatinis: ciklą pertraukia $sp3$ atomas, o 4 π elektronai nedaro $4n + 2$.', 'The arenium ion is not aromatic: an $sp3$ carbon interrupts the ring and 4 π electrons are not $4n + 2$.'),
+        why: t('Arenio jonas nearomatinis: ciklą pertraukia sp³ atomas, o 4 π elektronai nedaro $4n + 2$.', 'The arenium ion is not aromatic: an sp³ carbon interrupts the ring and 4 π electrons are not $4n + 2$.'),
         src: 'L9 p9, T p62'
       },
       {
@@ -1673,7 +1776,7 @@
         steps: [
           ch(t('Kuo sulfoninimas skiriasi nuo nitrinimo ir halogeninimo?', 'How does sulfonation differ from nitration and halogenation?'),
             [tx('jis grįžtamasis', 'it is reversible'), tx('jis vyksta kitu mechanizmu', 'it follows a different mechanism'), tx('elektrofilas yra nukleofilas', 'the electrophile is a nucleophile'), tx('jis nevyksta su benzenu', 'it does not occur with benzene')], 0,
-            t('Pažiūrėkite į reakcijos rodyklę.', 'Look at the reaction arrow.'),
+            t('Palyginkite pusiausvyros pobūdį su kitų SEAr reakcijų produktais.', 'Compare the nature of the equilibrium with the products of the other SEAr reactions.'),
             t('Schemoje yra ⇌: sulfoninimas yra grįžtamoji SEAr reakcija.', 'The scheme has ⇌: sulfonation is a reversible SEAr reaction.'))
         ],
         why: t('Mechanizmas tas pats (SEAr, elektrofilas $SO3H+$), bet pusiausvyra pasiekiama.', 'The mechanism is the same (SEAr, electrophile $SO3H+$), but an equilibrium is reached.'),
@@ -1685,10 +1788,10 @@
         steps: [
           ch(t('Kuris produktas susidaro?', 'Which product forms?'), [ml('[O-][N+](=O)c1cccc2ccccc12', { name: t('1-nitronaftalenas', '1-nitronaphthalene') }), ml('[O-][N+](=O)c1ccc2ccccc2c1', { name: t('2-nitronaftalenas', '2-nitronaphthalene') })], 0,
             t('Palyginkite, kurios padėties arenio jonas turi daugiau rezonansinių formulių su išlikusiu benzeno žiedu.', 'Compare which position gives an arenium ion with more resonance structures that keep an intact benzene ring.'),
-            t('Naftalenas atakuojamas α padėtyje (1-).', 'Naphthalene is attacked at the α position (1).')),
+            t('α ataka duoda arenio joną, kurio dvi rezonansinės formulės išlaiko nepaliestą benzeno žiedą; β atakos jonas turi tik vieną tokią formulę, todėl α ataka greitesnė.', 'α attack gives an arenium ion with two resonance structures that keep the other benzene ring intact; the β ion has only one such structure, so α attack is faster.')),
           ch(t('Ką matome mėgintuvėlyje?', 'What do we observe in the test tube?'),
-            [tx('oranžinį aliejinį sluoksnį, kuris praskiedus vandeniu nusėda ir sukietėja į geltonas nuosėdas', 'an orange oily layer that sinks when diluted with water and solidifies to a yellow precipitate'), tx('bespalvį tirpalą be pokyčių', 'a colourless solution with no change'), tx('žalias dujas', 'green gas'), tx('mėlynas kristalines nuosėdas', 'a blue crystalline precipitate')], 0,
-            t('Nitrojunginiams būdinga geltona spalva.', 'Nitro compounds are typically yellow.'),
+            [tx('oranžinį aliejinį sluoksnį, kuris praskiedus vandeniu nusėda ir sukietėja į geltonas nuosėdas', 'an orange oily layer that sinks when diluted with water and solidifies to a yellow precipitate'), tx('bespalvį tirpalą be pokyčių', 'a colourless solution with no change'), tx('oranžinį sluoksnį, kuris praskiedus vandeniu ištirpsta', 'an orange layer that dissolves when diluted with water'), tx('baltas nuosėdas iš karto įpylus $HNO3$', 'white crystals at once when $HNO3$ is added')], 0,
+            t('Pagalvokite, ar nitronaftalenas tirpsta vandenyje, ir kokia jo agregatinė būsena.', 'Think whether nitronaphthalene dissolves in water and what physical state it is in.'),
             t('Susidaręs nitronaftalenas nesimaišo su vandeniu.', 'The nitronaphthalene formed does not mix with water.'))
         ],
         why: t('Naftalenas reaguoja lengviau už benzeną ir atakuojamas α padėtyje; produktas matomas kaip oranžinis aliejus, vėliau – geltonos nuosėdos.', 'Naphthalene reacts more easily than benzene and is attacked at the α position; the product shows as an orange oil and later a yellow solid.'),
@@ -1713,16 +1816,16 @@
   const NB = '[O-][N+](=O)c1ccccc1';
   types.push({
     id: 'u09.fc',
-    title: t('Friedelio ir Krafto reakcijos: ribos ir produktai', 'Friedel–Crafts reactions: limits and products'),
+    title: t('Friedelio ir Craftso reakcijos: ribos ir produktai', 'Friedel–Crafts reactions: limits and products'),
     mirrors: ['S4.8', 'S4.18'],
     bank: [
       {
         id: 'u09.fc.1',
         q: [{ p: t('Nitrobenzenas kaitinamas su $CH3Cl$ ir $AlCl3$.', 'Nitrobenzene is heated with $CH3Cl$ and $AlCl3$.') }, sch([mm(NB), { arrow: '→', above: f('CH3Cl, AlCl3') }])],
         steps: [ch(t('Kas vyksta?', 'What happens?'), [tx('reakcija nevyksta', 'no reaction'), ml('Cc1cccc(c1)[N+](=O)[O-]'), ml('Cc1ccc(cc1)[N+](=O)[O-]'), ml('Cc1ccccc1[N+](=O)[O-]')], 0,
-          t('Ar toks žiedas pakankamai reaktyvus Friedelio–Krafto reakcijai?', 'Is such a ring reactive enough for a Friedel–Crafts reaction?'),
+          t('Ar toks žiedas pakankamai reaktyvus Friedelio ir Craftso reakcijai?', 'Is such a ring reactive enough for a Friedel–Crafts reaction?'),
           t('Nitrogrupė stipriai deaktyvuoja žiedą, todėl alkilinimas nevyksta.', 'The nitro group deactivates the ring strongly, so alkylation does not take place.'))],
-        why: t('Friedelio–Krafto reakcijos reikalauja pakankamai elektronais turtingo žiedo; stiprūs EA pakaitai jas užblokuoja.', 'Friedel–Crafts reactions need a sufficiently electron-rich ring; strong EA groups block them.'),
+        why: t('Friedelio ir Craftso reakcijos reikalauja pakankamai elektronais turtingo žiedo; stiprūs EA pakaitai jas užblokuoja.', 'Friedel–Crafts reactions need a sufficiently electron-rich ring; strong electron-withdrawing groups block them.'),
         src: 'L9 p16'
       },
       {
@@ -1732,7 +1835,7 @@
           [tx('aminogrupė su $AlCl3$ sudaro kompleksą, žiedas deaktyvuojamas', 'the amino group forms a complex with $AlCl3$ and the ring is deactivated'), tx('aminogrupė yra m-orientantas', 'the amino group is a meta director'), tx('anilinas per stabilus', 'aniline is too stable'), tx('žiede nėra π elektronų', 'the ring has no π electrons')], 0,
           t('Prisiminkite, kas yra $AlCl3$ ir ką turi azoto atomas.', 'Remember what $AlCl3$ is and what the nitrogen atom has.'),
           t('$AlCl3$ yra Liuiso rūgštis, azotas – bazė su laisvąja pora; susidaręs kompleksas deaktyvuoja žiedą.', '$AlCl3$ is a Lewis acid and nitrogen is a base with a lone pair; the complex that forms deactivates the ring.'))],
-        why: t('Aminogrupė yra stiprus donoras, bet Friedelio–Krafto sąlygomis ji reaguoja su katalizatoriumi.', 'The amino group is a strong donor, but under Friedel–Crafts conditions it reacts with the catalyst.'),
+        why: t('Aminogrupė yra stiprus donoras, bet Friedelio ir Craftso sąlygomis ji reaguoja su katalizatoriumi.', 'The amino group is a strong donor, but under Friedel–Crafts conditions it reacts with the catalyst.'),
         src: 'L9 p16'
       },
       {
@@ -1774,7 +1877,7 @@
       },
       {
         id: 'u09.fc.6',
-        q: [{ p: t('Pasirinkite metodą: iš benzeno norima gauti ketoną, ir žiede neturi atsirasti antros acilgrupės.', 'You want a ketone from benzene, with no second acyl group on the ring.') }],
+        q: [{ p: t('Benzenas acilinamas $CH3COCl$ ir $AlCl3$ pertekliuje, tačiau gaunamas tik monoacilintas produktas.', 'Benzene is acylated with excess $CH3COCl$ and $AlCl3$, yet only the monoacylated product forms.') }],
         steps: [ch(t('Kodėl acilinant polisubstitucija nevyksta?', 'Why is there no polysubstitution in acylation?'),
           [tx('karbonilo grupė deaktyvuoja žiedą', 'the carbonyl group deactivates the ring'), tx('acilgrupė aktyvuoja žiedą', 'the acyl group activates the ring'), tx('ketonas netirpsta', 'the ketone does not dissolve'), tx('$AlCl3$ pasibaigia', '$AlCl3$ runs out')], 0,
           t('Palyginkite alkilo ir acilo poveikį žiedui.', 'Compare the effect of alkyl and acyl groups on the ring.'),
@@ -1837,7 +1940,7 @@
           t('Pirma gaukite m-orientantą.', 'Get the meta director first.'),
           [{ p: t('$COOH$ yra m-orientantas, todėl nitrinama po oksidavimo.', '$COOH$ is a meta director, so nitration comes after oxidation.') }, sch([mm('Cc1ccccc1'), ar('KMnO4, t°'), mm('OC(=O)c1ccccc1'), ar('HNO3, H2SO4'), mm('OC(=O)c1cccc(c1)[N+](=O)[O-]')])])],
         why: t('Atvirkštinė tvarka duotų 4- ir 2-nitro izomerus.', 'The reverse order would give the 4 and 2 nitro isomers.'),
-        src: 'L9 p36', claims: [{ react: ['sear', ['OC(=O)c1ccccc1'], { E: 'NO2' }, 'OC(=O)c1cccc(c1)[N+](=O)[O-]'] }, { name: ['OC(=O)c1cccc(c1)[N+](=O)[O-]', t('3-nitrobenzenkarboksirūgštis', '3-nitrobenzoic acid')] }]
+        src: 'L9 p36', claims: [{ react: ['side.ox', ['Cc1ccccc1'], null, 'OC(=O)c1ccccc1'] }, { react: ['sear', ['OC(=O)c1ccccc1'], { E: 'NO2' }, 'OC(=O)c1cccc(c1)[N+](=O)[O-]'] }, { name: ['OC(=O)c1cccc(c1)[N+](=O)[O-]', t('3-nitrobenzenkarboksirūgštis', '3-nitrobenzoic acid')] }]
       },
       {
         id: 'u09.synth.3',
@@ -1851,42 +1954,42 @@
       },
       {
         id: 'u09.synth.4',
-        q: [{ p: t('Iš benzeno reikia gauti 4-brombenzenaminą (4-bromanliną).', 'Make 4-bromoaniline from benzene.') }, sch([mm('c1ccccc1', { opts: { circle: true } }), { arrow: '→' }, mm('Nc1ccc(Br)cc1', { name: t('4-brombenzenaminas', '4-bromobenzenamine') })])],
+        q: [{ p: t('Iš benzeno reikia gauti 4-brombenzenaminą (4-bromaniliną).', 'Make 4-bromoaniline from benzene.') }, sch([mm('c1ccccc1', { opts: { circle: true } }), { arrow: '→' }, mm('Nc1ccc(Br)cc1', { name: t('4-brombenzenaminas', '4-bromobenzenamine') })])],
         steps: [ord(t('Išdėstykite žingsnius teisinga tvarka.', 'Put the steps in the right order.'),
           [tx('$Br2$, $FeBr3$ (brominimas)', '$Br2$, $FeBr3$ (bromination)'), tx('$HNO3$, $H2SO4$ ir p-izomero atskyrimas', '$HNO3$, $H2SO4$ and separation of the p isomer'), tx('$Fe$, $H3O+$; paskui $HO-$ (redukcija)', '$Fe$, $H3O+$; then $HO-$ (reduction)')],
           t('Bromas kreipia į o-/p-, o aminogrupę paprasčiausia gauti iš nitrogrupės.', 'Bromine directs o/p, and the amino group is easiest to make from a nitro group.'),
           [sch([mm('c1ccccc1'), ar('Br2, FeBr3'), mm('Brc1ccccc1'), ar('HNO3, H2SO4'), mm('[O-][N+](=O)c1ccc(Br)cc1'), ar('1. Fe, H3O+', '2. HO−'), mm('Nc1ccc(Br)cc1')])])],
         why: t('Aminogrupė paprastai įvedama paskutinė, redukuojant nitrogrupę.', 'The amino group is normally introduced last, by reducing a nitro group.'),
-        src: 'L9 p14, p34', claims: [{ react: ['sear', ['Brc1ccccc1'], { E: 'NO2' }, '[O-][N+](=O)c1ccc(Br)cc1'] }]
+        src: 'L9 p14, p34', claims: [{ react: ['sear', ['Brc1ccccc1'], { E: 'NO2' }, '[O-][N+](=O)c1ccc(Br)cc1'] }, { react: ['nitro.reduce', ['[O-][N+](=O)c1ccc(Br)cc1'], null, 'Nc1ccc(Br)cc1'] }]
       },
       {
         id: 'u09.synth.5',
-        q: [{ p: t('Kaip toluenas paverčiamas 1-brom-3-(trichlormetil)benzenu?', 'Make 1-bromo-3-(trichloromethyl)benzene from toluene.') }, sch([mm('Cc1ccccc1'), { arrow: '→' }, mm('Brc1cccc(c1)C(Cl)(Cl)Cl', { name: t('1-brom-3-(trichlormetil)benzenas', '1-bromo-3-(trichloromethyl)benzene') })])],
+        q: [{ p: t('Kaip toluenas paverčiamas 1-chlor-3-(trichlormetil)benzenu?', 'Make 1-chloro-3-(trichloromethyl)benzene from toluene.') }, sch([mm('Cc1ccccc1'), { arrow: '→' }, mm('Clc1cccc(c1)C(Cl)(Cl)Cl', { name: t('1-chlor-3-(trichlormetil)benzenas', '1-chloro-3-(trichloromethyl)benzene') })])],
         steps: [ord(t('Išdėstykite žingsnius teisinga tvarka.', 'Put the steps in the right order.'),
-          [tx('$Cl2$ (perteklius), $hν$ (grandinės chlorinimas)', '$Cl2$ (excess), $hν$ (side-chain chlorination)'), tx('$Br2$, $FeBr3$ (žiedo brominimas)', '$Br2$, $FeBr3$ (ring bromination)'), tx('produkto išskyrimas ir gryninimas', 'isolation and purification of the product')],
-          t('$CCl3$ yra stiprus EA pakaitas.', '$CCl3$ is a strong EA group.'),
-          [{ p: t('Pirma šviesoje chlorinama grandinė, gaunamas m-orientantas $CCl3$; paskui $Br$ patenka į m- padėtį.', 'First the chain is chlorinated in light, giving the meta director $CCl3$; then $Br$ enters the m position.') }, sch([mm('Cc1ccccc1'), ar('Cl2, hν'), mm('ClC(Cl)(Cl)c1ccccc1'), ar('Br2, FeBr3'), mm('Brc1cccc(c1)C(Cl)(Cl)Cl')])])],
+          [tx('$Cl2$ (perteklius), $hν$ (grandinės chlorinimas)', '$Cl2$ (excess), $hν$ (side-chain chlorination)'), tx('$Cl2$, $FeCl3$ (žiedo chlorinimas)', '$Cl2$, $FeCl3$ (ring chlorination)'), tx('produkto išskyrimas ir gryninimas', 'isolation and purification of the product')],
+          t('$CCl3$ yra stiprus EA pakaitas.', '$CCl3$ is a strong electron-withdrawing group.'),
+          [{ p: t('Pirma šviesoje chlorinama grandinė, gaunamas m-orientantas $CCl3$; paskui $Cl$ patenka į m- padėtį.', 'First the chain is chlorinated in light, giving the meta director $CCl3$; then $Cl$ enters the m position.') }, sch([mm('Cc1ccccc1'), ar('Cl2, hν'), mm('ClC(Cl)(Cl)c1ccccc1'), ar('Cl2, FeCl3'), mm('Clc1cccc(c1)C(Cl)(Cl)Cl')])])],
         why: t('M-izomeras gaunamas, kai m-orientantas atsiranda pirmas.', 'The m isomer results when the meta director appears first.'),
-        src: 'L9 p36', claims: [{ react: ['sear', ['ClC(Cl)(Cl)c1ccccc1'], { E: 'Br' }, 'Brc1cccc(c1)C(Cl)(Cl)Cl'] }, { name: ['Brc1cccc(c1)C(Cl)(Cl)Cl', t('1-brom-3-(trichlormetil)benzenas', '1-bromo-3-(trichloromethyl)benzene')] }]
+        src: 'L9 p36', claims: [{ react: ['sear', ['ClC(Cl)(Cl)c1ccccc1'], { E: 'Cl' }, 'Clc1cccc(c1)C(Cl)(Cl)Cl'] }, { name: ['Clc1cccc(c1)C(Cl)(Cl)Cl', t('1-chlor-3-(trichlormetil)benzenas', '1-chloro-3-(trichloromethyl)benzene')] }]
       },
       {
         id: 'u09.synth.6',
-        q: [{ p: t('Kaip toluenas paverčiamas 1-brom-4-(trichlormetil)benzenu?', 'Make 1-bromo-4-(trichloromethyl)benzene from toluene.') }, sch([mm('Cc1ccccc1'), { arrow: '→' }, mm('Brc1ccc(cc1)C(Cl)(Cl)Cl', { name: t('1-brom-4-(trichlormetil)benzenas', '1-bromo-4-(trichloromethyl)benzene') })])],
+        q: [{ p: t('Kaip toluenas paverčiamas 1-chlor-4-(trichlormetil)benzenu?', 'Make 1-chloro-4-(trichloromethyl)benzene from toluene.') }, sch([mm('Cc1ccccc1'), { arrow: '→' }, mm('Clc1ccc(cc1)C(Cl)(Cl)Cl', { name: t('1-chlor-4-(trichlormetil)benzenas', '1-chloro-4-(trichloromethyl)benzene') })])],
         steps: [ord(t('Išdėstykite žingsnius teisinga tvarka.', 'Put the steps in the right order.'),
-          [tx('$Br2$, $FeBr3$ (žiedo brominimas)', '$Br2$, $FeBr3$ (ring bromination)'), tx('p-izomero atskyrimas', 'separate the p isomer'), tx('$Cl2$ (perteklius), $hν$ (grandinės chlorinimas)', '$Cl2$ (excess), $hν$ (side-chain chlorination)')],
+          [tx('$Cl2$, $FeCl3$ (žiedo chlorinimas)', '$Cl2$, $FeCl3$ (ring chlorination)'), tx('p-izomero atskyrimas', 'separate the p isomer'), tx('$Cl2$ (perteklius), $hν$ (grandinės chlorinimas)', '$Cl2$ (excess), $hν$ (side-chain chlorination)')],
           t('Metilas kreipia į o-/p-: $CCl3$ to nedaro.', 'Methyl directs o/p; $CCl3$ does not.'),
-          [sch([mm('Cc1ccccc1'), ar('Br2, FeBr3'), mm('Cc1ccc(cc1)Br'), ar('Cl2, hν'), mm('Brc1ccc(cc1)C(Cl)(Cl)Cl')])])],
-        why: t('Pirma žiede įvedamas pakaitas su metilu, kuris kreipia į para, o metilas paskui chlorinamas.', 'The ring substituent is introduced while methyl still directs para; the methyl is chlorinated afterwards.'),
-        src: 'L9 p36', claims: [{ react: ['sear', ['Cc1ccccc1'], { E: 'Br' }, 'Cc1ccc(cc1)Br'] }, { name: ['Brc1ccc(cc1)C(Cl)(Cl)Cl', t('1-brom-4-(trichlormetil)benzenas', '1-bromo-4-(trichloromethyl)benzene')] }]
+          [sch([mm('Cc1ccccc1'), ar('Cl2, FeCl3'), mm('Cc1ccc(cc1)Cl'), ar('Cl2, hν'), mm('Clc1ccc(cc1)C(Cl)(Cl)Cl')])])],
+        why: t('Chloras įvedamas tol, kol žiede yra $CH3$ (o-/p-orientantas); tik paskui metilas chlorinamas iki $CCl3$ (m-orientanto).', 'Chlorine goes in while the ring still has $CH3$ (an o/p director); only then is the methyl chlorinated to $CCl3$ (a meta director).'),
+        src: 'L9 p36', claims: [{ react: ['sear', ['Cc1ccccc1'], { E: 'Cl' }, 'Cc1ccc(cc1)Cl'] }, { name: ['Clc1ccc(cc1)C(Cl)(Cl)Cl', t('1-chlor-4-(trichlormetil)benzenas', '1-chloro-4-(trichloromethyl)benzene')] }]
       },
       {
         id: 'u09.synth.7',
-        q: [{ p: t('Bromuojant tolueną su $Br2$ ir $FeBr3$ 3-bromtoluenas nesusidaro.', 'Brominating toluene with $Br2$ and $FeBr3$ does not give 3-bromotoluene.') }, { mol: { smi: 'Cc1cccc(Br)c1', name: t('1-brom-3-metilbenzenas', '1-bromo-3-methylbenzene') } }],
+        q: [{ p: t('Brominant tolueną su $Br2$ ir $FeBr3$ 3-bromtoluenas nesusidaro.', 'Brominating toluene with $Br2$ and $FeBr3$ does not give 3-bromotoluene.') }, { mol: { smi: 'Cc1cccc(Br)c1', name: t('1-brom-3-metilbenzenas', '1-bromo-3-methylbenzene') } }],
         steps: [ch(t('Kodėl?', 'Why not?'),
           [tx('metilas kreipia į o- ir p- padėtis, m- ataka mažiau palanki', 'methyl directs o and p, so m attack is less favourable'), tx('metilas yra m-orientantas', 'methyl is a meta director'), tx('bromas per didelis m- padėčiai', 'bromine is too big for the m position'), tx('$FeBr3$ blokuoja m- padėtį', '$FeBr3$ blocks the m position')], 0,
           t('Pažiūrėkite, kurioms padėtims arenio jonas stabilesnis.', 'See for which positions the arenium ion is more stable.'),
           t('Metilas stabilizuoja arenio joną o-/p- atakoje, todėl m- produkto labai nedaug.', 'Methyl stabilises the arenium ion in o/p attack, so very little m product forms.'))],
-        why: t('Norint m-izomero, reikia kitos grupių tvarkos arba kito kelio.', 'To get the m isomer another order of groups or another route is needed.'),
+        why: t('Tvarkos pakeitimas čia nepadeda: ir $CH3$, ir $Br$ kreipia į o-/p- padėtis. m-Izomerui reikia, kad sintezės metu žiede būtų m-orientantas (kaip L9 p36 – $CCl3$ vietoje $CH3$).', 'Changing the order does not help here: both $CH3$ and $Br$ direct o/p. A meta isomer needs a meta director on the ring during the synthesis (as on L9 p36, $CCl3$ instead of $CH3$).'),
         src: 'L9 p24, p29'
       },
       {
