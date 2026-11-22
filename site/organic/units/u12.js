@@ -130,8 +130,8 @@
           },
           { mol: [{ smi: 'OCCO', name: t('1,2-etandiolis', 'ethane-1,2-diol') }, { smi: 'OCC(O)CO', name: t('1,2,3-propantriolis', 'propane-1,2,3-triol') }] },
           {
-            p: t('Daugelyje reakcijų polioliai elgiasi kaip paprasti alkoholiai: su natriu sudaro alkoholiatus, su rūgštimis – esterius.',
-              'In most reactions polyols behave like ordinary alcohols: with sodium they give alkoxides and with acids esters.'),
+            p: t('Daugelyje reakcijų polioliai elgiasi kaip paprasti alkoholiai: su natriu sudaro alkoholiatus, su rūgštimis – esterius. Su vienu ekvivalentu Na pakeičiamas vienas vandenilis, o kaitinant iki 150 °C su pertekliumi Na – abu.',
+              'In most reactions polyols behave like ordinary alcohols: with sodium they give alkoxides and with acids esters. One equivalent of Na replaces one hydrogen; with excess Na at 150 °C both are replaced.'),
             src: 'L12 p2'
           },
           {
@@ -179,8 +179,8 @@
           },
           { h: t('Glicerolis', 'Glycerol') },
           {
-            p: t('Riebalai ir aliejai yra glicerolio esteriai, todėl juos hidrolizuojant rūgštyje išsiskiria glicerolis. Glicerolis su HNO3 duoda trinitratą (nitroglicerinas), o su H3PO4 – glicerolfosfatus, fosfolipidų struktūrinius vienetus.',
-              'Fats and oils are glycerol esters, so hydrolysing them in acid releases glycerol. Glycerol gives the trinitrate (nitroglycerin) with HNO3 and glycerol phosphates, units of phospholipids, with H3PO4.'),
+            p: t('Riebalai ir aliejai yra glicerolio esteriai, todėl juos hidrolizuojant rūgštyje išsiskiria glicerolis. Glicerolis su HNO3 duoda trinitratą (nitroglicerinas), o su H3PO4 – glicerolfosfatus, fosfolipidų struktūrinius vienetus. Etandiolis ir propandiolis naudojami kaip antifrizai, nes žemina vandens užšalimo temperatūrą.',
+              'Fats and oils are glycerol esters, so hydrolysing them in acid releases glycerol. Glycerol gives the trinitrate (nitroglycerin) with HNO3 and glycerol phosphates, units of phospholipids, with H3PO4. Ethanediol and propanediol are used as antifreeze because they lower the freezing point of water.'),
             src: 'L12 p4–6'
           },
           {
@@ -314,8 +314,8 @@
           },
           { h: t('Oksidacija', 'Oxidation') },
           {
-            p: t('Rūgščioje terpėje fenolis oksiduojasi į chinoną; hidrochinonas oksiduojasi dar lengviau.',
-              'In acid a phenol is oxidised to a quinone, and hydroquinone is oxidised even more easily.'),
+            p: t('Rūgščioje terpėje fenolis oksiduojasi į chinoną; hidrochinonas oksiduojasi dar lengviau. Chinonai ir hidrochinonai sudaro grįžtamąją redokso porą, kuria remiasi ubichinonų darbas mitochondrijose.',
+              'In acid a phenol is oxidised to a quinone, and hydroquinone is oxidised even more easily. Quinones and hydroquinones form a reversible redox pair, which is how ubiquinones work in mitochondria.'),
             src: 'L12 p14–16'
           },
           { scheme: sch(['Oc1ccccc1'], f('CrO3, CH3COOH, H2O, 0 °C'), [{ smi: 'O=C1C=CC(=O)C=C1', name: t('2,5-cikloheksadien-1,4-dionas', 'cyclohexa-2,5-diene-1,4-dione') }]), src: 'L12 p14' },
@@ -335,8 +335,8 @@
           },
           { scheme: sch(['Oc1ccccc1'], t('konc. HNO3', 'conc. HNO3'), [{ smi: 'Oc1c(cc(cc1[N+](=O)[O-])[N+](=O)[O-])[N+](=O)[O-]', name: t('2,4,6-trinitrofenolis', '2,4,6-trinitrophenol') }]), src: 'L12 p18' },
           {
-            p: t('Su $FeCl3$ tirpalu fenoliai sudaro intensyviai violetinius kompleksus: $6 C6H5OH + FeCl3 → [Fe(OC6H5)6]^3-^ + 3 HCl + 3 H+$.',
-              'With a solution of $FeCl3$ phenols form intensely violet complexes: $6 C6H5OH + FeCl3 → [Fe(OC6H5)6]^3-^ + 3 HCl + 3 H+$.'),
+            p: t('Su $FeCl3$ tirpalu fenoliai sudaro intensyviai violetinius kompleksus: $6 C6H5OH + FeCl3 → [Fe(OC6H5)6]^3-^ + 3 HCl + 3 H+$. Tai kokybinė fenolio reakcija; alkoholiai tokios spalvos neduoda.',
+              'With a solution of $FeCl3$ phenols form intensely violet complexes: $6 C6H5OH + FeCl3 → [Fe(OC6H5)6]^3-^ + 3 HCl + 3 H+$. This is the qualitative test for a phenol; alcohols do not give the colour.'),
             src: 'L12 p10; T p76'
           },
           {
@@ -368,8 +368,8 @@
         blocks: [
           { h: t('Alkoholių sieros analogai', 'Sulfur analogues of alcohols') },
           {
-            p: t('Tioliuose (merkaptanuose) yra merkapto grupė $-SH$. Jei molekulėje yra ir OH grupė, pavadinimas baigiamas -olis, o $SH$ vadinama priešdėliu merkapto-.',
-              'Thiols (mercaptans) contain the mercapto group $-SH$. If the molecule also has an OH group, the name ends in -ol and $SH$ is the prefix mercapto-.'),
+            p: t('Tioliuose (merkaptanuose) yra merkapto grupė $-SH$. Jei molekulėje yra ir OH grupė, pavadinimas baigiamas -olis, o $SH$ vadinama priešdėliu merkapto-. Daugelis tiolių labai nemaloniai kvepia, pavyzdžiui, skunkų sekretas.',
+              'Thiols (mercaptans) contain the mercapto group $-SH$. If the molecule also has an OH group, the name ends in -ol and $SH$ is the prefix mercapto-. Many thiols smell very unpleasant, for example the secretion of skunks.'),
             src: 'L12 p22'
           },
           { mol: [{ smi: 'CC(C)CCS', name: t('3-metil-1-butantiolis', '3-methylbutane-1-thiol') }, { smi: 'SC(C)(C)CCO', name: t('3-merkapto-3-metil-1-butanolis', '3-methyl-3-sulfanylbutan-1-ol') }] },
@@ -418,8 +418,8 @@
             src: 'L12 p26'
           },
           {
-            p: t('Gyvuosiuose organizmuose tai yra cisteino ir cistino pora: disulfidiniai tilteliai palaiko baltymų tretinę struktūrą, o glutationas apsaugo ląsteles nuo oksidacijos.',
-              'In living organisms this is the cysteine and cystine pair: disulfide bridges hold the tertiary structure of proteins, and glutathione protects cells from oxidation.'),
+            p: t('Gyvuosiuose organizmuose tai yra cisteino ir cistino pora: disulfidiniai tilteliai palaiko baltymų tretinę struktūrą, o glutationas apsaugo ląsteles nuo oksidacijos. Plaukų sušukavimas remiasi tuo pačiu: tiltelius redukuoja, plaukams suteikia formą ir vėl oksiduoja.',
+              'In living organisms this is the cysteine and cystine pair: disulfide bridges hold the tertiary structure of proteins, and glutathione protects cells from oxidation. A hair perm uses the same chemistry: the bridges are reduced, the hair is shaped and the bridges are oxidised again.'),
             src: 'L12 p27–30'
           },
           { scheme: { items: [{ smi: 'NC(CS)C(=O)O' }, { plus: true }, { smi: 'NC(CS)C(=O)O' }, { arrow: '⇌', above: f('[O]'), below: f('[H]') }, { smi: 'NC(CSSCC(N)C(=O)O)C(=O)O' }] }, src: 'L12 p27' },
@@ -558,7 +558,7 @@
                 note: t('1 stadija: protonavimas.', 'Stage 1: protonation.')
               },
               {
-                scheme: { items: [{ smi: 'C[OH+]C(C)(C)C' }, { arrow: '→' }, { smi: 'CO' }, { plus: true }, { smi: 'C[C+](C)C' }] },
+                scheme: { items: [{ smi: 'C[OH+]C(C)(C)C', opts: { coords: [[0, 0.6], [0.9, 0], [2.4, 0], [2.4, -1.1], [3.3, 0.5], [3.3, -0.55]] } }, { arrow: '→' }, { smi: 'CO' }, { plus: true }, { smi: 'C[C+](C)C' }] },
                 arrows: [{ from: { m: 0, b: [1, 2] }, to: { m: 0, a: 1 } }],
                 note: t('2 stadija (lėta): atskyla metanolis ir susidaro tretinis karbokatijonas.', 'Stage 2 (slow): methanol leaves and a tertiary carbocation forms.')
               },
