@@ -152,10 +152,10 @@ Drawing quality is tested (no overlaps, crossings, label clashes); the playgroun
 | `formula` | types a formula | string `'C5H12'`; **always give `mol`** (the validator checks the formula against it; without `mol` it can check only when the statement has exactly one molecule) |
 | `match` | pairs left items with right items | `{left: Option[], right: Option[], pairs: number[]}`: `pairs[i]` is the right index for left item `i` |
 
-`Option` = `{text: T}` | `{mol: Mol}` | `{scheme: Scheme}`. In `choice`, `multi` and `match` the options are shuffled when shown, so write the right one anywhere and give its index. `solution` is a T or a Block list (use blocks to show a worked mechanism or a drawn product). Names in a `name` step: `answer.lt` / `answer.en` (or `answer: {smi}`) hold only names the namer can produce (its main name, alternatives, the course trivial name). A correct course spelling the namer does not produce goes **only** in `answer.extra: {lt: [..], en: [..], src: 'L1 p40'}`, with a `src`; extras are accepted from the learner and are listed for review. It works with both answer forms:
+`Option` = `{text: T}` | `{mol: Mol}` | `{scheme: Scheme}`. In `choice`, `multi` and `match` the options are shuffled when shown, so write the right one anywhere and give its index. `solution` is a T or a Block list (use blocks to show a worked mechanism or a drawn product). Names in a `name` step: `answer.lt` / `answer.en` (or `answer: {smi}`) hold only names the namer can produce (its main name, alternatives, the course trivial name). A correct course spelling the namer does not produce goes **only** in `answer.extra: {lt: [..], en: [..], src: 'T p9'}`, with a `src`; extras are accepted from the learner and are listed for review. It works with both answer forms:
 
-    answer: { smi: 'CC(=O)O', extra: { lt: ['acetilo rūgštis'], en: [], src: 'L1 p40' } }
-    answer: { lt: ['etanolis'], en: ['ethanol'], extra: { lt: ['etilo alkoholis'], en: ['ethyl alcohol'], src: 'L11 p3' } }
+    answer: { smi: 'CCO', extra: { lt: ['etilo alkoholis'], en: ['ethyl alcohol'], src: 'T p9' } }
+    answer: { lt: ['etanolis'], en: ['ethanol'], extra: { lt: ['etilo alkoholis'], en: ['ethyl alcohol'], src: 'T p9' } }
 
 Names are compared without case, spaces, dashes or brackets, and without Lithuanian letters (accepted with the correct spelling shown): `N-metiletanaminas` equals `N metil etanaminas`; commas and locants still matter.
 
