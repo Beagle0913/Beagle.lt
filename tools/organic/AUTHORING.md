@@ -15,6 +15,8 @@ A good unit teaches (notes), drills (exercise types with generators or banks) an
 7. Do not mark the unit ready and do not touch `site/organic/js/units.js`: the main session flips `ready` in its integration step after the unit is reviewed. Until then the unit is not shown on the site (the playground and the validator still load it).
 8. Commit only your own files: `git add site/organic/units/u07.js`, never `git add -A` (other agents work in the same checkout). The commit message ends with the `Co-Authored-By` line your task gives. Work on branch `organic-trainer`; do not push.
 
+A local browser may cache old engine scripts: after an engine update (a `git pull`, or a change reported by the main session) reload the playground without cache (Ctrl+Shift+R).
+
 Edit nothing else. If the engine, namer or a reaction rule is wrong or missing, say so in your report (with the SMILES and the expected result) and write around it; do not edit `site/organic/js/*.js` .
 
 ## 2. Tools
@@ -86,7 +88,7 @@ A unit file calls `ORG.unit(Unit)` once, inside the wrapper of the example (sect
 
 **Text `T`** = `{lt: string, en: string}`. Markup inside a string: `**bold**`, `*italic*`, `$formula$`. In a formula, a digit run after a letter or `)` becomes a subscript (`$CH3CH2OH$`, `$Ca(OH)2$`); a trailing `+`, `-`, `2+`, `2-` or `•` becomes a superscript (`$H+$`, `$OH-$`, `$NH4+$`, `$CH3•$`); `^...^` forces a superscript, and is required for a charge after a digit: `$Ca^2+^$`, `$SO4^2-^$`. Use the real minus `−` in plain text. Greek letters and symbols are typed directly (`σ`, `π`, `δ+`, `→`, `⇌`). `$` alone and `<` are plain text.
 
-**Molecule** `Mol = {smi, name?: T, caption?: T, opts?: DrawOpts}`. `smi` is SMILES: organic subset B C N O P S F Cl Br I, aromatic `c n o s`, brackets with H count and charge (`[NH4+]`, `[O-]`, `[CH3+]`, `[Br-]`, `[Cl]` for a radical), bonds `- = # :`, branches, ring closures (`%10` too), stereo `@ @@ / \`, ions separated by a dot (`CC(=O)[O-].[Na+]`). `name`, when given, is checked against the namer (systematic name, its alternatives or the course trivial name; names outside the namer's scope are not checked). `DrawOpts`:
+**Molecule** `Mol = {smi, name?: T, caption?: T, opts?: DrawOpts}`. `smi` is SMILES: organic subset B C N O P S F Cl Br I, aromatic `c n o s`, brackets with H count and charge (`[NH4+]`, `[O-]`, `[CH3+]`, `[Br-]`, `[Cl]` for a radical), bonds `- = # :`, branches, ring closures (`%10` too), stereo `@ @@ / \`, ions separated by a dot (`CC(=O)[O-].[Na+]`). `name`, when given, is checked against the namer: **give `name` to every molecule that your text names**, so that the namer verifies the drawing is the compound the text says. Two lines: `{ smi: 'CC(C)(C)Cl', name: t('2-chlor-2-metilpropanas', '2-chloro-2-methylpropane') }` passes; the same name on `CC(C)CCl` fails. Names outside the namer's scope are not checked, so then check the structure yourself in the playground. The accepted names are the namer's (systematic name, its alternatives or the course trivial name; names outside the namer's scope are not checked). `DrawOpts`:
 
 | option | meaning |
 |---|---|
@@ -198,7 +200,7 @@ Notes teach the topic to a first-year GMC student reading alone, often the week 
 2. the rule or definition in a `{rule}` box;
 3. **every reaction or structure you state, drawn** (`{scheme}`, `{mol}`, `{mech}`, `{resonance}`); a section that states a reaction without drawing it is incomplete;
 4. a `{pitfall}` box where learners usually go wrong;
-5. a `{example}` (worked example: question, then 3 to 6 steps that show the reasoning, each step a short list of blocks). **Every worked example is proved**: add `claims` next to the `example` key (a `react` claim for the product, `name` for a name you print, `formula`, `carbon`, ...; see 11.1). The validator warns when an example with numbered atoms has none, and unproved examples were wrong in review. Never reuse the numbered sentences of another example. When the text names a compound and says "atom no. 3", write the SMILES in IUPAC numbering order (or give `opts.numbers` a map) so that the drawn label equals the locant;
+5. a `{example}` (worked example: question, then 3 to 6 steps that show the reasoning, each step a short list of blocks). **Every worked example is proved**: add `claims` next to the `example` key (a `react` claim for the product, `name` for a name you print, `formula`, `carbon`, ...; see 11.1). The validator warns when an example with numbered atoms has none, and unproved examples were wrong in review. The claims must prove **every** product or fragment the example shows (each product's `react` or `name` claim), not only one. Never reuse the numbered sentences of another example. When the text names a compound and says "atom no. 3", write the SMILES in IUPAC numbering order (or give `opts.numbers` a map) so that the drawn label equals the locant. Every "no. N" or "atom N" in a text must equal the playground's 1-based label of that exact SMILES (open the playground and look at the drawn numbers; a reference that matched another SMILES is the classic error);
 6. a `{practice: typeId}` button at the end of the section that leads into the matching exercise type.
 
 Teach the course's own mechanism where the lecture gives one (for example the two stages I st. and II st. of AE, L7 p7); other explanations are supporting only, and the exercises drill the lecture's mechanism. Show stoichiometry when identical fragments appear (2 ×). Do not write a SMILES in text. A `{practice}` button shows the title of its type, so one button per exercise type is fine.
@@ -271,6 +273,7 @@ Both texts of a pair say the same thing. A text that differs only by a formula o
 - Untranslated or machine-sounding Lithuanian; terms the course does not use.
 - A reaction stated in the notes without a drawing; text copied from the slides.
 - A coverage map that lists a type that does not mirror the task, or a mirrored task missing from `coverage`.
+- A drawn molecule that is not the compound the text names (give the Mol a `name` so the namer checks it); a worked example that proves one product but not the others; an "atom N" reference that does not match the drawn labels of that SMILES;
 - A worked example in the notes without `claims`; atom numbers in the text that do not match the drawn labels; numbered sentences reused from another example.
 - A generator that picks regiochemistry by counting hydrogens, or whose pool has no ties and no benzylic case; distractors that are sibling outputs of unrelated problems or have a different formula.
 - "žingsnis" for a mechanism stage (use "stadija"); a SMILES or a Lithuanian abbreviation inside a learner-facing text or an `f()` label.
