@@ -10,9 +10,10 @@ A good unit teaches (notes), drills (exercise types with generators or banks) an
 2. Write notes and exercise types (sections 4 to 9). Keep every SMILES and fact that a program can compute in the form the tests check (section 6).
 3. Look at your work in the playground (section 2) after every few additions. Fix every message in its error list and look at every drawing.
 4. Run the validator for your unit only: `UNIT=u07 node --test tests/organic/content.test.js` (from the repo root). It must pass with no errors. Guide minimums (words, types, bank size, distinct generator problems) are errors in real unit files.
-5. Run `npm test`. The organic engine tests are run with `node --test tests/organic/` (not yet part of `npm test`). Never run the full `content.test.js` without `UNIT=`: before integration it fails by design with "unit file exists but is not marked ready".
-6. Do not mark the unit ready and do not touch `site/organic/js/units.js`: the main session flips `ready` in its integration step after the unit is reviewed. Until then the unit is not shown on the site (the playground and the validator still load it).
-7. Commit only your own files: `git add site/organic/units/u07.js`, never `git add -A` (other agents work in the same checkout). The commit message ends with the `Co-Authored-By` line your task gives. Work on branch `organic-trainer`; do not push.
+5. Run the copy check: `node tools/organic/copycheck.js u07` (it compares your text with the slides, seminar sheets and lab texts) and rewrite every hit in your own words. Read the textbook pages of your lecture (section 3), and before you report, verify every statement of your report against the file (counts, types, coverage).
+6. Run `npm test`. The organic engine tests are run with `node --test tests/organic/` (not yet part of `npm test`). Never run the full `content.test.js` without `UNIT=`: before integration it fails by design with "unit file exists but is not marked ready".
+7. Do not mark the unit ready and do not touch `site/organic/js/units.js`: the main session flips `ready` in its integration step after the unit is reviewed. Until then the unit is not shown on the site (the playground and the validator still load it).
+8. Commit only your own files: `git add site/organic/units/u07.js`, never `git add -A` (other agents work in the same checkout). The commit message ends with the `Co-Authored-By` line your task gives. Work on branch `organic-trainer`; do not push.
 
 Edit nothing else. If the engine, namer or a reaction rule is wrong or missing, say so in your report (with the SMILES and the expected result) and write around it; do not edit `site/organic/js/*.js` .
 
@@ -122,9 +123,11 @@ Drawing quality is tested (no overlaps, crossings, label clashes); the playgroun
 | `{example: {q: Block[], steps: Block[][]}}` | worked example: the question, then steps revealed one at a time |
 | `{practice: typeId}` | button "practise this type"; the id must exist in this unit |
 
-**Scheme** `{items: (Mol | {plus: true} | {arrow: '→'|'⇌'|'↔', above?: T|string, below?: T|string})[], maxWidth?}`. Reagents and conditions go in `above` / `below` of the arrow. Schemes wrap on a phone.
+**Scheme** `{items: (Mol | {plus: true} | {arrow: '→'|'⇌'|'↔', above?: T, below?: T})[], maxWidth?}`. Arrow labels must be `{lt, en}` objects: the validator rejects plain strings, and rejects a key that is present but `undefined`, so build the arrow conditionally (`cond ? {arrow: '→', above: x} : {arrow: '→'}`). For a label that is only formulas or symbols use a helper: `const f = (s) => ({ lt: s, en: s });` then `{arrow: '→', above: f('H2SO4, 160 °C')}` (an identical LT and EN text is accepted when it has no ordinary words). Reagents and conditions go in `above` / `below` of the arrow. Schemes wrap on a phone.
 
-**MechStep** `{scheme, arrows: [{from: Ref, to: Ref, half?: true}], note?: T}`. `Ref` = `{m: k, a: i}` (atom i of the k-th molecule of the scheme; `m` counts molecules only, not plus signs or arrows) | `{m: k, lp: i}` (a lone pair on atom i) | `{m: k, b: [i, j]}` (the bond i-j) | `{m: k, mid: [i, j]}` (a point between two atoms, for a bond being formed). To end an arrow on a reagent's hydrogen, give that molecule `opts: {allH: true}` and use `a: 'H0'` (first H drawn on atom 0) and bonds like `b: [0, 'H0']`. `half: true` draws a single-electron (fish-hook) arrow, for SR. Lone pairs need `opts: {lonePairs: true}` on that molecule.
+**MechStep** `{scheme, arrows: [{from: Ref, to: Ref, half?: true}], note?: T}`. `Ref` = `{m: k, a: i}` (atom i of the k-th molecule of the scheme; `m` counts molecules only, not plus signs or arrows) | `{m: k, lp: i}` (a lone pair on atom i) | `{m: k, b: [i, j]}` (the bond i-j) | `{m: k, mid: [i, j]}` (a point between two atoms, for a bond being formed). To end an arrow on a reagent's hydrogen, give that molecule `opts: {allH: true}` and use `a: 'H0'` (first H drawn on atom 0) and bonds like `b: [0, 'H0']`. A mechanism step shows the intermediate it produces: put the product of the arrows in the next step, not only the reactants (two steps that differ only in the direction of one bond look identical). Draw small reactants (ethene, water) with visible atoms: `opts: {allH: true}`. Arrows into H: `'H0'` is the first H drawn on atom 0, `'H3'` the first H drawn on atom 3 (u07 hydration: `to: {m: 0, a: 'H3'}`, `from: {m: 0, b: [3, 'H3']}`). Charged centres with `allH` ([OH2+], bromonium rings) can overlap: give `opts.coords` in bond-length units, y down. Working ones: oxonium `CC(C)[OH2+]` with `coords: [[0, 0], [0.87, 0.5], [1.73, 0], [0.87, 1.5]]`; bromonium ring `C1C[Br+]1` with `coords: [[0, 0], [1, 0], [0.5, -0.87]]`.
+
+`half: true` draws a single-electron (fish-hook) arrow, for SR. Lone pairs need `opts: {lonePairs: true}` on that molecule.
 
 **Unit**
 
@@ -135,7 +138,7 @@ Drawing quality is tested (no overlaps, crossings, label clashes); the playgroun
       types: ExType[],
       coverage: { 'S4.3': ['u07.hx'], ... } }   // every task of your unit -> the types that cover it
 
-**ExType** `{id: 'u07.hx', title: T, mirrors: ['S4.3', ...], gen?: function, bank?: Problem[]}`. The id starts with the unit id and a dot. A type has `gen`, `bank` or both. **Every task in `mirrors` must exist (section 3 list) and must appear in `coverage` with this type**; the validator checks both. The reverse is not checked, so keep `coverage` honest yourself: list a type under a task only when it really trains that task.
+**ExType** `{id: 'u07.hx', title: T, mirrors: ['S4.3', ...], gen?: function, bank?: Problem[]}`. The id starts with the unit id and a dot. A type has `gen`, `bank` or both. **Every task in `mirrors` must exist (section 3 list) and must appear in `coverage` with this type**; the validator checks both. `mirrors: []` is allowed for a lecture-only type (no seminar task). The reverse is not checked, so keep `coverage` honest yourself: list a type under a task only when it really trains that task.
 
 **Problem** `{id?, q: Block[], steps: Step[], why: T | Block[], src?, claims?: Claim[]}`. Bank problems need an `id` that starts with the type id and a dot and is unique (`u07.mech.3`). Generated problems need none.
 
@@ -145,12 +148,12 @@ Drawing quality is tested (no overlaps, crossings, label clashes); the playgroun
 |---|---|---|
 | `choice` | picks one option | the option's index in `options` (2 to 12 options) |
 | `multi` | picks every right option | array of right indices |
-| `atoms` | taps atoms on `mol` | array of atom indices; with `bonds: true` an array of `[i, j]` pairs; or leave out `answer` and set `from` to `'stereocentres'`, `'carbon:1'` ... `'carbon:4'`, `'hyb:sp'`, `'hyb:sp2'`, `'hyb:sp3'`, `'conjugated'`, `'aromatic'` and the engine computes it |
+| `atoms` | taps atoms on `mol` (a multi-component SMILES such as `O=C=O` or `A.B` works) | array of atom indices; with `bonds: true` an array of `[i, j]` pairs; or leave out `answer` and set `from` to `'stereocentres'`, `'carbon:1'` ... `'carbon:4'`, `'hyb:sp'`, `'hyb:sp2'`, `'hyb:sp3'`, `'conjugated'`, `'aromatic'` and the engine computes it |
 | `order` | sorts 3 to 6 items | no `answer`: **write `options` in the right order**; the trainer shuffles them |
 | `number` | types a number (comma or dot) | `{value, tol}` |
 | `name` | types a name | `{lt: [..], en: [..]}` (first is shown) or `{smi}` (the namer supplies every name; the molecule must be in its scope); `mol` shows the structure |
 | `formula` | types a formula | string `'C5H12'`; **always give `mol`** (the validator checks the formula against it; without `mol` it can check only when the statement has exactly one molecule) |
-| `match` | pairs left items with right items | `{left: Option[], right: Option[], pairs: number[]}`: `pairs[i]` is the right index for left item `i` |
+| `match` | pairs left items with right items | `answer: {left: Option[], right: Option[], pairs: number[]}` (the options live inside `answer`, not in `options`): `pairs[i]` is the right index for left item `i` |
 
 `Option` = `{text: T}` | `{mol: Mol}` | `{scheme: Scheme}`. In `choice`, `multi` and `match` the options are shuffled when shown, so write the right one anywhere and give its index. `solution` is a T or a Block list (use blocks to show a worked mechanism or a drawn product). Names in a `name` step: `answer.lt` / `answer.en` (or `answer: {smi}`) hold only names the namer can produce (its main name, alternatives, the course trivial name). A correct course spelling the namer does not produce goes **only** in `answer.extra: {lt: [..], en: [..], src: 'T p9'}`, with a `src`; extras are accepted from the learner and are listed for review. It works with both answer forms:
 
@@ -159,7 +162,7 @@ Drawing quality is tested (no overlaps, crossings, label clashes); the playgroun
 
 Names are compared without case, spaces, dashes or brackets, and without Lithuanian letters (accepted with the correct spelling shown): `N-metiletanaminas` equals `N metil etanaminas`; commas and locants still matter.
 
-**Claim** (checked by the validator; put them on the problem, `claims: [...]`): `{formula: [smi, 'C5H12']}`, `{name: [smi, T]}`, `{cip: [smi, i, 'R'|'S']}`, `{ez: [smi, i, j, 'E'|'Z']}`, `{centres: [smi, [i...]]}`, `{stereoisomers: [smi, n]}`, `{isomers: [formula, n, filter?]}`, `{hyb: [smi, i, 'sp2']}`, `{carbon: [smi, i, 1..4]}`, `{sigmaPi: [smi, sigma, pi]}`, `{aromatic: [smi, true|false]}`, `{react: [ruleId, [smi...], opts|null, majorSmi]}`, `{same: [smi, smi]}`, `{chiral: [smi, true|false]}`.
+**Claim** (checked by the validator; put them on the problem, `claims: [...]`, or next to the block key of a notes block, which is how worked examples are proved, see section 7): `{formula: [smi, 'C5H12']}`, `{name: [smi, T]}`, `{cip: [smi, i, 'R'|'S']}`, `{ez: [smi, i, j, 'E'|'Z']}`, `{centres: [smi, [i...]]}`, `{stereoisomers: [smi, n]}`, `{isomers: [formula, n, filter?]}`, `{hyb: [smi, i, 'sp2']}`, `{carbon: [smi, i, 1..4]}`, `{sigmaPi: [smi, sigma, pi]}`, `{aromatic: [smi, true|false]}`, `{react: [ruleId, [smi...], opts|null, majorSmi]}`, `{same: [smi, smi]}`, `{chiral: [smi, true|false]}`.
 
 **Generator** `gen(rng, ctx) -> Problem`, called with a seed: the same seed must always give the same problem. Use only `rng()` and `ctx` for randomness (`ctx.pick(arr)`, `ctx.shuffle(arr)`, `ctx.int(lo, hi)`), never `Math.random`. `ctx` also holds the engines: `chem, stereo, name, react, draw`. See section 11.2.
 
@@ -181,8 +184,9 @@ Facts about the engine (verified in reviews):
 - **Aromaticity.** Do not write claims or questions about 2-pyridone, uracil, coumarin, tropone (model dependent). Do for benzene, naphthalene, pyrrole, furan, thiophene, pyridine, pyrimidine, imidazole, indole, purine, the cyclopentadienyl anion, the tropylium cation.
 - **Unsaturation** is null for ions and radicals.
 - **Cation and radical stability** (course order, L7 p9, L6 p16): benzyl > allyl > tertiary > secondary > primary > methyl.
-- **Reactions.** `ORG.react.run(rule, [smi...], opts)` returns `{products: [{smi, major, by?}], none?, note?, mech?}`. `major: true` marks the course's main product(s); `by: true` marks an observable by-product (N2, H2, Ag, NH4Cl ...); `none: true` means no reaction. Mixtures that the course treats as comparable (o/p, 1,2/1,4) mark every member major: **a generator that needs one answer must require exactly one major product**. Use the result's `mech` for the mechanism symbol (E1/E2, AE/AR, SN1/SN2), not the rule's default. Generators skip substrates where `ORG.react.wouldRearrange(smi)` is true (a hydride or alkyl shift would change the textbook product). The options a rule takes are in the rule's definition in `site/organic/js/react.js` (`X: 'Cl'|'Br'|'I'`, `eq`, `base`, `reagent: 'PCC'|'chromic'`, `metal`, `excess`, `medium`, `stage`, `nu`, ...); read it. Rule ids: `sr.halogenate ae.hx ae.h2o ae.x2 ae.h2 ox.kmno4.mild ox.kmno4.harsh diene.hx yne.h2 yne.x2 yne.hx yne.hydration yne.cu sear side.br side.ox sn2 sn1 elim alc.hx alc.ox alc.na williamson ether.hi phenol.base phenol.alkyl phenol.acyl phenol.br2 thiol.base thiol.alkyl thiol.disulfide co.nabh4 co.hcn co.hemiacetal co.acetal co.thioacetal co.oxime co.phenylhydrazone co.tollens co.cannizzaro co.aldol co.aldolcond co.enols co.iodoform acid.ester acid.salt acid.socl2 acyl.nu amine.acyl ester.hydrolysis claisen lactone amine.protonate amine.alkyl amine.hno2 diazo.sub nitro.reduce nitrile.hydrolysis`. `ORG.react.RULES[id].title` and `.mech` describe each.
-- **Names in generated text.** Lithuanian inflects names ("2-metil-2-butenui"), and no program can do that. Show the molecule drawn, or name it only in the nominative (a label, a list). Do not splice namer output into a sentence that needs another case. Neutral splices (atom numbers, "tretinis", "antrinis") are fine.
+- **Reactions.** `ORG.react.run(rule, [smi...], opts)` returns `{products: [{smi, major, by?}], none?, note?, mech?}`. `major: true` marks the course's main product(s); `by: true` marks an observable by-product (N2, H2, Ag, NH4Cl ...); `none: true` means no reaction. Mixtures that the course treats as comparable (o/p, 1,2/1,4) mark every member major: **a generator that needs one answer must require exactly one major product**. Every result carries `mech` (the symbol of this result; default `RULES[id].mech`): use it for the mechanism symbol (E1/E2, AE, SN1/SN2), not a symbol you assume. Generators skip substrates where `ORG.react.wouldRearrange(smi)` is true (a hydride or alkyl shift would change the textbook product). The options a rule takes are in the rule's definition in `site/organic/js/react.js` (`X: 'Cl'|'Br'|'I'`, `eq`, `base`, `reagent: 'PCC'|'chromic'`, `metal`, `excess`, `medium`, `stage`, `nu`, ...); read it. Rule ids: `sr.halogenate ae.hx ae.h2o ae.x2 ae.h2 ox.kmno4.mild ox.kmno4.harsh diene.hx yne.h2 yne.x2 yne.hx yne.hydration yne.cu sear side.br side.ox sn2 sn1 elim alc.hx alc.ox alc.na williamson ether.hi phenol.base phenol.alkyl phenol.acyl phenol.br2 thiol.base thiol.alkyl thiol.disulfide co.nabh4 co.hcn co.hemiacetal co.acetal co.thioacetal co.oxime co.phenylhydrazone co.tollens co.cannizzaro co.aldol co.aldolcond co.enols co.iodoform acid.ester acid.salt acid.socl2 acyl.nu amine.acyl ester.hydrolysis claisen lactone amine.protonate amine.alkyl amine.hno2 diazo.sub nitro.reduce nitrile.hydrolysis`. `ORG.react.RULES[id].title` and `.mech` describe each.
+- **Building structures in a generator.** `ctx` has no graph-editing call. Edit the SMILES string instead (atom indices stay valid when you only change brackets, charges or append a branch) to build a cation, an adduct or a wrong option, and **cross-check against `react.run`**: compute the product yourself, then `continue` unless `react.run(...)` lists it as `major`. Swapping a fragment in a string (`smi.replace('Br', X)`) is fine when the result stays a valid SMILES. A generator whose pool is filtered (rearrangement, ties, namer scope) needs a pool of at least 40 candidates before filtering, or it fails the 30-distinct minimum.
+- **Names in generated text.** Lithuanian inflects names ("2-metil-2-butenui"), and no program can do that. Show the molecule drawn, or name it only in the nominative (a label, a list). Do not splice namer output into a sentence that needs another case. The genitive of names in -enas, -inas, -anas is -eno, -ino, -ano (never -enos, -inos, -anos); the validator rejects the wrong forms. Never show a SMILES to the learner: write condensed formulas inside `$...$` (`ctx.draw.condensed(mol)` gives ASCII to wrap), or draw the molecule. Neutral splices (atom numbers, "tretinis", "antrinis") are fine.
 - **Atom labels.** `opts.numbers` labels are 1-based. A problem text that says "C3" or "atom no. 3" refers to the label: SMILES index 2.
 - Views: Fischer from SMILES works for acyclic chains only (otherwise `rows`); `Ref.m` counts molecule items only.
 
@@ -194,8 +198,10 @@ Notes teach the topic to a first-year GMC student reading alone, often the week 
 2. the rule or definition in a `{rule}` box;
 3. **every reaction or structure you state, drawn** (`{scheme}`, `{mol}`, `{mech}`, `{resonance}`); a section that states a reaction without drawing it is incomplete;
 4. a `{pitfall}` box where learners usually go wrong;
-5. a `{example}` (worked example: question, then 3 to 6 steps that show the reasoning, each step a short list of blocks);
+5. a `{example}` (worked example: question, then 3 to 6 steps that show the reasoning, each step a short list of blocks). **Every worked example is proved**: add `claims` next to the `example` key (a `react` claim for the product, `name` for a name you print, `formula`, `carbon`, ...; see 11.1). The validator warns when an example with numbered atoms has none, and unproved examples were wrong in review. Never reuse the numbered sentences of another example. When the text names a compound and says "atom no. 3", write the SMILES in IUPAC numbering order (or give `opts.numbers` a map) so that the drawn label equals the locant;
 6. a `{practice: typeId}` button at the end of the section that leads into the matching exercise type.
+
+Teach the course's own mechanism where the lecture gives one (for example the two stages I st. and II st. of AE, L7 p7); other explanations are supporting only, and the exercises drill the lecture's mechanism. Show stoichiometry when identical fragments appear (2 ×). Do not write a SMILES in text. A `{practice}` button shows the title of its type, so one button per exercise type is fine.
 
 End the notes with `summary`: the cheat sheet of the unit on one screen (a table of reactions or rules, a `{list}`). Put reagents and conditions above or below the arrow. Cite `src` on blocks that state course-specific rules, values or conventions. Prefer short paragraphs (2 to 4 sentences), tables for comparisons (acidity, reactivity series, directing effects), and one idea per block. Teach the mechanism and the reason (stability of the intermediate, polarity, sterics), not only the result. Cover everything the lecture covers and everything your seminar tasks need; add Klein's standard explanation where the slides are terse. Lab units: aim, principle, apparatus and procedure steps, what is observed and why, safety, calculations (yield, Rf), typical mistakes.
 
@@ -205,13 +211,15 @@ Length: 800 to 2000 words per language (400 to 1000 for a lab unit), counted ove
 
 The problem makes the learner **decide** something a student must be able to decide on the exam: which atom, which product, which order, which reason. A fact lookup ("What is the formula of ethanol?") is not a problem; "Which of these products forms and why?" is.
 
-- **Wrong options are plausible mistakes**, never filler. Build them from the typical errors: the anti-Markovnikov product; the wrong numbering direction; the wrong main chain; the over-oxidised product (acid instead of aldehyde, ketone cleaved); the product of a different reagent (X2 instead of HX, H2 instead of HX); the wrong ring position (ortho/para vs meta); the other enantiomer or the wrong E/Z isomer; the rearranged or unrearranged cation; the reverse order of acidity or reactivity; an elimination instead of a substitution. Two or more of these per `choice` of 4 options. Options must be distinct (the validator rejects duplicates, including two spellings of the same structure).
+- **Wrong options are plausible mistakes**, never filler. Build them from the typical errors: the anti-Markovnikov product; the wrong numbering direction; the wrong main chain; the over-oxidised product (acid instead of aldehyde, ketone cleaved); the product of a different reagent (X2 instead of HX, H2 instead of HX); the wrong ring position (ortho/para vs meta); the other enantiomer or the wrong E/Z isomer; the rearranged or unrearranged cation; the reverse order of acidity or reactivity; an elimination instead of a substitution. Two or more of these per `choice` of 4 options. **Distractors share the formula of the answer** (positional isomers, the aldehyde instead of the acid, HCOOH instead of CO2, swapped fragments, the wrong leaving group), so that counting atoms cannot eliminate them; never use sibling outputs of unrelated pool members as distractors. Options must be distinct (the validator rejects duplicates, including two spellings of the same structure).
 - **Several steps** when the reasoning has stages: tap the atom, pick the intermediate, pick the product, name the mechanism symbol. Each step a separate decision; never reveal the answer of a later step in an earlier prompt or hint.
 - **The `why`** teaches the idea in 2 to 5 sentences: the principle and its reason, not a restatement of the answer. It is shown after the last step.
-- **Hints nudge, they do not give the answer.** A hint names the concept or the question to ask ("which carbon carries more hydrogens?", "draw the anion and count resonance structures"), never the answer.
+- **Hints nudge, they do not give the answer.** A hint may state the general rule but not the answer for this molecule; if applying the stated rule gives the answer at one glance, ask a question instead (borderline: "H+ goes to the carbon with more H" is fine when the step is about the cation, not when it is the step's answer). A hint names the concept or the question to ask ("which carbon carries more hydrogens?", "draw the anion and count resonance structures"), never the answer.
 - **Worked solutions show the reasoning**, step by step: what you look at, what rule applies, what follows. Use a Block list with a drawn product or a mechanism when it helps. Never write only "Answer: b".
 - A step shows its molecule via `mol` or the statement; do not make the learner count unlabelled atoms: use `opts.numbers: 'all'` on atom-tapping steps.
 - Put the right option anywhere (it is shuffled), but remember `order` options are written in the right order.
+- **Generators choose regiochemistry by cation type**, never by a hydrogen or neighbour count as a shortcut: benzyl > allyl > tertiary > secondary > primary. The pool must include ties (the engine marks both products major: use a `multi` step for both) and benzylic or allylic cases, otherwise the pitfall your notes teach is never practised. Where a reaction depends on conditions (KMnO4: medium × temperature), generate every combination the slides show.
+- **Map honestly.** A bank type lists in `mirrors` and `coverage` every seminar task it really trains, and the generator pools contain the case types of those tasks.
 - Variety within a type: different compounds, substituents, ring sizes, halogens, reagents; a generator must produce at least 30 distinct problems.
 - Cover every task of your seminar sheet; a type mirrors the tasks it is modelled on (`mirrors`), and `coverage` lists, for every task, the types that cover it.
 - Where a program can compute the answer, write a **generator** (products of rule-covered reactions, classification, counting, atom tapping with `from`, names with `{smi}`). Where it cannot (mechanism reasoning, comparisons with reasons, reagent choice, multi-step schemes, tests for groups), write a **bank** of at least 8 hand-written problems. Typical split: u01 to u05 generated classification, counting, naming; bank for reasons. u06 to u16 generators for products of reactions; banks for mechanisms, reagent choice, comparisons, multi-step schemes ("fill in A to E"), tests for functional groups. Labs: banks (method, apparatus, observations, why each step, safety) and small generators (yield %, Rf, melting-point judgements as `number` steps).
@@ -239,9 +247,15 @@ Write natural academic Lithuanian, as a lecturer would: full sentences, correct 
 | chiralinis centras (L5 p33; S3.3, S3.4, S3.11, S3.12) / chiralinis atomas (L5 p17, prochirality slide); chiralinė molekulė (L5 p17); enantiomerai, racematas (L5 p19); diastereomerai (L5 p33) | chiral centre (stereocentre), chiral molecule; enantiomers, racemate; diastereomers |
 | Markovnikovo taisyklė (L7 p13); Zaicevo taisyklė (L10 p20) | Markovnikov's rule; Zaitsev's rule |
 | orientantai (L9 p24); aktyvuojantys ir deaktyvuojantys aromatinių žiedų pakaitai (L9 p28) | directing groups; activating and deactivating substituents |
+| stadija (I st., II st.; lėtoji, greitoji); not "žingsnis" for mechanism stages (L7 p7) | stage of a mechanism |
+| dvigubasis / trigubasis ryšys; dvigubojo, dvigubąjį, dvigubuoju (L7 p5, p6, p13) | double / triple bond |
+| oksonio jonas (L7 p19); benzilkatijonas, alilkatijonas, metilkatijonas (L7 p9, p10); katalitinis (L7 p20); rūgšti terpė (L7 p22, p24); mono- / dipakeistas C atomas (L7 p24) | oxonium ion; benzyl, allyl, methyl cation; catalytic; acidic medium; mono- / disubstituted carbon |
+| hidrohalogeninimas, dihidroksilinimas, joninis / radikalinis prijungimas (L7 p14, p27); enolis izomerizuojasi | hydrohalogenation, dihydroxylation, ionic / radical addition; the enol isomerises |
 | oksidacija, redukcija (L3 p40); oksidavimas (L8 p15), oksidavimasis (L12 p27); hidrinimas (L7 p20); halogeninimas (L6 p7); hidratacija (L7 p19); dehidratacija (L11 p11) | oxidation, reduction; hydrogenation; halogenation; hydration; dehydration |
 
 *Oksidacija* is the concept, *oksidavimas* the process; both are fine. In task prompts use *chiralinis centras*, the wording students see on the seminar sheets, and the seminar wording for addition (*prijungimo reakcija*, *nukleofilinio prijungimo*). Where the slides and textbook differ, use the slides. Check a page image when you use a term not in this table.
+
+Grammar of names: the genitive of -enas, -inas, -anas names is -eno, -ino, -ano (never -enos, -inos, -anos).
 
 Mechanism symbols are written exactly: **SR, AE, AN, SEAr, SN1, SN2, E1, E2** (same in both languages). Prefixes in names: chlor-, brom-, jod-, fluor-, hidroksi-, okso-, formil-, amino-, nitro-, metoksi-. Lithuanian name style: locant before the parent: `2-metil-2-butenas`, `1-propanolis`, `pentano rūgštis`, `etilbutanoatas`, `N-metiletanaminas`, `benzenkarboksirūgštis`, `3-metil-5-heksin-2-olis`. Chain choice in the course: most principal groups, then most C=C and C≡C, then longest, then most prefix substituents. English: standard IUPAC as in Klein (`2-methylbut-2-ene`; the older `2-methyl-2-butene` is accepted by the namer).
 
@@ -257,6 +271,10 @@ Both texts of a pair say the same thing. A text that differs only by a formula o
 - Untranslated or machine-sounding Lithuanian; terms the course does not use.
 - A reaction stated in the notes without a drawing; text copied from the slides.
 - A coverage map that lists a type that does not mirror the task, or a mirrored task missing from `coverage`.
+- A worked example in the notes without `claims`; atom numbers in the text that do not match the drawn labels; numbered sentences reused from another example.
+- A generator that picks regiochemistry by counting hydrogens, or whose pool has no ties and no benzylic case; distractors that are sibling outputs of unrelated problems or have a different formula.
+- "žingsnis" for a mechanism stage (use "stadija"); a SMILES or a Lithuanian abbreviation inside a learner-facing text or an `f()` label.
+- A bank that trains a seminar task but does not list it; a report that does not match the file.
 - Editing `units.js` or setting `ready`; editing files that are not yours; `git add -A`.
 
 ## 11. Three complete worked examples
@@ -272,6 +290,7 @@ The whole file shape: wrapper, one note section using the common block kinds, su
 (function (ORG) {
   'use strict';
   const t = (lt, en) => ({ lt, en });
+  const f = (s) => ({ lt: s, en: s });   // a label that is only a formula or symbol: arrow labels must be {lt, en}, never a plain string
 
   ORG.unit({
     id: 'u07',
@@ -286,7 +305,7 @@ The whole file shape: wrapper, one note section using the common block kinds, su
               'When a hydrogen halide HX adds to an unsymmetrical alkene, it happens in two steps. First a proton bonds to one carbon of the double bond and a carbocation forms. Then the halide anion bonds to the positive carbon.')
           },
           {
-            scheme: { items: [{ smi: 'CC=C' }, { plus: true }, { smi: 'Br' }, { arrow: '→' }, { smi: 'CC(C)Br' }] },
+            scheme: { items: [{ smi: 'CC=C' }, { arrow: '→', above: f('HBr') }, { smi: 'CC(C)Br' }] },
             caption: t('Propenas ir HBr: pagrindinis produktas yra 2-brompropanas.', 'Propene and HBr: the main product is 2-bromopropane.'),
             src: 'L7 p9'
           },
@@ -297,13 +316,18 @@ The whole file shape: wrapper, one note section using the common block kinds, su
           },
           {
             example: {
-              q: [{ p: t('Koks produktas susidaro 2-metilpropenui reaguojant su HCl?', 'What is the product of 2-methylpropene with HCl?') }, { mol: { smi: 'CC(C)=C' } }],
+              q: [
+                { p: t('Koks produktas susidaro 2-metilpropenui reaguojant su HCl? Atomų numeriai atitinka grandinės numeraciją.', 'What is the product of 2-methylpropene with HCl? The atom numbers follow the chain numbering.') },
+                { mol: { smi: 'C=C(C)C', opts: { numbers: 'all' } } }   // SMILES written in IUPAC order: label 1 is C-1, label 2 is C-2
+              ],
               steps: [
-                [{ p: t('Vienas dvigubo ryšio atomas (CH₂) turi du vandenilius, kitas – nė vieno. Protonas jungiasi prie CH₂.', 'One double-bond carbon (CH₂) has two hydrogens, the other has none. The proton bonds to CH₂.') }],
-                [{ p: t('Teigiamas krūvis lieka ant atomo su dviem metilais: susidaro tretinis karbokatijonas.', 'The positive charge stays on the carbon with two methyls: a tertiary carbocation forms.') }],
-                [{ p: t('Chloridas prisijungia prie šio atomo.', 'Chloride bonds to that carbon.') }, { mol: { smi: 'CC(C)(C)Cl', name: t('2-chlor-2-metilpropanas', '2-chloro-2-methylpropane') } }]
+                [{ p: t('Atomas Nr. 1 (CH₂) turi du vandenilius, atomas Nr. 2 – nė vieno. Protonas jungiasi prie atomo Nr. 1.', 'Carbon no. 1 (CH₂) has two hydrogens, carbon no. 2 has none. The proton bonds to carbon no. 1.') }],
+                [{ p: t('Teigiamas krūvis lieka ant atomo Nr. 2: tai tretinis karbokatijonas, stabiliausias iš galimų.', 'The positive charge stays on carbon no. 2: a tertiary carbocation, the most stable one possible.') }],
+                [{ p: t('Chloridas prisijungia prie atomo Nr. 2.', 'Chloride bonds to carbon no. 2.') }, { mol: { smi: 'CC(C)(C)Cl', name: t('2-chlor-2-metilpropanas', '2-chloro-2-methylpropane') } }]
               ]
-            }
+            },
+            // the answer of a worked example is proved like any other claim
+            claims: [{ react: ['ae.hx', ['C=C(C)C'], { X: 'Cl' }, 'CC(C)(C)Cl'] }, { carbon: ['C=C(C)C', 1, 3] }]
           },
           {
             pitfall: t('Nesumaišykite krypties: halogenas patenka ten, kur teigiamą krūvį geriau išlaiko aplinkiniai atomai, o ne ten, kur jau yra daugiausia vandenilių.',
@@ -355,7 +379,7 @@ The whole file shape: wrapper, one note section using the common block kinds, su
 
 ### 11.2 A generator: HX addition (type `u07.hx`)
 
-A generator picks a substrate, asks the engine for the result, builds plausible wrong options, and returns a problem with three steps (tap, choose, name). Notes on what it does: it skips substrates that would rearrange; it skips substrates where the two double-bond carbons are alike (nothing to decide); it requires exactly one major product; the wrong options are the anti-Markovnikov product first, then X2 addition and hydrogenation; the right option is written first (the trainer shuffles); the name step is added only when the namer can name the product; texts contain atom numbers (index + 1) and class words, never inflected names. A type like this goes into the `types` array of a unit; with 13 substrates and 3 halogens it gives well over 30 distinct problems.
+A generator picks a substrate, asks the engine for the result, builds plausible wrong options, and returns a problem with up to three steps (tap, choose, name). What it shows: the pool has more than 40 candidates before filtering; it skips substrates that would rearrange; the regiochemistry comes from the type of the cation (benzylic > tertiary > secondary > primary) and must agree with `react.run` (exactly one major product, or two for a tie, which becomes a `multi` step); the wrong options have the formula of the answer (the minor anti-Markovnikov product, then radical-halogenation isomers built from the alkane, with `smi.replace('Br', X)` as string surgery); the right options are written first (the trainer shuffles); the name step is added only when the namer can name the product; texts contain atom labels (index + 1) and cation words, never inflected names or SMILES.
 
 ```js
 {
@@ -364,68 +388,78 @@ A generator picks a substrate, asks the engine for the result, builds plausible 
   mirrors: ['S4.3', 'S4.4'],
   gen(rng, ctx) {
     const { chem, react, name } = ctx;
+    // the pool: plain alkenes, ties (both products form), a benzylic case; more than 40 problems before any filtering
     const SUBSTRATES = ['CC=C', 'CC(C)=C', 'CCC=C', 'CCCC=C', 'CC(C)=CC', 'CCC(C)=C', 'CCC(C)=CC', 'CCC=C(C)C',
-      'CCCC(C)=C', 'CC(C)CC=C', 'CC1=CCCCC1', 'CC1=CCCC1', 'CC(C)C=C'];
-    const WORDS = { lt: ['pirminis', 'antrinis', 'tretinis'], en: ['primary', 'secondary', 'tertiary'] };
+      'CCCC(C)=C', 'CC(C)CC=C', 'CC1=CCCCC1', 'CC1=CCCC1', 'CC=CCC', 'CCC=CCC', 'CC=Cc1ccccc1', 'C=Cc1ccccc1', 'CC(C)C=C'];
+    const CATION = {                                          // the course order: benzyl > tertiary > secondary > primary
+      5: { lt: 'benzilkatijonas', en: 'benzylic carbocation' },
+      3: { lt: 'tretinis karbokatijonas', en: 'tertiary carbocation' },
+      2: { lt: 'antrinis karbokatijonas', en: 'secondary carbocation' },
+      1: { lt: 'pirminis karbokatijonas', en: 'primary carbocation' }
+    };
 
-    // 1. choose a substrate the course rule handles with one clear answer
     let pick = null;
     for (let tries = 0; tries < 60 && !pick; tries++) {
       const smi = ctx.pick(SUBSTRATES);
       if (react.wouldRearrange(smi)) continue;                // a hydride shift would change the textbook product
       const mol = chem.parse(smi);
-      const dbl = mol.bonds.find(b => b.order === 2);
-      const cN = i => mol.nbr[i].filter(j => mol.atoms[j].el === 'C').length;
-      if (cN(dbl.a) === cN(dbl.b)) continue;                  // both carbons alike: nothing to decide
-      const [hC, xC] = cN(dbl.a) < cN(dbl.b) ? [dbl.a, dbl.b] : [dbl.b, dbl.a];
+      const dbl = mol.bonds.find(b => b.order === 2 && !mol.atoms[b.a].aromatic);
+      // the carbocation that forms if the proton goes to the OTHER carbon: its type decides, not a hydrogen count
+      const cation = c => {
+        const nb = mol.nbr[c].filter(j => j !== (c === dbl.a ? dbl.b : dbl.a) && mol.atoms[j].el === 'C');
+        return nb.some(j => mol.atoms[j].aromatic) ? 5 : nb.length + 1;  // 5 = benzylic, else 1..3 = primary..tertiary
+      };
+      const sa = cation(dbl.a), sb = cation(dbl.b);           // positive charge on a (proton goes to b), and on b
       const X = ctx.pick(['Cl', 'Br', 'I']);
       const res = react.run('ae.hx', [smi], { X });
       const majors = res.products.filter(p => p.major);
-      if (majors.length !== 1) continue;                      // exactly one right answer
-      pick = { smi, hC, xC, X, cls: cN(xC), major: majors[0].smi, minor: res.products.filter(p => !p.major).map(p => p.smi) };
+      const tie = sa === sb;
+      if (majors.length !== (tie ? 2 : 1)) continue;          // the rule and the engine must agree; a symmetric alkene gives 1 and is skipped
+      const xC = sa > sb ? dbl.a : dbl.b, hC = xC === dbl.a ? dbl.b : dbl.a;
+      pick = { smi, tie, X, dbl, hC, xC, cls: Math.max(sa, sb), majors: majors.map(p => p.smi) };
     }
     if (!pick) throw new Error('u07.hx: no usable substrate');
 
-    // 2. wrong options: the anti-Markovnikov product first, then the products of other additions
+    // wrong options share the formula of the product: the minor (anti-Markovnikov) product, then radical-substitution isomers
     const canon = s => chem.canonical(chem.parse(s), { stereo: false });
-    const dihalide = react.run('ae.x2', [pick.smi], { X: pick.X }).products.find(p => p.major);
-    const alkane = react.run('ae.h2', [pick.smi]).products.find(p => p.major);
-    const seen = new Set([canon(pick.major)]);
-    const options = [{ mol: { smi: pick.major } }];           // the right option is written first; the trainer shuffles
-    for (const smi of pick.minor.concat(dihalide ? [dihalide.smi] : [], alkane ? [alkane.smi] : [])) {
-      if (!seen.has(canon(smi)) && options.length < 4) { seen.add(canon(smi)); options.push({ mol: { smi } }); }
-    }
+    const alkane = react.run('ae.h2', [pick.smi]).products[0].smi;
+    const wrong = react.run('ae.hx', [pick.smi], { X: pick.X }).products.filter(p => !p.major).map(p => p.smi)
+      .concat(ctx.shuffle(react.run('sr.halogenate', [alkane], { X: 'Br' }).products.map(p => p.smi.replace('Br', pick.X))));  // string surgery: swap Br for the halogen shown
+    const seen = new Set(pick.majors.map(canon));
+    const options = pick.majors.map(smi => ({ mol: { smi } })); // right options first; the trainer shuffles
+    for (const smi of wrong) if (!seen.has(canon(smi)) && options.length < 4 + pick.majors.length - 1) { seen.add(canon(smi)); options.push({ mol: { smi } }); }
+    const rightIdx = pick.majors.map((_, i) => i);
 
+    const labelA = pick.dbl.a + 1, labelB = pick.dbl.b + 1;
     const steps = [
-      {
+      pick.tie ? {
+        prompt: t('Bakstelėkite anglies atomus, kurie gali prisijungti protoną $H+$.', 'Tap the carbons that can receive the proton $H+$.'),
+        kind: 'atoms', mol: { smi: pick.smi, opts: { numbers: 'all' } }, answer: [pick.dbl.a, pick.dbl.b],
+        hint: t('Palyginkite, kokie karbokatijonai susidarytų, kai protonas prisijungia prie vieno ar kito dvigubo ryšio atomo.', 'Compare the carbocations that would form when the proton goes to one carbon or the other.'),
+        solution: t('Abu atomai (Nr. ' + labelA + ' ir ' + labelB + ') duoda tokio paties tipo karbokatijoną, todėl prisijungti gali prie abiejų ir susidaro du produktai.',
+          'Both carbons (no. ' + labelA + ' and ' + labelB + ') give the same type of carbocation, so the proton can go to either and two products form.')
+      } : {
         prompt: t('Bakstelėkite anglies atomą, kuris prisijungia protoną $H+$.', 'Tap the carbon that receives the proton $H+$.'),
         kind: 'atoms', mol: { smi: pick.smi, opts: { numbers: 'all' } }, answer: [pick.hC],
-        hint: t('$H+$ jungiasi prie to dvigubo ryšio atomo, kuris turi daugiau vandenilių. Ant kito atomo lieka teigiamas krūvis.',
-          '$H+$ bonds to the double-bond carbon that already carries more hydrogens. The other carbon is left with the positive charge.'),
-        solution: t('Atomas Nr. ' + (pick.hC + 1) + ' turi daugiau vandenilių, todėl jis gauna $H+$. Teigiamas krūvis lieka ant atomo Nr. ' + (pick.xC + 1) + '.',
-          'Carbon no. ' + (pick.hC + 1) + ' has more hydrogens, so it receives $H+$. The positive charge stays on carbon no. ' + (pick.xC + 1) + '.')
+        hint: t('Palyginkite, koks karbokatijonas susidarytų, kai protonas prisijungia prie vieno ar kito dvigubo ryšio atomo.', 'Compare the carbocation that would form when the proton goes to one carbon or the other.'),
+        solution: t('Protonas jungiasi prie atomo Nr. ' + (pick.hC + 1) + ', nes ant atomo Nr. ' + (pick.xC + 1) + ' lieka stabilesnis karbokatijonas: ' + CATION[pick.cls].lt + '.',
+          'The proton goes to carbon no. ' + (pick.hC + 1) + ', because carbon no. ' + (pick.xC + 1) + ' is left as the more stable cation: a ' + CATION[pick.cls].en + '.')
       },
       {
-        prompt: t('Koks yra pagrindinis produktas?', 'What is the main product?'),
-        kind: 'choice', options, answer: 0,
-        hint: t('Pirmiausia išmeskite variantus, kuriuose prisijungė ne vienas HX arba halogenas yra ne ten, kur susidaro stabilesnis karbokatijonas.',
-          'First rule out the options that are not a single HX addition, or have the halogen where the less stable cation would form.'),
+        prompt: pick.tie ? t('Pažymėkite visus produktus, kurių susidaro panašiai.', 'Pick every product that forms in comparable amounts.') : t('Koks yra pagrindinis produktas?', 'What is the main product?'),
+        kind: pick.tie ? 'multi' : 'choice', options, answer: pick.tie ? rightIdx : 0,
+        hint: t('Visi variantai turi tą pačią formulę, todėl lemia tik halogeno vieta. Kur jis jungiasi: prie teigiamo atomo ar prie neutralaus?', 'All options have the same formula, so only the place of the halogen matters. Does it bond to the positive carbon or to a neutral one?'),
         solution: [
-          {
-            p: t('Susidaro ' + WORDS.lt[pick.cls - 1] + ' karbokatijonas, ir halogenas jungiasi būtent prie jo.',
-              'A ' + WORDS.en[pick.cls - 1] + ' carbocation forms, and the halogen bonds to exactly that carbon.')
-          },
-          { mol: { smi: pick.major } }
-        ]
+          { p: t('Halogenas jungiasi prie katijono atomo. Susidaro: ' + CATION[pick.cls].lt + '.', 'The halogen bonds to the carbon of the cation. The cation is a ' + CATION[pick.cls].en + '.') }
+        ].concat(pick.majors.map(smi => ({ mol: { smi } })))
       }
     ];
-    const lt = name.name(pick.major, { lang: 'lt' }), en = name.name(pick.major, { lang: 'en' });
-    if (lt && en) {                                           // a name step only where the namer can supply the names
+    const lt = name.name(pick.majors[0], { lang: 'lt' }), en = name.name(pick.majors[0], { lang: 'en' });
+    if (!pick.tie && lt && en) {                              // a name step only where the namer can supply the names
       steps.push({
         prompt: t('Pavadinkite produktą.', 'Name the product.'),
-        kind: 'name', mol: { smi: pick.major }, answer: { smi: pick.major },
-        hint: t('Raskite ilgiausią grandinę ir sunumeruokite ją taip, kad pakaitų numeriai būtų kuo mažesni.',
-          'Find the longest chain and number it so the substituents get the lowest numbers.'),
+        kind: 'name', mol: { smi: pick.majors[0] }, answer: { smi: pick.majors[0] },
+        hint: t('Raskite ilgiausią grandinę ir sunumeruokite ją taip, kad pakaitų numeriai būtų kuo mažesni.', 'Find the longest chain and number it so the substituents get the lowest numbers.'),
         solution: t(lt.name, en.name)
       });
     }
@@ -433,8 +467,8 @@ A generator picks a substrate, asks the engine for the result, builds plausible 
     return {
       q: [{ scheme: { items: [{ smi: pick.smi }, { plus: true }, { smi: pick.X }, { arrow: '→' }] } }],
       steps,
-      why: t('HX prijungimas vyksta per karbokatijoną. Protonas pasirenka tą dvigubo ryšio atomą, po kurio lieka stabilesnis katijonas (tretinis > antrinis > pirminis), o halogenas jungiasi prie teigiamo atomo. Todėl pagrindinis produktas yra Markovnikovo, o ne atvirkštinis.',
-        'HX addition goes through a carbocation. The proton picks the double-bond carbon that leaves the more stable cation (tertiary > secondary > primary), and the halogen bonds to the positive carbon. That is why the main product follows Markovnikov’s rule and not the reverse.'),
+      why: t('HX prijungimas vyksta per karbokatijoną. Protonas pasirenka tą dvigubo ryšio atomą, po kurio lieka stabilesnis katijonas (benzilkatijonas > tretinis > antrinis > pirminis), o halogenas jungiasi prie teigiamo atomo. Kai abu katijonai vienodi, susidaro abu produktai.',
+        'HX addition goes through a carbocation. The proton picks the double-bond carbon that leaves the more stable cation (benzylic > tertiary > secondary > primary), and the halogen bonds to the positive carbon. When both cations are alike, both products form.'),
       src: 'L7 p9'
     };
   }
@@ -567,13 +601,13 @@ Tap the atom that gets H+, choose the carbocation (the third option is a typical
           kind: 'choice',
           options: [{ text: t('AE', 'AE') }, { text: t('AN', 'AN') }, { text: t('SR', 'SR') }, { text: t('SN1', 'SN1') }],
           answer: 0,
-          hint: t('Dvigubą ryšį atakuoja elektrofilas, ir vyksta prijungimas.', 'An electrophile attacks the double bond, and the molecule adds up.'),
+          hint: t('Dvigubą ryšį atakuoja elektrofilas, ir vyksta prijungimas.', 'An electrophile attacks the double bond, and the reagent adds across it.'),
           solution: t('AE: elektrofilinis prijungimas. Elektrofilas $H+$ atakuoja $π$ ryšį, po to nukleofilas $Br-$ prisijungia prie karbokatijono.',
             'AE: electrophilic addition. The electrophile $H+$ attacks the $π$ bond, then the nucleophile $Br-$ bonds to the carbocation.')
         }
       ],
-      why: t('Alkenas yra nukleofilas: jo $π$ elektronai atakuoja $H+$. Protonas jungiasi taip, kad susidarytų stabilesnis tretinis katijonas, o bromidas tada prisijungia prie jo. Šie du žingsniai ir yra elektrofilinis prijungimas (AE).',
-        'An alkene is a nucleophile: its $π$ electrons attack $H+$. The proton bonds so that the more stable tertiary cation forms, and bromide then bonds to it. These two steps are electrophilic addition (AE).'),
+      why: t('Alkenas yra nukleofilas: jo $π$ elektronai atakuoja $H+$. Protonas jungiasi taip, kad susidarytų stabilesnis tretinis katijonas, o bromidas tada prisijungia prie jo. Šie du žingsniai ir yra elektrofilinis prijungimas, žymimas AE.',
+        'An alkene is a nucleophile: its $π$ electrons attack $H+$. The proton bonds so that the more stable tertiary cation forms, and bromide then bonds to it. These two steps are electrophilic addition, named AE.'),
       src: 'L7 p9',
       claims: [
         { react: ['ae.hx', ['CC(C)=CC'], { X: 'Br' }, 'CCC(C)(C)Br'] },
