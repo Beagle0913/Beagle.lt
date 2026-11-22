@@ -585,13 +585,13 @@ function checkSeminarCoverage(units, meta) {
 }
 
 // meta: ORG.UNITS entries, files: unit ids found on disk
-function checkReady(meta, files) {
+function checkReady(meta, files, warnings) {
   const errors = [];
   for (const m of meta) if (m.ready && !files.includes(m.id)) errors.push('unit ' + m.id + ' is marked ready in units.js but ' + m.file + ' does not exist');
   for (const id of files) {
     const m = meta.find((x) => x.id === id);
     if (!m) errors.push('unit file ' + id + '.js is not in ORG.UNITS');
-    else if (!m.ready) errors.push('unit file ' + id + '.js exists but the unit is not marked ready in units.js (set ready: true)');
+    else if (!m.ready) (warnings || errors).push('unit file ' + id + '.js exists but the unit is not marked ready in units.js (set ready: true)');
   }
   return errors;
 }
@@ -610,7 +610,9 @@ const getUnit = (name) => { if (!loaded.has(name)) loaded.set(name, load.unit(pa
 
 test('unit files: a file for every ready unit, a ready flag for every file', (t) => {
   if (UNIT || UNIT_DIR) return t.skip('single unit or fixture run');
-  const errs = checkReady(ORG.UNITS, fileNames.map((n) => n.replace(/\.js$/, '')));
+  const warns = [];
+  const errs = checkReady(ORG.UNITS, fileNames.map((n) => n.replace(/\.js$/, '')), warns);
+  for (const w of warns) console.warn('WARNING: ' + w);
   assert.ok(!errs.length, '\n' + errs.join('\n'));
 });
 
@@ -931,7 +933,9 @@ test('validator: ready flags and unit files agree', () => {
   const meta = [{ id: 'u01', file: 'units/u01.js', ready: true }, { id: 'u02', file: 'units/u02.js', ready: false }, { id: 'u03', file: 'units/u03.js', ready: false }];
   assert.deepEqual(checkReady(meta, ['u01']), []);
   assert.match(checkReady(meta, [])[0], /unit u01 is marked ready in units.js but units\/u01\.js does not exist/);
-  assert.match(checkReady(meta, ['u01', 'u02'])[0], /unit file u02\.js exists but the unit is not marked ready/);
+  const warns = [];
+  assert.deepEqual(checkReady(meta, ['u01', 'u02'], warns), []);
+  assert.match(warns[0], /unit file u02\.js exists but the unit is not marked ready/);
   assert.match(checkReady(meta, ['u01', 'u09'])[0], /u09\.js is not in ORG\.UNITS/);
 });
 

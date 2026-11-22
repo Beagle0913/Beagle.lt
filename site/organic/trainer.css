@@ -172,7 +172,7 @@ input.in:disabled { opacity: 1; color: var(--ink); -webkit-text-fill-color: var(
 .orderitem.right { border-color: var(--good); background: var(--good-bg); }
 .orderitem.shown { border-color: var(--ink2); }
 .ordno { font: 600 13px var(--ui); color: var(--ink2); width: 1.4em; }
-.orderitem .optbody { flex: 1; }
+.orderitem .optbody { flex: 1; min-width: 0; overflow-wrap: anywhere; }
 .mv { width: 40px; height: 40px; border: 1.5px solid var(--line); background: var(--sheet); border-radius: 6px; font-size: 18px; line-height: 1; }
 .mv:hover:not(:disabled) { border-color: var(--accent); }
 .mv:disabled { opacity: .35; cursor: default; }

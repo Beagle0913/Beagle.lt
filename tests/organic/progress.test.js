@@ -140,9 +140,9 @@ test('the exam weights are exposed', () => {
 test('exam labels: spans come from the ready units and the missing ones are listed', () => {
   const O = ctx.ORG;
   const mt2 = O.examInfo('mt2');
-  assert.equal(mt2.span, '6–13');
-  assert.equal(mt2.missing, '14–16');
-  assert.equal(mt2.partial, true);
+  assert.equal(mt2.span, '6–16');
+  assert.equal(mt2.missing, '');
+  assert.equal(mt2.partial, false);
   assert.equal(O.examInfo('mt1').span, '');
   assert.equal(O.examAvailable('mt1'), false);
   assert.equal(O.examAvailable('mt2'), true);

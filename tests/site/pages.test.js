@@ -77,8 +77,8 @@ test('the organic chemistry trainer is listed and its page follows the contract'
   assert.ok(t, 'organic is in trainers.json');
   assert.equal(t.path, 'organic/');
   assert.deepEqual(t.name, { lt: 'Organinė chemija', en: 'Organic chemistry' });
-  assert.equal(t.summary.lt, 'Alkanai, alkenai, dienai ir alkinai, arenai, halogendariniai, alkoholiai, fenoliai, tioliai ir eteriai, aldehidai ir ketonai: reakcijos, mechanizmai ir uždaviniai.');
-  assert.equal(t.summary.en, 'Alkanes, alkenes, dienes and alkynes, arenes, haloalkanes, alcohols, phenols, thiols and ethers, aldehydes and ketones: reactions, mechanisms and problems.');
+  assert.equal(t.summary.lt, 'Alkanai, alkenai, dienai ir alkinai, arenai, halogendariniai, alkoholiai, fenoliai, tioliai ir eteriai, aldehidai ir ketonai, karboksirūgštys ir jų dariniai, aminai, azoto heterociklai: reakcijos, mechanizmai ir uždaviniai.');
+  assert.equal(t.summary.en, 'Alkanes, alkenes, dienes and alkynes, arenes, haloalkanes, alcohols, phenols, thiols and ethers, aldehydes and ketones, carboxylic acids and derivatives, amines, nitrogen heterocycles: reactions, mechanisms and problems.');
   assert.deepEqual(t.note, { lt: 'Pagal VU GMC Organinės chemijos kursą · LT / EN', en: 'Based on the VU GMC Organic Chemistry course · LT / EN' });
   const row = (html, prefix) => {
     const m = html.match(new RegExp(`<li>\\s*<a class="row" href="${prefix}organic/">[^]*?</li>`));
