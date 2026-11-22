@@ -177,8 +177,8 @@ function claimCheck(claim, unchecked) {
       return got === v[1] ? null : v[0] + ' has ' + got + ' stereoisomers, not ' + v[1];
     }
     case 'isomers': {
-      const got = S.isomers(v[0], v[2] ? { filter: v[2] } : {}).length;
-      return got === v[1] ? null : v[0] + (v[2] ? ' (' + v[2] + ')' : '') + ' has ' + got + ' constitutional isomers, not ' + v[1];
+      const got = S.isomers(v[0], Object.assign(v[2] ? { filter: v[2] } : {}, isObj(v[3]) ? v[3] : {})).length;
+      return got === v[1] ? null : v[0] + (v[2] ? ' (' + v[2] + ')' : '') + (isObj(v[3]) ? ' ' + JSON.stringify(v[3]) : '') + ' has ' + got + ' constitutional isomers, not ' + v[1];
     }
     case 'hyb': {
       const got = C.hybridization(need(v[0]), v[1]);
@@ -355,24 +355,25 @@ function checkUnit(unit, opts) {
     }
     if (s.kind === 'name' && isObj(s.answer)) {
       const a = s.answer;
+      // answer.extra {lt, en, src}: extra accepted names the namer does not produce; src is required, every extra is listed for review
+      const ex = isObj(a.extra) ? a.extra : null;
+      if (ex) {
+        if (!isStr(ex.src)) R.err(loc, 'answer.extra needs a src (where the extra names come from)', tag);
+        for (const lang of ['lt', 'en']) (Array.isArray(ex[lang]) ? ex[lang] : []).forEach((n) => R.extras.add(lang + ' "' + n + '" (' + (ex.src || 'no src') + ')'));
+      }
       if (isStr(a.smi) && !(Array.isArray(a.lt) && Array.isArray(a.en))) {
         if (parse(a.smi).err) return;
         const r = namerAnswer(a.smi);
         if (!r || r.error) R.err(loc, 'answer.smi "' + a.smi + '" is outside the namer\'s scope: write the names in answer.lt and answer.en instead', tag);
       } else if (Array.isArray(a.lt) && Array.isArray(a.en) && a.lt.length && a.en.length && isObj(s.mol) && isStr(s.mol.smi)) {
         if (parse(s.mol.smi).err) return;
-        // every accepted name must be the namer's name, one of its alternatives or its trivial name, unless listed in answer.extra
+        // every name in answer.lt / answer.en must be the namer's name, one of its alternatives or its trivial name
         const r = namerAnswer(s.mol.smi);
-        const ex = isObj(a.extra) ? a.extra : null;
-        if (ex && !isStr(ex.src)) R.err(loc, 'answer.extra needs a src (where the extra names come from)', tag);
         if (!r || r.error) R.unchecked.add(s.mol.smi);
         else for (const lang of ['lt', 'en']) {
-          const extra = new Set((ex && Array.isArray(ex[lang]) ? ex[lang] : []).map((n) => ORG.check.normName(n).key));
           a[lang].forEach((n) => {
-            const k = ORG.check.normName(n).key;
-            if (r[lang].has(k)) return;
-            if (extra.has(k)) { R.extras.add(lang + ' "' + n + '" for ' + s.mol.smi + ' (' + (ex.src || 'no src') + ')'); return; }
-            R.err(loc, 'accepted ' + lang + ' name "' + n + '" is wrong for ' + s.mol.smi + ' (namer: ' + r.show[lang].join(' / ') + '); if it is a real course spelling the namer does not produce, list it in answer.extra {lt, en, src}', tag);
+            if (r[lang].has(ORG.check.normName(n).key)) return;
+            R.err(loc, 'accepted ' + lang + ' name "' + n + '" is wrong for ' + s.mol.smi + ' (namer: ' + r.show[lang].join(' / ') + '); a real course spelling the namer does not produce goes in answer.extra {lt, en, src}', tag);
           });
         }
       } else R.unchecked.add('(name step without molecule)');
@@ -617,6 +618,7 @@ test('validator: wrong claims, one error each, naming unit, type, problem and cl
     [{ ez: ['C/C=C/C', 1, 2, 'Z'] }, /bond 1-2 of C.C=C.C is E, not Z/],
     [{ centres: ['C[C@H](N)C(=O)O', [0]] }, /has stereocentres \[1\], not \[0\]/],
     [{ stereoisomers: ['C[C@H](N)C(=O)O', 4] }, /has 2 stereoisomers, not 4/],
+    [{ isomers: ['C4H8', 5] }, /C4H8 has 3 constitutional isomers, not 5/],
     [{ isomers: ['C5H12', 4] }, /C5H12 has 3 constitutional isomers, not 4/],
     [{ hyb: ['C=C', 0, 'sp3'] }, /is sp2, not sp3/],
     [{ carbon: ['CC(C)C', 1, 2] }, /is class 3, not 2/],
@@ -631,6 +633,10 @@ test('validator: wrong claims, one error each, naming unit, type, problem and cl
     const u = fresh(); bankOf(u).claims = [claim];
     only(u, new RegExp('^\\[u01\\] type u01\\.bank, problem u01\\.bank\\.1, claims\\[0\\]: .*?' + re.source));
   }
+});
+
+test('validator: isomers claim options', () => {
+  for (const c of [['C4H8', 5, 'any', { rings: true }], ['C4H8', 3]]) { const u = fresh(); bankOf(u).claims = [{ isomers: c }]; assert.deepEqual(run(u).errors, [], JSON.stringify(c)); }
 });
 
 test('validator: right claims pass (fixture carries one of each kind)', () => {
@@ -650,9 +656,9 @@ test('validator: names outside the namer scope are counted, not failed', () => {
 test('validator: name steps and molecule captions are checked against the namer', () => {
   let u = fresh(); bankOf(u).steps[6].answer = { lt: ['pentanas', 'heksanas'], en: ['pentane'] };
   only(u, /type u01\.bank, problem u01\.bank\.1, steps\[6\]: accepted lt name "heksanas" is wrong for CCCCC \(namer: pentanas\)/);
-  u = fresh(); bankOf(u).steps[6].answer = { lt: ['pentanas'], en: ['pentane', 'pentan'], extra: { en: ['pentan'] } };
+  u = fresh(); bankOf(u).steps[6].answer = { lt: ['pentanas'], en: ['pentane'], extra: { en: ['pentan'] } };
   only(u, /answer\.extra needs a src/);
-  u = fresh(); bankOf(u).steps[6].answer = { lt: ['pentanas'], en: ['pentane', 'pentan'], extra: { en: ['pentan'], src: 'L1 p3' } };
+  u = fresh(); bankOf(u).steps[6].answer = { lt: ['pentanas'], en: ['pentane'], extra: { en: ['pentan'], src: 'L1 p3' } };
   const rx = run(u); assert.deepEqual(rx.errors, []); assert.match(rx.stats.extras[0], /en "pentan" for CCCCC \(L1 p3\)/);
   u = fresh(); bankOf(u).q[1] = { mol: { smi: 'CCCCC', name: T('butanas', 'butane') } };
   only(u, /problem u01\.bank\.1, q: molecule name: name of CCCCC is wrong/);
