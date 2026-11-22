@@ -17,7 +17,7 @@
     lt: [null, 'met', 'et', 'prop', 'but', 'pent', 'heks', 'hept', 'okt', 'non', 'dek', 'undek', 'dodek', 'tridek',
       'tetradek', 'pentadek', 'heksadek', 'heptadek', 'oktadek', 'nonadek', 'eikoz'],
     en: [null, 'meth', 'eth', 'prop', 'but', 'pent', 'hex', 'hept', 'oct', 'non', 'dec', 'undec', 'dodec', 'tridec',
-      'tetradec', 'pentadec', 'hexadec', 'heptadec', 'octadec', 'nonadec', 'eicos'],
+      'tetradec', 'pentadec', 'hexadec', 'heptadec', 'octadec', 'nonadec', 'icos'],
   };
   const MULT = {
     lt: ['', '', 'di', 'tri', 'tetra', 'penta', 'heksa', 'hepta', 'okta', 'nona', 'deka'],
@@ -37,6 +37,10 @@
     'aldehyde', 'ketone', 'alcohol', 'phenol', 'thiol', 'amine', 'alkene', 'alkyne'];
   const TERMINAL = { acid: 1, anhydride: 1, carboxylate: 1, ester: 1, acylhalide: 1, amide: 1, nitrile: 1, aldehyde: 1 };
   const SINGLE_ONLY = { carboxylate: 1, ester: 1, anhydride: 1 };
+
+  // flags of the current naming pass; extra passes with other flags give spelling variants for `alts`
+  const VAR0 = { deriv: false, stemK: false, sec: false, sys: false, triv: false };
+  let VAR = VAR0;
 
   class OutOfScope extends Error {}
   function out(msg) { throw new OutOfScope(msg || 'out of scope'); }
@@ -58,16 +62,18 @@
 
   // substituent object: lt, en names; cx: composed name (parentheses in English)
   function S(lt, en, cx) { return { lt, en, cx: !!cx }; }
-  const alphaKey = (name) => name.toLowerCase().replace(/^(tret|sec|tert)-/, '').replace(/[^a-z]/g, '');
+  const alphaKey = (name) => name.toLowerCase().replace(/^(tret|sec|tert|antr)-/, '').replace(/[^a-z]/g, '');
+  // enclosing marks: ( ) then [ ( ) ] then { [ ( ) ] }
+  const enclose = (nm) => (/\[/.test(nm) ? '{' + nm + '}' : /\(/.test(nm) ? '[' + nm + ']' : '(' + nm + ')');
 
   // ------------------------------------------------------------------
   // Model of the molecule
   // ------------------------------------------------------------------
 
   function makeModel(mol) {
-    const A = mol.atoms;
+    let A = mol.atoms;
     const n = A.length;
-    const nbr = mol.nbr;
+    let nbr = mol.nbr;
     if (n > 60) out('too large');
     const M = { mol, n, A, nbr, skip: new Array(n).fill(false), cation: null };
     M.el = (i) => A[i].el;
@@ -75,6 +81,18 @@
     M.arBond = (i, j) => mol.bondAt(i, j).order === 1.5;
 
     // components: one component, or an acid anion with one alkali cation
+    // a covalently written salt (CCC(=O)O[Na]) is treated like the ionic form
+    A.forEach((a, i) => {
+      if (CATION[a.el] && nbr[i].length === 1 && A[nbr[i][0]].el === 'O' && A[nbr[i][0]].h === 0 && a.charge === 0) {
+        M.skip[i] = true;
+        M.cation = a.el;
+        const o = nbr[i][0];
+        nbr = nbr.map((l) => l.filter((j) => j !== i));
+        A = A.map((x, k) => (k === o ? Object.assign({}, x, { charge: -1 }) : x));
+        M.nbr = nbr;
+        M.A = A;
+      }
+    });
     const comps = {};
     A.forEach((a, i) => { (comps[a.comp] = comps[a.comp] || []).push(i); });
     const ck = Object.keys(comps);
@@ -186,7 +204,6 @@
     }
     // groups on carbons: OH, SH, SO3H, amines (N not used by an amide)
     for (const c of M.carbons) {
-      if (M.gc[c] && M.gc[c].type !== 'ketone') { /* carbon of a carbonyl derivative may not carry OH/SH/N groups */ }
       for (const x of nbr[c]) {
         if (used[x]) continue;
         const e = el(x);
@@ -287,15 +304,16 @@
     const items = Object.keys(byName).map((k) => byName[k]).sort((p, q) => (alphaKey(p.s[lang]) < alphaKey(q.s[lang]) ? -1 : 1));
     return items.map((it, idx) => {
       const nm = it.s[lang];
-      const complex = hasDigit(nm) || (lang === 'en' && it.s.cx);
+      const complex = hasDigit(nm) || it.s.cx || /[()]/.test(nm);
+      const wrap = it.n > 1 ? complex : (hasDigit(nm) || (lang === 'en' && it.s.cx));
       const m = it.n > 1 ? (complex ? BIS[it.n] : mult(it.n, lang)) : '';
-      const t = m + (complex ? '(' + nm + ')' : nm);
+      const t = m + (wrap ? enclose(nm) : nm);
       return idx === 0 ? t : '(' + t + ')';
     }).join('');
   }
 
   const RETAINED = {
-    lt: { '1-metiletil': 'izopropil', '1-metilpropil': 'sec-butil', '2-metilpropil': 'izobutil', '1,1-dimetiletil': 'tret-butil', fenilmetil: 'benzil', etanoil: 'acetil', fenilmetanoil: 'benzoil', metanoil: 'formil', metiletenil: 'izopropenil' },
+    lt: { '1-metiletil': 'izopropil', '1-metilpropil': 'antr-butil', '2-metilpropil': 'izobutil', '1,1-dimetiletil': 'tret-butil', fenilmetil: 'benzil', etanoil: 'acetil', fenilmetanoil: 'benzoil', metanoil: 'formil', metiletenil: 'izopropenil' },
     en: { '1-methylethyl': 'isopropyl', '1-methylpropyl': 'sec-butyl', '2-methylpropyl': 'isobutyl', '1,1-dimethylethyl': 'tert-butyl', phenylmethyl: 'benzyl', ethanoyl: 'acetyl', phenylmethanoyl: 'benzoyl', methanoyl: 'formyl', '1-methylethenyl': 'isopropenyl' },
   };
 
@@ -377,7 +395,7 @@
         case 'acid': return S('karboksi', 'carboxy', false);
         case 'aldehyde': return S('formil', 'formyl', false);
         case 'nitrile': return S('cian', 'cyano', false);
-        case 'acylhalide': return S(HAL[g.hal].lt + 'karbonil', HAL[g.hal].en + 'carbonyl', true);
+        case 'acylhalide': return S(HAL[g.hal].lt + 'formil', HAL[g.hal].en + 'formyl', true);
         case 'ester': {
           const R = alkoxy(subst(M, g.r, g.oAtom));
           return S(R.lt + 'karbonil', R.en + 'carbonyl', true);
@@ -403,14 +421,15 @@
     const items = Object.keys(byName).map((k) => byName[k]).sort((p, q) => (alphaKey(p.s[lang]) < alphaKey(q.s[lang]) ? -1 : 1));
     return items.map((it) => {
       const nm = it.s[lang];
-      const complex = hasDigit(nm) || (lang === 'en' && it.s.cx);
+      const complex = hasDigit(nm) || it.s.cx || /[()]/.test(nm);
+      const wrap = it.n > 1 ? complex : (hasDigit(nm) || (lang === 'en' && it.s.cx));
       const m = it.n > 1 ? (complex ? BIS[it.n] : mult(it.n, lang)) : '';
-      return Array(it.n).fill('N').join(',') + '-' + m + (complex ? '(' + nm + ')' : nm);
-    }).join('-') + '-';
+      return Array(it.n).fill('N').join(',') + '-' + m + (wrap ? enclose(nm) : nm);
+    }).join('-');
   }
 
   // prefix text: groups of {loc, S}; omit locants when `show` is false
-  function prefixText(items, lang, show) {
+  function prefixText(items, lang, show, nobare) {
     const groups = {};
     items.forEach((it) => {
       const k = it.S[lang];
@@ -421,11 +440,11 @@
       const b = alphaKey(q.S[lang]);
       return a < b ? -1 : a > b ? 1 : 0;
     });
-    const bare = !show && list.length > 1 && !items.some((it) => typeof it.loc === 'string');
+    const bare = !show && !nobare && list.length > 1 && !items.some((it) => typeof it.loc === 'string');
     const texts = list.map((gr, gi) => {
       const nm = gr.S[lang];
-      const complex = hasDigit(nm) || (lang === 'en' && gr.S.cx);
       const cnt = gr.locs.length;
+      const complex = hasDigit(nm) || /[()]|^N[-,]/.test(nm) || (cnt > 1 ? gr.S.cx : (lang === 'en' && gr.S.cx));
       const locs = gr.locs.slice().sort((p, q) => {
         const pn = typeof p === 'string';
         const qn = typeof q === 'string';
@@ -434,7 +453,7 @@
         return p - q;
       });
       const m = cnt > 1 ? (complex ? BIS[cnt] : mult(cnt, lang)) : '';
-      const body = m + (complex ? '(' + nm + ')' : nm);
+      const body = m + (complex ? enclose(nm) : nm);
       const hasN = locs.some((l) => typeof l === 'string');
       if (bare) return body.charAt(0) === '(' || (gi !== 1 && !complex) ? body : '(' + body + ')';
       return (show || hasN ? locs.join(',') + '-' : '') + body;
@@ -479,9 +498,22 @@
       core = core.replace(lang === 'lt' ? /il$/ : /yl$/, (sat ? 'an' : '') + ending[lang]);
     }
     let name = pref ? (/^[0-9(]/.test(core) ? pref + '-' + core : pref + core) : core;
+    return retained(lang, name);
+  }
+
+  function retained(lang, name) {
     const map = RETAINED[lang];
-    if (map[name]) name = map[name];
-    return name;
+    const keep = { fenilmetil: 1, etanoil: 1, fenilmetanoil: 1, metanoil: 1, phenylmethyl: 1, ethanoyl: 1, phenylmethanoyl: 1, methanoyl: 1 };
+    if (VAR.sys && !keep[name]) {
+      const sys = { en: { '1-methylethyl': 'propan-2-yl', '1-methylpropyl': 'butan-2-yl', '1,1-dimethylethyl': '2-methylpropan-2-yl' } };
+      return (sys[lang] || {})[name] || name;
+    }
+    if (VAR.sec && name === '1-metilpropil') return 'sec-butil';
+    if (VAR.triv) {
+      const tv = { lt: { etenil: 'vinil', '2-propenil': 'alil' }, en: { ethenyl: 'vinyl', 'prop-2-en-1-yl': 'allyl' } };
+      if (tv[lang][name]) return tv[lang][name];
+    }
+    return map[name] || name;
   }
 
   // chain radical, attached at x (position 1), `from` is the attaching atom
@@ -536,14 +568,13 @@
         if (o === 2) en.push(i + 1);
         if (o === 3) inn.push(i + 1);
       }
-      const key = [sortNum(items.map((it) => it.loc)).join(',')];
       const ending = acyl ? { lt: 'oil', en: 'oyl' } : null;
       const ltName = radicalAssemble('lt', items, en, inn, p.length, false, false, ending);
       const enName = radicalAssemble('en', items, en, inn, p.length, false, false, ending);
       const cand = { lt: ltName, en: enName, key: sortNum(items.map((it) => it.loc)) };
       if (!bestName || cmpArr(cand.key, bestName.key) < 0 || (cmpArr(cand.key, bestName.key) === 0 && cand.lt < bestName.lt)) bestName = cand;
     }
-    const simple = !hasDigit(bestName.lt) && /^(methyl|ethyl|propyl|butyl|pentyl|hexyl|heptyl|octyl|nonyl|decyl|isopropyl|isobutyl|sec-butyl|tert-butyl|ethenyl|ethynyl|acetyl|isopropenyl)$/.test(bestName.en);
+    const simple = !hasDigit(bestName.lt) && /^(methyl|ethyl|propyl|butyl|pentyl|hexyl|heptyl|octyl|nonyl|decyl|isopropyl|isobutyl|sec-butyl|tert-butyl|ethenyl|ethynyl|acetyl|isopropenyl|vinyl|allyl)$/.test(bestName.en);
     const r = S(bestName.lt, bestName.en, !simple && !/^(benzyl)$/.test(bestName.en));
     if (acyl) r.acyl = true;
     return r;
@@ -589,10 +620,11 @@
     return S(lt, en, !/^(phenyl|cyclo[a-z]+yl)$/.test(en));
   }
 
-  function alphaVec(items) {
+  function alphaVec(items, lang) {
+    lang = lang || 'lt';
     return items.slice().sort((p, q) => {
-      const a = alphaKey(p.S.lt);
-      const b = alphaKey(q.S.lt);
+      const a = alphaKey(p.S[lang]);
+      const b = alphaKey(q.S[lang]);
       return a < b ? -1 : a > b ? 1 : p.loc - q.loc;
     }).map((it) => it.loc);
   }
@@ -608,9 +640,18 @@
   // Parent candidates
   // ------------------------------------------------------------------
 
-  function chains(M) {
-    // a nitrile carbon is part of a chain only when the nitrile is the principal group (else it is a cyano prefix)
-    const acSet = new Set(M.ac.filter((i) => M.T === 'nitrile' || !(M.gc[i] && M.gc[i].type === 'nitrile')));
+  // carbons that are not chain atoms: nitrile carbons (cyano) and, as the course writes them, the carbons of
+  // lower acid derivatives (karbamoil, chlorformil, alkoksikarbonil); T-group carbons when the suffix is carboxylic acid
+  function chains(M, exo) {
+    const T = M.T;
+    const skip = (i) => {
+      const g = M.gc[i];
+      if (!g) return false;
+      if (g.type === T) return !!exo && TERMINAL[T] === 1 && g.type !== 'anhydride';
+      if (g.type === 'nitrile') return true;
+      return !VAR.deriv && (g.type === 'amide' || g.type === 'acylhalide' || g.type === 'ester');
+    };
+    const acSet = new Set(M.ac.filter((i) => !skip(i)));
     const res = [];
     function dfs(path) {
       const last = path[path.length - 1];
@@ -623,11 +664,13 @@
       }
     }
     acSet.forEach((u) => dfs([u]));
-    return res.map((atoms) => ({ kind: 'chain', atoms, set: new Set(atoms), arom: false }));
+    return res.map((atoms) => ({ kind: 'chain', atoms, set: new Set(atoms), arom: false, exoMode: !!exo }));
   }
 
   function candidates(M) {
-    const c = chains(M);
+    const c = chains(M, false);
+    const many = M.T && TERMINAL[M.T] && M.T !== 'anhydride' && M.G.filter((g) => g.type === M.T).length >= 2;
+    if (many) chains(M, true).forEach((x) => c.push(x));
     M.rings.forEach((r, k) => c.push({ kind: 'ring', atoms: r, set: new Set(r), arom: M.ringArom[k] }));
     return c;
   }
@@ -642,7 +685,7 @@
         return k.length === 1 ? k[0] : null;
       }
       default:
-        if (P.kind === 'chain') return P.set.has(g.c) ? g.c : null;
+        if (P.kind === 'chain' && !P.exoMode) return P.set.has(g.c) ? g.c : null;
         return (g.cn !== null && g.cn !== undefined && P.set.has(g.cn) && !P.set.has(g.c)) ? g.cn : null;
     }
   }
@@ -669,7 +712,7 @@
     P.mb = mb;
     P.counted = [];
     if (T === 'alkene' || T === 'alkyne') {
-      P.cnt = mb.filter((b) => b.o === (T === 'alkene' ? 2 : 3)).length;
+      P.cnt = mb.length; // the course counts double and triple bonds together (criterion b)
     } else if (T) {
       M.G.forEach((g) => {
         if (g.type !== T) return;
@@ -681,14 +724,14 @@
     P.consumed = new Set();
     P.counted.forEach(({ g }) => {
       g.atoms.forEach((i) => P.consumed.add(i));
-      if (P.kind === 'ring' && TERMINAL[g.type]) P.consumed.add(g.c);
+      if ((P.kind === 'ring' || P.exoMode) && TERMINAL[g.type]) P.consumed.add(g.c);
     });
     let nsub = 0;
     P.atoms.forEach((a) => {
       M.nbr[a].forEach((z) => { if (!P.set.has(z) && !P.consumed.has(z)) nsub++; });
     });
     P.nsub = nsub;
-    P.score = [P.cnt, mb.length, P.kind === 'ring' ? 1 : 0, P.arom ? 1 : 0, P.atoms.length, nsub];
+    P.score = [P.cnt, mb.length, P.exoMode ? 0 : 1, P.kind === 'ring' ? 1 : 0, P.arom ? 1 : 0, P.atoms.length, nsub];
   }
 
   // numbering ------------------------------------------------------------
@@ -733,8 +776,18 @@
     return P.kind === 'ring' ? P.atoms.length : Math.min(la, lb);
   }
 
-  function bestNumbering(M, P) {
+  // N-substituents of an amine or amide group (everything on N except the carbon in the parent)
+  function nSubsOf(M, g, anchor) {
+    if (g.type === 'amide') return g.nsub.map((j) => subst(M, j, g.nAtom));
+    if (g.type === 'amine') return g.carbons.filter((j) => j !== anchor).map((j) => subst(M, j, g.nAtom));
+    return [];
+  }
+
+  // The numbering is the same in both languages up to the alphabetical tie-break, which each language
+  // makes with its own names. N, N' labels count before that tie-break.
+  function bestNumbering(M, P, lang) {
     const subs = P.subs || (P.subs = substsOf(M, P));
+    if (!P.nS) P.nS = P.counted.map((c) => nSubsOf(M, c.g, c.anchor));
     let best = null;
     numberings(P).forEach((loc) => {
       const suf = sortNum(P.counted.map((c) => loc[c.anchor]));
@@ -743,7 +796,12 @@
       const all = sortNum(en.concat(inn));
       const pref = sortNum(subs.map((s) => loc[s.a]));
       const items = subs.map((s) => ({ loc: loc[s.a], S: s.S }));
-      const key = [suf, all, en, pref, alphaVec(items)];
+      // which N carries the substituents: N before N'
+      const order = P.counted.map((c, i) => i).sort((x, y) => loc[P.counted[x].anchor] - loc[P.counted[y].anchor]);
+      const labels = [];
+      const ntext = [];
+      order.forEach((ci, idx) => P.nS[ci].forEach((sb) => { labels.push(idx); ntext.push(idx + ':' + alphaKey(sb[lang])); }));
+      const key = [suf, all, en, pref, labels.sort((x, y) => x - y), alphaVec(items, lang), ntext.sort()];
       if (!best || cmpKey(key, best.key) < 0) best = { loc, key, suf, en, inn, items };
     });
     return best;
@@ -760,17 +818,14 @@
       suf: num.suf, en: num.en, inn: num.inn, prefix: num.items.map((it) => ({ loc: it.loc, S: it.S })),
       cation: M.cation, hal: null, esterR: null, P, num,
     };
-    const exoRing = P.kind === 'ring' && T && TERMINAL[T];
-    ir.exo = !!exoRing;
+    ir.exo = !!((P.kind === 'ring' || P.exoMode) && T && TERMINAL[T]);
     // N-substituents of amines and amides, with N, N' labels in the order of the locants
     const ord = P.counted.slice().sort((a, b) => num.loc[a.anchor] - num.loc[b.anchor]);
     const primes = ['N', "N'", "N''", "N'''"];
     ord.forEach(({ g, anchor }, idx) => {
       const lab = ord.length > 1 ? primes[idx] : 'N';
-      if (g.type === 'amide') {
-        g.nsub.forEach((j) => ir.prefix.push({ loc: lab, S: subst(M, j, g.nAtom) }));
-      } else if (g.type === 'amine') {
-        g.carbons.forEach((j) => { if (j !== anchor) ir.prefix.push({ loc: lab, S: subst(M, j, g.nAtom) }); });
+      if (g.type === 'amide' || g.type === 'amine') {
+        nSubsOf(M, g, anchor).forEach((sb) => ir.prefix.push({ loc: lab, S: sb }));
       } else if (g.type === 'ester') {
         ir.esterR = subst(M, g.r, g.oAtom);
       } else if (g.type === 'acylhalide') ir.hal = g.hal;
@@ -781,16 +836,16 @@
   function numPrefixOcc(ir) { return ir.prefix.filter((p) => typeof p.loc === 'number').length; }
 
   // which locants are written
-  function shows(ir, mode) {
+  function showsBase(ir, mode) {
     const n = ir.n;
     const T = ir.T;
     const unsatCount = ir.en.length + ir.inn.length;
     const hasT = T && T !== 'alkene' && T !== 'alkyne';
-    const term = !!(hasT && TERMINAL[T] && ir.kind === 'chain');
+    const term = !!(hasT && TERMINAL[T] && ir.kind === 'chain' && !ir.exo);
     const occ = numPrefixOcc(ir);
     const f = { suf: false, en: false, pref: false };
     if (mode === 'explicit') {
-      const g = shows(ir, 'lt');
+      const g = showsBase(ir, 'lt');
       if (ir.kind === 'chain' && n >= 3) {
         g.suf = !!(hasT && !term);
         g.en = unsatCount > 0;
@@ -827,85 +882,105 @@
     return f;
   }
 
+  // mode: 'lt' | 'iupac' | 'explicit' | { base, set } (a base mode with some flags forced)
+  function shows(ir, mode) {
+    const f = showsBase(ir, typeof mode === 'object' ? mode.base : mode);
+    // with an N locant the carbon locant is written too: 2-chlor-N-metiletanamidas
+    if (ir.n >= 2 && ir.prefix.some((p) => typeof p.loc === 'string')) f.pref = true;
+    if (typeof mode === 'object') Object.assign(f, mode.set);
+    return f;
+  }
+
+  function ltStem(n, next) {
+    const s = stemOf(n, 'lt');
+    // the course writes dec- before e and i (decinas, oktadeceno rūgštis) and dek- before a
+    if (n >= 10 && /k$/.test(s) && !VAR.stemK && /^[ei]/.test(next)) return s.slice(0, -1) + 'c';
+    return s;
+  }
+
+  const BENZENE_EN = { acid: 'benzoic acid', aldehyde: 'benzaldehyde', amide: 'benzamide', nitrile: 'benzonitrile', phenol: 'phenol', amine: 'aniline', ester: 'benzoate', carboxylate: 'benzoate' };
+
+  // the suffix word for the principal group; null for the Lithuanian acid on a chain (written "o rūgštis")
+  function suffixWord(T, lang, exo, m, hal) {
+    if (lang === 'lt') {
+      switch (T) {
+        case 'acid': return exo ? m + 'karboksirūgštis' : null;
+        case 'carboxylate': case 'ester': return exo ? 'karboksilatas' : 'oatas';
+        case 'acylhalide': return (exo ? m + 'karbonil' : m + 'oil') + m + hal.ltAn;
+        case 'amide': return m + (exo ? 'karboksamidas' : 'amidas');
+        case 'nitrile': return m + (exo ? 'karbonitrilas' : 'nitrilas');
+        case 'aldehyde': return m + (exo ? 'karbaldehidas' : 'alis');
+        case 'ketone': return m + 'onas';
+        case 'alcohol': case 'phenol': return m + 'olis';
+        case 'thiol': return m + 'tiolis';
+        case 'amine': return m + 'aminas';
+        case 'sulfonic': return m + 'sulfonrūgštis';
+        default: return out('suffix');
+      }
+    }
+    switch (T) {
+      case 'acid': return exo ? m + 'carboxylic acid' : em(m, 'oic acid');
+      case 'carboxylate': case 'ester': return exo ? 'carboxylate' : 'oate';
+      case 'acylhalide': return (exo ? m + 'carbonyl ' : m + 'oyl ') + m + hal.enAn;
+      case 'amide': return exo ? m + 'carboxamide' : em(m, 'amide');
+      case 'nitrile': return m + (exo ? 'carbonitrile' : 'nitrile');
+      case 'aldehyde': return exo ? m + 'carbaldehyde' : em(m, 'al');
+      case 'ketone': return em(m, 'one');
+      case 'alcohol': case 'phenol': return em(m, 'ol');
+      case 'thiol': return m + 'thiol';
+      case 'amine': return em(m, 'amine');
+      case 'sulfonic': return m + 'sulfonic acid';
+      default: return out('suffix');
+    }
+  }
+
+  // the unsaturated core of a parent word: stem + (a) + en/in endings, or stem + an
+  function unsatCore(ir, lang, sh, locFirst) {
+    const en = lang === 'en';
+    const parts = [];
+    if (!ir.arom && ir.en.length) parts.push({ k: 'en', locs: ir.en });
+    if (!ir.arom && ir.inn.length) parts.push({ k: en ? 'yn' : 'in', locs: ir.inn });
+    const ringPart = ir.kind === 'ring' ? (en ? 'cyclo' : 'ciklo') : '';
+    const next = parts.length ? (parts[0].locs.length === 1 ? parts[0].k : 'a') : 'a';
+    const stem0 = ir.arom ? 'benzen' : ringPart + (en ? stemOf(ir.n, 'en') : ltStem(ir.n, next));
+    let core;
+    if (parts.length) {
+      const first = parts[0];
+      core = stem0 + (first.locs.length > 1 ? 'a' : '');
+      parts.forEach((p, i) => {
+        const loc = sh.en ? p.locs.join(',') : '';
+        if (locFirst && i === 0) core = (loc ? loc + '-' : '') + core + mult(p.locs.length, lang) + p.k;
+        else core += (loc ? '-' + loc + '-' : '') + mult(p.locs.length, lang) + p.k;
+      });
+    } else core = ir.arom ? stem0 : stem0 + 'an';
+    return { core, hasUnsat: parts.length > 0 };
+  }
+
   // the parent word, Lithuanian (and English in the older locant-first style)
   function parentFront(ir, lang, sh) {
     const T = ir.T;
     const hasT = T && T !== 'alkene' && T !== 'alkyne';
     const en = lang === 'en';
-    const stem0 = ir.arom ? (en ? 'benzen' : 'benzen') : (ir.kind === 'ring' ? (en ? 'cyclo' : 'ciklo') : '') + stemOf(ir.n, lang);
-    const parts = [];
-    if (!ir.arom && ir.en.length) parts.push({ k: 'en', locs: ir.en });
-    if (!ir.arom && ir.inn.length) parts.push({ k: en ? 'yn' : 'in', locs: ir.inn });
-    const hasUnsat = parts.length > 0;
     const cnt = ir.count;
-    if (en && ir.arom && cnt === 1 && T) {
-      const hl = ir.hal ? HAL[ir.hal] : null;
-      const R = { acid: 'benzoic acid', aldehyde: 'benzaldehyde', amide: 'benzamide', nitrile: 'benzonitrile', phenol: 'phenol', amine: 'aniline', ester: 'benzoate', carboxylate: 'benzoate' };
-      if (R[T]) return R[T];
-      if (T === 'acylhalide') return 'benzoyl ' + hl.enAn;
-    }
-    let core;
-    if (hasUnsat) {
-      const first = parts[0];
-      core = (sh.en ? first.locs.join(',') + '-' : '') + stem0 + (first.locs.length > 1 ? 'a' : '') + mult(first.locs.length, lang) + first.k;
-      for (let i = 1; i < parts.length; i++) core += '-' + (sh.en ? parts[i].locs.join(',') + '-' : '') + mult(parts[i].locs.length, lang) + parts[i].k;
-    } else if (ir.arom) core = stem0;
-    else core = stem0 + 'an';
-    const locsTxt = ir.suf.join(',');
-    const ring = ir.kind === 'ring';
-    const m = cnt > 1 ? mult(cnt, lang) : '';
-    let word = '';
-    let cons = false; // English: suffix starts with a consonant
-    if (!hasT) {
-      return en ? core + 'e' : core + 'as';
-    }
-    const exo = ir.exo;
     const hal = ir.hal ? HAL[ir.hal] : null;
-    if (lang === 'lt') {
-      switch (T) {
-        case 'acid':
-          word = exo ? m + 'karboksirūgštis' : null;
-          if (word === null) return core + 'o ' + m + 'rūgštis';
-          break;
-        case 'carboxylate': case 'ester': word = exo ? 'karboksilatas' : 'oatas'; break;
-        case 'acylhalide': word = (exo ? m + 'karbonil' : m + 'oil') + m + hal.ltAn; break;
-        case 'amide': word = m + (exo ? 'karboksamidas' : 'amidas'); break;
-        case 'nitrile': word = m + (exo ? 'karbonitrilas' : 'nitrilas'); break;
-        case 'aldehyde': word = m + (exo ? 'karbaldehidas' : 'alis'); break;
-        case 'ketone': word = m + 'onas'; break;
-        case 'alcohol': word = m + 'olis'; break;
-        case 'phenol': word = m + 'olis'; break;
-        case 'thiol': word = m + 'tiolis'; break;
-        case 'amine': word = m + 'aminas'; break;
-        case 'sulfonic': word = m + 'sulfonrūgštis'; break;
-        default: out('suffix');
-      }
+    if (en && ir.arom && cnt === 1 && T) {
+      if (BENZENE_EN[T]) return BENZENE_EN[T];
+      if (T === 'acylhalide') return 'benzoyl ' + hal.enAn;
+    }
+    const { core, hasUnsat } = unsatCore(ir, lang, sh, true);
+    if (!hasT) return en ? core + 'e' : core + 'as';
+    const m = cnt > 1 ? mult(cnt, lang) : '';
+    const exo = ir.exo;
+    const locsTxt = ir.suf.join(',');
+    const word = suffixWord(T, lang, exo, m, hal);
+    if (!en) {
+      if (word === null) return core + 'o ' + m + 'rūgštis';
       if (ir.arom && cnt === 1 && T === 'phenol') return 'fenolis';
-      if (ir.arom && cnt === 1 && T === 'amine') return 'anilinas';
-      if (sh.suf && !TERMINAL[T] || sh.suf && exo) {
-        return hasUnsat ? core + '-' + locsTxt + '-' + word : locsTxt + '-' + core + word;
-      }
-      return core + word;
     }
-    // English, older locant-first style
-    switch (T) {
-      case 'acid': word = exo ? m + 'carboxylic acid' : em(m, 'oic acid'); break;
-      case 'carboxylate': case 'ester': word = exo ? 'carboxylate' : 'oate'; break;
-      case 'acylhalide': word = (exo ? m + 'carbonyl ' : m + 'oyl ') + m + hal.enAn; break;
-      case 'amide': word = exo ? m + 'carboxamide' : em(m, 'amide'); break;
-      case 'nitrile': word = m + (exo ? 'carbonitrile' : 'nitrile'); break;
-      case 'aldehyde': word = exo ? m + 'carbaldehyde' : em(m, 'al'); break;
-      case 'ketone': word = em(m, 'one'); break;
-      case 'alcohol': case 'phenol': word = em(m, 'ol'); break;
-      case 'thiol': word = m + 'thiol'; break;
-      case 'amine': word = em(m, 'amine'); break;
-      case 'sulfonic': word = m + 'sulfonic acid'; break;
-      default: out('suffix');
-    }
-    cons = !/^[aeiou]/.test(word);
+    // English: the final e of the stem ending stays before a consonant
     let base = core;
-    if (!hasUnsat && !ir.arom) base = stem0 + 'an';
-    if (cons) base += 'e';
+    if (en && !/[aeiou]/.test(word.charAt(0))) base += 'e';
+    // locants of the unsaturation came first; those of the suffix follow it, or lead when there is none
     if (sh.suf && (!TERMINAL[T] || exo)) {
       return hasUnsat ? base + '-' + locsTxt + '-' + word : locsTxt + '-' + base + word;
     }
@@ -916,46 +991,18 @@
   function parentNew(ir, sh) {
     const T = ir.T;
     const hasT = T && T !== 'alkene' && T !== 'alkyne';
-    const stem0 = ir.arom ? 'benzen' : (ir.kind === 'ring' ? 'cyclo' : '') + stemOf(ir.n, 'en');
-    const parts = [];
-    if (!ir.arom && ir.en.length) parts.push({ k: 'en', locs: ir.en });
-    if (!ir.arom && ir.inn.length) parts.push({ k: 'yn', locs: ir.inn });
-    const hasUnsat = parts.length > 0;
-    let base;
-    if (hasUnsat) {
-      base = stem0 + (parts[0].locs.length > 1 ? 'a' : '');
-      parts.forEach((p) => { base += (sh.en ? '-' + p.locs.join(',') + '-' : '') + mult(p.locs.length, 'en') + p.k; });
-    } else if (ir.arom) base = stem0;
-    else base = stem0 + 'an';
-    if (!hasT) return base + 'e';
+    const { core } = unsatCore(ir, 'en', sh, false);
+    if (!hasT) return core + 'e';
     const cnt = ir.count;
     const m = cnt > 1 ? mult(cnt, 'en') : '';
-    const exo = ir.exo;
     const hal = ir.hal ? HAL[ir.hal] : null;
-    let word;
-    switch (T) {
-      case 'acid': word = exo ? m + 'carboxylic acid' : em(m, 'oic acid'); break;
-      case 'carboxylate': case 'ester': word = exo ? 'carboxylate' : 'oate'; break;
-      case 'acylhalide': word = (exo ? m + 'carbonyl ' : m + 'oyl ') + m + hal.enAn; break;
-      case 'amide': word = exo ? m + 'carboxamide' : em(m, 'amide'); break;
-      case 'nitrile': word = m + (exo ? 'carbonitrile' : 'nitrile'); break;
-      case 'aldehyde': word = exo ? m + 'carbaldehyde' : em(m, 'al'); break;
-      case 'ketone': word = em(m, 'one'); break;
-      case 'alcohol': case 'phenol': word = em(m, 'ol'); break;
-      case 'thiol': word = m + 'thiol'; break;
-      case 'amine': word = em(m, 'amine'); break;
-      case 'sulfonic': word = m + 'sulfonic acid'; break;
-      default: out('suffix');
-    }
-    // retained names of the benzene ring with one group
+    const word = suffixWord(T, 'en', ir.exo, m, hal);
     if (ir.arom && cnt === 1) {
-      const R = { acid: 'benzoic acid', aldehyde: 'benzaldehyde', amide: 'benzamide', nitrile: 'benzonitrile', phenol: 'phenol', amine: 'aniline', ester: 'benzoate', carboxylate: 'benzoate' };
-      if (R[T]) return R[T];
+      if (BENZENE_EN[T]) return BENZENE_EN[T];
       if (T === 'acylhalide') return 'benzoyl ' + hal.enAn;
     }
-    const cons = !/^[aeiou]/.test(word);
-    const b = cons ? base + 'e' : base;
-    if (sh.suf && (!TERMINAL[T] || exo)) return b + '-' + ir.suf.join(',') + '-' + word;
+    const b = /[aeiou]/.test(word.charAt(0)) ? core : core + 'e';
+    if (sh.suf && (!TERMINAL[T] || ir.exo)) return b + '-' + ir.suf.join(',') + '-' + word;
     return b + word;
   }
 
@@ -971,7 +1018,7 @@
       return lang === 'lt' ? full.replace(/rūgštis$/, 'rūgšties anhidridas') : full.replace(/acid$/, 'anhydride');
     }
     const sh = shows(ir, mode);
-    const pref = prefixText(ir.prefix, lang, sh.pref);
+    const pref = prefixText(ir.prefix, lang, sh.pref, sh.nobare);
     const parent = style === 'new' ? parentNew(ir, sh) : parentFront(ir, lang, sh);
     let name = joinPrefix(pref, parent);
     if (ir.T === 'ester') {
@@ -1004,7 +1051,7 @@
     // ties: lowest locants, then the name
     let pick = null;
     best.forEach((P) => {
-      const num = bestNumbering(M, P);
+      const num = bestNumbering(M, P, 'lt');
       const ir = describe(M, P, num);
       const nm = render(ir, 'lt', 'lt', 'lt');
       const cand = { P, num, ir, nm };
@@ -1075,7 +1122,7 @@
     return '(' + list.map((x) => x.loc + x.d).join(',') + ')-';
   }
 
-  function toluene(ir, M, lang) {
+  function toluene(ir, lang) {
     // alternative names with toluene as the parent (course examples: 2-bromtoluenas)
     if (!ir.arom || ir.T || ir.kind !== 'ring') return null;
     const P = ir.P;
@@ -1090,18 +1137,66 @@
         const loc = {};
         for (let i = 0; i < m; i++) loc[P.atoms[(start + dir * i + m * 2) % m]] = i + 1;
         const others = items.filter((it) => it !== me).map((it) => ({ loc: loc[it.a], S: it.S }));
-        const key = [sortNum(others.map((o) => o.loc)), alphaVec(others)];
+        const key = [sortNum(others.map((o) => o.loc)), alphaVec(others, lang)];
         if (!best || cmpKey(key, best.key) < 0) best = { key, others };
       }
     });
     const o = best.others;
     const word = lang === 'lt' ? 'toluenas' : 'toluene';
     if (!o.length) return word;
-    const pref = prefixText(o, lang, !(o.length === 1 && false));
-    return joinPrefix(pref, word);
+    return joinPrefix(prefixText(o, lang, true), word);
   }
 
-  function nameMol(M, opts) {
+  // o-, m-, p- names of a disubstituted benzene (the course writes p-chlorbenzenkarboksirūgštis, p-dibrombenzenas)
+  function orthoMetaPara(ir, lang) {
+    if (!ir.arom || ir.kind !== 'ring' || ir.T === 'ester' || ir.T === 'carboxylate') return null;
+    const locs = ir.suf.concat(ir.prefix.filter((p) => typeof p.loc === 'number').map((p) => p.loc));
+    if (locs.length !== 2) return null;
+    const d = Math.abs(locs[0] - locs[1]);
+    const rel = d === 1 || d === 5 ? 0 : d === 2 || d === 4 ? 1 : 2;
+    const word = lang === 'lt' ? ['o-', 'm-', 'p-'][rel] : ['ortho-', 'meta-', 'para-'][rel];
+    const text = lang === 'lt' ? render(ir, 'lt', 'lt', { base: 'lt', set: { pref: false, suf: false, nobare: true } })
+      : render(ir, 'en', 'new', { base: 'iupac', set: { pref: false, suf: false, nobare: true } });
+    return word + text;
+  }
+
+  // names such as izopropilmetileteris, izopropiljodidas, fenilmetilketonas; null when the molecule is not of that kind
+  function functionalNames(M) {
+    const nonC = [];
+    M.A.forEach((a, i) => { if (!M.skip[i] && a.el !== 'C') nonC.push(i); });
+    if (nonC.length !== 1) return null;
+    const x = nonC[0];
+    const radical = (c, from) => { const r = subst(M, c, from); return !hasDigit(r.lt) && !r.acyl ? r : null; };
+    const join = (rs, lang, word, sep) => {
+      const by = rs.slice().sort((p, q) => (alphaKey(p[lang]) < alphaKey(q[lang]) ? -1 : alphaKey(p[lang]) > alphaKey(q[lang]) ? 1 : 0));
+      if (by[0][lang] === by[1][lang]) return mult(2, lang) + by[0][lang] + sep + word;
+      return by[0][lang] + sep + by[1][lang] + sep + word;
+    };
+    const el = M.el(x);
+    if (el === 'O' && M.G.length === 0 && M.nbr[x].length === 2) {
+      const rs = M.nbr[x].map((c) => radical(c, x));
+      if (rs.some((r) => !r)) return null;
+      const r = { lt: join(rs, 'lt', 'eteris', ''), en: join(rs, 'en', 'ether', ' ') };
+      // the course also writes the radicals the other way round (metilfenileteris)
+      if (rs[0].lt !== rs[1].lt) r.ltAlso = rs.slice().sort((p, q) => (alphaKey(p.lt) < alphaKey(q.lt) ? 1 : -1)).map((x) => x.lt).join('') + 'eteris';
+      return r;
+    }
+    if (HAL[el] && M.G.length === 0) {
+      const r = radical(M.nbr[x][0], x);
+      if (!r) return null;
+      return { lt: r.lt + HAL[el].ltAn, en: r.en + ' ' + HAL[el].enAn };
+    }
+    if (el === 'O' && M.G.length === 1 && M.G[0].type === 'ketone') {
+      const c = M.G[0].c;
+      const rs = M.nbr[c].filter((j) => j !== x).map((j) => radical(j, c));
+      if (rs.length !== 2 || rs.some((r) => !r)) return null;
+      return { lt: join(rs, 'lt', 'ketonas', ''), en: join(rs, 'en', 'ketone', ' ') };
+    }
+    return null;
+  }
+
+  // the main naming pass; `full` also builds the alternative spellings
+  function coreNames(M, stereo, full) {
     findGroups(M);
     validate(M);
     M.T = determineT(M);
@@ -1112,37 +1207,62 @@
       // two aromatic rings joined directly (biphenyl type) are not covered
       P.atoms.forEach((a) => M.nbr[a].forEach((z) => { if (M.ringOf[z] >= 0 && M.ringOf[z] !== M.ringOf[a] && M.ringArom[M.ringOf[z]]) out('ring assembly'); }));
     }
-    // all atoms must be accounted for: every heavy atom is in the parent, a group or a substituent
-    const lang = opts.lang;
+    const irLt = ir;
+    const numEn = bestNumbering(M, P, 'en');
+    const irEn = describe(M, P, numEn);
     const mol = M.mol;
-    let sPrefix = '';
-    if (opts.stereo && ORG.stereo) {
+    const pre = { lt: '', en: '' };
+    if (stereo && ORG.stereo) {
       if (ir.T === 'ester' || ir.T === 'carboxylate' || ir.T === 'anhydride') {
         const d = descriptorsFor(M, P, num, mol);
         if (d && d.length) out('stereo of esters');
-      } else sPrefix = stereoPrefix(descriptorsFor(M, P, num, mol));
+      } else {
+        pre.lt = stereoPrefix(descriptorsFor(M, P, num, mol));
+        pre.en = stereoPrefix(descriptorsFor(M, P, numEn, mol));
+      }
     }
-    const mainLt = render(ir, 'lt', 'lt', 'lt');
-    const bundle = { lt: [], en: [] };
-    // English main, IUPAC 2013 style
-    const mainEn = render(ir, 'en', 'new', 'iupac');
-    bundle.lt.push(render(ir, 'lt', 'lt', 'explicit'));
-    bundle.en.push(render(ir, 'en', 'old', 'lt'));
-    bundle.en.push(render(ir, 'en', 'new', 'lt'));
-    bundle.en.push(render(ir, 'en', 'old', 'explicit'));
-    bundle.en.push(render(ir, 'en', 'new', 'explicit'));
-    bundle.en.push(render(ir, 'en', 'old', 'iupac'));
+    const mainLt = render(irLt, 'lt', 'lt', 'lt');
+    const mainEn = render(irEn, 'en', 'new', 'iupac');
+    const res = { lt: { name: pre.lt + mainLt, alts: [] }, en: { name: pre.en + mainEn, alts: [] } };
+    if (!full) return res;
+
+    const A = { lt: [], en: [] };
+    A.lt.push(render(irLt, 'lt', 'lt', 'explicit'));
+    A.en.push(render(irEn, 'en', 'old', 'lt'), render(irEn, 'en', 'new', 'lt'), render(irEn, 'en', 'old', 'explicit'),
+      render(irEn, 'en', 'new', 'explicit'), render(irEn, 'en', 'old', 'iupac'));
+    const hasT = irLt.T && irLt.T !== 'alkene' && irLt.T !== 'alkyne';
+    const unsat = irLt.en.length + irLt.inn.length;
+    const termT = hasT && TERMINAL[irLt.T] && irLt.kind === 'chain' && !irLt.exo;
     // course-attested alternatives
-    const tl = toluene(ir, M, 'lt');
-    if (tl) { bundle.lt.push(tl); bundle.en.push(toluene(ir, M, 'en')); }
-    if (ir.T === 'amine' && ir.arom && ir.count === 1) {
-      bundle.lt.push(render(Object.assign({}, ir, { arom: true }), 'lt', 'lt', 'lt').replace(/anilinas$/, 'benzenaminas'));
+    const tl = toluene(irLt, 'lt');
+    if (tl) { A.lt.push(tl); A.en.push(toluene(irEn, 'en')); }
+    A.lt.push(orthoMetaPara(irLt, 'lt'));
+    A.en.push(orthoMetaPara(irEn, 'en'));
+    if (irLt.T === 'amine' && irLt.arom && irLt.count === 1) {
+      A.lt.push(mainLt.replace(/benzenaminas$/, 'anilinas'), mainLt.replace(/benzenaminas$/, 'fenilaminas'));
+      A.en.push(mainEn.replace(/aniline$/, 'benzenamine'));
     }
-    [mainEn].concat(bundle.en.slice()).forEach((x) => {
-      if (/sulfanyl/.test(x)) bundle.en.push(x.replace(/\(([a-z]+)sulfanyl\)/g, '$1thio').replace(/sulfanyl/g, 'mercapto'));
+    if (irLt.T === 'acylhalide') A.lt.push(mainLt.replace('etanoil', 'acetil').replace('benzenkarbonil', 'benzoil'));
+    [mainEn].concat(A.en.slice()).forEach((x) => {
+      if (/sulfanyl/.test(x)) A.en.push(x.replace(/\(([a-z]+)sulfanyl\)/g, '$1thio').replace(/sulfanyl/g, 'mercapto'));
     });
-    if (ir.T === 'amine' && ir.arom && ir.count === 1) bundle.en.push(mainEn.replace(/aniline$/, 'benzenamine'));
-    if (ir.T === 'amine' && M.G.length === 1) {
+    [mainLt, mainEn].forEach((x, i) => {
+      const r = i === 0 ? x.replace(/acetiloksi/g, 'acetoksi') : x.replace(/\(acetyloxy\)/g, 'acetoxy');
+      (i === 0 ? A.lt : A.en).push(r);
+    });
+    ['ethanoic acid', 'ethanamide', 'ethanenitrile', 'ethanoyl chloride', 'ethanoate'].forEach((w, i) => {
+      const to = ['acetic acid', 'acetamide', 'acetonitrile', 'acetyl chloride', 'acetate'][i];
+      A.en.push(mainEn.replace(new RegExp(w + '$'), to));
+    });
+    if (termT && irLt.count === 2 && irLt.n === 4 && !irLt.prefix.length && unsat === 1) A.lt.push(render(irLt, 'lt', 'lt', { base: 'lt', set: { en: false } }));
+    if (hasT && !termT && irLt.kind === 'chain' && irLt.count === 1 && unsat && irLt.suf[0] === 1) A.lt.push(render(irLt, 'lt', 'lt', { base: 'lt', set: { suf: false } }));
+    if (hasT && !termT && irLt.count === 1 && unsat && irLt.kind === 'ring') A.lt.push(render(irLt, 'lt', 'lt', { base: 'lt', set: { suf: true } }));
+    if (hasT && !termT && irLt.kind === 'chain' && irLt.count === 1 && irLt.n === 2 && irLt.prefix.length) A.lt.push(render(irLt, 'lt', 'lt', { base: 'lt', set: { suf: true } }));
+    if (hasT && irLt.n === 1 && irLt.kind === 'chain') {
+      if (/^N,N-/.test(mainLt)) A.lt.push(mainLt.replace(/^N,N-/, ''));
+      if (/^N,N-/.test(mainEn)) A.en.push(mainEn.replace(/^N,N-/, ''));
+    }
+    if (irLt.T === 'amine' && M.G.length === 1) {
       // functional (radical) names that the course also writes: etilmetilaminas, difenilaminas
       const nAtom = M.G[0].nAtom;
       const radicals = M.G[0].carbons.map((c) => subst(M, c, nAtom));
@@ -1150,35 +1270,60 @@
         const group = (lang) => {
           const by = {};
           radicals.forEach((r) => { by[r[lang]] = (by[r[lang]] || 0) + 1; });
-          return Object.keys(by).map((k) => (by[k] > 1 ? mult(by[k], lang) : '') + k).sort().join('');
+          const keys = Object.keys(by);
+          // Lithuanian: sorted as written (dimetiletilaminas); English: alphabetical ignoring di/tri
+          if (lang === 'en') keys.sort((p, q) => (alphaKey(p) < alphaKey(q) ? -1 : 1));
+          const txt = keys.map((k) => (by[k] > 1 ? mult(by[k], lang) : '') + k);
+          return (lang === 'lt' ? txt.sort() : txt).join('');
         };
-        bundle.lt.push(group('lt') + 'aminas');
-        bundle.en.push(group('en') + 'amine');
-        if (radicals.length === 2 && radicals.every((r) => r.lt === 'fenil')) bundle.lt.push('N,N-difenilaminas');
+        A.lt.push(group('lt') + 'aminas');
+        A.en.push(group('en') + 'amine');
+        if (radicals.length === 2 && radicals.every((r) => r.lt === 'fenil')) A.lt.push('N,N-difenilaminas');
       }
     }
-    if (ir.T === 'acylhalide') {
-      bundle.lt.push(mainLt.replace('etanoil', 'acetil').replace('benzenkarbonil', 'benzoil'));
-    }
-    const fin = (list, main) => {
+    const fn = functionalNames(M);
+    if (fn) { A.lt.push(fn.lt, fn.ltAlso); A.en.push(fn.en); }
+    const fin = (list, main, lang) => {
       const seen = new Set([main]);
-      const res = [];
-      list.forEach((x) => { if (x && !seen.has(x)) { seen.add(x); res.push(x); } });
-      return res;
+      const outList = [];
+      list.forEach((x) => {
+        if (!x) return;
+        const y = pre[lang] + x;
+        if (!seen.has(y) && y.length <= MAXLEN) { seen.add(y); outList.push(y); }
+      });
+      return outList;
     };
-    const wrap = (s) => (s ? sPrefix + s : s);
-    const lt = wrap(mainLt);
-    const en = wrap(mainEn);
-    return {
-      lt: { name: lt, alts: fin(bundle.lt.map(wrap), lt) },
-      en: { name: en, alts: fin(bundle.en.map(wrap), en) },
-    };
+    res.lt.alts = fin(A.lt, res.lt.name, 'lt');
+    res.en.alts = fin(A.en, res.en.name, 'en');
+    return res;
+  }
+
+  // naming with other spellings of substituents, stems or chains: their names go to `alts`
+  const PASSES = [{ deriv: true }, { stemK: true }, { sec: true }, { sys: true }, { triv: true }];
+
+  function nameMol(mol, stereo) {
+    VAR = VAR0;
+    const base = coreNames(makeModel(mol), stereo, true);
+    PASSES.forEach((flags) => {
+      VAR = Object.assign({}, VAR0, flags);
+      try {
+        const r = coreNames(makeModel(mol), stereo, false);
+        ['lt', 'en'].forEach((lang) => {
+          if (r[lang].name !== base[lang].name && r[lang].name.length <= MAXLEN && base[lang].alts.indexOf(r[lang].name) < 0) base[lang].alts.push(r[lang].name);
+        });
+      } catch (e) {
+        if (!(e instanceof OutOfScope)) { VAR = VAR0; throw e; }
+      }
+    });
+    VAR = VAR0;
+    return base;
   }
 
   // ------------------------------------------------------------------
   // Public API
   // ------------------------------------------------------------------
 
+  const MAXLEN = 80;
   const cache = new Map();
 
   function name(mol, opts) {
@@ -1188,22 +1333,24 @@
     if (typeof mol === 'string') key = mol + '|' + (opts.stereo ? 1 : 0);
     let both = key ? cache.get(key) : undefined;
     if (both === undefined) {
+      const m = typeof mol === 'string' ? chem.parse(mol) : mol; // bad SMILES throws here
       try {
-        const m = typeof mol === 'string' ? chem.parse(mol) : mol;
-        both = nameMol(makeModel(m), { stereo: !!opts.stereo });
+        both = nameMol(m, !!opts.stereo);
       } catch (e) {
+        VAR = VAR0;
         if (e instanceof OutOfScope) both = null;
-        else throw e; // bad SMILES and real bugs are not hidden
+        else throw e; // real bugs are not hidden
       }
+      if (both && (both.lt.name.length > MAXLEN || both.en.name.length > MAXLEN)) both = null;
       if (key) { if (cache.size > 2000) cache.clear(); cache.set(key, both); }
     }
     if (!both) return null;
     const r = both[lang];
-    if (r.name.length > 120) return null;
     return { name: r.name, alts: r.alts.slice() };
   }
 
-  function inScope(mol) { return name(mol, { lang: 'lt' }) !== null; }
+  // in scope when both languages can name it
+  function inScope(mol) { return name(mol, { lang: 'lt' }) !== null && name(mol, { lang: 'en' }) !== null; }
 
   // trivial names used in the course -----------------------------------
 
@@ -1231,6 +1378,10 @@
     ['NC(N)=O', 'karbamidas', 'urea'], ['OC(=O)c1ccccc1O', 'salicilo rūgštis', 'salicylic acid'],
     ['CC(=O)Oc1ccccc1C(O)=O', 'acetilsalicilo rūgštis (aspirinas)', 'acetylsalicylic acid (aspirin)'],
     ['CC(=O)Nc1ccc(O)cc1', 'paracetamolis', 'paracetamol'],
+    ['C=C', 'etilenas', 'ethylene'], ['OC(=O)C=Cc1ccccc1', 'cinamono rūgštis', 'cinnamic acid'],
+    ['ClCc1ccccc1', 'benzilchloridas', 'benzyl chloride'], ['CC(=O)c1ccccc1', 'acetofenonas', 'acetophenone'],
+    ['Oc1ccccc1O', 'pirokatecholis', 'catechol'], ['Sc1ccccc1', 'tiofenolis', 'thiophenol'],
+    ['C=Cc1ccccc1', 'stirenas', 'styrene'],
   ];
   let trivialMap = null;
   function trivial(mol) {

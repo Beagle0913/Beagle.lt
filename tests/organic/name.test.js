@@ -190,7 +190,7 @@ test('Lithuanian rules from the lecture: seniority list', () => {
   // COOH > SO3H > COOM > anhydride > COOR > COX > CONH2 > CN > CHO > CO > OH > ArOH > SH > NH2 > C=C > C#C
   const t = (smi) => nm(smi, 'lt').name;
   assert.strictEqual(t('OC(=O)CS(O)(=O)=O'), 'sulfoetano rūgštis');
-  assert.strictEqual(t('COC(=O)CC(O)=O'), '3-metoksi-3-oksopropano rūgštis');
+  assert.strictEqual(t('COC(=O)CC(O)=O'), 'metoksikarboniletano rūgštis');
   assert.strictEqual(t('NC(=O)CC(C)C#N'), '3-cianbutanamidas');
   assert.strictEqual(t('N#CCC=O'), '3-oksopropannitrilas');
   assert.strictEqual(t('O=CCC(C)=O'), '3-oksobutanalis');
@@ -250,7 +250,7 @@ test('English rules: IUPAC 2013 style main name, older style in alts', () => {
   assert.ok(r('OCCO').alts.indexOf('1,2-ethanediol') >= 0);
   // the course also writes the toluene and aniline forms
   assert.ok(nm('Cc1ccccc1Br', 'lt').alts.indexOf('2-bromtoluenas') >= 0);
-  assert.ok(nm('Nc1ccc(Br)cc1', 'lt').alts.indexOf('4-brombenzenaminas') >= 0);
+  assert.ok(nm('Nc1ccc(Br)cc1', 'lt').alts.indexOf('4-bromanilinas') >= 0);
   assert.ok(nm('CC(Cl)=O', 'lt').alts.indexOf('acetilchloridas') >= 0);
 });
 
@@ -270,7 +270,171 @@ test('large and unusual molecules are handled without throwing', () => {
 test('every name in the table uses only letters, digits and the usual punctuation', () => {
   rows.forEach((r) => {
     if (r.lt === 'null') return;
-    assert.ok(/^[0-9A-Za-zĄČĘĖĮŠŲŪŽąčęėįšųūž,()\- ]+$/.test(r.lt), r.lt);
+    assert.ok(/^[0-9A-Za-zĄČĘĖĮŠŲŪŽąčęėįšųūž,()'\- ]+$/.test(r.lt), r.lt);
     assert.ok(/^[0-9A-Za-z,()'\- ]+$/.test(r.en), r.en);
   });
+});
+
+// fix round 1 -----------------------------------------------------------------------
+
+test('English numbering breaks the alphabetical tie with English names', () => {
+  const cases = [
+    ['COc1ccc(C)cc1', '1-methoxy-4-methylbenzene', '1-metil-4-metoksibenzenas'],
+    ['COC1CCC(C)CC1', '1-methoxy-4-methylcyclohexane', '1-metil-4-metoksicikloheksanas'],
+    ['CC(OC)CC(C)C', '2-methoxy-4-methylpentane', '2-metil-4-metoksipentanas'],
+    ['CCc1ccccc1OCC', '1-ethoxy-2-ethylbenzene', '1-etil-2-etoksibenzenas'],
+    ['CC1CC1OC', '1-methoxy-2-methylcyclopropane', '1-metil-2-metoksiciklopropanas'],
+    ['OC(=O)c1cc(OC)cc(C)c1', '3-methoxy-5-methylbenzoic acid', '3-metil-5-metoksibenzenkarboksirūgštis'],
+    ['Ic1cccc(C(C)C)c1', '1-iodo-3-isopropylbenzene', '1-izopropil-3-jodbenzenas'],
+    ['OC1C(C)CCCC1S', '2-methyl-6-sulfanylcyclohexan-1-ol', '2-merkapto-6-metilcikloheksanolis'],
+  ];
+  cases.forEach(([smi, en, lt]) => {
+    assert.strictEqual(nm(smi, 'en').name, en, smi);
+    assert.strictEqual(nm(smi, 'lt').name, lt, smi);
+  });
+});
+
+test('stereo locants follow the numbering of each language', () => {
+  const smi = 'O[C@H]1[C@@H](C)CCC[C@H]1S';
+  assert.strictEqual(nm(smi, 'lt', { stereo: true }).name, '(1S,2R,6S)-2-merkapto-6-metilcikloheksanolis');
+  assert.strictEqual(nm(smi, 'en', { stereo: true }).name, '(1S,2S,6R)-2-methyl-6-sulfanylcyclohexan-1-ol');
+});
+
+test('an N locant brings the carbon locants back', () => {
+  assert.strictEqual(nm('ClCC(=O)NC', 'lt').name, '2-chlor-N-metiletanamidas');
+  assert.strictEqual(nm('ClCC(=O)NC', 'en').name, '2-chloro-N-methylethanamide');
+  assert.strictEqual(nm('CCN(CC)CC(=O)Nc1c(C)cccc1C', 'en').name, '2-(diethylamino)-N-(2,6-dimethylphenyl)ethanamide');
+  // without an N substituent the locant stays out, as the course writes trichloretanalis
+  assert.strictEqual(nm('NCC(=O)N', 'lt').name, 'aminoetanamidas');
+});
+
+test('identical compound substituents take bis', () => {
+  assert.strictEqual(nm('ClCC1CCC(CCl)CC1', 'lt').name, '1,4-bis(chlormetil)cikloheksanas');
+  assert.strictEqual(nm('COCc1ccc(COC)cc1', 'en').name, '1,4-bis(methoxymethyl)benzene');
+  assert.strictEqual(nm('CCNc1ccc(NCC)cc1C(O)=O', 'lt').name, '2,5-bis(etilamino)benzenkarboksirūgštis');
+  // simple substituents keep di
+  assert.strictEqual(nm('ClC(Cl)C', 'lt').name, '1,1-dichloretanas');
+});
+
+test('N and N-prime do not depend on the order of the atoms', () => {
+  ['CNCCN(C)C', 'CN(C)CCNC'].forEach((smi) => {
+    assert.strictEqual(nm(smi, 'lt').name, "N,N,N'-trimetil-1,2-etandiaminas", smi);
+    assert.strictEqual(nm(smi, 'en').name, "N,N,N'-trimethylethane-1,2-diamine", smi);
+  });
+  assert.strictEqual(nm('CNC(=O)CC(=O)N(C)C', 'lt').name, "N,N,N'-trimetilpropandiamidas");
+  assert.strictEqual(nm('CN(C)C(=O)CC(=O)NC', 'lt').name, "N,N,N'-trimetilpropandiamidas");
+});
+
+test('anilinas is not the main name; benzenaminas is, with the aniline forms in alts', () => {
+  const r = nm('Nc1ccc(Br)cc1', 'lt');
+  assert.strictEqual(r.name, '4-brombenzenaminas');
+  assert.ok(r.alts.indexOf('4-bromanilinas') >= 0 && r.alts.indexOf('4-bromfenilaminas') >= 0);
+  assert.strictEqual(nm('CNc1ccccc1', 'lt').name, 'N-metilbenzenaminas');
+  assert.ok(nm('CNc1ccccc1', 'lt').alts.indexOf('N-metilanilinas') >= 0);
+  assert.deepEqual(P(N.trivial('Nc1ccccc1')), { lt: 'anilinas', en: 'aniline' });
+  assert.ok(nm('Nc1ccccc1', 'en').alts.indexOf('benzenamine') >= 0);
+});
+
+test('criterion b counts double and triple bonds together', () => {
+  assert.strictEqual(nm('C=CC(C=C)C#CC#C', 'lt').name, '5-etenil-6-hepten-1,3-diinas');
+  assert.strictEqual(nm('C=CC(C=C)C#CC#C', 'en').name, '5-ethenylhept-6-en-1,3-diyne');
+});
+
+test('acid derivatives as prefixes, as the course writes them', () => {
+  assert.strictEqual(nm('NC(=O)CC(O)=O', 'lt').name, 'karbamoiletano rūgštis');
+  assert.strictEqual(nm('COC(=O)CC(O)=O', 'lt').name, 'metoksikarboniletano rūgštis');
+  assert.ok(nm('COC(=O)CC(O)=O', 'lt').alts.indexOf('3-metoksi-3-oksopropano rūgštis') >= 0);
+  assert.strictEqual(nm('ClC(=O)c1ccc(cc1)C(O)=O', 'lt').name, '4-chlorformilbenzenkarboksirūgštis');
+  assert.strictEqual(nm('NC(=O)CC(C)C#N', 'lt').name, '3-cianbutanamidas');
+  assert.strictEqual(nm('OC(=O)CC(O)C(=O)NC', 'lt').name, '3-hidroksi-3-(N-metilkarbamoil)propano rūgštis');
+});
+
+test('stems from C10 on: dec- before e and i, dek- before a; the other spelling is an alt', () => {
+  const a = nm('CCCCC#CCCCC', 'lt');
+  assert.strictEqual(a.name, '5-decinas');
+  assert.ok(a.alts.indexOf('5-dekinas') >= 0);
+  const b = nm('CCCCCCCCC=CCCCCCCCC(O)=O', 'lt');
+  assert.strictEqual(b.name, '9-oktadeceno rūgštis');
+  assert.ok(b.alts.indexOf('9-oktadekeno rūgštis') >= 0);
+  assert.strictEqual(nm('CCCCCCCCCCO', 'lt').name, '1-dekanolis');
+  assert.strictEqual(nm('CCCCCCCCCCC', 'lt').name, 'undekanas');
+  assert.strictEqual(nm('CCCCCCCCCCCCCCCCCCCC', 'en').name, 'icosane');
+});
+
+test('citric acid: three acid groups as a carboxylic acid on a propane chain', () => {
+  assert.strictEqual(nm('OC(=O)CC(O)(CC(O)=O)C(O)=O', 'lt').name, '2-hidroksi-1,2,3-propantrikarboksirūgštis');
+  assert.strictEqual(nm('OC(=O)CC(O)(CC(O)=O)C(O)=O', 'en').name, '2-hydroxypropane-1,2,3-tricarboxylic acid');
+  // two acid groups stay a dioic acid
+  assert.strictEqual(nm('OC(=O)CCC(O)=O', 'lt').name, 'butano dirūgštis');
+});
+
+test('alternative names the course writes', () => {
+  const alts = (smi, lang) => nm(smi, lang).alts;
+  // o-, m-, p- for disubstituted benzenes
+  assert.ok(alts('OC(=O)c1ccc(Cl)cc1', 'lt').indexOf('p-chlorbenzenkarboksirūgštis') >= 0);
+  assert.ok(alts('Brc1ccc(Br)cc1', 'lt').indexOf('p-dibrombenzenas') >= 0);
+  assert.ok(alts('OC(=O)c1ccccc1Br', 'lt').indexOf('o-brombenzenkarboksirūgštis') >= 0);
+  assert.ok(alts('OC(=O)c1cccc(Br)c1', 'lt').indexOf('m-brombenzenkarboksirūgštis') >= 0);
+  assert.ok(alts('Brc1ccc(Br)cc1', 'en').indexOf('para-dibromobenzene') >= 0);
+  assert.ok(alts('OC(=O)c1ccccc1Br', 'en').indexOf('ortho-bromobenzoic acid') >= 0);
+  // functional names of ethers, halides, ketones
+  assert.ok(alts('COC(C)C', 'lt').indexOf('izopropilmetileteris') >= 0);
+  assert.ok(alts('CCOCc1ccccc1', 'lt').indexOf('benziletileteris') >= 0);
+  assert.ok(alts('COC(C)(C)C', 'lt').indexOf('tret-butilmetileteris') >= 0);
+  assert.ok(alts('COc1ccccc1', 'lt').indexOf('metilfenileteris') >= 0);
+  assert.ok(alts('c1ccc(cc1)Oc1ccccc1', 'lt').indexOf('difenileteris') >= 0);
+  assert.ok(alts('CCOC', 'en').indexOf('ethyl methyl ether') >= 0);
+  assert.ok(alts('CC(C)I', 'lt').indexOf('izopropiljodidas') >= 0);
+  assert.ok(alts('CC(C)I', 'en').indexOf('isopropyl iodide') >= 0);
+  assert.ok(alts('CC(=O)c1ccccc1', 'lt').indexOf('fenilmetilketonas') >= 0);
+  assert.ok(alts('CC(=O)c1ccccc1', 'lt').indexOf('1-fenil-1-etanonas') >= 0);
+  // acetoksi, buteno dirūgštis, 2-propentiolis, explicit ring locants
+  assert.ok(alts('CC(=O)Oc1ccccc1C(O)=O', 'lt').indexOf('2-acetoksibenzenkarboksirūgštis') >= 0);
+  assert.ok(alts('OC(=O)C=CC(O)=O', 'lt').indexOf('buteno dirūgštis') >= 0);
+  assert.ok(alts('C=CCS', 'lt').indexOf('2-propentiolis') >= 0);
+  assert.ok(alts('OC1C=CCCC1', 'lt').indexOf('2-cikloheksen-1-olis') >= 0);
+  assert.ok(alts('O=C1CC=CCC1', 'lt').indexOf('3-cikloheksen-1-onas') >= 0);
+  // substituent names
+  assert.strictEqual(nm('CCC(C)C(C)(C)C', 'lt').name, '2,2,3-trimetilpentanas');
+  assert.strictEqual(nm('CCC(C)c1ccccc1', 'lt').name, 'antr-butilbenzenas');
+  assert.ok(alts('CCC(C)c1ccccc1', 'lt').indexOf('sec-butilbenzenas') >= 0);
+  assert.ok(alts('CCC(C)c1ccccc1', 'lt').indexOf('(1-metilpropil)benzenas') >= 0);
+  assert.ok(alts('CC(C)c1ccccc1', 'en').indexOf('(propan-2-yl)benzene') >= 0);
+  // English retained names
+  assert.ok(alts('CC(O)=O', 'en').indexOf('acetic acid') >= 0);
+  assert.ok(alts('CC(N)=O', 'en').indexOf('acetamide') >= 0);
+  assert.ok(alts('CC#N', 'en').indexOf('acetonitrile') >= 0);
+  assert.ok(alts('CC(Cl)=O', 'en').indexOf('acetyl chloride') >= 0);
+  assert.ok(alts('CN(C)C=O', 'lt').indexOf('dimetilmetanamidas') >= 0);
+  // functional amine names: English alphabetical, Lithuanian as written
+  assert.ok(alts('CCN(C)C', 'en').indexOf('ethyldimethylamine') >= 0);
+  assert.ok(alts('CCN(C)C', 'lt').indexOf('dimetiletilaminas') >= 0);
+});
+
+test('English nested enclosing marks, covalent salts, trivial names', () => {
+  // a compound substituent inside a compound substituent gets square brackets
+  assert.strictEqual(nm('OC(=O)CC(NCC(Cl)C)C', 'en').name, '3-[(2-chloropropyl)amino]butanoic acid');
+  assert.strictEqual(nm('CCC(=O)O[Na]', 'lt').name, 'natrio propanoatas');
+  assert.strictEqual(nm('CC(=O)O[K]', 'en').name, 'potassium ethanoate');
+  const t = (smi) => { const x = N.trivial(smi); return x === null ? null : P(x); };
+  assert.deepEqual(t('C=C'), { lt: 'etilenas', en: 'ethylene' });
+  assert.deepEqual(t('OC(=O)C=Cc1ccccc1'), { lt: 'cinamono rūgštis', en: 'cinnamic acid' });
+  assert.deepEqual(t('ClCc1ccccc1'), { lt: 'benzilchloridas', en: 'benzyl chloride' });
+  assert.deepEqual(t('CC(=O)c1ccccc1'), { lt: 'acetofenonas', en: 'acetophenone' });
+  assert.deepEqual(t('Oc1ccccc1O'), { lt: 'pirokatecholis', en: 'catechol' });
+  assert.deepEqual(t('Sc1ccccc1'), { lt: 'tiofenolis', en: 'thiophenol' });
+  assert.deepEqual(t('C=Cc1ccccc1'), { lt: 'stirenas', en: 'styrene' });
+});
+
+test('names and alts are at most 80 characters and inScope needs both languages', () => {
+  rows.forEach((r) => {
+    ['lt', 'en'].forEach((lang) => {
+      const got = nm(r.smi, lang);
+      if (got) [got.name].concat(got.alts).forEach((x) => assert.ok(x.length <= 80, x));
+    });
+  });
+  // a name over the bound is out of scope in both languages
+  const long = 'CC(C)(C)C(C)(C)C(C)(C)C(C)(C)C(Cl)(Br)C(Cl)(Br)C(Cl)(Br)C(Cl)(Br)C(Cl)(Br)';
+  assert.strictEqual(N.inScope(long), nm(long, 'lt') !== null && nm(long, 'en') !== null);
+  if (nm(long, 'lt') !== null) assert.ok(nm(long, 'lt').name.length <= 80);
 });
