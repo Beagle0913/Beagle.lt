@@ -3,8 +3,8 @@
   'use strict';
   const T = (lt, en) => ({ lt, en });
   const MT1 = ['mt1', 'exam'], MT2 = ['mt2', 'exam'];
-  const row = (n, part, lt, en, exams, sources) => ({ id: 'u' + String(n).padStart(2, '0'), n: String(n), part, file: 'units/u' + String(n).padStart(2, '0') + '.js', title: T(lt, en), exams, sources, ready: false });
-  const lab = (n, lt, en) => ({ id: 'l' + n, n: 'L' + n, part: 3, file: 'units/l' + n + '.js', title: T(lt, en), exams: [], sources: ['LW' + n], ready: false });
+  const row = (n, part, lt, en, exams, sources, ready) => ({ id: 'u' + String(n).padStart(2, '0'), n: String(n), part, file: 'units/u' + String(n).padStart(2, '0') + '.js', title: T(lt, en), exams, sources, ready: ready === true });
+  const lab = (n, lt, en, ready) => ({ id: 'l' + n, n: 'L' + n, part: 3, file: 'units/l' + n + '.js', title: T(lt, en), exams: [], sources: ['LW' + n], ready: ready === true });
 
   ORG.UNITS = [
     row(1, 1, 'Formulės, klasifikavimas ir nomenklatūra', 'Formulas, classification and nomenclature', MT1, ['L1', 'S1']),

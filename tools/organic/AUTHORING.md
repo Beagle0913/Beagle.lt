@@ -11,10 +11,10 @@ A good unit teaches (notes), drills (exercise types with generators or banks) an
 3. Look at your work in the playground (section 2) after every few additions. Fix every message in its error list and look at every drawing.
 4. Run the validator: `UNIT=u07 node --test tests/organic/content.test.js` (from the repo root). It must pass with no errors. Guide minimums (words, types, bank size, distinct generator problems) are errors in real unit files.
 5. Run `npm test`.
-6. Mark your unit ready in `site/organic/js/units.js`, only when the validator passes: on the one line of your unit inside `ORG.UNITS`, wrap the row, for example `Object.assign(row(7, 2, '...', '...', MT2, ['L7', 'S4']), { ready: true })`. Change nothing else on the line. A unit that is not ready is not shown on the site.
-7. Commit only your own files: `git add site/organic/units/u07.js site/organic/js/units.js`, never `git add -A` (other agents work in the same checkout). The commit message ends with the `Co-Authored-By` line your task gives. Work on branch `organic-trainer`; do not push.
+6. Do not mark the unit ready and do not touch `site/organic/js/units.js`: the main session flips `ready` in its integration step after the unit is reviewed. Until then the unit is not shown on the site (the playground and the validator still load it).
+7. Commit only your own files: `git add site/organic/units/u07.js`, never `git add -A` (other agents work in the same checkout). The commit message ends with the `Co-Authored-By` line your task gives. Work on branch `organic-trainer`; do not push.
 
-Edit nothing else. If the engine, namer or a reaction rule is wrong or missing, say so in your report (with the SMILES and the expected result) and write around it; do not edit `site/organic/js/*.js` other than that one `ready` edit.
+Edit nothing else. If the engine, namer or a reaction rule is wrong or missing, say so in your report (with the SMILES and the expected result) and write around it; do not edit `site/organic/js/*.js` .
 
 ## 2. Tools
 
@@ -250,7 +250,7 @@ Both texts of a pair say the same thing. A text that differs only by a formula o
 - Untranslated or machine-sounding Lithuanian; terms the course does not use.
 - A reaction stated in the notes without a drawing; text copied from the slides.
 - A coverage map that lists a type that does not mirror the task, or a mirrored task missing from `coverage`.
-- Setting `ready: true` before the validator passes; editing files that are not yours; `git add -A`.
+- Editing `units.js` or setting `ready`; editing files that are not yours; `git add -A`.
 
 ## 11. Three complete worked examples
 
@@ -584,5 +584,5 @@ Tap the atom that gets H+, choose the carbocation (the third option is a typical
 2. `UNIT=<id> node --test tests/organic/content.test.js` passes; `npm test` passes.
 3. Every task of your sheet is in `coverage` and in some type's `mirrors`.
 4. Every `src` points to a page you opened.
-5. `ready: true` set for your unit only; `git add` of your unit file and `units.js` only; committed on `organic-trainer`.
+5. `git add` of your unit file only (never `units.js`, never `ready`); committed on `organic-trainer`.
 6. Your report lists: files, number of types / bank sizes / generators, anything you could not cover and why, engine or namer problems you found (SMILES, expected and actual result), and anything in the sources you could not read.
