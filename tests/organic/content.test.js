@@ -240,6 +240,25 @@ function computeFrom(from, mol) {
   return null;
 }
 
+const BLOCK_KEYS = ['h', 'p', 'list', 'rule', 'pitfall', 'mol', 'scheme', 'mech', 'resonance', 'fischer', 'newman', 'chair', 'table', 'example', 'practice'];
+function hasNumberedMol(node) {
+  if (Array.isArray(node)) return node.some(hasNumberedMol);
+  if (!isObj(node)) return false;
+  if (typeof node.smi === 'string' && isObj(node.opts) && node.opts.numbers) return true;
+  return Object.values(node).some(hasNumberedMol);
+}
+
+// Learner-facing text lint. A SMILES-like token: 4+ chars of SMILES characters with one of =#()[]@ and two or more capitals.
+function smilesLike(text) {
+  const out = [];
+  for (const raw of text.replace(/\$[^$]*\$/g, ' ').split(/\s+/)) {
+    const tok = raw.replace(/[.,;:!?"'”“]+$/, '');
+    if (/^[A-Za-z0-9=#()[\]@+\-\/%]{4,}$/.test(tok) && /[=#()[\]@]/.test(tok) && (tok.match(/[A-Z]/g) || []).length >= 2) out.push(tok);
+  }
+  return out;
+}
+const GENITIVE = /(?:met|et|prop|but|pent|heks|hept|okt|non|dek|adi)(an|en|in)os(?![\p{L}])/iu;
+
 function optionKeys(o, lang) {
   if (!isObj(o)) return 'x:' + JSON.stringify(o);
   if ('mol' in o) return 'mol:' + canon(o.mol.smi);
@@ -258,7 +277,9 @@ function checkUnit(unit, opts) {
   const guide = (loc, msg) => (opts.guide === 'fail' ? R.err(loc, msg) : R.warn(loc, 'guide: ' + msg));
   const lab = isLab(String(unit.id));
 
-  for (const e of ORG.check.validateUnit(unit)) R.err('structure', e);
+  // `claims` on notes blocks are checked here; the structural validator is shown the notes without them
+  const noClaims = (n) => (Array.isArray(n) ? n.map(noClaims) : isObj(n) ? Object.fromEntries(Object.entries(n).filter(([k]) => k !== 'claims').map(([k, v]) => [k, noClaims(v)])) : n);
+  for (const e of ORG.check.validateUnit(Object.assign({}, unit, { notes: noClaims(unit.notes), summary: noClaims(unit.summary) }))) R.err('structure', e);
 
   function textCheck(T, loc, tag) {
     for (const lang of ['lt', 'en']) {
@@ -266,6 +287,12 @@ function checkUnit(unit, opts) {
       if (/<[A-Za-z]/.test(s)) R.err(loc, lang + ' text has "<" followed by a letter (markup is not HTML): "' + snip(s) + '"', tag);
       if (/\bundefined\b|\bNaN\b|\[object /.test(s)) R.err(loc, lang + ' text contains undefined / NaN / [object]: "' + snip(s) + '"', tag);
     }
+    for (const lang of ['lt', 'en']) {
+      const tokens = smilesLike(T[lang]);
+      if (tokens.length) R.err(loc, lang + ' text shows a formula or SMILES to the learner ("' + tokens[0] + '"): write it inside $...$ or draw it as a molecule', tag);
+    }
+    const g = GENITIVE.exec(T.lt);
+    if (g) R.err(loc, 'genitive of -' + g[1] + 'as is -' + g[1] + 'o ("' + g[0] + '"): ' + snip(T.lt), tag);
     if (T.lt === T.en && sameTextIsWrong(T.lt)) R.err(loc, 'lt and en are identical, one is not translated: "' + snip(T.lt) + '"', tag);
   }
 
@@ -306,6 +333,14 @@ function checkUnit(unit, opts) {
     if (typeof node === 'number') { if (!Number.isFinite(node)) R.err(loc, 'a non-finite number under "' + parentKey + '"', tag); return; }
     if (!isObj(node)) return;
     if (isT(node)) { textCheck(node, loc, tag); return; }
+    if (Array.isArray(node.claims) && parentKey !== 'claim') {
+      const kind = Object.keys(node).find((k) => BLOCK_KEYS.includes(k));
+      const bloc = loc + (kind ? ', ' + kind + ' block' : '');
+      node.claims.forEach((c, k) => runClaim(c, bloc + ', claims[' + k + ']', tag));
+    }
+    if (isObj(node.example) && !Array.isArray(node.claims) && hasNumberedMol(node.example)) {
+      R.warn(loc, 'example block has a molecule with numbered atoms but no claims: prove its answer with claims: [...]', tag);
+    }
     if (typeof node.smi === 'string') {
       molCheck(node, loc, tag, parentKey);
       if (isT(node.name)) nameCheck(node.smi, node.name, 'molecule name', loc, tag);
@@ -380,16 +415,17 @@ function checkUnit(unit, opts) {
     }
   }
 
+  function runClaim(c, loc, tag) {
+    scan(c, loc, tag, 'claim');
+    try { const e = claimCheck(c, R.unchecked); if (e) R.err(loc, e, tag); } catch (e) { R.err(loc, 'claim could not be checked: ' + e.message, tag); }
+  }
+
   function problemChecks(p, type, prob, tag) {
     if (!isObj(p)) return;
     scan(p.q, L(type, prob, 'q'), tag, 'q');
     (Array.isArray(p.steps) ? p.steps : []).forEach((s, i) => { scan(s, L(type, prob, 'steps[' + i + ']'), tag, 'step'); stepChecks(s, i, type, prob, tag, p); });
     scan(p.why, L(type, prob, 'why'), tag, 'why');
-    (Array.isArray(p.claims) ? p.claims : []).forEach((c, k) => {
-      const loc = L(type, prob, 'claims[' + k + ']');
-      scan(c, loc, tag, 'claim');
-      try { const e = claimCheck(c, R.unchecked); if (e) R.err(loc, e, tag); } catch (e) { R.err(loc, 'claim could not be checked: ' + e.message, tag); }
-    });
+    (Array.isArray(p.claims) ? p.claims : []).forEach((c, k) => runClaim(c, L(type, prob, 'claims[' + k + ']'), tag));
   }
   const safely = (fn, loc, tag) => { try { fn(); } catch (e) { if (!R.errs.size) R.err(loc, 'validator error: ' + e.message, tag); } };
 
@@ -786,6 +822,28 @@ test('validator: step answers are cross-checked, mirrors need coverage, small ru
   for (const x of ['pKa', 'pH', 'SN2', 'E1', 'Markovnikov', '$SN2$ ir E1']) { u = fresh(); bankOf(u).why = T(x, x); assert.deepEqual(run(u).errors, [], x); }
   u = fresh(); bankOf(u).why = T('Same ordinary words', 'Same ordinary words');
   only(u, /lt and en are identical/);
+});
+
+test('validator: claims on notes blocks, numbered examples, text lint', () => {
+  const exampleBlock = (extra) => Object.assign({ example: { q: [{ p: T('Klausimas', 'Question') }, { mol: { smi: 'CC(C)C=CC', opts: { numbers: 'all' } } }], steps: [[{ p: T('Žingsnis', 'Step') }]] } }, extra);
+  const withBlock = (b) => { const u = fresh(); u.notes[1].blocks.push(b); return u; };
+  // 1: claims on blocks are checked, with the block location
+  let r = only(withBlock(exampleBlock({ claims: [{ formula: ['CC(C)C=CC', 'C6H14'] }] })), /notes section "more", example block, claims\[0\]: CC\(C\)C=CC has formula C6H12, not C6H14/);
+  assert.deepEqual(run(withBlock(exampleBlock({ claims: [{ formula: ['CC(C)C=CC', 'C6H12'] }] }))).errors, []);
+  assert.deepEqual(run(withBlock({ p: T('Tekstas', 'Text'), claims: [{ chiral: ['CCO', false] }] })).errors, []);
+  // 2: a numbered example without claims is a warning
+  r = run(withBlock(exampleBlock({})));
+  assert.deepEqual(r.errors, []);
+  assert.ok(r.warnings.some((w) => /example block has a molecule with numbered atoms but no claims/.test(w)));
+  assert.ok(!run(withBlock(exampleBlock({ claims: [{ formula: ['CC(C)C=CC', 'C6H12'] }] }))).warnings.some((w) => /numbered atoms/.test(w)));
+  // 3: SMILES in learner text, genitive of -enas / -inas / -anas
+  only(withBlock({ p: T('Junginys CC(C)C=CC yra alkenas.', 'The compound is an alkene.') }), /lt text shows a formula or SMILES to the learner \("CC\(C\)C=CC"\)/);
+  only(withBlock({ p: T('Junginys yra alkenas.', 'The compound CC(C)C=CC is an alkene.') }), /en text shows a formula or SMILES/);
+  for (const ok of ['Junginys $CC(C)C=CC$ yra alkenas.', 'Žiūrėkite (E)-2-butenas ir (R)-alaninas, C=O ryšys.', 'Naudokite pH ir SN2 bei NaOH.']) assert.deepEqual(run(withBlock({ p: T(ok, ok + ' (en)') })).errors, [], ok);
+  only(withBlock({ p: T('Butenos molekulė.', 'The butene molecule.') }), /genitive of -enas is -eno \("Butenos"\)/);
+  only(withBlock({ p: T('Pentinos formulė.', 'The pentyne formula.') }), /genitive of -inas is -ino/);
+  only(withBlock({ p: T('Propanos formulė.', 'The propane formula.') }), /genitive of -anas is -ano/);
+  assert.deepEqual(run(withBlock({ p: T('Buteno formulė ir dienos metu.', 'The butene formula.') })).errors, []);
 });
 
 test('validator: ready flags and unit files agree', () => {
