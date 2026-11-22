@@ -557,7 +557,7 @@ test('fix 2: ring amines in acid', () => {
 test('fix 3: acylation goes to the amine N, not to O', () => {
   assert.ok(R('phenol.acyl', ['Nc1ccc(O)cc1', 'CC(=O)OC(C)=O']).none);
   assert.ok(R('acyl.nu', ['CC(=O)Cl', 'NCCO'], { nu: 'alcohol' }).none);
-  assert.ok(/amine.acyl/.test(R('acyl.nu', ['CC(=O)Cl', 'NCCO'], { nu: 'alcohol' }).note.en));
+  assert.ok(/amino group/.test(R('acyl.nu', ['CC(=O)Cl', 'NCCO'], { nu: 'alcohol' }).note.en));
   only(R('amine.acyl', ['NCCO', 'CC(=O)Cl']), 'CC(=O)NCCO');
   expectProducts(R('amine.acyl', ['Nc1ccc(O)cc1', 'CC(=O)OC(C)=O']), ['CC(=O)Nc1ccc(O)cc1', 'CC(=O)O'], ['CC(=O)Nc1ccc(O)cc1']);
 });
@@ -641,7 +641,7 @@ test('fix 17: excess Na also takes the SH, then both are alkylated (S5.14b)', ()
 
 test('fix 19, 20, 22: Lithuanian notes, metal option, Claisen with one alpha-H', () => {
   assert.ok(/dieno\./.test(R('diene.hx', ['CCC'], { X: 'Br' }).note.lt));
-  assert.ok(/prisijungia/.test(R('diene.hx', ['C=CC=C'], { X: 'Br' }).note.lt));
+  assert.ok(/prijungia/.test(R('diene.hx', ['C=CC=C'], { X: 'Br' }).note.lt));
   assert.ok(/varianto/.test(R('williamson', ['CC(C)OC(C)C']).note.lt));
   only(R('acid.salt', ['CC(=O)O'], { metal: 'K' }), 'CC(=O)[O-].[K+]');
   only(R('acid.salt', ['CC(=O)O'], { M: 'K' }), 'CC(=O)[O-].[K+]');
@@ -650,6 +650,88 @@ test('fix 19, 20, 22: Lithuanian notes, metal option, Claisen with one alpha-H',
   // every Lithuanian note in the file is non-empty and has no leftover English markers
   const rules = Object.keys(react.RULES);
   assert.ok(rules.length > 50);
+});
+
+// ---------------------------------------------------------------- fix round 2
+
+test('fix r2.1: a crowded position between two substituents is never major', () => {
+  same(R('sear', ['Cc1cccc(C)c1'], { E: 'C(C)=O' }), ['CC(=O)c1ccc(C)cc1C']);
+  same(R('sear', ['COc1cccc(C)c1'], { E: 'C(C)=O' }), ['COc1ccc(C(C)=O)c(C)c1']);
+  same(R('sear', ['Nc1cccc(C)c1'], { E: 'SO3H' }), ['Nc1ccc(S(=O)(=O)O)c(C)c1']);
+  same(R('sear', ['Cc1cccc(C)c1'], { E: 'C(C)(C)C' }), ['Cc1ccc(C(C)(C)C)c(C)c1']);
+});
+
+test('fix r2.2: side.ox never throws and gives benzoic acid with CO2 as by-product', () => {
+  ['CC(=C)c1ccccc1', 'C=CCc1ccccc1', 'OCCc1ccccc1', 'OC(=O)Cc1ccccc1', 'CC(=O)c1ccccc1', 'CC(O)c1ccccc1'].forEach((s) => {
+    const r = R('side.ox', [s]);
+    assert.deepStrictEqual(majorsOf(r), [canon('OC(=O)c1ccccc1')], s);
+    r.products.forEach((p) => chem.parse(p.smi));
+    assert.ok(r.products.every((p) => p.major || p.smi === canon('O=C=O')), s);
+  });
+});
+
+test('fix r2.3-5: notes, ids, radicals', () => {
+  assert.strictEqual(react.RULES['diene.hx'].title.lt, 'HX jungimasis prie konjuguotojo dieno (1,2 ir 1,4)');
+  ['co.hemiacetal'].forEach((id) => assert.ok(!/pusacet/.test(react.RULES[id].title.lt)));
+  const notes = [];
+  const grab = (r) => { if (r.note) notes.push(r.note); };
+  grab(R('sn1', ['CC(C)(C)Br'], { nu: 'CN' }));
+  grab(R('acyl.nu', ['CC(=O)Cl', 'NCCO'], { nu: 'alcohol' }));
+  grab(R('phenol.acyl', ['Nc1ccc(O)cc1', 'CC(=O)OC(C)=O']));
+  grab(R('claisen', ['CC(C)C(=O)OCC']));
+  grab(R('co.tollens', ['CC(=O)O']));
+  grab(R('co.cannizzaro', ['O=Cc1ccccc1', 'O=Cc1ccc(C)cc1']));
+  notes.forEach((n) => {
+    assert.ok(!/amine\.acyl|sn2|\bsn1\b|elim\b|p\. 91|vadovėlis/.test(n.lt + n.en.replace(/SN2/g, '')), JSON.stringify(n));
+    assert.ok(!/sveikos/.test(n.lt));
+  });
+  assert.ok(!/Ketones/.test(R('co.tollens', ['CC(=O)O']).note.en));
+  assert.ok(/Ketones/.test(R('co.tollens', ['CC(C)=O']).note.en));
+  assert.ok(!/formaldehyde is oxidised/.test(R('co.cannizzaro', ['O=Cc1ccccc1', 'O=Cc1ccc(C)cc1']).note.en));
+  // alkylation of all anions leaves neutral OH alone
+  only(R('williamson', ['CC([O-])CCO.[Na+]', 'CI'], { all: true }), 'CC(OC)CCO');
+  // radicals: benzyl = allyl
+  const both = R('sr.halogenate', ['C=CCC(C)Cc1ccccc1'], { X: 'Br' });
+  assert.strictEqual(majorsOf(both).length, 2);
+});
+
+test('fix r2.2b: every product of every rule parses (fuzz)', () => {
+  const subs = ['CC', 'CC=C', 'CC(C)=C', 'C=CC=C', 'CC#C', 'c1ccccc1', 'Cc1ccccc1', 'CCc1ccccc1', 'CC(=C)c1ccccc1', 'C=CCc1ccccc1', 'OCCc1ccccc1',
+    'OC(=O)Cc1ccccc1', 'Oc1ccccc1', 'Nc1ccccc1', 'CN(C)c1ccccc1', 'c1ccccc1[N+](=O)[O-]', 'CCO', 'CC(C)O', 'OCCO', 'CCS', 'SCCS', 'CCOCC', 'C1CCOC1',
+    'CCBr', 'CC(C)(C)Br', 'BrCC=C', 'CC=O', 'CC(C)=O', 'O=Cc1ccccc1', 'O=CCC=O', 'CC(=O)O', 'OCCCC(=O)O', 'CC(=O)OC', 'CCOC(=O)CC', 'O=C1CCCO1',
+    'CC(=O)Cl', 'CC(=O)OC(C)=O', 'CC(N)=O', 'CCN', 'CNC', 'CN(C)C', 'NCCO', 'c1ccncc1', 'c1ccc2ccccc2c1', 'N#Cc1ccccc1', 'c1ccccc1[N+]#N.[Cl-]', 'C=O'];
+  const partners = ['CI', 'CCO', 'CC(=O)Cl', 'CC(=O)OC(C)=O', 'CCS', 'CC=O', 'CCBr'];
+  const opts = { 'sr.halogenate': [{ X: 'Cl' }, { X: 'Br' }], 'ae.hx': [{ X: 'Cl' }], 'ae.x2': [{ X: 'Br' }], 'diene.hx': [{ X: 'Br' }], 'yne.h2': [{ eq: 2 }], 'yne.x2': [{ eq: 1, X: 'Br' }],
+    'yne.hx': [{ eq: 2, X: 'Cl' }], sear: [{ E: 'NO2' }, { E: 'C(C)=O' }, { E: 'SO3H' }], sn2: [{ nu: 'OH' }, { nu: 'NH3' }], sn1: [{ nu: 'OH' }], elim: [{}],
+    'alc.hx': [{ X: 'Br' }], 'alc.ox': [{ reagent: 'chromic' }], 'ether.hi': [{ eq: 1 }, { eq: 2, acid: 'HBr' }], 'ester.hydrolysis': [{ medium: 'base' }, { medium: 'acid' }],
+    'diazo.sub': [{ with: 'CuCN' }], 'acyl.nu': [{ nu: 'water' }, { nu: 'amine' }], 'thiol.base': [{ metal: 'Hg' }], 'amine.protonate': [{ eq: 'all' }],
+    'nitrile.hydrolysis': [{ stage: 'amide' }], 'co.cannizzaro': [{}], williamson: [{}, { all: true }], 'alc.na': [{ excess: true }] };
+  const two = ['williamson', 'phenol.alkyl', 'phenol.acyl', 'thiol.alkyl', 'co.hemiacetal', 'co.acetal', 'co.thioacetal', 'acid.ester', 'amine.alkyl', 'amine.acyl', 'acyl.nu', 'co.aldol', 'claisen'];
+  let n = 0;
+  Object.keys(react.RULES).forEach((id) => {
+    subs.forEach((s) => {
+      const lists = two.indexOf(id) >= 0 ? [[s]].concat(partners.map((p) => [s, p])) : [[s]];
+      lists.forEach((rl) => (opts[id] || [{}]).forEach((o) => {
+        let r;
+        try { r = react.run(id, rl, o); } catch (e) {
+          assert.ok(/^react:/.test(e.message), id + ' ' + JSON.stringify(rl) + ' ' + e.message);
+          return;
+        }
+        r.products.forEach((p) => {
+          n++;
+          let m;
+          try { m = chem.parse(p.smi); } catch (e) { assert.fail(id + ' ' + JSON.stringify(rl) + ' gave an unparsable product ' + p.smi); }
+          m.atoms.forEach((x, i) => {
+            if (x.el !== 'C' || x.charge !== 0) return;
+            let v = x.h;
+            m.nbr[i].forEach((j) => { v += m.bondAt(i, j).kek; });
+            assert.strictEqual(v, 4, id + ' ' + JSON.stringify(rl) + ' gave a carbon without four bonds: ' + p.smi);
+          });
+        });
+      }));
+    });
+  });
+  assert.ok(n > 300, 'products checked: ' + n);
 });
 
 //@@TESTS
