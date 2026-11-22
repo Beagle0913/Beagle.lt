@@ -238,8 +238,8 @@
         { mol: { smi: 'CC(C)C=CC', name: t('4-metil-2-pentenas', '4-methyl-2-pentene') } },
         { h: t('Cis ir trans izomerai', 'Cis and trans isomers') },
         {
-          p: t('Aplink dvigubąjį ryšį sukti negalima, todėl 2-butenas turi du stereoizomerus: cis (Z) ir trans (E). Kaip pagal Z/E taisyklę juos vadinti, aiškinama 5 skyriuje („Izomerija“). Šio skyriaus reakcijose abu izomerai duoda tuos pačius konstitucinius produktus.',
-            'There is no rotation about a double bond, so 2-butene has two stereoisomers: cis (Z) and trans (E). How to name them by the Z/E rule is explained in unit 5 (isomerism). In the reactions of this unit both isomers give the same constitutional products.')
+          p: t('Aplink dvigubąjį ryšį sukti negalima, todėl 2-butenas turi du stereoizomerus: cis (Z) ir trans (E). Kaip pagal Z/E taisyklę juos vadinti, aiškinama skyriuje „Izomerija“. Šio skyriaus reakcijose abu izomerai duoda tuos pačius konstitucinius produktus.',
+            'There is no rotation about a double bond, so 2-butene has two stereoisomers: cis (Z) and trans (E). How to name them by the Z/E rule is explained in the unit “Isomerism”. In the reactions of this unit both isomers give the same constitutional products.')
         },
         { mol: [{ smi: 'C/C=C\\C', caption: t('cis-2-butenas (Z)', 'cis-2-butene (Z)') }, { smi: 'C/C=C/C', caption: t('trans-2-butenas (E)', 'trans-2-butene (E)') }] },
         {
@@ -782,8 +782,8 @@
   function nameSolution(lt, enName) {
     const d = nameDetail(lt);
     if (!d) return t('Pavadinimas: ' + lt + '. Pagrindinė grandinė ar žiedas, pakaitai ir jų numeriai skaitomi iš struktūros.', 'The name is ' + enName + ': the parent chain or ring, the substituents and their numbers are read from the structure.');
-    return t('Pavadinimas: ' + lt + '. Pagrindinė ' + (d.ring ? 'žiedas' : 'grandinė') + ' turi ' + d.n + ' C atomus, dvigubasis ryšys prasideda ties atomu Nr. ' + d.loc + (d.sub ? ', pakaitai: ' + d.sub : ', pakaitų nėra') + '.',
-      'The name is ' + enName + '. The parent ' + (d.ring ? 'ring' : 'chain') + ' has ' + d.n + ' carbons, the double bond starts at carbon no. ' + d.loc + (d.sub ? ', substituents: ' + d.sub : ', no substituents') + '.');
+    return t('Pavadinimas: ' + lt + '. Pagrindinė ' + (d.ring ? 'žiedas' : 'grandinė') + ' turi ' + d.n + ' C atomus, dvigubojo ryšio numeris pavadinime – ' + d.loc + (d.sub ? ', pakaitai: ' + d.sub : ', pakaitų nėra') + '.',
+      'The name is ' + enName + '. The parent ' + (d.ring ? 'ring' : 'chain') + ' has ' + d.n + ' carbons, the locant of the double bond is ' + d.loc + (d.sub ? ', substituents: ' + d.sub : ', no substituents') + '.');
   }
   const nameStep = (ctx, smi, prompt) => {
     const lt = ctx.name.name(smi, { lang: 'lt' });
@@ -1589,7 +1589,7 @@
           options: [{ mol: { smi: 'CCCC(C)Br' } }, { mol: { smi: 'CCC(Br)CC' } }, { mol: { smi: 'CCCCCBr' } }, { mol: { smi: 'CCC(Br)C(C)Br' } }],
           answer: [0, 1],
           hint: t('Halogenas atsiduria ten, kur buvo teigiamas krūvis.', 'The halogen ends up where the positive charge was.'),
-          solution: t('2-brompentanas (katijonas ties atomu 2) ir 3-brompentanas (katijonas ties atomu 3). 1-brompentanui reikėtų pirminio katijono, o dibromidas – antros HBr molekulės.', '2-Bromopentane (cation at carbon 2) and 3-bromopentane (cation at carbon 3). 1-Bromopentane would need a primary cation, and a dibromide a second HBr.')
+          solution: t('2-brompentanas (katijonas ties antruoju grandinės atomu) ir 3-brompentanas (katijonas ties trečiuoju). 1-brompentanui reikėtų pirminio katijono, o dibromidas – antros HBr molekulės.', '2-Bromopentane (cation at the second chain carbon) and 3-bromopentane (cation at the third). 1-Bromopentane would need a primary cation, and a dibromide a second HBr.')
         }
       ],
       why: t('Kai abu katijonai vienodos klasės, Markovnikovo taisyklė negali pasirinkti: susidaro abiejų izomerų mišinys. Taisyklė veikia tik tada, kai vienas katijonas stabilesnis.', 'When both cations are of the same class, Markovnikov’s rule cannot choose: a mixture of both isomers forms. The rule only picks a winner when one cation is more stable.'),
@@ -1603,7 +1603,7 @@
           prompt: t('Kuris alkenas tinkamesnis, kad susidarytų tik šis produktas?', 'Which alkene is better if only this product should form?'),
           kind: 'choice', options: [{ mol: { smi: 'CCCC=CCCC' } }, { mol: { smi: 'CCC=CCCCC' } }, { mol: { smi: 'C=CCCCCCC' } }], answer: 0,
           hint: t('Nubraižykite katijonus, kuriuos gali sudaryti kiekvienas alkenas.', 'Draw the cations that each alkene can form.'),
-          solution: t('4-oktenas simetriškas ir gali sudaryti tik vieną katijoną (ties atomu 4). 3-oktenas sudaro du antrinius katijonus ir duotų ir 3-bromoktaną.', 'Oct-4-ene is symmetrical and forms only one cation (at carbon 4). Oct-3-ene forms two secondary cations and would also give 3-bromooctane.')
+          solution: t('4-oktenas simetriškas ir gali sudaryti tik vieną katijoną (ties ketvirtuoju grandinės atomu). 3-oktenas sudaro du antrinius katijonus ir duotų ir 3-bromoktaną.', 'Oct-4-ene is symmetrical and forms only one cation (at the fourth chain carbon). Oct-3-ene forms two secondary cations and would also give 3-bromooctane.')
         },
         {
           prompt: t('Kodėl 3-oktenas netinka?', 'Why is oct-3-ene unsuitable?'),
