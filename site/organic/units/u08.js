@@ -900,6 +900,21 @@
           pitfall: t('„1,4“ – tai padėtys keturių anglies atomų konjuguotojoje sistemoje, o ne keturi prisijungę atomai.',
             '“1,4” are positions in the four-carbon conjugated system, not four added atoms.')
         },
+        {
+          example: {
+            q: [{ p: t('1,3-butadienas reaguoja su vienu ekvivalentu HCl. Kokie produktai ir kuris iš jų yra 1,4-produktas?', 'Buta-1,3-diene reacts with one equivalent of HCl. What are the products, and which one is the 1,4 product?') },
+              { mol: { smi: 'C=CC=C', name: t('1,3-butadienas', 'buta-1,3-diene'), opts: { numbers: 'all' } } }],
+            steps: [
+              [{ p: t('Protonas jungiasi prie galinio atomo Nr. 1; teigiamas krūvis pasiskirsto tarp atomų Nr. 2 ir Nr. 4 (aliltipo katijonas).', 'The proton bonds to terminal carbon no. 1; the positive charge is shared by carbons no. 2 and no. 4 (an allylic cation).') }],
+              [{ p: t('Chloridas jungiasi prie atomo Nr. 2: H ir Cl gretimuose atomuose, tai 1,2-produktas.', 'Chloride bonds to carbon no. 2: H and Cl on adjacent carbons, the 1,2 product.') },
+                { mol: { smi: 'CC(Cl)C=C', name: t('3-chlor-1-butenas', '3-chlorobut-1-ene') } }],
+              [{ p: t('Chloridas jungiasi prie atomo Nr. 4: H ir Cl sistemos galuose, dvigubasis ryšys viduryje, tai 1,4-produktas.', 'Chloride bonds to carbon no. 4: H and Cl at the ends of the system, the double bond in the middle, the 1,4 product.') },
+                { mol: { smi: 'CC=CCCl', name: t('1-chlor-2-butenas', '1-chlorobut-2-ene') } }]
+            ]
+          },
+          claims: [{ react: ['diene.hx', ['C=CC=C'], { X: 'Cl' }, 'CC(Cl)C=C'] }, { react: ['diene.hx', ['C=CC=C'], { X: 'Cl' }, 'CC=CCCl'] },
+            { name: ['CC(Cl)C=C', t('3-chlor-1-butenas', '3-chlorobut-1-ene')] }, { name: ['CC=CCCl', t('1-chlor-2-butenas', '1-chlorobut-2-ene')] }]
+        },
         { practice: 'u08.dmech' }
       ]
     },
