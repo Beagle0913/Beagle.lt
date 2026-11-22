@@ -259,6 +259,28 @@ function smilesLike(text) {
 }
 const GENITIVE = /(?:met|et|prop|but|pent|heks|hept|okt|non|dek|adi)(an|en|in)os(?![\p{L}])/iu;
 
+// Views are rendered once (both languages) to catch arrows to missing atoms, bad specs, NaN in the output.
+const viewCache = new Map();
+function viewProblem(kind, spec) {
+  const key = kind + JSON.stringify(spec);
+  if (!viewCache.has(key)) {
+    let r = null;
+    for (const lang of ['lt', 'en']) {
+      try {
+        let d;
+        if (kind === 'mech') d = ORG.views.mechanism(Object.assign({}, spec, { lang }));
+        else if (kind === 'resonance') d = ORG.views.resonance({ mols: spec, lang });
+        else d = ORG.views[kind](Object.assign({}, spec, { lang }));
+        const out = ORG.draw.toString(d.svg);
+        if (/NaN|undefined/.test(out)) { r = 'renders NaN or undefined (' + lang + ')'; break; }
+      } catch (e) { r = 'does not render (' + lang + '): ' + e.message; break; }
+    }
+    viewCache.set(key, r);
+  }
+  return viewCache.get(key);
+}
+const VIEW_KINDS = ['mech', 'scheme', 'resonance', 'fischer', 'newman', 'chair'];
+
 function optionKeys(o, lang) {
   if (!isObj(o)) return 'x:' + JSON.stringify(o);
   if ('mol' in o) return 'mol:' + canon(o.mol.smi);
@@ -336,10 +358,15 @@ function checkUnit(unit, opts) {
 
   // every T, every Mol, every number under node
   function scan(node, loc, tag, parentKey) {
-    if (Array.isArray(node)) { node.forEach((x) => scan(x, loc, tag, parentKey)); return; }
+    if (Array.isArray(node)) {
+      if (parentKey === 'mech') node.forEach((st, i) => { const e = isObj(st) ? viewProblem('mech', st) : null; if (e) R.err(loc, 'mechanism step ' + i + ' ' + e, tag); });
+      if (parentKey === 'resonance') { const e = viewProblem('resonance', node); if (e) R.err(loc, 'resonance block ' + e, tag); }
+      node.forEach((x) => scan(x, loc, tag, parentKey)); return;
+    }
     if (typeof node === 'number') { if (!Number.isFinite(node)) R.err(loc, 'a non-finite number under "' + parentKey + '"', tag); return; }
     if (!isObj(node)) return;
     if (isT(node)) { textCheck(node, loc, tag); return; }
+    if (parentKey === 'scheme' || parentKey === 'fischer' || parentKey === 'newman' || parentKey === 'chair') { const e = viewProblem(parentKey, node); if (e) R.err(loc, parentKey + ' ' + e, tag); }
     if (Array.isArray(node.claims) && parentKey !== 'claim') {
       const kind = Object.keys(node).find((k) => BLOCK_KEYS.includes(k));
       const bloc = loc + (kind ? ', ' + kind + ' block' : '');
@@ -889,6 +916,15 @@ test('validator: claims on notes blocks, numbered examples, text lint', () => {
   assert.equal(run(u).errors.length, 4); // the why (lt, en) and the fixture solution of steps[2] (lt, en)
   r = run(withBlock({ p: T('Žr. 3 skyrių ir 2 skyriuje.', 'See section 3 and 2 section.') })); assert.equal(r.errors.length, 2);
   assert.match(r.errors[0], /refers to a section number/);
+});
+
+test('validator: views are rendered (mechanism arrows to a missing atom)', () => {
+  const mechBlock = (to) => ({ mech: [{ scheme: { items: [{ smi: 'ClCl' }] }, arrows: [{ from: { m: 0, b: [0, 1] }, to, half: true }], note: T('Homolizė', 'Homolysis') }] });
+  const withBlock = (b) => { const u = fresh(); u.notes[1].blocks.push(b); return u; };
+  assert.deepEqual(run(withBlock(mechBlock({ m: 0, a: 1 }))).errors, []);
+  only(withBlock(mechBlock({ m: 0, a: 99 })), /notes section "more": mechanism step 0 does not render [(]lt[)]: .*99/);
+  const u = fresh(); bankOf(u).q.push(mechBlock({ m: 0, a: 99 }));
+  only(u, /type u01.bank, problem u01.bank.1, q: mechanism step 0 does not render/);
 });
 
 test('validator: ready flags and unit files agree', () => {
