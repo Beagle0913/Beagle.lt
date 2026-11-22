@@ -155,7 +155,7 @@ Drawing quality is tested (no overlaps, crossings, label clashes); the playgroun
 `Option` = `{text: T}` | `{mol: Mol}` | `{scheme: Scheme}`. In `choice`, `multi` and `match` the options are shuffled when shown, so write the right one anywhere and give its index. `solution` is a T or a Block list (use blocks to show a worked mechanism or a drawn product). Names in a `name` step: `answer.lt` / `answer.en` (or `answer: {smi}`) hold only names the namer can produce (its main name, alternatives, the course trivial name). A correct course spelling the namer does not produce goes **only** in `answer.extra: {lt: [..], en: [..], src: 'L1 p40'}`, with a `src`; extras are accepted from the learner and are listed for review. It works with both answer forms:
 
     answer: { smi: 'CC(=O)O', extra: { lt: ['acetilo rūgštis'], en: [], src: 'L1 p40' } }
-    answer: { lt: ['etano rūgštis'], en: ['ethanoic acid'], extra: { lt: ['acto rūgštis'], en: ['acetic acid'], src: 'L1 p40' } }
+    answer: { lt: ['etanolis'], en: ['ethanol'], extra: { lt: ['etilo alkoholis'], en: ['ethyl alcohol'], src: 'L11 p3' } }
 
 Names are compared without case, spaces, dashes or brackets, and without Lithuanian letters (accepted with the correct spelling shown): `N-metiletanaminas` equals `N metil etanaminas`; commas and locants still matter.
 
@@ -219,7 +219,7 @@ The problem makes the learner **decide** something a student must be able to dec
 
 ## 9. Lithuanian and English
 
-Write natural academic Lithuanian, as a lecturer would: full sentences, correct cases, no word-for-word English. Read each text aloud in your head. Prefer the course's own term over a "better" one. Terms the course uses (spelling from the slides; check a slide when unsure):
+Write natural academic Lithuanian, as a lecturer would: full sentences, correct cases, no word-for-word English. Read each text aloud in your head. Prefer the course's own term over a "better" one. Where the course uses two terms, both are acceptable; task prompts follow the wording of the seminar sheets. Terms the course uses (spelling from the slides; check a slide when unsure):
 
 | Lithuanian (course, slide) | English (Klein) |
 |---|---|
@@ -228,7 +228,7 @@ Write natural academic Lithuanian, as a lecturer would: full sentences, correct 
 | karbokatijonas, tarpinis karbokatijonas; benzil-, alil-, tretinis, antrinis, pirminis, metil- (L7 p9) | carbocation, intermediate; benzylic, allylic, tertiary, secondary, primary, methyl |
 | nukleofilas, nukleofilinis; elektrofilas, elektrofilinis; heterolizinių reakcijų reagentai (L3 p23) | nucleophile; electrophile; reagents of heterolytic reactions |
 | radikalas, radikalinis (L6 p5) | radical |
-| jungimasis, jungimosi reakcijos (L7 p4); H prijungimas (L7 p20) | addition |
+| jungimasis, jungimosi reakcijos (L7 p4); H prijungimas (L7 p20); prijungimas, vandens prijungimas (L7 p19); prijungimo reakcija (S4.5); nukleofilinis prijungimas (L13 p4, S6.1); aldolinis prisijungimas (S6.6) | addition (S6.7 is "nukleofilinio acilpakeitimo": substitution) |
 | eliminavimas, eliminavimo produktai (L10 p14); *atskilimas* only for loss of H+ from the arenium ion (L9 p10) | elimination |
 | nueinančioji grupė (L10 p3) | leaving group |
 | tirpiklis; poliniai protoniniai / aprotoniniai tirpikliai (L10 p10) | solvent; polar protic / aprotic |
@@ -236,12 +236,12 @@ Write natural academic Lithuanian, as a lecturer would: full sentences, correct 
 | indukcijos efektas, +I, -I (L3 p3); mezomerijos efektas, +M, -M (L3 p10) | inductive effect; resonance (mesomeric) effect |
 | konjugacija (L3 p6); hiperkonjugacija (L7 p9); rezonansinės formulės (L4 p17) | conjugation; hyperconjugation; resonance structures |
 | rūgštingumas, bazingumas, Brionstedo rūgštys ir bazės (L4 p2); konjuguotoji bazė / rūgštis (L4 p6); pKa (L4 p9) | acidity, basicity, Brønsted acids and bases; conjugate base / acid; pKa |
-| chiralinis atomas, chiralinė molekulė (L5 p17); enantiomerai, racematas (L5 p19); diastereomerai (L5 p33) | chiral atom (centre), chiral molecule; enantiomers, racemate; diastereomers |
+| chiralinis centras (L5 p33; S3.3, S3.4, S3.11, S3.12) / chiralinis atomas (L5 p17, prochirality slide); chiralinė molekulė (L5 p17); enantiomerai, racematas (L5 p19); diastereomerai (L5 p33) | chiral centre (stereocentre), chiral molecule; enantiomers, racemate; diastereomers |
 | Markovnikovo taisyklė (L7 p13); Zaicevo taisyklė (L10 p20) | Markovnikov's rule; Zaitsev's rule |
 | orientantai (L9 p24); aktyvuojantys ir deaktyvuojantys aromatinių žiedų pakaitai (L9 p28) | directing groups; activating and deactivating substituents |
-| oksidacija, redukcija (L3 p40); hidrinimas (L7 p20); halogeninimas (L6 p7); hidratacija (L7 p19); dehidratacija (L11 p11) | oxidation, reduction; hydrogenation; halogenation; hydration; dehydration |
+| oksidacija, redukcija (L3 p40); oksidavimas (L8 p15), oksidavimasis (L12 p27); hidrinimas (L7 p20); halogeninimas (L6 p7); hidratacija (L7 p19); dehidratacija (L11 p11) | oxidation, reduction; hydrogenation; halogenation; hydration; dehydration |
 
-Where the slides and textbook differ, use the slides. Check a page image when you use a term not in this table.
+*Oksidacija* is the concept, *oksidavimas* the process; both are fine. In task prompts use *chiralinis centras*, the wording students see on the seminar sheets, and the seminar wording for addition (*prijungimo reakcija*, *nukleofilinio prijungimo*). Where the slides and textbook differ, use the slides. Check a page image when you use a term not in this table.
 
 Mechanism symbols are written exactly: **SR, AE, AN, SEAr, SN1, SN2, E1, E2** (same in both languages). Prefixes in names: chlor-, brom-, jod-, fluor-, hidroksi-, okso-, formil-, amino-, nitro-, metoksi-. Lithuanian name style: locant before the parent: `2-metil-2-butenas`, `1-propanolis`, `pentano rūgštis`, `etilbutanoatas`, `N-metiletanaminas`, `benzenkarboksirūgštis`, `3-metil-5-heksin-2-olis`. Chain choice in the course: most principal groups, then most C=C and C≡C, then longest, then most prefix substituents. English: standard IUPAC as in Klein (`2-methylbut-2-ene`; the older `2-methyl-2-butene` is accepted by the namer).
 
