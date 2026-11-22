@@ -87,12 +87,12 @@
     { id: 'anil', a: '[NH3+]c1ccccc1', k: 0, pka: 4.6, src: 'L4 p30', nm: t('anilinio jonas', 'anilinium ion') },
     { id: 'hcn', a: 'C#N', k: 0, pka: 9.31, src: 'L4 p38', nm: t('vandenilio cianidas', 'hydrogen cyanide') },
     { id: 'phenol', a: 'Oc1ccccc1', k: 0, pka: 9.9, src: 'L4 p11', nm: t('fenolis', 'phenol') },
-    { id: 'acac', a: 'CC(=O)CC(C)=O', k: 3, pka: 9.0, src: 'L4 p11', nm: t('2,4-pentandionas', 'pentane-2,4-dione') },
+    { id: 'acac', a: 'CC(=O)CC(C)=O', k: 3, pka: 9.0, src: 'L4 p11', nm: t('pentan-2,4-dionas', 'pentane-2,4-dione') },
     { id: 'water', a: 'O', k: 0, pka: 15.7, src: 'L4 p11', nm: t('vanduo', 'water') },
     { id: 'meoh', a: 'CO', k: 1, pka: 15.6, src: 'S2.23', nm: t('metanolis', 'methanol') },
     { id: 'etoh', a: 'CCO', k: 2, pka: 16, src: 'L4 p11', nm: t('etanolis', 'ethanol') },
     { id: 'tbuoh', a: 'CC(C)(C)O', k: 4, pka: 18, src: 'L4 p11', nm: t('tret-butanolis', 'tert-butyl alcohol') },
-    { id: 'acetone', a: 'CC(C)=O', k: 0, pka: 19.2, src: 'L4 p11', nm: t('acetonas', 'acetone') },
+    { id: 'acetone', a: 'CC(C)=O', k: 0, pka: 19.3, src: 'S2.23, L4 p11', nm: t('acetonas', 'acetone') },
     { id: 'ethyne', a: 'C#C', k: 0, pka: 25, src: 'L4 p11', nm: t('etinas', 'ethyne') },
     { id: 'nh3', a: 'N', k: 0, pka: 38, src: 'L4 p11', nm: t('amoniakas', 'ammonia') },
     { id: 'ethene', a: 'C=C', k: 0, pka: 44, src: 'L4 p11', nm: t('etenas', 'ethene') },
@@ -143,27 +143,28 @@
     const pa = ctx.chem.parse(A), pb = ctx.chem.parse(B);
     const aA = pa.atoms[k], aB = pb.atoms[k];
     // wrong conjugate bases of the acid A, and wrong conjugate acids of the base B (typical slips; every one a valid structure)
-    const wrongBases = () => {
+    const wrongBases = (lax) => {
       const w = [];
       if (aA.charge === 0 && /^(N|O|S|Cl)$/.test(aA.el)) w.push(change(ctx, A, k, 1, 1));            // H+ added instead of removed
       let others = 0;
       pa.atoms.forEach((a, j) => { if (j !== k && a.h >= 1 && !a.aromatic && /^(C|N|O|S)$/.test(a.el) && others < 2) { const x = change(ctx, A, j, -1, -1); if (x && canon(ctx, x) !== canon(ctx, B)) { w.push(x); others++; } } });   // the proton taken from another atom
       if (aA.h >= 2) w.push(change(ctx, A, k, -2, -2));                                                // two protons removed
-      w.push(change(ctx, A, k, -1, 0));                                                                // an H atom removed, not H+
       w.push(change(ctx, A, k, -1, 1));                                                                // a hydride removed
+      if (lax) w.push(change(ctx, A, k, -1, 0));                                                       // an H atom removed, not H+ (only when too few other options exist)
       return w.concat(pr.xb || []);
     };
-    const wrongAcids = () => {
+    const wrongAcids = (lax) => {
       const w = [];
       if (aB.h >= 1) w.push(change(ctx, B, k, -1, -1));                                                // H+ removed instead of added
       if (/^(N|O|S)$/.test(aB.el)) w.push(change(ctx, B, k, 2, 2));                                   // two protons added
       w.push(change(ctx, B, k, 0, 2));                                                                 // the charge simply flipped
-      w.push(change(ctx, B, k, 1, 0));                                                                 // H added but the charge forgotten
+      if (lax) w.push(change(ctx, B, k, 1, 0));                                                        // H added but the charge forgotten (only when too few other options exist)
       return w.concat(pr.xa || []);
     };
-    const attempt = (acid) => molOptions(ctx, acid ? B : A, (acid ? wrongBases() : wrongAcids()).filter(Boolean), 4);
-    let options = attempt(asAcid);
-    if (options.length < 3) { asAcid = !asAcid; options = attempt(asAcid); }
+    const attempt = (acid, lax) => molOptions(ctx, acid ? B : A, (acid ? wrongBases(lax) : wrongAcids(lax)).filter(Boolean), 4);
+    let options = attempt(asAcid, false);
+    if (options.length < 3) options = attempt(asAcid, true);
+    if (options.length < 3) { asAcid = !asAcid; options = attempt(asAcid, false); if (options.length < 3) options = attempt(asAcid, true); }
     const given = asAcid ? A : B, answer = asAcid ? B : A;
     if (options.length < 3) throw new Error('u04.conj: too few options for ' + A + ' (' + options.length + ')');
     const many = (asAcid ? pa : pb).atoms.length > 1 && (asAcid || pr.tapB !== false);
@@ -177,7 +178,7 @@
           t('Protoną atiduoda atomas Nr. ' + (k + 1) + ': kitų vandenilių rūgštingumas mažesnis.', 'The proton is given up by atom no. ' + (k + 1) + ': the other hydrogens are less acidic.'), ho));
       }
       steps.push({
-        prompt: t('Kokia yra šios rūgšties konjuguotoji bazė?', 'What is the conjugate base of this acid?'), kind: 'choice', options, answer: 0,
+        prompt: many ? t('Kokia yra šios rūgšties konjuguotoji bazė (protoną atiduoda rūgščiausia vieta)?', 'What is the conjugate base of this acid (the proton comes from the most acidic site)?') : t('Kokia yra šios rūgšties konjuguotoji bazė?', 'What is the conjugate base of this acid?'), kind: 'choice', options, answer: 0,
         hint: t('Rūgštis atiduoda $H+$. Kaip dėl to pasikeičia vandenilių skaičius ir krūvis?', 'The acid gives away $H+$. How do the number of hydrogens and the charge change?'),
         solution: [{ p: t('Atėmus $H+$, vandenilių lieka vienu mažiau, o krūvis sumažėja vienu vienetu:', 'Removing $H+$ leaves one hydrogen fewer and lowers the charge by one unit:') }, mo(answer)]
       });
@@ -189,7 +190,7 @@
           t('Protoną prisijungia atomas Nr. ' + (k + 1) + ': jo elektronų pora sudaro naują ryšį su $H+$.', 'Atom no. ' + (k + 1) + ' takes up the proton: its electron pair forms the new bond to $H+$.'), ho));
       }
       steps.push({
-        prompt: t('Kokia yra šios bazės konjuguotoji rūgštis?', 'What is the conjugate acid of this base?'), kind: 'choice', options, answer: 0,
+        prompt: many ? t('Kokia yra šios bazės konjuguotoji rūgštis (protoną prisijungia bazingiausias centras)?', 'What is the conjugate acid of this base (the proton goes to the most basic centre)?') : t('Kokia yra šios bazės konjuguotoji rūgštis?', 'What is the conjugate acid of this base?'), kind: 'choice', options, answer: 0,
         hint: t('Bazė prisijungia $H+$. Kaip dėl to pasikeičia vandenilių skaičius ir krūvis?', 'The base takes up $H+$. How do the number of hydrogens and the charge change?'),
         solution: [{ p: t('Prisijungus $H+$, vandenilių tampa vienu daugiau, o krūvis padidėja vienu vienetu:', 'Taking up $H+$ gives one hydrogen more and raises the charge by one unit:') }, mo(answer)]
       });
@@ -225,7 +226,7 @@
         q: [{ p: t('Rūgšties A rūgštingumo konstanta vandenyje: ' + kaT.lt + '. Rūgšties B pKa = ' + nt(pB).lt + '.', 'The acidity constant of acid A in water: ' + kaT.en + '. Acid B has pKa = ' + nt(pB).en + '.') }],
         steps: [
           {
-            prompt: t('Apskaičiuokite rūgšties A pKa (dvi skaitmenys po kablelio).', 'Calculate the pKa of acid A (two decimals).'), kind: 'number', answer: { value: pA, tol: 0.03 },
+            prompt: t('Apskaičiuokite rūgšties A pKa (du skaitmenys po kablelio).', 'Calculate the pKa of acid A (two decimals).'), kind: 'number', answer: { value: pA, tol: 0.03 },
             hint: t('pKa = −lg Ka. Skaičiaus $10^−n^$ dešimtainis logaritmas yra −n.', 'pKa = −lg Ka. The decimal logarithm of $10^−n^$ is −n.'),
             solution: t('pKa = −lg(' + cT.lt + '·10^−' + n + ') = ' + n + ' − lg ' + cT.lt + ' = ' + nt(pA).lt + '.', 'pKa = −lg(' + cT.en + '·10^−' + n + ') = ' + n + ' − lg ' + cT.en + ' = ' + nt(pA).en + '.')
           },
@@ -268,7 +269,10 @@
     let A = null, Bp = null;
     for (let i = 0; i < 80 && !A; i++) {
       const x = ctx.pick(PK), y = ctx.pick(PK);
-      if (x !== y && Math.abs(x.pka - y.pka) >= 1.5) { A = x; Bp = y; }
+      if (x !== y && Math.abs(x.pka - y.pka) >= 1.5) {
+        const four = [x.a, change(ctx, y.a, y.k, -1, -1), change(ctx, x.a, x.k, -1, -1), y.a];   // the four species of the equation must be distinct (the role step)
+        if (four.every((m) => m) && new Set(four.map((m) => canon(ctx, m))).size === 4) { A = x; Bp = y; }
+      }
     }
     if (!A) throw new Error('u04.dir: no pair');
     const AB = change(ctx, A.a, A.k, -1, -1), BB = change(ctx, Bp.a, Bp.k, -1, -1);
@@ -282,6 +286,9 @@
         { table: { head: [t('Rūgštis', 'Acid'), f('pKa')], rows: [[M(A.a), nt(A.pka)], [M(Bp.a), nt(Bp.pka)]] } }
       ],
       steps: [
+        matchRoles(t('Priskirkite kiekvienai dalelei jos vaidmenį reakcijoje iš kairės į dešinę.', 'Assign each species its role in the reaction read from left to right.'), [A.a, BB, AB, Bp.a], [0, 1, 2, 3],
+          t('Rūgštis atiduoda protoną ir tampa konjuguotąja baze; bazė jį prisijungia ir tampa konjuguotąja rūgštimi.', 'The acid gives away a proton and becomes its conjugate base; the base takes it up and becomes its conjugate acid.'),
+          t('Kairėje esanti $HA$ – rūgštis, jos konjuguotoji bazė yra dešinėje pirmoji dalelė; kairėje esanti bazė paima protoną ir tampa konjuguotąja rūgštimi (dešinėje antroji).', 'The left-hand $HA$ is the acid and its conjugate base is the first species on the right; the base on the left takes the proton and becomes the conjugate acid (the second species on the right).')),
         cho(t('Kuri rūgštis stipresnė: reakcijos kairėje ar dešinėje pusėje?', 'Which acid is stronger: the one on the left or the one on the right of the equation?'),
           [mo(A.a), mo(Bp.a)], strongerLeft ? 0 : 1,
           t('Kuo mažesnė pKa, tuo stipresnė rūgštis.', 'The smaller the pKa, the stronger the acid.'),
@@ -294,10 +301,12 @@
           rightFav ? t('Stipresnė rūgštis yra kairėje, todėl ji reaguoja: gaunama silpnesnė bazė ir silpnesnė rūgštis. Pusiausvyra pasislinkusi į dešinę, pKa skiriasi ' + nt(Math.round((Bp.pka - A.pka) * 100) / 100).lt + ' vieneto.', 'The stronger acid is on the left, so it reacts: a weaker acid and a weaker base form. The equilibrium lies to the right; the pKa values differ by ' + nt(Math.round((Bp.pka - A.pka) * 100) / 100).en + ' units.')
             : t('Stipresnė rūgštis yra dešinėje, todėl jos susidarymas nepalankus: pusiausvyra pasislinkusi į kairę, pKa skiriasi ' + nt(Math.round((A.pka - Bp.pka) * 100) / 100).lt + ' vieneto.', 'The stronger acid is on the right, so its formation is unfavourable: the equilibrium lies to the left; the pKa values differ by ' + nt(Math.round((A.pka - Bp.pka) * 100) / 100).en + ' units.')),
         cho(t('Kodėl pusiausvyra pasislinkusi būtent taip?', 'Why does the equilibrium lie that way?'),
-          [{ text: stepWeak },
+          [{ text: stepWeak }].concat(ctx.shuffle([
             tx('Pusiausvyra pasislenka į stipresnės rūgšties ir stipresnės bazės pusę, nes šios dalelės energingesnės.', 'The equilibrium shifts to the side of the stronger acid and stronger base because these species are richer in energy.'),
             tx('Pusiausvyra visada pasislenka į dešinę, nes bazė atima protoną iš rūgšties.', 'The equilibrium always lies to the right because the base takes the proton from the acid.'),
-            tx('Pusiausvyra pasislenka į pusę, kurioje yra rūgštis su mažesne pKa reikšme.', 'The equilibrium shifts to the side that holds the acid with the smaller pKa.')], 0,
+            tx('Pusiausvyra pasislenka į pusę, kurioje yra rūgštis su mažesne pKa reikšme.', 'The equilibrium shifts to the side that holds the acid with the smaller pKa.'),
+            tx('Pusiausvyra pasislenka į pusę, kurioje yra daugiau atomų, nes tada produktai stabilesni.', 'The equilibrium shifts to the side with more atoms because the products are then more stable.'),
+            tx('Kryptį lemia tik tai, kuri dalelė sudaryta iš daugiau elementų, o ne pKa.', 'The direction depends only on which species has more elements, not on pKa.')]).slice(0, 3)), 0,
           t('Rūgščių ir bazių reakcijas valdo termodinamika: produktai turi būti stabilesni.', 'Acid-base reactions are under thermodynamic control: the products must be more stable.'),
           t('Mažesnę potencinę energiją turi silpnesnė bazė su silpnesne rūgštimi, todėl jų pusė vyrauja.', 'A weaker acid and a weaker base have lower potential energy, so their side predominates.'))
       ],
@@ -331,7 +340,7 @@
     const prod = change(ctx, T.a, T.k, -1, -1);
     return {
       q: [
-        { p: t('Rūgšties (parodyta) pKa = ' + nt(T.pka).lt + '. Lentelėje – keturios bazės ir jų konjuguotųjų rūgščių pKa.', 'The acid shown has pKa = ' + nt(T.pka).en + '. The table lists four bases and the pKa of their conjugate acids.') },
+        { p: t('Rūgšties (parodyta) pKa = ' + nt(T.pka).lt + '. Lentelėje – bazės ir jų konjuguotųjų rūgščių pKa.', 'The acid shown has pKa = ' + nt(T.pka).en + '. The table lists the bases and the pKa of their conjugate acids.') },
         mo(T.a),
         { table: { head: [t('Bazė', 'Base'), t('Konjuguotoji rūgštis', 'Conjugate acid'), f('pKa')], rows: chosen.map((s) => [t(s.nm.lt + ' ' + s.salt, s.nm.en + ' ' + s.salt), M(PKID[s.pk].a), nt(PKID[s.pk].pka)]) } }
       ],
@@ -387,7 +396,7 @@
       id: 'type', gap: 0.5, src: 'L4 p19, T p34',
       members: (ctx) => {
         const R = ctx.pick([['C', 'CN', 'CO', 'CS', 'CC(=O)O'], ['CC', 'CCN', 'CCO', 'CCS', 'CCC(=O)O'], ['CCC', 'CCCN', 'CCCO', 'CCCS', 'CCCC(=O)O']]);
-        return R.map((smi, i) => ({ smi, key: i + 1 }));
+        return R.map((smi, i) => ({ smi, key: R.length - i }));   // smaller key = stronger acid: COOH 1 ... CH 5
       },
       right: t('Rūgštį lemia anijono stabilumas. Neigiamą krūvį geriau išlaiko elektroneigiamesnis atomas (O > N > C) ir didesnis, labiau poliarizuojamas atomas (S > O); karboksilato krūvis dar ir pasiskirsto tarp dviejų O atomų.',
         'The acid is set by the stability of the anion. A negative charge is held better by a more electronegative atom (O > N > C) and by a larger, more polarisable atom (S > O); the carboxylate charge is also shared by two O atoms.'),
@@ -403,8 +412,8 @@
         const V = ctx.pick([['CC', 'C=C', 'C#C', true], ['CCC', 'CC=C', 'CC#C'], ['CCCC', 'CCC=C', 'CCC#C'], ['CCCCC', 'CCCC=C', 'CCCC#C']]);
         return [{ smi: V[0], key: 3, pka: V[3] ? 50 : undefined }, { smi: V[1], key: 2, pka: V[3] ? 44 : undefined }, { smi: V[2], key: 1, pka: V[3] ? 25 : undefined }];
       },
-      right: t('Kuo didesnė anglies atomo s charakterio dalis (sp > sp2 > sp3), tuo didesnis jo elektrinis neigiamumas ir tuo stabilesnis karbanijonas, todėl alkino C–H rūgštingiausias.',
-        'The larger the s character of the carbon atom (sp > sp2 > sp3), the higher its electronegativity and the more stable the carbanion, so the alkyne C–H is the most acidic.'),
+      right: t('Lyginama $C–H$ prie sp, sp2 ir sp3 anglies. Kuo didesnė anglies atomo s charakterio dalis (sp > sp2 > sp3), tuo didesnis jo elektrinis neigiamumas ir tuo stabilesnis karbanijonas, todėl alkino C–H rūgštingiausias.',
+        'Compare the $C–H$ on the sp, sp2 and sp3 carbon. The larger the s character of the carbon atom (sp > sp2 > sp3), the higher its electronegativity and the more stable the carbanion, so the alkyne C–H is the most acidic.'),
       wrong: [
         t('Elektrinis neigiamumas mažėja didėjant s charakteriui, todėl alkanas yra stipriausia rūgštis.', 'Electronegativity falls as the s character grows, so the alkane is the strongest acid.'),
         t('Rūgštingumą lemia tik vandenilių skaičius prie anglies: daugiau vandenilių – stipresnė rūgštis.', 'Acidity depends only on the number of hydrogens on carbon: more hydrogens, a stronger acid.'),
@@ -414,11 +423,11 @@
     {
       id: 'res', gap: 0.3, src: 'L4 p11, p17',
       members: () => fromPK(['tbuoh', 'etoh', 'water', 'phenol', 'ch3cooh', 'acetone', 'acac']),
-      right: t('Rūgšties stiprumą lemia anijono stabilumas. Karboksilato, fenoksido ir diketono anijonuose neigiamas krūvis delokalizuotas (rezonansas), o alkoksido krūvis lieka ant vieno O atomo; alkilgrupių +I efektas ir silpnesnė solvatacija anijoną dar mažiau stabilizuoja.',
-        'The strength of an acid is set by the stability of its anion. In carboxylate, phenoxide and diketone anions the negative charge is delocalised (resonance), whereas the alkoxide charge stays on one O atom; the +I effect of alkyl groups and weaker solvation stabilise it even less.'),
+      right: t('Rūgšties stiprumą lemia anijono stabilumas. Karboksilato, fenoksido ir diketono anijonuose neigiamas krūvis delokalizuotas (rezonansas), o alkoksido krūvis lieka ant vieno O atomo; alkilgrupių +I efektas ir silpnesnė solvatacija anijoną dar mažiau stabilizuoja. Acetonas yra $C–H$ rūgštis: nors enolatas stabilizuotas rezonansu, vienos $C=O$ grupės nepakanka, kad jis pralenktų alkoksidą ant elektroneigiamo $O$.',
+        'The strength of an acid is set by the stability of its anion. In carboxylate, phenoxide and diketone anions the negative charge is delocalised (resonance), whereas the alkoxide charge stays on one O atom; the +I effect of alkyl groups and weaker solvation stabilise it even less. Acetone is a $C–H$ acid: although its enolate is resonance stabilised, a single $C=O$ group does not beat an alkoxide whose charge sits on the more electronegative $O$.'),
       wrong: [
-        t('Alkoksido anijoną stabilizuoja alkilgrupės, nes jos sklaido neigiamą krūvį.', 'Alkyl groups stabilise the alkoxide anion because they spread the negative charge.'),
-        t('Rūgštingumą lemia tik tai, ar molekulėje yra O–H ryšys.', 'Acidity depends only on whether the molecule has an O–H bond.'),
+        t('Alkoksido anijoną stabilizuoja alkilgrupės, nes jos sklaido neigiamą krūvį, todėl tret-butanolis rūgštesnis už metanolį ir etanolį.', 'Alkyl groups stabilise the alkoxide anion because they spread the negative charge, so tert-butanol is more acidic than methanol and ethanol.'),
+        t('Rūgštingumą lemia tik tai, ar molekulėje yra O–H ryšys, o ne anijono krūvio padėtis ir delokalizacija.', 'Acidity depends only on whether the molecule has an O–H bond, not on where the anion charge sits or how far it is delocalised.'),
         t('Kuo ilgesnė anglies grandinė, tuo stipresnė rūgštis.', 'The longer the carbon chain, the stronger the acid.')
       ]
     }
@@ -428,14 +437,14 @@
       id: 'aniline',
       members: (ctx) => [
         { smi: 'Nc1ccc(cc1)[N+](=O)[O-]', key: 1 }, { smi: 'Nc1ccc(Cl)cc1', key: 2 }, { smi: 'Nc1ccccc1', key: 3 },
-        { smi: ctx.pick(['Nc1ccc(C)cc1', 'CCc1ccc(N)cc1']), key: 4 }, { smi: ctx.pick(['COc1ccc(N)cc1', 'CCOc1ccc(N)cc1']), key: 5 }],
-      gap: 0.5, src: 'L4 p30, S2.21',
-      right: t('Elektronų donoriniai pakaitai (alkilas +I, alkoksigrupė +M) didina elektronų tankį ant azoto ir bazingumą; akceptoriniai (nitrogrupė −M ir −I, chloras −I) jį mažina.',
-        'Electron-donating substituents (alkyl +I, alkoxy +M) raise the electron density on nitrogen and the basicity; acceptors (nitro −M and −I, chlorine −I) lower it.'),
+        { smi: ctx.pick(['Nc1ccc(C)cc1', 'CCc1ccc(N)cc1']), key: 4 }, { smi: ctx.pick(['COc1ccc(N)cc1', 'CCOc1ccc(N)cc1']), key: 5 }, { smi: 'CCN', key: 6 }],
+      gap: 0.5, src: 'L4 p30, p32, S2.21',
+      right: t('Elektronų donoriniai pakaitai (alkilas +I, alkoksigrupė +M) didina elektronų tankį ant azoto ir bazingumą; akceptoriniai (nitrogrupė −M ir −I, chloras −I) jį mažina. Palyginant du donorus: $p$-padėtyje alkoksigrupė savo deguonies laisvąja pora perduoda elektronų tankį per žiedą tiesiai azotui ($+M$, jis viršija jos $−I$), o alkilgrupė stumia elektronus tik silpnai ($+I$), todėl 4-metoksianilinas bazingesnis už 4-metilaniliną. Alifatinio azoto pora nedelokalizuota žiede, todėl etanaminas bazingesnis už visus anilinus.',
+        'Electron-donating substituents (alkyl +I, alkoxy +M) raise the electron density on nitrogen and the basicity; acceptors (nitro −M and −I, chlorine −I) lower it. Comparing two donors: in the $p$ position an alkoxy group pushes an oxygen lone pair through the ring straight to nitrogen ($+M$, which outweighs its $−I$), whereas an alkyl group pushes electrons only weakly ($+I$), so 4-methoxyaniline is a stronger base than 4-methylaniline. The lone pair of an aliphatic amine is not delocalised into a ring, so ethanamine is a stronger base than any aniline.'),
       wrong: [
-        t('Nitrogrupė didina bazingumą, nes stabilizuoja konjuguotąją rūgštį – anilinio katijoną.', 'The nitro group raises the basicity because it stabilises the conjugate acid, the anilinium cation.'),
+        t('Nitrogrupė didina bazingumą, nes stabilizuoja konjuguotąją rūgštį – anilinio katijoną, o ne ištraukia elektronų tankį iš azoto.', 'The nitro group raises the basicity because it stabilises the conjugate acid, the anilinium cation, rather than pulling electron density away from nitrogen.'),
         t('Pakaitas veikia tik savo dydžiu: kuo jis didesnis, tuo labiau užstoja azotą ir tuo bazė stipresnė.', 'A substituent acts only through its size: the bigger it is, the more it shields nitrogen and the stronger the base.'),
-        t('Visi pakaitai prie benzeno žiedo bazingumą vienodai mažina, nes žiedas pats yra akceptorius.', 'Every substituent on the benzene ring lowers the basicity equally because the ring is itself an acceptor.')
+        t('Visi pakaitai prie benzeno žiedo bazingumą vienodai mažina, nes žiedas pats yra akceptorius, o pakaito pobūdis nieko nekeičia.', 'Every substituent on the benzene ring lowers the basicity equally because the ring is itself an acceptor, and the nature of the substituent changes nothing.')
       ]
     },
     {
@@ -555,7 +564,7 @@
         },
         {
           p: t('Ta pati medžiaga gali elgtis ir kaip rūgštis, ir kaip bazė. Acto rūgštis su stipria rūgštimi (oksonio jonu) elgiasi kaip bazė: protoną ji prisijungia prie karbonilo deguonies.',
-            'The same substance can act as an acid or as a base. Acetic acid acts as a base toward a strong acid (the oxonium ion): it takes the proton on the carbonyl oxygen.'),
+            'The same substance can act as an acid or as a base. Acetic acid acts as a base toward a strong acid (the hydronium (oxonium) ion): it takes the proton on the carbonyl oxygen.'),
           src: 'L4 p4'
         },
         { scheme: { items: [M('CC(=O)O'), PLUS, M('[OH3+]'), EQ, M('CC(=[OH+])O'), PLUS, M('O')] }, caption: t('Acto rūgštis kaip bazė.', 'Acetic acid acting as a base.'), src: 'L4 p4' },
@@ -572,7 +581,7 @@
             steps: [
               [{ p: t('Sieros rūgštis atiduoda protoną vandeniui, todėl sieros rūgštis yra rūgštis, o vanduo – bazė (jis prisijungia protoną).', 'Sulfuric acid gives a proton to water, so sulfuric acid is the acid and water is the base (it takes up the proton).') }],
               [{ p: t('Sieros rūgštis, netekusi protono, virsta hidrosulfatu – tai konjuguotoji bazė.', 'Sulfuric acid, having lost the proton, becomes hydrogensulfate: the conjugate base.') }, { mol: M('OS(=O)(=O)[O-]') }],
-              [{ p: t('Vanduo, prisijungęs protoną, virsta oksonio jonu – tai konjuguotoji rūgštis.', 'Water, having taken up the proton, becomes the oxonium ion: the conjugate acid.') }, { mol: M('[OH3+]') }]
+              [{ p: t('Vanduo, prisijungęs protoną, virsta oksonio jonu – tai konjuguotoji rūgštis.', 'Water, having taken up the proton, becomes the hydronium ion: the conjugate acid.') }, { mol: M('[OH3+]') }]
             ]
           },
           claims: [{ formula: ['OS(=O)(=O)[O-]', 'HSO4-'] }, { formula: ['[OH3+]', 'H3O+'] }, { formula: ['OS(=O)(=O)O', 'H2SO4'] }],
@@ -594,10 +603,10 @@
             'Acidity is usually measured with water as the base and expressed by an equilibrium constant. The concentration of water hardly changes (it is in large excess), so it is folded into the constant, which gives the acidity constant $Ka$.'),
           src: 'L4 p8-9, T p33'
         },
-        { scheme: { items: [M('CC(=O)O'), PLUS, M('O'), EQ, M('CC(=O)[O-]'), PLUS, M('[OH3+]')] }, caption: t('Acto rūgštis vandenyje: acetato ir oksonio jonai.', 'Acetic acid in water: acetate and oxonium ions.'), src: 'L4 p8' },
+        { scheme: { items: [M('CC(=O)O'), PLUS, M('O'), EQ, M('CC(=O)[O-]'), PLUS, M('[OH3+]')] }, caption: t('Acto rūgštis vandenyje: acetato ir oksonio jonai.', 'Acetic acid in water: acetate and hydronium ions.'), src: 'L4 p8' },
         {
-          p: t('$Ka = [CH3COO^-^][H3O^+^] / [CH3COOH]$. Acto rūgščiai $1,75·10^−5^$ ($Ka$): iš 100 000 jos molekulių vandenyje anijono pavidalo yra tik apie dvi. Patogiau naudoti neigiamą logaritmą, $pKa = −lg Ka$; acto rūgšties $pKa$ yra 4,75.',
-            '$Ka = [CH3COO^-^][H3O^+^] / [CH3COOH]$. For acetic acid $Ka = 1.75·10^−5^$: in water only about 2 molecules out of 100 000 are in the anion form. It is more convenient to use the negative logarithm: $pKa = −lg Ka$, for acetic acid $pKa = 4.75$.'),
+          p: t('$Ka = [CH3COO^-^][H3O^+^] / [CH3COOH]$. Acto rūgščiai $1,75·10^−5^$ ($Ka$): Ka maža: acto rūgštis vandenyje disocijuoja tik nežymiai (skaidrė pateikia tik iliustraciją: maždaug dvi iš šimto tūkstančių molekulių). Patogiau naudoti neigiamą logaritmą, $pKa = −lg Ka$; acto rūgšties $pKa$ yra 4,75.',
+            '$Ka = [CH3COO^-^][H3O^+^] / [CH3COOH]$. For acetic acid $Ka = 1.75·10^−5^$: Ka is small: acetic acid dissociates only slightly in water (the slide gives only an illustration: roughly two molecules in a hundred thousand). It is more convenient to use the negative logarithm: $pKa = −lg Ka$, for acetic acid $pKa = 4.75$.'),
           src: 'L4 p9, T p33'
         },
         {
@@ -611,12 +620,16 @@
             rows: [
               [M('OS(=O)(=O)O'), nt(-9), M('OS(=O)(=O)[O-]')], [M('Cl'), nt(-7), M('[Cl-]')], [M('[OH3+]'), nt(-1.74), M('O')],
               [M('CC(=O)O'), nt(4.75), M('CC(=O)[O-]')], [M('CC(=O)CC(C)=O'), nt(9.0), M('CC(=O)[CH-]C(C)=O')], [M('Oc1ccccc1'), nt(9.9), M('[O-]c1ccccc1')],
-              [M('O'), nt(15.7), M('[OH-]')], [M('CCO'), nt(16), M('CC[O-]')], [M('CC(C)(C)O'), nt(18), M('CC(C)(C)[O-]')], [M('CC(C)=O'), nt(19.2), M('CC(=O)[CH2-]')],
+              [M('O'), nt(15.7), M('[OH-]')], [M('CCO'), nt(16), M('CC[O-]')], [M('CC(C)(C)O'), nt(18), M('CC(C)(C)[O-]')], [M('CC(C)=O'), nt(19.3), M('CC(=O)[CH2-]')],
               [M('C#C'), nt(25), M('C#[C-]')], [M('N'), nt(38), M('[NH2-]')], [M('C=C'), nt(44), M('C=[CH-]')], [M('CC'), nt(50), M('C[CH2-]')]
             ]
           },
           caption: t('Įvairių junginių rūgštingumas (vandenyje): stipriausia rūgštis viršuje.', 'The acidity of various compounds (in water): the strongest acid is at the top.'),
           src: 'L4 p11'
+        },
+        {
+          p: t('Šaltiniai pKa apvalina skirtingai (pvz., acetonas: 19,2 skaidrėje, 19,3 seminare); skyriuje naudojama viena reikšmė.', 'Sources round pKa values differently (acetone: 19.2 on the slide, 19.3 in the seminar); this unit uses one value per compound.'),
+          src: 'L4 p11, S2.23'
         },
         {
           p: t('Kitos kurso nurodytos stiprios rūgštys: $HNO3$ ($pKa = −1,4$), benzensulfonrūgštis ($−6,5$), trifluoracto rūgštis ($0,18$).', 'Other strong acids the course gives: $HNO3$ ($pKa = −1.4$), benzenesulfonic acid ($−6.5$), trifluoroacetic acid ($0.18$).'),
@@ -667,12 +680,12 @@
         },
         { resonance: [{ smi: 'CC(=O)[O-]' }, { smi: 'CC([O-])=O' }], caption: t('Acetato anijonas: dvi lygiavertės rezonansinės formulės.', 'The acetate anion: two equivalent resonance structures.'), src: 'L4 p17' },
         {
-          p: t('Tas pats su fenoksidu: krūvis pasiskirsto žiede ($pKa$ 9,9), o alkoksido krūvis lieka ant vieno deguonies (etanolis 16). Diketone pentano-2,4-dione ($pKa$ 9,0) anijono krūvis delokalizuotas per dvi $C=O$ grupes, todėl šis $C–H$ junginys rūgštesnis už fenolį, o acetonas, turintis vieną $C=O$ grupę, yra daug silpnesnė rūgštis (19,2).',
-            'The same holds for phenoxide: the charge is spread over the ring ($pKa$ 9.9), while the alkoxide charge stays on one oxygen (ethanol 16). In pentane-2,4-dione ($pKa$ 9.0) the anion charge is delocalised over two $C=O$ groups, so this $C–H$ compound is more acidic than phenol, whereas acetone with a single $C=O$ group is a much weaker acid (19.2).'),
+          p: t('Tas pats su fenoksidu: krūvis pasiskirsto žiede ($pKa$ 9,9), o alkoksido krūvis lieka ant vieno deguonies (etanolis 16). Pentan-2,4-dione ($pKa$ 9,0) anijono krūvis delokalizuotas per dvi $C=O$ grupes, todėl šis $C–H$ junginys rūgštesnis už fenolį, o acetonas, turintis vieną $C=O$ grupę, yra daug silpnesnė rūgštis (19,3).',
+            'The same holds for phenoxide: the charge is spread over the ring ($pKa$ 9.9), while the alkoxide charge stays on one oxygen (ethanol 16). In pentane-2,4-dione ($pKa$ 9.0) the anion charge is delocalised over two $C=O$ groups, so this $C–H$ compound is more acidic than phenol, whereas acetone with a single $C=O$ group is a much weaker acid (19.3).'),
           src: 'L4 p11'
         },
         { resonance: [{ smi: '[O-]c1ccccc1' }, { smi: 'O=C1C=CC=C[CH-]1' }, { smi: 'O=C1C=C[CH-]C=C1' }], caption: t('Fenoksido anijonas: krūvis pasiekia o- ir p- padėtis.', 'The phenoxide anion: the charge reaches the ortho and para positions.'), src: 'L4 p11' },
-        { resonance: [{ smi: 'CC(=O)[CH-]C(C)=O' }, { smi: 'CC([O-])=CC(C)=O' }], caption: t('Pentano-2,4-diono anijonas: krūvis dalijasi tarp anglies ir deguonies.', 'The pentane-2,4-dione anion: the charge is shared between carbon and oxygen.'), src: 'L4 p11' },
+        { resonance: [{ smi: 'CC(=O)[CH-]C(C)=O' }, { smi: 'CC([O-])=CC(C)=O' }], caption: t('Pentan-2,4-diono anijonas: krūvis dalijasi tarp anglies ir deguonies.', 'The pentane-2,4-dione anion: the charge is shared between carbon and oxygen.'), src: 'L4 p11' },
         { h: t('2. Rūgštinio centro atomas: elektrinis neigiamumas ir dydis', '2. The atom of the acidic centre: electronegativity and size') },
         {
           p: t('Didėjant atomo elektriniam neigiamumui, didėja gebėjimas išlaikyti neigiamą krūvį, todėl O–H rūgštys stipresnės už N–H rūgštis, o šios – už C–H rūgštis. Nesočiuosiuose junginiuose C–H rūgštingumas dėl hibridizacijos didesnis: anglies elektrinis neigiamumas yra apie 2,5 ($sp^3^$), 2,8 ($sp^2^$) ir 3,1 ($sp$). Todėl acetilenas ir jo dariniai jau yra rūgštys.',
@@ -721,7 +734,7 @@
             head: [t('Rūgštis', 'Acid'), f('pKa'), t('Rūgštis', 'Acid'), f('pKa')],
             rows: [[M('C'), nt(40), M('C(Cl)(Cl)Cl'), nt(15.7)]]
           },
-          caption: t('Chloras (−I) padaro C–H rūgštį daug stipresnę: metanas ir chloroformas.', 'Chlorine (−I) makes a C–H acid much stronger: methane and chloroform.'),
+          caption: t('Chloras (−I) padaro C–H rūgštį daug stipresnę: metanas ir chloroformas. Skaidrės reikšmės apytikslės: tikrasis chloroformo pKa didesnis, tačiau kryptis ($−I$ didina rūgštingumą) ta pati.', 'Chlorine (−I) makes a C–H acid much stronger: methane and chloroform. The slide values are approximate; the real pKa of chloroform is higher, but the trend ($−I$ raises acidity) is the same.'),
           src: 'L4 p21, T p35'
         },
         {
@@ -822,8 +835,8 @@
         },
         { resonance: [{ smi: 'Nc1ccccc1' }, { smi: '[NH2+]=C1C=CC=C[CH-]1' }], caption: t('Anilino azoto laisvoji pora konjuguoja su žiedu: dalis elektronų tankio pereina žiedui.', 'The nitrogen lone pair of aniline is conjugated with the ring: part of the electron density moves into the ring.'), src: 'L4 p30' },
         {
-          p: t('Pakaitai benzeno žiede veikia panašiai. Nitrogrupė ištraukia elektronų tankį ($−M$ ir $−I$), chloras mažina jį ($−I$), alkilgrupė ($+I$) ir alkoksigrupė ($+M$) elektronų tankį didina. Jų poveikis bazingumui didėja taip: 4-nitroanilinas < anilinas < 4-metilanilinas < 4-metoksianilinas.',
-            'Substituents on the benzene ring act in the same way. The nitro group draws electron density away ($−M$ and $−I$), chlorine reduces it ($−I$), the alkyl group ($+I$) and the alkoxy group ($+M$) increase it. Their effect on basicity rises like this: 4-nitroaniline < aniline < 4-methylaniline < 4-methoxyaniline.'),
+          p: t('Pakaitai benzeno žiede veikia panašiai. Nitrogrupė ištraukia elektronų tankį ($−M$ ir $−I$), chloras mažina jį ($−I$), alkilgrupė ($+I$) ir alkoksigrupė ($+M$) elektronų tankį didina. Bazingumas didėja eilėje: 4-nitroanilinas < anilinas < 4-metilanilinas < 4-metoksianilinas. Palyginant du donorus: $p$-padėtyje alkoksigrupė savo deguonies laisvąja pora perduoda elektronų tankį per žiedą tiesiai azotui ($+M$, jis viršija jos $−I$), o alkilgrupė stumia elektronus tik silpnai ($+I$), todėl 4-metoksianilinas bazingesnis už 4-metilaniliną. Alifatinio azoto pora nedelokalizuota žiede, todėl etanaminas bazingesnis už visus anilinus.',
+            'Substituents on the benzene ring act in the same way. The nitro group draws electron density away ($−M$ and $−I$), chlorine reduces it ($−I$), the alkyl group ($+I$) and the alkoxy group ($+M$) increase it. In order of increasing basicity: 4-nitroaniline < aniline < 4-methylaniline < 4-methoxyaniline. Comparing two donors: in the $p$ position an alkoxy group pushes an oxygen lone pair through the ring straight to nitrogen ($+M$, which outweighs its $−I$), whereas an alkyl group pushes electrons only weakly ($+I$), so 4-methoxyaniline is a stronger base than 4-methylaniline. The lone pair of an aliphatic amine is not delocalised into a ring, so ethanamine is a stronger base than any aniline.'),
           src: 'L4 p30, S2.21'
         },
         { resonance: [{ smi: 'Nc1ccc(cc1)[N+](=O)[O-]' }, { smi: '[NH2+]=C1C=CC(=[N+]([O-])[O-])C=C1' }], caption: t('4-nitroanilinas: laisvoji pora delokalizuojasi iki nitrogrupės (−M), todėl bazingumas dar mažesnis.', '4-nitroaniline: the lone pair is delocalised as far as the nitro group (−M), so the basicity is lower still.'), src: 'S2.21, L3 p10' },
@@ -910,6 +923,23 @@
           src: 'L4 p5'
         },
         { scheme: { items: [M('[O-][N+](=O)[OH2+]'), { arrow: '→' }, M('O=[N+]=O'), PLUS, M('O')] }, caption: t('Nitronio jonas ir vanduo.', 'The nitronium ion and water.'), src: 'L4 p5' },
+        { p: t('Sieros rūgštis gali protonuoti ir kitą sieros rūgšties molekulę: viena molekulė yra bazė, kita – rūgštis; gautas $H3SO4+$ praranda vandenį ir susidaro $HSO3+$.', 'Sulfuric acid can also protonate another molecule of sulfuric acid: one molecule is the base, the other the acid; the $H3SO4+$ formed loses water and $HSO3+$ forms.'), src: 'L4 p5' },
+        {
+          mech: [
+            {
+              scheme: { items: [M('OS(=O)(=O)O', { lonePairs: [0] }), PLUS, M('OS(=O)(=O)O', { allH: true })] },
+              arrows: [{ from: { m: 0, lp: 0 }, to: { m: 1, a: 'H0' } }, { from: { m: 1, b: [0, 'H0'] }, to: { m: 1, a: 0 } }],
+              note: t('1 stadija: protonavimas. Viena sieros rūgšties molekulė – bazė, kita – rūgštis.', 'Stage 1: protonation. One sulfuric acid molecule is the base, the other the acid.')
+            },
+            {
+              scheme: { items: [M('OS(=O)(=O)[OH2+]', { lonePairs: [0] })] },
+              arrows: [{ from: { m: 0, lp: 0 }, to: { m: 0, mid: [0, 1] } }, { from: { m: 0, b: [1, 4] }, to: { m: 0, a: 4 } }],
+              note: t('2 stadija: išeina vanduo, susidaro $HSO3+$.', 'Stage 2: water leaves and $HSO3+$ forms.')
+            }
+          ],
+          src: 'L4 p5'
+        },
+        { scheme: { items: [M('OS(=O)(=O)[OH2+]'), { arrow: '→' }, M('O[S+](=O)=O'), PLUS, M('O')] }, caption: t('$HSO3+$ ir vanduo.', '$HSO3+$ and water.'), src: 'L4 p5' },
         {
           pitfall: t('„Amfoterinis“ nereiškia „neutralus“. Junginio vaidmenį kiekvienoje reakcijoje lemia partneris: su stipresne rūgštimi jis bazė, su stipresne baze – rūgštis. Palyginkite pKa, o ne „įsimink“ vaidmenį.',
             '“Amphoteric” does not mean “neutral”. The role of the compound in each reaction is set by its partner: with a stronger acid it is a base, with a stronger base it is an acid. Compare the pKa values instead of memorising a role.')
@@ -946,8 +976,8 @@
           src: 'L4 p36'
         },
         { scheme: { items: [M('CC(=O)O'), PLUS, M('[OH-]'), { arrow: '→' }, M('CC(=O)[O-]'), PLUS, M('O')] }, caption: t('Karboksirūgštis (pKa 3–5) ir hidroksidas: susidaro daug silpnesnė rūgštis vanduo (15,7), reakcija vyksta iki galo.', 'A carboxylic acid (pKa 3–5) and hydroxide: a much weaker acid, water (15.7), forms and the reaction goes to completion.'), src: 'L4 p36, T p37' },
-        { scheme: { items: [M('CC(=O)O'), PLUS, M('N'), EQ, M('CC(=O)[O-]'), PLUS, M('[NH4+]')] }, caption: t('Acto rūgštis (4,8) ir amoniakas: dešinėje silpnesnė rūgštis $NH4+$ (9,4), pusiausvyra – į dešinę.', 'Acetic acid (4.8) and ammonia: the weaker acid $NH4+$ (9.4) is on the right, so the equilibrium lies to the right.'), src: 'L4 p37' },
-        { scheme: { items: [M('CCO'), PLUS, M('CN'), EQ, M('CC[O-]'), PLUS, M('C[NH3+]')] }, caption: t('Etanolis (15,9) ir metilaminas: dešinėje stipresnė rūgštis $CH3NH3+$ (10,7), pusiausvyra – į kairę.', 'Ethanol (15.9) and methylamine: the stronger acid $CH3NH3+$ (10.7) is on the right, so the equilibrium lies to the left.'), src: 'L4 p37' },
+        { scheme: { items: [M('CC(=O)O'), PLUS, M('N'), EQ, M('CC(=O)[O-]'), PLUS, M('[NH4+]')] }, caption: t('Acto rūgštis (4,75) ir amoniakas: dešinėje silpnesnė rūgštis $NH4+$ (9,26), pusiausvyra – į dešinę.', 'Acetic acid (4.75) and ammonia: the weaker acid $NH4+$ (9.26) is on the right, so the equilibrium lies to the right.'), src: 'L4 p37' },
+        { scheme: { items: [M('CCO'), PLUS, M('CN'), EQ, M('CC[O-]'), PLUS, M('C[NH3+]')] }, caption: t('Etanolis (16) ir metilaminas: dešinėje stipresnė rūgštis $CH3NH3+$ (10,62), pusiausvyra – į kairę.', 'Ethanol (16) and methylamine: the stronger acid $CH3NH3+$ (10.62) is on the right, so the equilibrium lies to the left.'), src: 'L4 p37 (the slide rounds to 4,8; 9,4; 15,9; 10,7)' },
         {
           p: t('Papildomai (Klein): pusiausvyros konstanta apytiksliai lygi $10^Δ^$, kur $Δ$ – dviejų rūgščių pKa skirtumas. Skirtumas 3–4 vienetai jau reiškia, kad reakcija praktiškai vyksta iki galo.',
             'Extra (Klein): the equilibrium constant is roughly $10^Δ^$, where $Δ$ is the difference between the pKa values of the two acids. A difference of 3–4 units means the reaction practically goes to completion.'),
@@ -955,8 +985,8 @@
         },
         { h: t('Kuri bazė deprotonizuos rūgštį?', 'Which base will deprotonate an acid?') },
         {
-          p: t('Bazė deprotonizuoja rūgštį tik tada, kai jos konjuguotoji rūgštis yra silpnesnė už deprotonizuojamą rūgštį. Acetonas ($pKa$ 19,2) su $NaOH$ (vandens pKa 15,7) beveik nereaguoja, o su $NaNH2$ (amoniako pKa 38) reaguoja visiškai.',
-            'A base deprotonates an acid only when its own conjugate acid is weaker than the acid being deprotonated. Acetone ($pKa$ 19.2) hardly reacts with $NaOH$ (pKa of water 15.7), but reacts completely with $NaNH2$ (pKa of ammonia 38).'),
+          p: t('Bazė deprotonizuoja rūgštį tik tada, kai jos konjuguotoji rūgštis yra silpnesnė už deprotonizuojamą rūgštį. Acetonas ($pKa$ 19,3) su $NaOH$ (vandens pKa 15,7) beveik nereaguoja, o su $NaNH2$ (amoniako pKa 38) reaguoja visiškai.',
+            'A base deprotonates an acid only when its own conjugate acid is weaker than the acid being deprotonated. Acetone ($pKa$ 19.3) hardly reacts with $NaOH$ (pKa of water 15.7), but reacts completely with $NaNH2$ (pKa of ammonia 38).'),
           src: 'S2.23, L4 p11'
         },
         {
@@ -1106,13 +1136,13 @@
     },
     {
       id: 'u04.role.3',
-      q: [{ p: t('Acto rūgštis reaguoja su amoniaku (pKa: $CH3COOH$ 4,8; $NH4+$ 9,4).', 'Acetic acid reacts with ammonia (pKa: $CH3COOH$ 4.8; $NH4+$ 9.4).') }, SC([M('CC(=O)O'), PLUS, M('N'), EQ, M('CC(=O)[O-]'), PLUS, M('[NH4+]')])],
+      q: [{ p: t('Acto rūgštis reaguoja su amoniaku (pKa: $CH3COOH$ 4,75; $NH4+$ 9,26).', 'Acetic acid reacts with ammonia (pKa: $CH3COOH$ 4.75; $NH4+$ 9.26).') }, SC([M('CC(=O)O'), PLUS, M('N'), EQ, M('CC(=O)[O-]'), PLUS, M('[NH4+]')])],
       steps: [
         matchRoles(t('Priskirkite kiekvienai dalelei jos vaidmenį reakcijoje iš kairės į dešinę.', 'Assign each species its role in the reaction read from left to right.'), ['CC(=O)O', 'N', 'CC(=O)[O-]', '[NH4+]'], [0, 1, 2, 3],
           t('Rūgštis atiduoda protoną ir virsta konjuguotąja baze.', 'The acid gives away a proton and becomes its conjugate base.'), t('Acto rūgštis – rūgštis, amoniakas – bazė; acetatas – acto rūgšties konjuguotoji bazė, $NH4+$ – amoniako konjuguotoji rūgštis.', 'Acetic acid is the acid, ammonia the base; acetate is the conjugate base of acetic acid, $NH4+$ the conjugate acid of ammonia.')),
         cho(t('Kuria kryptimi pasislinkusi pusiausvyra?', 'Which way does the equilibrium lie?'), [tx('Į dešinę', 'To the right'), tx('Į kairę', 'To the left')], 0,
           t('Palyginkite kairėje ir dešinėje esančių rūgščių pKa.', 'Compare the pKa of the acids on the left and on the right.'),
-          t('Kairėje rūgštis (4,8) stipresnė nei dešinėje esantis $NH4+$ (9,4), todėl gaunama silpnesnė bazė ir silpnesnė rūgštis: pusiausvyra – į dešinę.', 'The acid on the left (4.8) is stronger than $NH4+$ on the right (9.4), so a weaker acid and a weaker base form: the equilibrium lies to the right.'))
+          t('Kairėje rūgštis (4,75) stipresnė nei dešinėje esantis $NH4+$ (9,26), todėl gaunama silpnesnė bazė ir silpnesnė rūgštis: pusiausvyra – į dešinę.', 'The acid on the left (4.75) is stronger than $NH4+$ on the right (9.26), so a weaker acid and a weaker base form: the equilibrium lies to the right.'))
       ],
       why: t('Reakcija vyksta į silpnesnės rūgšties ir silpnesnės bazės pusę. Rūgštis ir jos konjuguotoji bazė – viena pora, bazė ir jos konjuguotoji rūgštis – kita.', 'The reaction goes toward the weaker acid and the weaker base. An acid and its conjugate base form one pair, a base and its conjugate acid another.'),
       src: 'L4 p37, p6'
@@ -1144,7 +1174,7 @@
           t('Mažesnė pKa – stipresnė rūgštis; reakcija vyksta, susidarant silpnesnei rūgščiai.', 'The smaller pKa is the stronger acid; the reaction goes toward the weaker acid.'),
           t('Sieros rūgšties pKa mažesnė, todėl ji stipresnė ir beveik visiškai perduoda protoną vandeniui; susidaro silpnesnė rūgštis $H3O+$.', 'Sulfuric acid has the smaller pKa, so it is stronger and passes its proton to water almost completely; the weaker acid $H3O+$ forms.'))
       ],
-      why: t('Kai rūgštis atiduoda protoną vandeniui, vanduo yra bazė, o susidariusi dalelė – oksonio jonas. Pusiausvyra pasislenka į silpnesnių dalelių pusę.', 'When an acid gives a proton to water, water is the base and the species formed is the oxonium ion. The equilibrium shifts to the side of the weaker species.'),
+      why: t('Kai rūgštis atiduoda protoną vandeniui, vanduo yra bazė, o susidariusi dalelė – oksonio jonas. Pusiausvyra pasislenka į silpnesnių dalelių pusę.', 'When an acid gives a proton to water, water is the base and the species formed is the hydronium ion. The equilibrium shifts to the side of the weaker species.'),
       src: 'L4 p7, p10-11'
     },
     {
@@ -1251,7 +1281,7 @@
     },
     {
       id: 'u04.amph.4',
-      q: [{ p: t('Acto rūgštis reaguoja su stipria rūgštimi (oksonio jonu). Kur prisijungia protonas?', 'Acetic acid reacts with a strong acid (the oxonium ion). Where does the proton go?') }, SC([M('CC(=O)O'), PLUS, M('[OH3+]'), FW])],
+      q: [{ p: t('Acto rūgštis reaguoja su stipria rūgštimi (oksonio jonu). Kur prisijungia protonas?', 'Acetic acid reacts with a strong acid (the hydronium ion). Where does the proton go?') }, SC([M('CC(=O)O'), PLUS, M('[OH3+]'), FW])],
       steps: [
         atomsStep(t('Bakstelėkite atomą, kuris prisijungia protoną.', 'Tap the atom that takes up the proton.'), 'CC(=O)O', [2],
           t('Palyginkite dviejų deguonies atomų laisvąsias poras: kurią protonavus katijonas stabilesnis?', 'Compare the lone pairs of the two oxygen atoms: protonation of which gives the more stable cation?'),
@@ -1286,7 +1316,7 @@
       steps: [
         atomsStep(t('Bakstelėkite rūgštinio centro atomą (atiduoda protoną).', 'Tap the atom of the acidic centre (it gives up the proton).'), 'CC(N)C(=O)O', [5],
           t('Karboksilo grupės $O–H$ yra rūgštus.', 'The $O–H$ of the carboxyl group is the acidic one.'), t('Atomas Nr. 6 – karboksilo grupės $OH$ deguonis.', 'Atom no. 6 is the $OH$ oxygen of the carboxyl group.')),
-        atomsStep(t('Bakstelėkite baziniu centro atomą (prisijungia protoną).', 'Tap the atom of the basic centre (it takes up a proton).'), 'CC(N)C(=O)O', [2],
+        atomsStep(t('Bakstelėkite bazinio centro atomą (prisijungia protoną).', 'Tap the atom of the basic centre (it takes up a proton).'), 'CC(N)C(=O)O', [2],
           t('Kurio atomo laisvoji elektronų pora yra bazingesnė?', 'Which atom has a lone pair and is the more basic one?'), t('Atomas Nr. 3 – amino grupės azotas, kurio laisvoji pora jungia protoną.', 'Atom no. 3 is the nitrogen of the amino group; its lone pair binds a proton.')),
         cho(t('Kokia forma vyrauja vandenyje?', 'Which form predominates in water?'), [mo('CC([NH3+])C(=O)[O-]'), mo('CC(N)C(=O)O'), mo('CC([NH3+])C(=O)O'), mo('CC(N)C(=O)[O-]')], 0,
           t('Rūgštinis centras atiduoda protoną bazinio centro naudai tos pačios molekulės viduje.', 'The acidic centre gives its proton to the basic centre within the same molecule.'),
@@ -1304,7 +1334,7 @@
           t('Palyginkite pKa: azoto rūgšties −1,4, sieros rūgšties −9.', 'Compare the pKa values: nitric acid −1.4, sulfuric acid −9.'), t('Sieros rūgštis stipresnė (−9), todėl ji atiduoda protoną, o silpnesnė azoto rūgštis (−1,4) jį priima.', 'Sulfuric acid is stronger (−9), so it gives up the proton, and the weaker nitric acid (−1.4) takes it.')),
         atomsStep(t('Bakstelėkite azoto rūgšties atomą, kuris prisijungia protoną.', 'Tap the atom of nitric acid that takes up the proton.'), 'O[N+](=O)[O-]', [0],
           t('Protonuojama vieta, iš kurios vėliau gali išeiti vanduo.', 'The protonation site is the one from which water can leave later.'), t('Protonuojamas $OH$ deguonis (Nr. 1): susidaręs $–OH2+$ yra gera nueinanti grupė.', 'The $OH$ oxygen (no. 1) is protonated: the resulting $–OH2+$ is a good leaving group.')),
-        cho(t('Kas susidaro po vandens atskilimo?', 'What forms after water leaves?'), [mo('O=[N+]=O.O'), mo('[O-][N+](=O)[OH2+]'), tx('Nitrato jonas ir oksonio jonas.', 'The nitrate ion and the oxonium ion.')], 0,
+        cho(t('Kas susidaro po vandens atskilimo?', 'What forms after water leaves?'), [mo('O=[N+]=O.O'), mo('[O-][N+](=O)[OH2+]'), tx('Nitrato jonas ir oksonio jonas.', 'The nitrate ion and the hydronium ion.')], 0,
           t('Vandens atskilimui padeda neigiamo deguonies laisvoji pora.', 'A lone pair of the negative oxygen helps water to leave.'),
           [{ p: t('Neigiamo deguonies pora sudaro $N=O$ ryšį, o $N–OH2+$ ryšio elektronai pereina vandeniui:', 'The pair of the negative oxygen forms an $N=O$ bond and the electrons of the $N–OH2+$ bond move to water:') },
             { mech: [{ scheme: { items: [M('[O-][N+](=O)[OH2+]', { lonePairs: [0] })] }, arrows: [{ from: { m: 0, lp: 0 }, to: { m: 0, mid: [0, 1] } }, { from: { m: 0, b: [1, 3] }, to: { m: 0, a: 3 } }] }] }, mo('O=[N+]=O.O')])
@@ -1407,15 +1437,15 @@
           t('Rūgštingumą lemia tik anglies atomų skaičius: daugiau – stipresnė.', 'Acidity depends only on the number of carbon atoms: more means stronger.'),
           t('Skruzdžių rūgštis silpniausia, nes neturi alkilgrupės, kuri stabilizuotų anijoną.', 'Formic acid is the weakest because it has no alkyl group to stabilise the anion.')], t('Palyginkite, kokie pakaitai yra prie karboksilo grupės: donorai ar ne.', 'Compare the groups attached to the carboxyl group: are they donors?'))
       ],
-      why: t('Alkilgrupės (+I) mažina rūgštingumą (3,7 / 4,7 / 5,0 eilėje HCOOH, CH3COOH, (CH3)3CCOOH), o nepakeista aromatinė karboksirūgštis šiek tiek stipresnė už alifatinę, nes krūvis gali delokalizuotis žiede.', 'Alkyl groups (+I) lower acidity (3.7 / 4.7 / 5.0 in the series HCOOH, CH3COOH, (CH3)3CCOOH), and an unsubstituted aromatic carboxylic acid is slightly stronger than the aliphatic one because the charge can be delocalised into the ring.'),
+      why: t('Alkilgrupės (+I) mažina rūgštingumą (3,7 / 4,75 / 5,0 eilėje HCOOH, CH3COOH, (CH3)3CCOOH), o nepakeista aromatinė karboksirūgštis šiek tiek stipresnė už alifatinę, nes krūvis gali delokalizuotis žiede.', 'Alkyl groups (+I) lower acidity (3.7 / 4.75 / 5.0 in the series HCOOH, CH3COOH, (CH3)3CCOOH), and an unsubstituted aromatic carboxylic acid is slightly stronger than the aliphatic one because the charge can be delocalised into the ring.'),
       src: 'L4 p20, T p35'
     },
     {
       id: 'u04.rank.6',
-      q: [{ p: t('Palyginkite keturių aromatinių rūgščių rūgštingumą.', 'Compare the acidity of four aromatic acids.') }, { mol: [M('CCc1ccc(cc1)C(=O)O'), M('OS(=O)(=O)c1ccccc1'), M('OC(=O)c1ccc(cc1)[N+](=O)[O-]'), M('OC(=O)c1ccccc1')] }],
+      q: [{ p: t('Palyginkite penkių aromatinių rūgščių rūgštingumą.', 'Compare the acidity of five aromatic acids.') }, { mol: [M('CCc1ccc(cc1)C(=O)O'), M('OS(=O)(=O)c1ccccc1'), M('OC(=O)c1ccc(cc1)[N+](=O)[O-]'), M('OC(=O)c1ccc(Cl)cc1'), M('OC(=O)c1ccccc1')] }],
       steps: [
-        orderStep(['OS(=O)(=O)c1ccccc1', 'OC(=O)c1ccc(cc1)[N+](=O)[O-]', 'OC(=O)c1ccccc1', 'CCc1ccc(cc1)C(=O)O'], HINT_ANION,
-          t('Benzensulfonrūgštis (−6,5) > 4-nitrobenzenkarboksirūgštis > benzenkarboksirūgštis (4,2) > 4-etilbenzenkarboksirūgštis.', 'Benzenesulfonic acid (−6.5) > 4-nitrobenzoic acid > benzoic acid (4.2) > 4-ethylbenzoic acid.')),
+        orderStep(['OS(=O)(=O)c1ccccc1', 'OC(=O)c1ccc(cc1)[N+](=O)[O-]', 'OC(=O)c1ccc(Cl)cc1', 'OC(=O)c1ccccc1', 'CCc1ccc(cc1)C(=O)O'], HINT_ANION,
+          t('Benzensulfonrūgštis (−6,5) > 4-nitrobenzenkarboksirūgštis > 4-chlorbenzenkarboksirūgštis > benzenkarboksirūgštis (4,2) > 4-etilbenzenkarboksirūgštis.', 'Benzenesulfonic acid (−6.5) > 4-nitrobenzoic acid > 4-chlorobenzoic acid > benzoic acid (4.2) > 4-ethylbenzoic acid.')),
         reasonStep(t('Sulfonato krūvis pasidalija tarp trijų deguonies atomų; nitrogrupė yra akceptorius (−M, −I) ir stabilizuoja anijoną, o etilgrupė – donoras (+I) ir jį destabilizuoja.', 'The sulfonate charge is shared by three oxygen atoms; the nitro group is an acceptor (−M, −I) and stabilises the anion, whereas the ethyl group is a donor (+I) and destabilises it.'), [
           t('Nitrogrupė yra donoras, todėl didina elektronų tankį ir rūgštingumą.', 'The nitro group is a donor, so it raises the electron density and the acidity.'),
           t('Etilgrupė stabilizuoja anijoną, nes sklaido neigiamą krūvį.', 'The ethyl group stabilises the anion because it spreads the negative charge.'),
@@ -1423,7 +1453,7 @@
       ],
       why: t('Elektronų akceptoriai anijoną stabilizuoja, todėl rūgštingumas didėja, o donorai veikia priešingai. Sulfonrūgštis dar stipresnė, nes anijono krūvis delokalizuotas tarp trijų deguonies atomų (pKa −6,5).', 'Electron-acceptor substituents stabilise the anion and raise the acidity, donors lower it. A sulfonic acid is stronger still because the anion charge is delocalised over three oxygen atoms (pKa −6.5).'),
       src: 'L4 p10, p21, p23, S2.20',
-      claims: [{ name: ['OC(=O)c1ccc(cc1)[N+](=O)[O-]', t('4-nitrobenzenkarboksirūgštis', '4-nitrobenzoic acid')] }, { name: ['CCc1ccc(cc1)C(=O)O', t('4-etilbenzenkarboksirūgštis', '4-ethylbenzoic acid')] }]
+      claims: [{ name: ['OC(=O)c1ccc(cc1)[N+](=O)[O-]', t('4-nitrobenzenkarboksirūgštis', '4-nitrobenzoic acid')] }, { name: ['OC(=O)c1ccc(Cl)cc1', t('4-chlorbenzenkarboksirūgštis', '4-chlorobenzoic acid')] }, { name: ['CCc1ccc(cc1)C(=O)O', t('4-etilbenzenkarboksirūgštis', '4-ethylbenzoic acid')] }]
     },
     {
       id: 'u04.rank.7',
@@ -1443,10 +1473,24 @@
       src: 'L4 p11, p18, S2.20'
     },
     {
+      id: 'u04.rank.9',
+      q: [{ p: t('Palyginkite trijų karboksirūgščių rūgštingumą.', 'Compare the acidity of three carboxylic acids.') }, { mol: [M('CCC(=O)O'), M('OC(=O)CBr'), M('OC(=O)CF')] }],
+      steps: [
+        orderStep(['OC(=O)CF', 'OC(=O)CBr', 'CCC(=O)O'], HINT_ANION, t('Fluoracto rūgštis (2,66) > bromacto rūgštis (2,86) > propano rūgštis (apie 4,9).', 'Fluoroacetic acid (2.66) > bromoacetic acid (2.86) > propanoic acid (about 4.9).')),
+        reasonStep(t('Halogenai yra elektronų akceptoriai (−I): jie stabilizuoja karboksilato anijoną, tuo labiau, kuo elektroneigiamesnis halogenas; etilgrupė yra donoras (+I) ir anijoną destabilizuoja.', 'Halogens are electron acceptors (−I): they stabilise the carboxylate anion, the more so the more electronegative the halogen; the ethyl group is a donor (+I) and destabilises the anion.'), [
+          t('Bromas didesnis už fluorą ir labiau poliarizuojamas, todėl bromacto rūgštis stipresnė už fluoracto.', 'Bromine is larger than fluorine and more polarisable, so bromoacetic acid is stronger than fluoroacetic acid.'),
+          t('Etilgrupė yra elektronų akceptorius, todėl propano rūgštis stipriausia.', 'The ethyl group is an electron acceptor, so propanoic acid is the strongest.'),
+          t('Rūgštingumą lemia tik anglies atomų skaičius grandinėje: daugiau – stipresnė.', 'Acidity depends only on the number of carbon atoms in the chain: more means stronger.')], HINT_ANION)
+      ],
+      why: t('Elektronų akceptoriai (halogenai, −I) stabilizuoja karboksilato anijoną ir didina rūgštingumą, o alkilgrupės (+I) jį mažina; poveikis stipresnis, kuo didesnis elektrinis neigiamumas.', 'Electron-acceptor substituents (halogens, −I) stabilise the carboxylate anion and raise the acidity, whereas alkyl groups (+I) lower it; the effect is stronger the higher the electronegativity.'),
+      src: 'L4 p20, p22, S2.20',
+      claims: [{ name: ['OC(=O)CF', t('fluoretano rūgštis', 'fluoroethanoic acid')] }, { name: ['OC(=O)CBr', t('brometano rūgštis', 'bromoethanoic acid')] }]
+    },
+    {
       id: 'u04.rank.8',
       q: [{ p: t('Palyginkite keturių junginių rūgštingumą (visi turi tik vieną rūgščiausią vandenilį).', 'Compare the acidity of four compounds (each has one most acidic hydrogen).') }, { mol: [M('CC(C)=O'), M('CCO'), M('CC(=O)CC(C)=O'), M('Oc1ccccc1')] }],
       steps: [
-        orderStep(['CC(=O)CC(C)=O', 'Oc1ccccc1', 'CCO', 'CC(C)=O'], HINT_ANION, t('Pentan-2,4-dionas (9,0) > fenolis (9,9) > etanolis (16) > acetonas (19,2).', 'Pentane-2,4-dione (9.0) > phenol (9.9) > ethanol (16) > acetone (19.2).')),
+        orderStep(['CC(=O)CC(C)=O', 'Oc1ccccc1', 'CCO', 'CC(C)=O'], HINT_ANION, t('Pentan-2,4-dionas (9,0) > fenolis (9,9) > etanolis (16) > acetonas (19,3).', 'Pentane-2,4-dione (9.0) > phenol (9.9) > ethanol (16) > acetone (19.3).')),
         atomsStep(t('Bakstelėkite pentan-2,4-diono atomą, kuris atiduoda protoną.', 'Tap the atom of pentane-2,4-dione that gives up the proton.'), 'CC(=O)CC(C)=O', [3],
           t('Kurio vandenilio praradimas leidžia anijono krūviui pasiskirstyti per abi $C=O$ grupes?', 'Loss of which hydrogen lets the charge of the anion spread over both $C=O$ groups?'), t('Atomas Nr. 4 (CH₂ tarp dviejų karbonilų): anijono krūvis delokalizuojamas per abu deguonies atomus.', 'Atom no. 4 (the CH₂ between the two carbonyls): the anion charge is delocalised over both oxygen atoms.')),
         reasonStep(t('Diketono anijono krūvis delokalizuotas per dvi $C=O$ grupes; acetone yra tik viena grupė, o alkoksido krūvis lieka vienas.', 'The charge of the diketone anion is delocalised over two $C=O$ groups; acetone has only one such group, and the alkoxide charge stays alone.'), [
@@ -1454,7 +1498,7 @@
           t('$C=O$ grupė mažina rūgštingumą, nes ištraukia elektronus iš $C–H$ ryšio, todėl acetonas silpniausia.', 'The $C=O$ group lowers acidity because it pulls electrons out of the $C–H$ bond, so acetone is the weakest.'),
           t('Rūgštingumą lemia tik vandenilio poliškumas: $O–H$ visada poliškesnis už $C–H$.', 'Acidity depends only on the polarity of the hydrogen: $O–H$ is always more polar than $C–H$.')], HINT_ANION)
       ],
-      why: t('Diketono anijonas stabilizuotas dviejų $C=O$ grupių rezonansu, todėl net C–H junginys (9,0) pralenkia fenolį ir alkoholius. Vienos $C=O$ grupės pakanka, kad acetonas (19,2) būtų rūgštingesnis už alkaną, bet ne už alkoholį.', 'The diketone anion is stabilised by resonance with two $C=O$ groups, so even a C–H compound (9.0) overtakes phenol and the alcohols. A single $C=O$ group is enough to make acetone (19.2) more acidic than an alkane but not than an alcohol.'),
+      why: t('Diketono anijonas stabilizuotas dviejų $C=O$ grupių rezonansu, todėl net C–H junginys (9,0) pralenkia fenolį ir alkoholius. Vienos $C=O$ grupės pakanka, kad acetonas (19,3) būtų rūgštingesnis už alkaną, bet ne už alkoholį.', 'The diketone anion is stabilised by resonance with two $C=O$ groups, so even a C–H compound (9.0) overtakes phenol and the alcohols. A single $C=O$ group is enough to make acetone (19.3) more acidic than an alkane but not than an alcohol.'),
       src: 'L4 p11, p17, S2.20'
     }
   ];
@@ -1504,12 +1548,12 @@
       t('$α$ anglies anijonas (enolatas) konjuguotas su $C=O$ grupe: krūvis dalijasi su deguonimi.', 'The anion of the $α$ carbon (an enolate) is conjugated with the $C=O$ group: the charge is shared with oxygen.'),
       [t('$β$ anglis toliau nuo $C=O$, todėl labiau apsaugota ir rūgštesnė.', 'The $β$ carbon is farther from $C=O$, so it is better shielded and more acidic.'), t('$C=O$ grupė yra donorė ir mažina gretimo $C–H$ rūgštingumą.', 'The $C=O$ group is a donor and lowers the acidity of the neighbouring $C–H$.'), t('Visi sotieji $C–H$ ryšiai tokio pat rūgštingumo.', 'All saturated $C–H$ bonds are equally acidic.')],
       t('Kurio anijono krūvis gali pasiekti deguonį?', 'The charge of which anion can reach oxygen?'), t('Atomas Nr. 4 ($α$ padėtyje) rūgštesnis už $β$ atomą (Nr. 5).', 'Atom no. 4 (the $α$ position) is more acidic than the $β$ atom (no. 5).'),
-      t('Karbonilo grupė padidina greta esančio $C–H$ rūgštingumą, nes anijonas stabilizuojamas rezonansu (acetono pKa 19,2).', 'A carbonyl group raises the acidity of the adjacent $C–H$ because the anion is stabilised by resonance (acetone pKa 19.2).'), 'L4 p11, p24'),
-    protonProblem(8, 'CC(=O)CC(=O)O', 3, 6, 6,
-      t('Karboksilato anijono krūvis pasidalija tarp dviejų elektroneigiamų deguonies atomų, o $CH2$ anijono krūvis lieka daugiausia ant anglies ir tik iš dalies dalijasi su deguonimi.', 'The carboxylate charge is shared between two electronegative oxygen atoms, whereas the charge of the $CH2$ anion stays mostly on carbon and is shared with oxygen only in part.'),
+      t('Karbonilo grupė padidina greta esančio $C–H$ rūgštingumą, nes anijonas stabilizuojamas rezonansu (acetono pKa 19,3).', 'A carbonyl group raises the acidity of the adjacent $C–H$ because the anion is stabilised by resonance (acetone pKa 19.3).'), 'L4 p11, p24'),
+    protonProblem(8, 'CC(=O)CCC(=O)O', 3, 7, 7,
+      t('Karboksilato krūvis pasidalija tarp dviejų lygiaverčių deguonies atomų, o $α$-anglies anijonas (enolatas) turi tik vieną $C=O$ grupę ir anglies centrą: $O–H$ pKa 3–5, o $C–H$ prie $C=O$ – apie 19.', 'The carboxylate charge is shared by two equivalent oxygen atoms, whereas the enolate of an $α$ $C–H$ has only one $C=O$ and a carbon centre: the $O–H$ has pKa 3–5, a $C–H$ next to $C=O$ about 19.'),
       [t('Metileno grupė tarp dviejų karbonilų visada rūgščiausia vieta molekulėje.', 'A methylene group between two carbonyls is always the most acidic site in a molecule.'), t('Karboksilo grupė turi mažiau vandenilių, todėl rūgštis silpnesnė.', 'The carboxyl group has fewer hydrogens, so it is a weaker acid.'), t('Abu protonai vienodai rūgštūs, nes abu šalia $C=O$.', 'Both protons are equally acidic because both are next to $C=O$.')],
-      t('Palyginkite $O–H$ rūgštį (pKa 3–5) su $C–H$ rūgštimi šalia $C=O$ (pKa apie 19).', 'Compare an $O–H$ acid (pKa 3–5) with a $C–H$ acid next to $C=O$ (pKa about 19).'), t('Atomas Nr. 7 ($O–H$) rūgštesnis už $CH2$ (Nr. 4).', 'Atom no. 7 ($O–H$) is more acidic than the $CH2$ (no. 4).'),
-      t('Karboksirūgšties $O–H$ (pKa 3–5) paprastai rūgštesnis už net aktyvuotą $C–H$ (pKa apie 9–19).', 'The $O–H$ of a carboxylic acid (pKa 3–5) is normally more acidic than even an activated $C–H$ (pKa about 9–19).'), 'L4 p24, p36'),
+      t('Palyginkite $O–H$ rūgštį (pKa 3–5) su $C–H$ rūgštimi šalia $C=O$ (pKa apie 19).', 'Compare an $O–H$ acid (pKa 3–5) with a $C–H$ acid next to $C=O$ (pKa about 19).'), t('Atomas Nr. 8 ($O–H$) rūgštesnis už $α$ $CH2$ (Nr. 4).', 'Atom no. 8 ($O–H$) is more acidic than the $α$ $CH2$ (no. 4).'),
+      t('Karboksirūgšties $O–H$ (pKa 3–5) paprastai rūgštesnis už net aktyvuotą $C–H$ (pKa apie 19).', 'The $O–H$ of a carboxylic acid (pKa 3–5) is normally more acidic than even an activated $C–H$ (pKa about 19).'), 'L4 p24, p36'),
     protonProblem(9, 'Cc1ccc(O)cc1', 0, 5, 5,
       t('Fenoksido krūvis delokalizuotas žiede ir ant elektroneigiamo deguonies, o benzilo anijonas turi krūvį ant anglies.', 'The phenoxide charge is delocalised in the ring and held on electronegative oxygen, whereas a benzyl anion has the charge on carbon.'),
       [t('Metilo grupė yra donorė ir mažina elektronų tankį, todėl jos $C–H$ rūgštesnis.', 'The methyl group is a donor and lowers electron density, so its $C–H$ is more acidic.'), t('Benzilo $C–H$ rūgštesnis, nes yra šalia benzeno žiedo.', 'A benzylic $C–H$ is more acidic because it is next to the benzene ring.'), t('Abu protonai tokie patys, nes abu susiję su žiedu.', 'Both protons are the same because both are linked to the ring.')],
@@ -1529,19 +1573,19 @@
     why, src
   });
   const BASEC = [
-    baseCentre(1, 'NCCO', 0, t('Aminoetanolyje yra du galimi baziniai centrai.', 'Aminoethanol has two possible basic centres.'),
+    baseCentre(1, 'NCCO', 0, t('2-aminoetanolyje yra du galimi baziniai centrai.', '2-Aminoethanol has two possible basic centres.'),
       t('Palyginkite $N$ ir $O$ elektrinį neigiamumą: kuris silpniau laiko laisvąją porą?', 'Compare the electronegativity of $N$ and $O$: which holds its lone pair less tightly?'), t('Azoto atomas (Nr. 1) yra bazingesnis už deguonį (Nr. 4).', 'The nitrogen atom (no. 1) is more basic than oxygen (no. 4).'),
       t('Azotas mažiau elektroneigiamas už deguonį, todėl silpniau laiko laisvąją porą ir lengviau ją suteikia protonui ($:N$ > $:O$).', 'Nitrogen is less electronegative than oxygen, so it holds its lone pair less tightly and gives it more readily to a proton ($:N$ > $:O$).'),
       [t('Deguonis turi dvi laisvąsias poras, todėl yra stipresnė bazė.', 'Oxygen has two lone pairs, so it is the stronger base.'), t('Hidroksilo grupė didina azoto elektronų tankį, todėl bazingesnis yra deguonis.', 'The hydroxyl group raises the electron density, so oxygen is the more basic.'), t('Azotas turi daugiau vandenilių.', 'Nitrogen has more hydrogens.')],
       t('Bazė silpnesnė, kai jos baziniame centre yra elektroneigiamesnis atomas, nes jis tvirčiau laiko laisvąją porą: aminai stipresni už alkoholius.', 'The higher the electronegativity of the atom of the basic centre, the more tightly it holds the lone pair and the weaker the base: amines are stronger than alcohols.'), 'L4 p29, T p36'),
-    baseCentre(2, 'CSCCO', 4, t('2-(metiltio)etanolyje yra ir sulfonio, ir oksonio tipo centras.', 'The compound shown has both a sulfonium-type and an oxonium-type centre.'),
+    baseCentre(2, 'CSCCO', 4, t('2-(metiltio)etanolyje yra ir sulfonio, ir oksonio tipo centras.', '2-(Methylsulfanyl)ethanol has both a sulfonium-type and an oxonium-type centre.'),
       t('Prisiminkite eilę $:N$ > $:O$ > $:S$.', 'Recall the series $:N$ > $:O$ > $:S$.'), t('Deguonis (Nr. 5) bazingesnis už sierą (Nr. 2).', 'Oxygen (no. 5) is more basic than sulfur (no. 2).'),
       t('Sieros atomas didesnis ir labiau poliarizuojamas: laisvoji pora išsklaidyta didesniame tūryje ir sunkiau jungia protoną, todėl $:S$ yra silpnesnė bazė už $:O$.', 'The sulfur atom is larger and more polarisable: its lone pair is spread over a larger volume and binds a proton less readily, so $:S$ is a weaker base than $:O$.'),
       [t('Siera mažiau elektroneigiama už deguonį, todėl jos laisvoji pora labiau tinka protonui.', 'Sulfur is less electronegative than oxygen, so its lone pair suits a proton better.'), t('Eteriai bazingesni už alkoholius, nes neturi $O–H$ ryšio.', 'Ethers are more basic than alcohols because they have no $O–H$ bond.'), t('Siera turi daugiau elektronų, todėl protoną sudaro stipresnį ryšį.', 'Sulfur has more electrons, so it forms a stronger bond to the proton.')],
       t('Didėjant atomo matmenims, laisvoji pora labiau išsklaidoma ir bazė silpnėja: $:S$ < $:O$ < $:N$.', 'As atoms get larger the lone pair is spread out more and the base gets weaker: $:S$ < $:O$ < $:N$.'), 'L4 p29, T p36'),
     baseCentre(3, 'C=CCCN', 4, t('Bute-3-en-1-amine yra ir $π$ ryšys, ir laisvoji azoto pora.', 'But-3-en-1-amine has both a $π$ bond and the lone pair of nitrogen.'),
       t('Palyginkite, kuris centras – $π$ elektronai ar laisvoji pora – lengviau prieinamas protonui.', 'Compare which centre, $π$ electrons or the lone pair, is more available to a proton.'), t('Azoto atomas (Nr. 5) yra bazinis centras; $π$ ryšys – labai silpnas.', 'The nitrogen atom (no. 5) is the basic centre; the $π$ bond is a very weak one.'),
-      t('Laisvoji azoto pora nedalyvauja jokiame ryšyje ir lengvai sudaro ryšį su protonu, o $π$ ryšio elektronos yra ryšyje: $π$ bazės labai silpnos.', 'The lone pair on nitrogen is in no bond and readily bonds to a proton, whereas the $π$ electrons are already in a bond: $π$ bases are very weak.'),
+      t('Laisvoji azoto pora nedalyvauja jokiame ryšyje ir lengvai sudaro ryšį su protonu, o $π$ ryšio elektronai jau yra ryšyje: $π$ bazės labai silpnos.', 'The lone pair on nitrogen is in no bond and readily bonds to a proton, whereas the $π$ electrons are already in a bond: $π$ bases are very weak.'),
       [t('$π$ elektronai labiau išsikišę, todėl dvigubasis ryšys stipresnė bazė.', 'The $π$ electrons stick out more, so a double bond is the stronger base.'), t('Azotas negali prisijungti protono, nes jau susijęs su trimis atomais.', 'Nitrogen cannot take a proton because it is already linked to three atoms.'), t('Abu centrai vienodai bazingi.', 'Both centres are equally basic.')],
       t('Bazei reikia arba $π$ elektronų, arba laisvosios poros; $π$ bazės (alkenai, arenai) labai silpnos, nes protoną prisijungianti pora nėra laisva.', 'A base needs either $π$ electrons or a lone pair; $π$ bases (alkenes, arenes) are very weak because the pair that takes up the proton is not free.'), 'L4 p25, T p35'),
     baseCentre(4, 'NCc1ccc(N)cc1', 0, t('4-aminobenzilaminas turi alifatinį ir aromatinį amino azotą.', '4-Aminobenzylamine has an aliphatic and an aromatic amino nitrogen.'),
@@ -1749,7 +1793,7 @@
     },
     {
       list: [
-        t('Svarbiausios pKa: $H2SO4$ −9; $HCl$ −7; $H3O+$ −1,74; $CH3COOH$ 4,75; fenolis 9,9; $H2O$ 15,7; etanolis 16; acetonas 19,2; etinas 25; $NH3$ 38; etenas 44; etanas 50.', 'Key pKa values: $H2SO4$ −9; $HCl$ −7; $H3O+$ −1.74; $CH3COOH$ 4.75; phenol 9.9; $H2O$ 15.7; ethanol 16; acetone 19.2; ethyne 25; $NH3$ 38; ethene 44; ethane 50.'),
+        t('Svarbiausios pKa: $H2SO4$ −9; $HCl$ −7; $H3O+$ −1,74; $CH3COOH$ 4,75; fenolis 9,9; $H2O$ 15,7; etanolis 16; acetonas 19,3; etinas 25; $NH3$ 38; etenas 44; etanas 50.', 'Key pKa values: $H2SO4$ −9; $HCl$ −7; $H3O+$ −1.74; $CH3COOH$ 4.75; phenol 9.9; $H2O$ 15.7; ethanol 16; acetone 19.3; ethyne 25; $NH3$ 38; ethene 44; ethane 50.'),
         t('Lenktoji rodyklė prasideda nuo elektronų (laisvosios poros ar ryšio): bazės pora → $H$, $H–A$ ryšys → $A$.', 'A curved arrow starts at electrons (a lone pair or a bond): the base pair → $H$, the $H–A$ bond → $A$.')
       ],
       src: 'L4'
