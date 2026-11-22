@@ -9,8 +9,8 @@ A good unit teaches (notes), drills (exercise types with generators or banks) an
 1. Read your sources (section 3): lecture slide images, the seminar sheet, the textbook pages.
 2. Write notes and exercise types (sections 4 to 9). Keep every SMILES and fact that a program can compute in the form the tests check (section 6).
 3. Look at your work in the playground (section 2) after every few additions. Fix every message in its error list and look at every drawing.
-4. Run the validator: `UNIT=u07 node --test tests/organic/content.test.js` (from the repo root). It must pass with no errors. Guide minimums (words, types, bank size, distinct generator problems) are errors in real unit files.
-5. Run `npm test`.
+4. Run the validator for your unit only: `UNIT=u07 node --test tests/organic/content.test.js` (from the repo root). It must pass with no errors. Guide minimums (words, types, bank size, distinct generator problems) are errors in real unit files.
+5. Run `npm test`. The organic engine tests are run with `node --test tests/organic/` (not yet part of `npm test`). Never run the full `content.test.js` without `UNIT=`: before integration it fails by design with "unit file exists but is not marked ready".
 6. Do not mark the unit ready and do not touch `site/organic/js/units.js`: the main session flips `ready` in its integration step after the unit is reviewed. Until then the unit is not shown on the site (the playground and the validator still load it).
 7. Commit only your own files: `git add site/organic/units/u07.js`, never `git add -A` (other agents work in the same checkout). The commit message ends with the `Co-Authored-By` line your task gives. Work on branch `organic-trainer`; do not push.
 
@@ -93,7 +93,7 @@ A unit file calls `ORG.unit(Unit)` once, inside the wrapper of the example (sect
 | `numbers` | `'all'`, `[idx...]` or `{idx: 'text'}`: atom labels (the labels of `'all'` and of an index list show index + 1) |
 | `lonePairs` | `true` or `[idx...]`: lone pair dots |
 | `allH` | draw every H (needed for an arrow into a reagent's H) |
-| `condensed` | condensed formula style |
+| `condensed` | condensed formula style (`ctx.draw.condensed(mol)` in a generator returns plain ASCII such as `CH3CH(OH)CH2CHO`: wrap it in `$...$` before putting it in a text) |
 | `highlight` | `{atoms: [idx], bonds: [[i,j]], tone: 1..4}` |
 | `deltas` | `{idx: '+' or '-'}` draws δ+ / δ− |
 | `circle` | benzene drawn with a circle |
@@ -115,7 +115,7 @@ Drawing quality is tested (no overlaps, crossings, label clashes); the playgroun
 | `{scheme: Scheme, caption?: T}` | reaction scheme |
 | `{mech: MechStep[], caption?: T}` | mechanism steps with curved arrows |
 | `{resonance: Mol[], caption?: T}` | resonance structures joined by ↔ |
-| `{fischer: spec}` | `{smi, top: atomIdx, bottom: atomIdx}` (acyclic chains only) or `{rows: [{left, right}], top, bottom}` |
+| `{fischer: spec}` | `{smi, top: atomIdx, bottom: atomIdx}` (acyclic chains only) or `{rows: [{left, right}], top, bottom}` (with `rows`, `top` and `bottom` are labels, T or string, for the end groups, not atom indices) |
 | `{newman: spec}` | `{front: [s,s,s], back: [s,s,s], angle}` |
 | `{chair: spec}` | `{subs: [{pos: 1..6, ax: boolean, label}], flip?}` |
 | `{table: {head: T[], rows: (T \| Mol)[][]}}` | table; every row as long as `head` |
@@ -135,7 +135,7 @@ Drawing quality is tested (no overlaps, crossings, label clashes); the playgroun
       types: ExType[],
       coverage: { 'S4.3': ['u07.hx'], ... } }   // every task of your unit -> the types that cover it
 
-**ExType** `{id: 'u07.hx', title: T, mirrors: ['S4.3', ...], gen?: function, bank?: Problem[]}`. The id starts with the unit id and a dot. A type has `gen`, `bank` or both. **Every task in `mirrors` must appear in `coverage` with this type** (the validator checks both ways) and must exist (section 3 list).
+**ExType** `{id: 'u07.hx', title: T, mirrors: ['S4.3', ...], gen?: function, bank?: Problem[]}`. The id starts with the unit id and a dot. A type has `gen`, `bank` or both. **Every task in `mirrors` must exist (section 3 list) and must appear in `coverage` with this type**; the validator checks both. The reverse is not checked, so keep `coverage` honest yourself: list a type under a task only when it really trains that task.
 
 **Problem** `{id?, q: Block[], steps: Step[], why: T | Block[], src?, claims?: Claim[]}`. Bank problems need an `id` that starts with the type id and a dot and is unique (`u07.mech.3`). Generated problems need none.
 
@@ -152,7 +152,12 @@ Drawing quality is tested (no overlaps, crossings, label clashes); the playgroun
 | `formula` | types a formula | string `'C5H12'`; **always give `mol`** (the validator checks the formula against it; without `mol` it can check only when the statement has exactly one molecule) |
 | `match` | pairs left items with right items | `{left: Option[], right: Option[], pairs: number[]}`: `pairs[i]` is the right index for left item `i` |
 
-`Option` = `{text: T}` | `{mol: Mol}` | `{scheme: Scheme}`. In `choice`, `multi` and `match` the options are shuffled when shown, so write the right one anywhere and give its index. `solution` is a T or a Block list (use blocks to show a worked mechanism or a drawn product). Extra accepted names in a `name` step, beyond what the namer produces (its main name, alternatives and the course trivial name), go in `answer.extra: {lt: [..], en: [..], src: 'L1 p40'}`; every one is listed for review. Names are compared without case, spaces, dashes or brackets, and without Lithuanian letters (accepted with the correct spelling shown): `N-metiletanaminas` equals `N metil etanaminas`; commas and locants still matter.
+`Option` = `{text: T}` | `{mol: Mol}` | `{scheme: Scheme}`. In `choice`, `multi` and `match` the options are shuffled when shown, so write the right one anywhere and give its index. `solution` is a T or a Block list (use blocks to show a worked mechanism or a drawn product). Names in a `name` step: `answer.lt` / `answer.en` (or `answer: {smi}`) hold only names the namer can produce (its main name, alternatives, the course trivial name). A correct course spelling the namer does not produce goes **only** in `answer.extra: {lt: [..], en: [..], src: 'L1 p40'}`, with a `src`; extras are accepted from the learner and are listed for review. It works with both answer forms:
+
+    answer: { smi: 'CC(=O)O', extra: { lt: ['acetilo rūgštis'], en: [], src: 'L1 p40' } }
+    answer: { lt: ['etano rūgštis'], en: ['ethanoic acid'], extra: { lt: ['acto rūgštis'], en: ['acetic acid'], src: 'L1 p40' } }
+
+Names are compared without case, spaces, dashes or brackets, and without Lithuanian letters (accepted with the correct spelling shown): `N-metiletanaminas` equals `N metil etanaminas`; commas and locants still matter.
 
 **Claim** (checked by the validator; put them on the problem, `claims: [...]`): `{formula: [smi, 'C5H12']}`, `{name: [smi, T]}`, `{cip: [smi, i, 'R'|'S']}`, `{ez: [smi, i, j, 'E'|'Z']}`, `{centres: [smi, [i...]]}`, `{stereoisomers: [smi, n]}`, `{isomers: [formula, n, filter?]}`, `{hyb: [smi, i, 'sp2']}`, `{carbon: [smi, i, 1..4]}`, `{sigmaPi: [smi, sigma, pi]}`, `{aromatic: [smi, true|false]}`, `{react: [ruleId, [smi...], opts|null, majorSmi]}`, `{same: [smi, smi]}`, `{chiral: [smi, true|false]}`.
 
@@ -170,7 +175,7 @@ Facts about the engine (verified in reviews):
 - **Stereo SMILES.** Always check a stereo SMILES with a `cip` claim before using it. Correct ones: L-alanine `C[C@H](N)C(=O)O` (S); L-serine `OC[C@H](N)C(=O)O` (S); L-cysteine `SC[C@H](N)C(=O)O` (R); (R)-carvone `CC1=CC[C@H](CC1=O)C(C)=C`; D-glyceraldehyde `OC[C@@H](O)C=O` (R). Ephedrine `CNC(C)C(O)c1ccccc1` has centres at atoms 2 and 4; menthol `CC(C)C1CCC(C)CC1O` at 3, 6, 9.
 - **Chiral centre** (chiralinis centras) = an atom with four constitutionally different substituents (`ORG.stereo.stereocentres`). 1,4-disubstituted cyclohexanes have none (cis/trans still exist). Do not write R/S claims for inositol-type ring carbons or pseudoasymmetric centres (`cip` returns null).
 - `isMeso` means achiral with at least 2 chiral centres. Do not call cis-1,4-dimethylcyclohexane meso.
-- **Isomer counts:** only with a group filter (`alcohol`, `ether`, `amine1`, `ester`, `acid`, `aldehyde`, `ketone`, `alkene`, ...), never `any` for formulas with N or O. `isomers` drops enols, peroxides, gem-diols, hemiacetals, hemiaminals, imidic acids and aminals. Up to 7 heavy atoms.
+- **Isomer counts:** only with a group filter (`alcohol`, `ether`, `amine1`, `ester`, `acid`, `aldehyde`, `ketone`, `alkene`, ...), never `any` for formulas with N or O. `isomers` drops enols, peroxides, gem-diols, hemiacetals, hemiaminals, imidic acids and aminals. `ORG.stereo.isomers` counts acyclic isomers by default (C4H8 gives 3 alkenes); with `{rings: true}` rings count too (C4H8 gives 5). The `isomers` claim takes an optional 4th element for this: `{isomers: ['C4H8', 5, null, {rings: true}]}`. State in the question whether rings count, and make the claim match. Up to 8 heavy atoms.
 - **Carbon class** (primary ... quaternary) is meant for sp3 carbons; the carbon of methanol or a methyl halide is class 0 ("metilo").
 - **Hybridisation.** A lone-pair atom next to a π system is sp2 (amide N, aniline N, phenol O, ester alkoxy O). Ask hybridisation mainly about C atoms, and about heteroatoms only when the course states the answer.
 - **Aromaticity.** Do not write claims or questions about 2-pyridone, uracil, coumarin, tropone (model dependent). Do for benzene, naphthalene, pyrrole, furan, thiophene, pyridine, pyrimidine, imidazole, indole, purine, the cyclopentadienyl anion, the tropylium cation.
@@ -216,25 +221,27 @@ The problem makes the learner **decide** something a student must be able to dec
 
 Write natural academic Lithuanian, as a lecturer would: full sentences, correct cases, no word-for-word English. Read each text aloud in your head. Prefer the course's own term over a "better" one. Terms the course uses (spelling from the slides; check a slide when unsure):
 
-| Lithuanian (course) | English (Klein) |
+| Lithuanian (course, slide) | English (Klein) |
 |---|---|
-| pakaitas; pakeitimo reakcija | substituent; substitution |
-| funkcinė grupė | functional group |
-| karbokatijonas (tarpinis karbokatijonas), benzil-, alil-, tretinis / antrinis / pirminis | carbocation (intermediate), benzylic, allylic, tertiary / secondary / primary |
-| nukleofilas, nukleofilinis; elektrofilas, elektrofilinis | nucleophile; electrophile |
-| radikalas, radikalinis | radical |
-| jungimasis, prijungimas (alkenams) | addition |
-| eliminavimas, atskilimas | elimination |
-| nueinančioji grupė | leaving group |
-| tirpiklis; poliniai protoniniai / aprotoniniai tirpikliai | solvent; polar protic / aprotic |
-| reagentas, reakcijos mechanizmas | reagent, mechanism |
-| indukcijos efektas (+I, -I), mezomerijos efektas (+M, -M) | inductive, resonance (mesomeric) effect |
-| konjugacija, hiperkonjugacija, rezonansinės formulės | conjugation, hyperconjugation, resonance structures |
-| rūgštingumas, bazingumas; Brionstedo rūgštys ir bazės; konjuguotoji bazė / rūgštis; pKa | acidity, basicity; Brønsted; conjugate base / acid |
-| chiralinis centras, enantiomerai, diastereomerai, rasematas | chiral centre (stereocentre), enantiomers, diastereomers, racemate |
-| Markovnikovo taisyklė; Zaicevo taisyklė | Markovnikov's rule; Zaitsev's rule |
-| orientantai (o,p- ir m-), aktyvinantys / dezaktyvinantys | directing groups, activating / deactivating |
-| oksidavimas, redukcija, hidrinimas, halogeninimas, hidratacija, dehidratacija | oxidation, reduction, hydrogenation, halogenation, hydration, dehydration |
+| pakaitas (L3 p2); nukleofilinio pakeitimo reakcijos (L10 p14) | substituent; substitution |
+| funkcinė grupė (L1 p23) | functional group |
+| karbokatijonas, tarpinis karbokatijonas; benzil-, alil-, tretinis, antrinis, pirminis, metil- (L7 p9) | carbocation, intermediate; benzylic, allylic, tertiary, secondary, primary, methyl |
+| nukleofilas, nukleofilinis; elektrofilas, elektrofilinis; heterolizinių reakcijų reagentai (L3 p23) | nucleophile; electrophile; reagents of heterolytic reactions |
+| radikalas, radikalinis (L6 p5) | radical |
+| jungimasis, jungimosi reakcijos (L7 p4); H prijungimas (L7 p20) | addition |
+| eliminavimas, eliminavimo produktai (L10 p14); *atskilimas* only for loss of H+ from the arenium ion (L9 p10) | elimination |
+| nueinančioji grupė (L10 p3) | leaving group |
+| tirpiklis; poliniai protoniniai / aprotoniniai tirpikliai (L10 p10) | solvent; polar protic / aprotic |
+| reagentas (L3 p23); reakcijos mechanizmas (L3) | reagent; mechanism |
+| indukcijos efektas, +I, -I (L3 p3); mezomerijos efektas, +M, -M (L3 p10) | inductive effect; resonance (mesomeric) effect |
+| konjugacija (L3 p6); hiperkonjugacija (L7 p9); rezonansinės formulės (L4 p17) | conjugation; hyperconjugation; resonance structures |
+| rūgštingumas, bazingumas, Brionstedo rūgštys ir bazės (L4 p2); konjuguotoji bazė / rūgštis (L4 p6); pKa (L4 p9) | acidity, basicity, Brønsted acids and bases; conjugate base / acid; pKa |
+| chiralinis atomas, chiralinė molekulė (L5 p17); enantiomerai, racematas (L5 p19); diastereomerai (L5 p33) | chiral atom (centre), chiral molecule; enantiomers, racemate; diastereomers |
+| Markovnikovo taisyklė (L7 p13); Zaicevo taisyklė (L10 p20) | Markovnikov's rule; Zaitsev's rule |
+| orientantai (L9 p24); aktyvuojantys ir deaktyvuojantys aromatinių žiedų pakaitai (L9 p28) | directing groups; activating and deactivating substituents |
+| oksidacija, redukcija (L3 p40); hidrinimas (L7 p20); halogeninimas (L6 p7); hidratacija (L7 p19); dehidratacija (L11 p11) | oxidation, reduction; hydrogenation; halogenation; hydration; dehydration |
+
+Where the slides and textbook differ, use the slides. Check a page image when you use a term not in this table.
 
 Mechanism symbols are written exactly: **SR, AE, AN, SEAr, SN1, SN2, E1, E2** (same in both languages). Prefixes in names: chlor-, brom-, jod-, fluor-, hidroksi-, okso-, formil-, amino-, nitro-, metoksi-. Lithuanian name style: locant before the parent: `2-metil-2-butenas`, `1-propanolis`, `pentano rūgštis`, `etilbutanoatas`, `N-metiletanaminas`, `benzenkarboksirūgštis`, `3-metil-5-heksin-2-olis`. Chain choice in the course: most principal groups, then most C=C and C≡C, then longest, then most prefix substituents. English: standard IUPAC as in Klein (`2-methylbut-2-ene`; the older `2-methyl-2-butene` is accepted by the namer).
 
@@ -254,7 +261,7 @@ Both texts of a pair say the same thing. A text that differs only by a formula o
 
 ## 11. Three complete worked examples
 
-Each passes `UNIT_DIR=<folder> node --test tests/organic/content.test.js` (guide minimums show only as warnings there, since an example has one problem, not eight). Task ids in the examples are placeholders: use the real tasks of your sheet.
+Each passes `UNIT_DIR=<folder> node --test tests/organic/content.test.js` (guide minimums show only as warnings there, since an example has one problem, not eight). Task ids in the examples are placeholders: use the real tasks of your sheet. To validate a type snippet of your own the same way: paste it into the `types` array of a minimal unit (the wrapper of 11.1 is enough), give that unit a matching `coverage` for every task the type mirrors, save it as `unit-b.js` (`unit-a.js`, `unit-c.js` also work) in a scratch folder outside the repo, and run `UNIT_DIR=<that folder> node --test tests/organic/content.test.js`.
 
 ### 11.1 The minimal unit file
 
