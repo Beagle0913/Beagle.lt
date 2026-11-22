@@ -124,6 +124,7 @@ h2:focus, h3:focus, section:focus { outline: none; }
 .exsteps { margin: 8px 0 0; padding-left: 1.4em; }
 .exsteps li { margin: 6px 0; }
 .exbar { display: flex; gap: 8px; margin-top: 8px; }
+.exbar[hidden] { display: none; }
 .practicerow, .tolist { margin: 10px 0 4px; }
 .practicetop { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 8px; }
 .practicetop .sectitle { margin: 0; }
@@ -241,16 +242,16 @@ input.in:disabled { opacity: 1; color: var(--ink); -webkit-text-fill-color: var(
 .hit { fill: transparent; stroke: transparent; stroke-width: 0; cursor: pointer; }
 line.hit { stroke: transparent; stroke-width: 22; stroke-linecap: round; fill: none; }
 .hit:hover { fill: color-mix(in srgb, var(--accent) 14%, transparent); }
-line.hit:hover { stroke: color-mix(in srgb, var(--accent) 22%, transparent); }
+line.hit:hover { stroke: var(--accent); stroke-opacity: 0.22; }
 .hit.sel { fill: color-mix(in srgb, var(--accent) 30%, transparent); stroke: var(--accent); stroke-width: 2; }
-line.hit.sel { stroke: color-mix(in srgb, var(--accent) 45%, transparent); }
+line.hit.sel { stroke: var(--accent); stroke-opacity: 0.45; }
 line.hit.sel, line.hit.ok, line.hit.bad, line.hit.shownsel { stroke-width: 22; fill: none; }
-line.hit.shownsel { stroke: color-mix(in srgb, var(--ink2) 45%, transparent); }
+line.hit.shownsel { stroke: var(--ink2); stroke-opacity: 0.45; }
 .hit.ok { fill: color-mix(in srgb, var(--good) 35%, transparent); stroke: var(--good); }
-line.hit.ok { stroke: color-mix(in srgb, var(--good) 55%, transparent); }
+line.hit.ok { stroke: var(--good); stroke-opacity: 0.55; }
 .hit.shownsel { fill: color-mix(in srgb, var(--ink2) 30%, transparent); stroke: var(--ink2); }
 .hit.bad { fill: color-mix(in srgb, var(--bad) 30%, transparent); stroke: var(--bad); }
-line.hit.bad { stroke: color-mix(in srgb, var(--bad) 50%, transparent); }
+line.hit.bad { stroke: var(--bad); stroke-opacity: 0.50; }
 .hit:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
 .tap .hit { touch-action: manipulation; }
 

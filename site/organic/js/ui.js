@@ -21,7 +21,7 @@
   const STR = {
     lt: {
       title: 'Organinė chemija', brand: ['Organinė ', 'chemija'], reset: 'Ištrinti pažangą', reset2: 'Spustelėkite dar kartą, kad ištrintumėte', langLabel: 'Kalba',
-      examBox: 'Egzamino praktika', mt1: '1 tarpinis (1–5)', mt2: '2 tarpinis (6–16)', exam: 'Visas kursas', reviewBtn: n => `Klaidos (${n})`,
+      examBox: 'Egzamino praktika', mt1: r => `1 tarpinis (${r})`, mt2: r => `2 tarpinis (${r})`, exam: r => `Visas kursas (${r})`, missingUnits: m => `Skyriai ${m} dar neparengti, todėl šis bandymas jų neapima.`, reviewBtn: n => `Klaidos (${n})`,
       units: 'Skyriai', notOpened: 'neatidaryta', progressOf: (d, t) => `${d} iš ${t} tipų įsisavinta`,
       back: '← Visi skyriai', learn: 'Mokytis', practice: 'Treniruotis', unitTabs: 'Skyriaus dalys',
       toc: 'Turinys', summary: 'Santrauka', readOf: (a, b) => `Perskaityta ${a} iš ${b} dalių`, mixAll: 'Maišyti visus', mixTitle: 'Visi tipai', types: 'Uždavinių tipai', noTypes: 'Šiame skyriuje uždavinių dar nėra.',
@@ -31,19 +31,19 @@
       stepOf: (k, n) => `${k} žingsnis iš ${n}`, check: 'Tikrinti', answer: 'Atsakyti', hint: 'Užuomina', show: 'Rodyti sprendimą', solution: 'Sprendimas', why: 'Kodėl', mirrors: 'Pratybų užduotys',
       right: 'Teisingai.', wrong: 'Dar ne. Pasitaisykite ir bandykite dar kartą.', pick: 'Pirmiausia pasirinkite arba įrašykite atsakymą.', solvedFirst: 'Išspręsta!', solvedHelp: 'Išspręsta su pagalba', another: 'Dar vienas toks uždavinys', nextType: 'Kitas tipas →', listBack: '← Visi šio skyriaus tipai',
       tapAtoms: 'Bakstelėkite atomus. Dar kartą bakstelėjus pažymėjimas nuimamas.', tapBonds: 'Bakstelėkite ryšius. Dar kartą bakstelėjus pažymėjimas nuimamas.', selected: 'pažymėta', atomWord: 'atomas', bondWord: 'ryšys',
-      up: 'Pakelti aukštyn', down: 'Nuleisti žemyn', position: (n, m) => `${n} iš ${m}`, choose: '— pasirinkite —', matchWith: 'Pasirinkite pora', typeNumber: 'skaičius', typeName: 'pavadinimas', typeFormula: 'pvz., C5H12',
+      up: 'Pakelti aukštyn', down: 'Nuleisti žemyn', position: (n, m) => `${n} iš ${m}`, choose: '— pasirinkite —', matchWith: 'Pasirinkite porą', typeNumber: 'skaičius', typeName: 'pavadinimas', typeFormula: 'pvz., C5H12',
       numberFor: 'Skaičiaus atsakymas', nameFor: 'Pavadinimo atsakymas', formulaFor: 'Formulės atsakymas',
       examOf: (k, n) => `Uždavinys ${k} iš ${n}`, examHead: { mt1: 'Egzamino praktika: 1 tarpinis', mt2: 'Egzamino praktika: 2 tarpinis', exam: 'Egzamino praktika: visas kursas' },
       examNote: 'Užuominų nėra. Kiekvienas žingsnis tikrinamas vieną kartą, sprendimus pamatysite pabaigoje.', examLoading: 'Renkami uždaviniai…', examFewer: n => `Kai kurių skyrių (${n}) nepavyko įkelti, todėl uždavinių mažiau.`, examNone: 'Egzamino uždavinių sudaryti nepavyko: skyriai dar neparengti arba neįkelti.',
       nextProblem: 'Kitas uždavinys', seeResult: 'Rezultatas', result: 'Rezultatas', scoreOf: (s, m) => `${dec(s)} iš ${dec(m)} balų`,
       passMt2: 'Antram tarpiniam egzaminui išlaikyti reikia ne mažiau kaip 1,7 balo.', passYes: 'Šio bandymo rezultato pakanka.', passNo: 'Šio bandymo rezultato nepakanka.',
       perProblem: 'Uždaviniai ir sprendimai', stepsRight: (a, b) => `${a} iš ${b} žingsnių`, newTry: 'Naujas bandymas', toReview: 'Klaidos', gotRight: 'teisingai', gotWrong: 'neteisingai', lost: 'Nepavyko sudaryti uždavinio.', zoom: 'Padidinti', unzoom: 'Pritaikyti prie ekrano', preparing: 'Skyriai dar ruošiami.', molLabel: 'Molekulės struktūra',
-      reviewHead: 'Klaidos', reviewEmpty: 'Klaidų sąrašas tuolaik tuščias. Neteisingai išspręsti uždaviniai atsiras čia.', reviewLeft: n => `Liko uždavinių: ${n}`, reviewDone: n => n ? `Peržiūra baigta. Sąraše dar liko: ${n}.` : 'Peržiūra baigta. Klaidų sąrašas tuščias.', nextMissed: 'Kitas uždavinys',
+      reviewHead: 'Klaidos', reviewEmpty: 'Klaidų sąrašas kol kas tuščias. Neteisingai išspręsti uždaviniai atsiras čia.', reviewLeft: n => `Liko uždavinių: ${n}`, reviewDone: n => n ? `Peržiūra baigta. Sąraše dar liko: ${n}.` : 'Peržiūra baigta. Klaidų sąrašas tuščias.', nextMissed: 'Kitas uždavinys',
       noscript: 'Šiam treniruokliui reikia „JavaScript“.'
     },
     en: {
       title: 'Organic chemistry', brand: ['Organic ', 'chemistry'], reset: 'Reset progress', reset2: 'Click again to erase progress', langLabel: 'Language',
-      examBox: 'Exam practice', mt1: 'Midterm 1 (1–5)', mt2: 'Midterm 2 (6–16)', exam: 'Whole course', reviewBtn: n => `Mistakes (${n})`,
+      examBox: 'Exam practice', mt1: r => `Midterm 1 (${r})`, mt2: r => `Midterm 2 (${r})`, exam: r => `Whole course (${r})`, missingUnits: m => `Units ${m} are not ready yet, so this attempt does not include them.`, reviewBtn: n => `Mistakes (${n})`,
       units: 'Units', notOpened: 'not opened', progressOf: (d, t) => `${d} of ${t} types mastered`,
       back: '← All units', learn: 'Learn', practice: 'Practise', unitTabs: 'Parts of the unit',
       toc: 'Contents', summary: 'Summary', readOf: (a, b) => `Read ${a} of ${b} sections`, mixAll: 'Mix all types', mixTitle: 'All types', types: 'Exercise types', noTypes: 'There are no exercises in this unit yet.',
@@ -227,7 +227,7 @@
       bar.hidden = n >= ex.steps.length;
     };
     const next = button(S.nextStep, 'btn', () => { revealed[path] = (revealed[path] || 0) + 1; draw(); });
-    const all = button(S.showAll, 'btn ghost', () => { revealed[path] = ex.steps.length; draw(); next.focus(); });
+    const all = button(S.showAll, 'btn ghost', () => { revealed[path] = ex.steps.length; draw(); const li = steps.lastElementChild; if (li) { li.tabIndex = -1; li.focus(); } });
     bar.append(next, all); box.append(bar); draw();
     parent.append(box);
     inset -= 34;
@@ -261,7 +261,7 @@
     const parts = (location.hash || '').replace(/^#\/?/, '').split('/').filter(Boolean).map(p => { try { return decodeURIComponent(p); } catch (e) { return p; } });
     if (!parts.length) return { view: 'home', key: 'home' };
     if (parts[0] === 'review') return { view: 'review', key: 'review' };
-    if (parts[0] === 'exam' && P.EXAMS[parts[1]] && ORG.examUnits(parts[1]).length) return { view: 'exam', exam: parts[1], key: 'exam:' + parts[1] };
+    if (parts[0] === 'exam' && P.EXAMS[parts[1]] && ORG.examAvailable(parts[1])) return { view: 'exam', exam: parts[1], key: 'exam:' + parts[1] };
     const unit = ORG.readyUnit(parts[0]);
     if (unit) {
       if (!parts[1]) return { view: 'unit', unit, tab: 'learn', key: 'u:' + unit.id };
@@ -297,12 +297,12 @@
   /* ---------- home ---------- */
   function renderHome() {
     const queue = P.reviewQueue(prog).filter(r => unitOfType(r.type));
-    const exams = ['mt1', 'mt2', 'exam'].filter(k => ORG.examUnits(k).length);
+    const exams = ['mt1', 'mt2', 'exam'].filter(k => ORG.examAvailable(k));
     if (!ORG.readyUnits().length) { app.append(el('p', 'plain', S.preparing)); doc.title = S.title; return; }
     const box = el('section', 'examsbox');
     box.append(el('h2', 'boxtitle', S.examBox));
     const row = el('div', 'examrow');
-    for (const k of exams) row.append(link('#/exam/' + k, S[k], 'btn'));
+    for (const k of exams) row.append(link('#/exam/' + k, S[k](ORG.examInfo(k).span), 'btn'));
     row.append(link('#/review', S.reviewBtn(queue.length), 'btn' + (queue.length ? ' warn' : '')));
     box.append(row);
     app.append(box);
@@ -351,7 +351,8 @@
     getUnit(u.id).then(unit => {
       if (!alive(my)) return;
       clear(body);
-      if (tab === 'learn') learnView(body, u, unit); else practiceView(body, u, unit);
+      try { if (tab === 'learn') learnView(body, u, unit); else practiceView(body, u, unit); }
+      catch (e) { clear(body); body.append(lostBox()); }
     }, () => {
       if (!alive(my)) return;
       clear(body); body.append(unavailable(() => render()));
@@ -864,6 +865,8 @@
     app.append(link('#/', S.back, 'backlink'));
     const h = el('h2', 'pagetitle', S.examHead[kind]); h.tabIndex = -1; app.append(h);
     app.append(el('p', 'plain muted', S.examNote));
+    const nfo = ORG.examInfo(kind);
+    if (nfo.partial) app.append(el('p', 'plain muted', S.missingUnits(nfo.missing)));
     const host = el('div', 'playhost'); app.append(host);
     doc.title = S.examHead[kind] + ' – ' + S.title;
     const build = () => {
@@ -914,6 +917,8 @@
     const h = el('h3', 'resulttitle', S.result); h.tabIndex = -1; box.append(h);
     box.append(el('p', 'score', S.scoreOf(sc.score, sc.max)));
     if (sc.pass !== null) box.append(el('p', 'passnote ' + (sc.pass ? 'yes' : 'no'), S.passMt2 + ' ' + (sc.pass ? S.passYes : S.passNo)));
+    const nfo = ORG.examInfo(kind);
+    if (nfo.partial) box.append(el('p', 'plain muted', S.missingUnits(nfo.missing)));
     box.append(el('h3', 'sectitle', S.perProblem));
     s.plays.forEach((p, i) => {
       if (!p || p.lost) return;

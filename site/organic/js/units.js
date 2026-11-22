@@ -36,6 +36,15 @@
   ORG.readyUnit = id => ORG.UNITS.find(u => u.id === id && u.ready === true) || null;
   ORG.readyParts = () => ORG.PARTS.filter(pt => ORG.readyUnits().some(u => u.part === pt.part));
   ORG.examUnits = kind => ORG.readyUnits().filter(u => u.exams.includes(kind));
+  // The whole-course exam is offered only once a Part I unit is ready too (otherwise it would just repeat midterm 2).
+  ORG.examAvailable = kind => ORG.examUnits(kind).length > 0 && (kind !== 'exam' || ORG.examUnits('mt1').length > 0);
+  const squash = ns => { const out = []; for (let i = 0; i < ns.length; i++) { let j = i; while (j + 1 < ns.length && ns[j + 1] === ns[j] + 1) j++; out.push(j > i ? ns[i] + '–' + ns[j] : String(ns[i])); i = j; } return out.join(', '); };
+  // What an exam really draws from: span = ready unit numbers, missing = unit numbers of this exam that are not released yet.
+  ORG.examInfo = kind => {
+    const ready = ORG.examUnits(kind).map(u => Number(u.n));
+    const missing = ORG.UNITS.filter(u => u.exams.includes(kind) && u.ready !== true).map(u => Number(u.n));
+    return { span: squash(ready), missing: squash(missing), partial: missing.length > 0 };
+  };
 
   // Exam parts and their titles (the home page lists the units in these groups).
   ORG.PARTS = [
