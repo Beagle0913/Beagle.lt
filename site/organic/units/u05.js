@@ -78,6 +78,24 @@
     CH2OH: { r: 'CH2OH', l: 'HOH2C' }, H: { r: 'H', l: 'H' }
   };
 
+  // geometry of a Fischer centre drawn as rows: st = [top, right, bottom, left] ligand keys; vertical bonds go away from the viewer, horizontal ones towards it
+  const FV = [[0, 1, -1], [1, 0, 1], [0, -1, -1], [-1, 0, 1]];
+  const det3 = (a, b, c) => a[0] * (b[1] * c[2] - b[2] * c[1]) - a[1] * (b[0] * c[2] - b[2] * c[0]) + a[2] * (b[0] * c[1] - b[1] * c[0]);
+  function fischerRS(st) {
+    const order = [0, 1, 2, 3].sort((x, y) => LIG[st[y]].rk - LIG[st[x]].rk);   // senior first
+    const [a, b, c, d] = order.map(i => FV[i]);
+    const sub = (p, q) => [p[0] - q[0], p[1] - q[1], p[2] - q[2]];
+    return det3(sub(a, d), sub(b, d), sub(c, d)) < 0 ? 'R' : 'S';
+  }
+  const fischerDraw = (st) => ({ rows: [{ left: FIS[st[3]].l, right: FIS[st[1]].r }], top: FIS[st[0]].r, bottom: FIS[st[2]].r });
+  // direction (clockwise or not) of the three senior ligands as drawn on the paper (y down), H ignored
+  function fischerSeen(st) {
+    const P = [[0, -1], [1, 0], [0, 1], [-1, 0]];
+    const order = [0, 1, 2, 3].filter(i => st[i] !== 'H').sort((x, y) => LIG[st[y]].rk - LIG[st[x]].rk).map(i => P[i]);
+    const [a, b, c] = order;
+    return ((b[0] - a[0]) * (c[1] - b[1]) - (b[1] - a[1]) * (c[0] - b[0])) > 0;
+  }
+
   /* ================================================================ notes ================================================================ */
 
   const NOTES = [
@@ -245,16 +263,21 @@
           src: 'L5 p10'
         },
         {
-          rule: t('Chiralinis centras (vadinamas ir asimetriniu, ar stereogeniniu) yra atomas, prie kurio prijungti keturi nevienodi pakaitai; anglies atveju jis žymimas $*C$. Anglis gali tapti tokiu centru tik būdama $sp3$ hibridizacijos. Molekulė su vienu chiraliniu centru visada chiralinė.',
-            'A chiral centre (asymmetric or stereogenic centre) is an atom with four different substituents, marked $*C$. A carbon can have four different substituents only when it is $sp3$ hybridised. A molecule with a single chiral centre is always chiral.'),
+          rule: t('Chiralinis centras (vadinamas ir asimetriniu centru) yra atomas, prie kurio prijungti keturi nevienodi pakaitai; anglies atveju jis žymimas $*C$. Anglis gali tapti tokiu centru tik būdama $sp3$ hibridizacijos. Molekulė su vienu chiraliniu centru visada chiralinė.',
+            'A chiral centre (also called an asymmetric centre) is an atom with four different substituents, marked $*C$. A carbon can have four different substituents only when it is $sp3$ hybridised. A molecule with a single chiral centre is always chiral.'),
           src: 'L5 p15'
+        },
+        {
+          p: t('Stereogeninis centras (stereocentras) – platesnė sąvoka: atomas, kurio dviejų pakaitų sukeitimas duoda kitą stereoizomerą. Todėl stereocentrai yra ir chiraliniai centrai (sukeitus gaunamas enantiomeras), ir dvigubojo ryšio atomai (sukeitus gaunamas $Z$ ar $E$ izomeras). Uždaviniuose „chiralinis centras“ reiškia atomą su keturiais skirtingais pakaitais.',
+            'A stereogenic centre (stereocentre) is a wider term: an atom at which swapping two substituents gives another stereoisomer. Chiral centres qualify (the swap gives the enantiomer) and so do the carbons of a double bond (the swap gives the $Z$ or $E$ isomer). In the tasks "chiral centre" means an atom with four different substituents.'),
+          src: 'L5 p42'
         },
         {
           mol: [
             { smi: 'CC[C@H](C)Br', name: t('2-brombutanas', '2-bromobutane') },
             { smi: 'CCC(C)(C)Br', name: t('2-brom-2-metilbutanas', '2-bromo-2-methylbutane') }
           ],
-          caption: t('2-brombutanas turi keturis skirtingus pakaitus ($Br$, $CH3$, $CH2CH3$, $H$), todėl yra chiralinis; 2-brom-2-metilbutane yra dvi vienodos metilo grupės, jis achiralinis.', '2-Bromobutane has four different substituents ($Br$, $CH3$, $CH2CH3$, $H$) and is chiral; 2-bromo-2-methylbutane has two identical methyl groups and is achiral.'),
+          caption: t('2-brombutanas turi keturis skirtingus pakaitus ($Br$, $CH3$, $CH2CH3$, $H$), todėl yra chiralinis; 2-brom-2-metilbutano molekulėje yra dvi vienodos metilo grupės, todėl jis achiralinis.', '2-Bromobutane has four different substituents ($Br$, $CH3$, $CH2CH3$, $H$) and is chiral; 2-bromo-2-methylbutane has two identical methyl groups and is achiral.'),
           src: 'L5 p14'
         },
         {
@@ -395,8 +418,8 @@
         },
         { h: t('Chirališkumas gamtoje ir vaistuose', 'Chirality in nature and in drugs') },
         {
-          p: t('Baltymai, angliavandeniai ir receptoriai yra chiraliniai, todėl enantiomerus jie atpažįsta skirtingai, kaip dešinė ranka dešinę pirštinę. Limoneno $R$-enantiomeras kvepia apelsinais, $S$-enantiomeras – citrinomis. Vaistų atveju dažnai veikia tik vienas enantiomeras: ibuprofeno aktyvus $S$ (organizme dalis $R$ virsta $S$), levodopos – tik $S$, escitalopramo $S$ ~100 kartų aktyvesnis už $R$. Fermentai gali veikti tik vieną enantiomerą, o tai leidžia juos atskirti.',
-            'Proteins, carbohydrates and receptors are chiral, so they recognise the enantiomers differently, like a right hand a right glove. The $R$ enantiomer of limonene smells of oranges and the $S$ enantiomer of lemons. Drugs often act through one enantiomer only: ibuprofen is active as $S$ (in the body part of the $R$ form turns into $S$), levodopa only as $S$, and the $S$ form of escitalopram is about 100 times more active than $R$. Enzymes may act on one enantiomer only, which allows them to be separated.'),
+          p: t('Baltymai, angliavandeniai ir receptoriai yra chiraliniai, todėl enantiomerus jie atpažįsta skirtingai, kaip dešinė ranka dešinę pirštinę. Limoneno $R$-enantiomeras kvepia apelsinais, $S$-enantiomeras – citrinomis. Vaistų atveju dažnai veikia tik vienas enantiomeras: ibuprofeno aktyvus $S$ (organizme dalis $R$ virsta $S$), levodopos – tik $S$, escitalopramo $S$ ~100 kartų aktyvesnis už $R$; propranololis (hipertenzijos vaistas) parduodamas kaip racematas, nors aktyvus tik $S$, o $R$ įtariamas esant toksiškas. Fermentai gali veikti tik vieną enantiomerą, o tai leidžia juos atskirti.',
+            'Proteins, carbohydrates and receptors are chiral, so they recognise the enantiomers differently, like a right hand a right glove. The $R$ enantiomer of limonene smells of oranges and the $S$ enantiomer of lemons. Drugs often act through one enantiomer only: ibuprofen is active as $S$ (in the body part of the $R$ form turns into $S$), levodopa only as $S$, and the $S$ form of escitalopram is about 100 times more active than $R$; propranolol (an antihypertensive) is sold as a racemate although only $S$ is active and $R$ is suspected to be toxic. Enzymes may act on one enantiomer only, which allows them to be separated.'),
           src: 'L5 p26'
         },
         {
@@ -416,7 +439,7 @@
     /* ------------------------------------------------------------ 4 */
     {
       id: 'cip',
-      title: t('R,S sistema (Kano, Ingoldo ir Prelogo nomenklatūra)', 'The R,S system (Cahn–Ingold–Prelog)'),
+      title: t('Kano–Ingolto–Prelogo R,S sistema', 'The R,S system (Cahn–Ingold–Prelog)'),
       blocks: [
         { h: t('Kaip nustatyti R ar S', 'How to assign R or S') },
         {
@@ -453,6 +476,11 @@
             ]
           },
           src: 'T p44'
+        },
+        {
+          p: t('Dvigubasis ir trigubasis ryšys skaičiuojamas kaip du ar trys tokie patys atomai: $C=O$ prie anglies duoda $(O,O)$, todėl $COOH$ yra $(O,O,O)$, $CHO$ – $(O,O,H)$, $C≡N$ – $(N,N,N)$, fenilas – $(C,C,C)$, vinilas – $(C,C,H)$. Jei antrojo laipsnio atomai vienodi, lyginama toliau: žiūrima, kuriame pakaite pirmą kartą atsiranda didesnio atominio skaičiaus atomas.',
+            'A double or triple bond counts the atom at its far end twice or three times: $C=O$ on a carbon gives $(O,O)$, so $COOH$ is $(O,O,O)$, $CHO$ is $(O,O,H)$, $C≡N$ is $(N,N,N)$, phenyl $(C,C,C)$ and vinyl $(C,C,H)$. If the atoms of the second sphere are the same, keep going outward and rank by the first point of difference.'),
+          src: 'L5 p24, p43'
         },
         {
           mol: { smi: 'OC[C@@H](O)C=O', name: t('2,3-dihidroksipropanalis', '2,3-dihydroxypropanal') },
@@ -511,7 +539,7 @@
         { h: t('σ-diastereomerai ir stereoizomerų skaičius', 'σ-diastereomers and the number of stereoisomers') },
         {
           p: t('Diastereomerais vadiname stereoizomerus, kurie nesudaro veidrodinės poros. Yra dvi jų rūšys: $σ$-diastereomerai, kuriuose dalis chiralinių centrų turi tą pačią konfigūraciją, o kita dalis – priešingą, ir $π$-diastereomerai, kurių skirtumą lemia dvigubasis ryšys.',
-            'Stereoisomers that are not enantiomers (not mirror images of each other) are called diastereomers. They are divided into $σ$- and $π$-diastereomers. In $σ$-diastereomers some chiral centres have the same configuration and others the opposite one.'),
+            'Stereoisomers that are not enantiomers (not mirror images of each other) are called diastereomers. They are divided into $σ$- and $π$-diastereomers. In $σ$-diastereomers some chiral centres have the same configuration and others the opposite one, and $π$-diastereomers differ because of a double bond.'),
           src: 'L5 p33'
         },
         {
@@ -753,7 +781,7 @@
         },
         {
           table: {
-            head: [t('Ciklas', 'Ring'), t('Kampo nuokrypis nuo 109,5°', 'Deviation from 109.5°'), t('Pastaba', 'Remark')],
+            head: [t('Ciklas', 'Ring'), t('Kampo skirtumas nuo 109,5°', 'Angle difference from 109.5°'), t('Pastaba', 'Remark')],
             rows: [
               [t('ciklopropanas', 'cyclopropane'), f('109,5° − 60° = 49,5°'), t('plokščias, visi $H$ užstoti, „bananiniai“ ryšiai; reakcijose lengvai atsiveria', 'planar, all $H$ eclipsed, “banana” bonds; opens easily in reactions')],
               [t('ciklobutanas', 'cyclobutane'), f('109,5° − 90° = 19,5°'), t('neplokščias („sulenktas kvadratas“), žemas perėjimo barjeras', 'not planar (a “folded square”), low barrier between forms')],
@@ -853,7 +881,7 @@
         },
         {
           chair: { subs: [{ pos: 6, ax: false, label: 'OH' }, { pos: 1, ax: false, label: 'OH' }, { pos: 2, ax: false, label: 'OH' }, { pos: 3, ax: false, label: 'OH' }, { pos: 4, ax: false, label: 'CH2OH' }] },
-          caption: t('$β$-D-Gliukopiranozė stabiliausioje kėdėje: visi penki pakaitai ekvatoriniai; šeštoji viršūnė (be užrašo, 5 padėtis) yra ciklo deguonis.', '$β$-D-Glucopyranose in its most stable chair: all five substituents equatorial; the unlabelled sixth vertex (position 5) is the ring oxygen.'),
+          caption: t('$β$-D-Gliukopiranozė stabiliausioje kėdėje: visi penki pakaitai ekvatoriniai; šeštoji viršūnė be užrašo – tarp anglies su $CH2OH$ ir anglies su $OH$ – yra ciklo deguonis.', '$β$-D-Glucopyranose in its most stable chair: all five substituents equatorial; the unlabelled sixth vertex, between the carbon with $CH2OH$ and the carbon with $OH$, is the ring oxygen.'),
           src: 'L5 p66'
         },
         { practice: 'u05.chair' },
@@ -895,19 +923,25 @@
 
   /* ================================================================ exercise types ================================================================ */
 
-  // class names for the filters of ORG.stereo.isomers: [genitive plural LT, plural EN]
+  // class names for the filters of ORG.stereo.isomers: [genitive plural LT, plural EN, nominative plural LT]
   const GROUPS = {
-    alcohol: ['alkoholių', 'alcohols'], ether: ['eterių', 'ethers'], aldehyde: ['aldehidų', 'aldehydes'], ketone: ['ketonų', 'ketones'],
-    ester: ['esterių', 'esters'], acid: ['karboksirūgščių', 'carboxylic acids'], amine1: ['pirminių aminų', 'primary amines'],
-    amine2: ['antrinių aminų', 'secondary amines'], amine3: ['tretinių aminų', 'tertiary amines']
+    alcohol: ['alkoholių', 'alcohols', 'alkoholiai'], ether: ['eterių', 'ethers', 'eteriai'], aldehyde: ['aldehidų', 'aldehydes', 'aldehidai'],
+    ketone: ['ketonų', 'ketones', 'ketonai'], ester: ['esterių', 'esters', 'esteriai'], acid: ['karboksirūgščių', 'carboxylic acids', 'karboksirūgštys'],
+    amine1: ['pirminių aminų', 'primary amines', 'pirminiai aminai'], amine2: ['antrinių aminų', 'secondary amines', 'antriniai aminai'],
+    amine3: ['tretinių aminų', 'tertiary amines', 'tretiniai aminai'], nitrile: ['nitrilų', 'nitriles', 'nitrilai']
   };
-  // [formula, filter, other classes of the same formula]
+  // [formula, filter, other classes of the same formula]; filter null = every constitutional isomer of the formula,
+  // the third item is then a list of formulas of near neighbours whose structures serve as wrong options
   const ISO = [
     ['C3H8O', 'alcohol', ['ether']], ['C4H10O', 'alcohol', ['ether']], ['C4H10O', 'ether', ['alcohol']], ['C5H12O', 'alcohol', ['ether']],
     ['C5H12O', 'ether', ['alcohol']], ['C4H8O', 'aldehyde', ['ketone']], ['C5H10O', 'aldehyde', ['ketone']], ['C5H10O', 'ketone', ['aldehyde']],
     ['C3H6O2', 'ester', ['acid']], ['C4H8O2', 'ester', ['acid']], ['C4H8O2', 'acid', ['ester']], ['C5H10O2', 'acid', ['ester']],
-    ['C3H9N', 'amine1', ['amine2', 'amine3']], ['C4H11N', 'amine1', ['amine2', 'amine3']], ['C4H11N', 'amine2', ['amine1', 'amine3']]
+    ['C3H9N', 'amine1', ['amine2', 'amine3']], ['C4H11N', 'amine1', ['amine2', 'amine3']], ['C4H11N', 'amine2', ['amine1', 'amine3']],
+    ['C4H7N', 'nitrile', null],
+    ['C5H12', null, ['C5H10']], ['C4H9Cl', null, ['C4H9Br', 'C4H8']], ['C2H7N', null, ['C2H5N']], ['C2H6O', null, ['C2H4O', 'C2H5Cl']]
   ];
+  // wrong options for nitriles: same formula, other functional groups
+  const NITRILE_WRONG = ['C=CCN=C', 'CC#CCN', 'C=CCC=N', 'CC=CC=N', 'CC(C#C)N'];
 
   let CHIRAL_SPLIT = null;
 
@@ -920,19 +954,22 @@
       gen(rng, ctx) {
         const { stereo } = ctx;
         const [formula, filt, others] = ctx.pick(ISO);
-        const right = stereo.isomers(formula, { filter: filt });
+        const right = filt ? stereo.isomers(formula, { filter: filt }) : stereo.isomers(formula);
         const wrongPool = [];
-        others.forEach(o => stereo.isomers(formula, { filter: o }).forEach(s => wrongPool.push(s)));
+        if (!filt) others.forEach(f => stereo.isomers(f).forEach(s => wrongPool.push(s)));
+        else if (others) others.forEach(o => stereo.isomers(formula, { filter: o }).forEach(s => wrongPool.push(s)));
+        else NITRILE_WRONG.forEach(s => wrongPool.push(s));
         if (right.length < 2 || wrongPool.length < 1) throw new Error('u05.constit: ' + formula + ' ' + filt);
-        const g = GROUPS[filt];
-        const nr = Math.min(right.length, 2);
+        const g = filt ? GROUPS[filt] : null;
+        const nr = ctx.int(wrongPool.length < 2 ? 2 : 1, Math.min(right.length, 3));
         const picked = ctx.shuffle(right).slice(0, nr);
-        const wrong = ctx.shuffle(wrongPool).slice(0, Math.min(wrongPool.length, 4 - nr < 2 ? 2 : 4 - nr));
+        const wrong = ctx.shuffle(wrongPool).slice(0, Math.min(wrongPool.length, Math.max(2, 4 - nr)));
         const options = picked.concat(wrong).map(s => ({ mol: { smi: s } }));
         const shown = ctx.shuffle(right.slice()).slice(0, 8);
         const steps = [
           {
-            prompt: t('Kiek yra ' + g[0] + ', kurių molekulinė formulė $' + formula + '$?', 'How many ' + g[1] + ' have the molecular formula $' + formula + '$?'),
+            prompt: filt ? t('Kiek yra ' + g[0] + ', kurių molekulinė formulė $' + formula + '$?', 'How many ' + g[1] + ' have the molecular formula $' + formula + '$?')
+              : t('Kiek sandaros izomerų turi formulė $' + formula + '$?', 'How many constitutional isomers does the formula $' + formula + '$ have?'),
             kind: 'number', answer: { value: right.length, tol: 0 },
             hint: t('Pirmiausia pasirinkite ilgiausią anglies grandinę, po to ją trumpinkite ir stumdykite funkcinę grupę. Nesuskaičiuokite to paties junginio du kartus.',
               'Start with the longest carbon chain, then shorten it and move the functional group. Do not count the same compound twice.'),
@@ -942,11 +979,15 @@
             ]
           },
           {
-            prompt: t('Pažymėkite visas struktūras, kurios yra ' + g[0] + ' izomerai ($' + formula + '$).', 'Pick every structure that is one of the ' + g[1] + ' of $' + formula + '$.'),
+            prompt: filt ? t('Pažymėkite visas struktūras, kurios yra ' + g[2] + ' ($' + formula + '$).', 'Pick every structure that is one of the ' + g[1] + ' of $' + formula + '$.')
+              : t('Pažymėkite visas struktūras, kurių molekulinė formulė $' + formula + '$.', 'Pick every structure whose molecular formula is $' + formula + '$.'),
             kind: 'multi', options, answer: picked.map((_, i) => i),
-            hint: t('Visų variantų formulė ta pati, todėl žiūrėkite tik į funkcinę grupę.', 'All options have the same formula, so look only at the functional group.'),
-            solution: t('Teisingos struktūros priklauso klasei ' + g[0] + '; kiti variantai turi tą pačią formulę, bet kitą funkcinę grupę (funkciniai izomerai).',
+            hint: filt ? t('Visų variantų formulė ta pati, todėl žiūrėkite tik į funkcinę grupę.', 'All options have the same formula, so look only at the functional group.')
+              : t('Suskaičiuokite kiekvienos struktūros $C$, $H$ ir kitų atomų skaičių.', 'Count the $C$, $H$ and other atoms of each structure.'),
+            solution: filt ? t('Teisingos struktūros priklauso klasei ' + g[0] + '; kiti variantai turi tą pačią formulę, bet kitą funkcinę grupę (funkciniai izomerai).',
               'The right structures belong to the class of ' + g[1] + '; the others have the same formula but another functional group (functional isomers).')
+              : t('Teisingos struktūros turi formulę $' + formula + '$; kitų struktūrų atomų skaičius kitoks, todėl jos nėra šios formulės izomerai.',
+                'The right structures have the formula $' + formula + '$; the others have a different number of atoms, so they are not isomers of this formula.')
           }
         ];
         return {
@@ -955,7 +996,7 @@
           why: t('Sandaros izomerus randame sistemingai: pasirenkame grandinės skeletą (grandininiai izomerai), po to keičiame funkcinės grupės ar dvigubojo ryšio vietą (padėties izomerai). Tos pačios formulės junginiai su kita funkcine grupe yra funkciniai izomerai.',
             'Constitutional isomers are found systematically: choose the carbon skeleton (chain isomers), then move the functional group or double bond (position isomers). Compounds of the same formula with another functional group are functional isomers.'),
           src: 'L5 p3',
-          claims: [{ isomers: [formula, right.length, filt] }]
+          claims: [{ isomers: filt ? [formula, right.length, filt] : [formula, right.length] }]
         };
       }
     },
@@ -974,7 +1015,7 @@
           ['CC(O)C(Cl)C', 1], ['CC(O)C(N)C(=O)O', 0], ['CC(C)C(N)C(=O)O', 0], ['CC(CC)C(N)C(=O)O', 0], ['CNC(C)C(O)c1ccccc1', 0],
           ['OCC(NC(=O)C(Cl)Cl)C(O)c1ccc(cc1)[N+](=O)[O-]', 0], ['CC1=CCC(CC1)C(C)=C', 0], ['CC1=CCC(CC1=O)C(C)=C', 0], ['CC(C)C1CCC(C)CC1O', 0],
           ['O=C1C=C2CCC(C(C)=C)CC2(C)C(C)C1', 0], ['OCC(O)C1OC(=O)C(O)=C1O', 0], ['CCC(=O)OC(Cc1ccccc1)(c1ccccc1)C(C)CN(C)C', 0],
-          ['CCC(C)C(C)CC', 0]
+          ['CCC(C)C(C)CC', 0], ['ClC(=C)C(CBr)(Cl)CCCC(C)(C)Cl', 0], ['CC(O)C=C', 0], ['CC(Br)CC(Cl)C', 0], ['CC(N)c1ccccc1', 0], ['OCC(Cl)C=C', 0]
         ];
         const [smi, named] = ctx.pick(POOL);
         const mol = chem.parse(smi);
@@ -1013,7 +1054,7 @@
           });
         }
         return {
-          q: [{ p: t('Šiame junginyje yra chiralinių centrų (chiralinio atomo).', 'This compound contains chiral centres (stereogenic atoms).') }, { mol: { smi } }],
+          q: [{ p: t('Raskite chiralinius centrus šiame junginyje.', 'Find the chiral centres in this compound.') }, { mol: { smi } }],
           steps,
           why: t('Chiralinis centras yra atomas su keturiais skirtingais pakaitais. Jei yra $n$ tokių centrų, galimi $2^n^$ stereoizomerų; kai molekulė turi simetrijos plokštumą (mezoforma), jų būna mažiau.',
             'A chiral centre is an atom with four different substituents. With $n$ such centres up to $2^n^$ stereoisomers are possible; when the molecule has a plane of symmetry (a meso form), there are fewer.'),
@@ -1060,7 +1101,7 @@
                   'Chiral molecules have neither a plane nor a centre of symmetry. Molecules without chiral centres, or with a plane of symmetry, are achiral.')
             },
             {
-              prompt: t('Pirmojoje pažymėtoje chiralinėje molekulėje bakstelėkite chiralinius centrus.', 'In the first chiral molecule you picked, tap the chiral centres.'),
+              prompt: t('Pirmojoje (viršuje kairėje) chiralinėje molekulėje bakstelėkite chiralinius centrus.', 'In the first chiral molecule in the list (reading left to right), tap the chiral centres.'),
               kind: 'atoms', mol: { smi: first }, answer: cs,
               hint: t('Kuriuose anglies atomuose yra keturios skirtingos grupės?', 'Which carbons carry four different groups?'),
               solution: t('Chiralinių centrų: ' + cs.length + '. Tai sp³ anglys su keturiais skirtingais pakaitais.', 'Chiral centres: ' + cs.length + '. They are sp³ carbons with four different substituents.')
@@ -1132,19 +1173,36 @@
       gen(rng, ctx) {
         const { stereo, chem } = ctx;
         const KEYS = Object.keys(LIG).filter(k => k !== 'H');
+        const KEYS_V = ['OH', 'NH2', 'Cl', 'Br', 'CH3', 'Et', 'COOH', 'CHO', 'CH2OH'];
+        const vert = rng() < 0.4;                              // hydrogen on the vertical line (behind the plane), S3.15c
         for (let tries = 0; tries < 80; tries++) {
-          const heavy = ctx.shuffle(KEYS.slice()).slice(0, 3);
+          const heavy = ctx.shuffle((vert ? KEYS_V : KEYS).slice()).slice(0, 3);
           if (new Set(heavy.map(k => LIG[k].rk)).size !== 3) continue;
-          const tag = rng() < 0.5 ? '@' : '@@';
-          const cs = centreSmi(ctx, ['H'].concat(heavy), tag);
-          const mol = chem.parse(cs.smi);
-          const engine = stereo.cip(mol, 0);
-          const spec = { smi: cs.smi, top: cs.first[heavy[0]], bottom: cs.first[heavy[1]] };
-          const read = ORG.views.readFischer(spec);
-          if (read[0] !== engine || engine !== rsFromTag(tag, cs.order.map(k => LIG[k].rk))) continue;
+          let cs = null, engine, spec;
+          if (vert) {
+            const hp = ctx.pick([0, 2]);
+            const st = [null, null, null, null];
+            st[hp] = 'H'; st[2 - hp] = heavy[0]; st[1] = heavy[1]; st[3] = heavy[2];
+            engine = fischerRS(st);
+            if (fischerSeen(st) !== (engine === 'R')) throw new Error('u05.fischer: seen direction disagrees');
+            for (const tag of ['@', '@@']) {
+              const c2 = centreSmi(ctx, ['H'].concat(heavy), tag);
+              if (stereo.cip(chem.parse(c2.smi), 0) === engine) cs = c2;
+            }
+            if (!cs) continue;
+            spec = fischerDraw(st);
+          } else {
+            const tag = rng() < 0.5 ? '@' : '@@';
+            cs = centreSmi(ctx, ['H'].concat(heavy), tag);
+            const mol = chem.parse(cs.smi);
+            engine = stereo.cip(mol, 0);
+            spec = { smi: cs.smi, top: cs.first[heavy[0]], bottom: cs.first[heavy[1]] };
+            const read = ORG.views.readFischer(spec);
+            if (read[0] !== engine || engine !== rsFromTag(tag, cs.order.map(k => LIG[k].rk))) continue;
+          }
           const sorted = byRank(['H'].concat(heavy));
           const ot = orderText(sorted);
-          const apparentClockwise = engine === 'S';          // H is on a horizontal bond: the direction read on paper is reversed
+          const apparentClockwise = vert ? engine === 'R' : engine === 'S';   // H horizontal: the direction read on paper is reversed; H vertical: it is the true one
           return {
             q: [{ p: t('Nustatykite stereocentro konfigūraciją pagal Fišerio projekciją.', 'Determine the configuration of the stereocentre from the Fischer projection.') }, { fischer: spec }],
             steps: [
@@ -1156,7 +1214,8 @@
                 solution: t(ot.lt, ot.en)
               },
               {
-                prompt: t('Vandenilis yra horizontalioje linijoje. Ar eiga 1 → 2 → 3, kurią matote ant popieriaus, sukasi pagal laikrodžio rodyklę?', 'The hydrogen is on a horizontal line. Does the sequence 1 → 2 → 3 that you read on the paper run clockwise?'),
+                prompt: vert ? t('Vandenilis yra vertikalioje linijoje. Ar eiga 1 → 2 → 3, kurią matote ant popieriaus, sukasi pagal laikrodžio rodyklę?', 'The hydrogen is on a vertical line. Does the sequence 1 → 2 → 3 that you read on the paper run clockwise?')
+                  : t('Vandenilis yra horizontalioje linijoje. Ar eiga 1 → 2 → 3, kurią matote ant popieriaus, sukasi pagal laikrodžio rodyklę?', 'The hydrogen is on a horizontal line. Does the sequence 1 → 2 → 3 that you read on the paper run clockwise?'),
                 kind: 'choice',
                 options: [{ text: t('Taip, pagal laikrodžio rodyklę', 'Yes, clockwise') }, { text: t('Ne, prieš laikrodžio rodyklę', 'No, anticlockwise') }],
                 answer: apparentClockwise ? 0 : 1,
@@ -1166,10 +1225,14 @@
               {
                 prompt: t('Kokia stereocentro konfigūracija?', 'What is the configuration of the stereocentre?'),
                 kind: 'choice', options: [{ text: f('$R$') }, { text: f('$S$') }], answer: engine === 'R' ? 0 : 1,
-                hint: t('Horizontalios Fišerio linijos nukreiptos į stebėtoją, todėl jauniausias pakaitas yra ne už plokštumos. Ką tai daro su matoma kryptimi?',
-                  'The horizontal lines of a Fischer projection point towards the viewer, so the lowest-priority group is not behind the plane. What does that do to the direction you see?'),
-                solution: t('Jauniausias pakaitas (H) nukreiptas į stebėtoją, todėl tikroji kryptis priešinga matomai: ' + (engine === 'R' ? 'ant popieriaus prieš laikrodžio rodyklę, iš tikrųjų pagal – $R$.' : 'ant popieriaus pagal laikrodžio rodyklę, iš tikrųjų prieš – $S$.'),
-                  'The lowest-priority group (H) points towards the viewer, so the true direction is the opposite of the one you see: ' + (engine === 'R' ? 'anticlockwise on paper, really clockwise, so $R$.' : 'clockwise on paper, really anticlockwise, so $S$.'))
+                hint: vert ? t('Vertikalios Fišerio linijos eina už plokštumos. Ką tai sako apie jauniausią pakaitą ir apie matomą kryptį?',
+                  'The vertical lines of a Fischer projection go behind the plane. What does that say about the lowest-priority group and about the direction you see?')
+                  : t('Horizontalios Fišerio linijos nukreiptos į stebėtoją, todėl jauniausias pakaitas yra ne už plokštumos. Ką tai daro su matoma kryptimi?',
+                    'The horizontal lines of a Fischer projection point towards the viewer, so the lowest-priority group is not behind the plane. What does that do to the direction you see?'),
+                solution: vert ? t('Jauniausias pakaitas (H) yra vertikalioje linijoje, t. y. už plokštumos, todėl matoma kryptis ir yra tikroji: ' + (engine === 'R' ? 'pagal laikrodžio rodyklę – $R$.' : 'prieš laikrodžio rodyklę – $S$.'),
+                  'The lowest-priority group (H) is on a vertical line, i.e. behind the plane, so the direction you see is the true one: ' + (engine === 'R' ? 'clockwise, so $R$.' : 'anticlockwise, so $S$.'))
+                  : t('Jauniausias pakaitas (H) nukreiptas į stebėtoją, todėl tikroji kryptis priešinga matomai: ' + (engine === 'R' ? 'ant popieriaus prieš laikrodžio rodyklę, iš tikrųjų pagal – $R$.' : 'ant popieriaus pagal laikrodžio rodyklę, iš tikrųjų prieš – $S$.'),
+                    'The lowest-priority group (H) points towards the viewer, so the true direction is the opposite of the one you see: ' + (engine === 'R' ? 'anticlockwise on paper, really clockwise, so $R$.' : 'clockwise on paper, really anticlockwise, so $S$.'))
               }
             ],
             why: t('Fišerio projekcijoje horizontalios linijos nukreiptos į stebėtoją, vertikalios – nuo jo. Kai jauniausias pakaitas yra horizontalioje linijoje, matoma eigos kryptis būna priešinga tikrajai; kai vertikalioje – kryptis tokia pati.',
@@ -1188,15 +1251,7 @@
       title: t('Fišerio projekcijos veiksmai', 'Operations on a Fischer projection'),
       mirrors: ['S3.5', 'S3.13'],
       gen(rng, ctx) {
-        const V = [[0, 1, -1], [1, 0, 1], [0, -1, -1], [-1, 0, 1]];          // top, right, bottom, left: vertical away, horizontal towards the viewer
-        const det3 = (a, b, c) => a[0] * (b[1] * c[2] - b[2] * c[1]) - a[1] * (b[0] * c[2] - b[2] * c[0]) + a[2] * (b[0] * c[1] - b[1] * c[0]);
-        const rsOf = (st) => {                                              // st = [top, right, bottom, left] ligand keys
-          const order = [0, 1, 2, 3].sort((x, y) => LIG[st[y]].rk - LIG[st[x]].rk);   // senior first
-          const [a, b, c, d] = order.map(i => V[i]);
-          const sub = (p, q) => [p[0] - q[0], p[1] - q[1], p[2] - q[2]];
-          return det3(sub(a, d), sub(b, d), sub(c, d)) < 0 ? 'R' : 'S';
-        };
-        const draw = (st) => ({ rows: [{ left: FIS[st[3]].l, right: FIS[st[1]].r }], top: FIS[st[0]].r, bottom: FIS[st[2]].r });
+        const rsOf = fischerRS, draw = fischerDraw;
         const VERT = ['COOH', 'CHO', 'CH2OH', 'CH3', 'Et'];
         const HOR = ['OH', 'NH2', 'Cl', 'Br', 'H', 'CH3'];
         const OPS = [
@@ -1204,7 +1259,7 @@
           { id: 'rot90', lt: 'pasukus brėžinį lapo plokštumoje ketvirtadaliu apskritimo (90°)', en: 'turning the formula by 90° in the plane of the paper', odd: true },
           { id: 'rot180', lt: 'apsukus brėžinį lapo plokštumoje (180°)', en: 'turning the formula by 180° in the plane of the paper', odd: false },
           { id: 'swap2', lt: 'du kartus sukeitus pakaitus vietomis (dvi poros)', en: 'swapping two pairs of substituents', odd: false },
-          { id: 'cyc3', lt: 'trims pakaitams ciklu pasikeitus vietomis (kiekvienas užima gretimo vietą)', en: 'three substituents cyclically exchanging places (each takes the place of the next)', odd: false }
+          { id: 'cyc3', lt: 'trims pakaitams cikliškai pasikeitus vietomis (kiekvienas užima gretimo vietą)', en: 'three substituents cyclically exchanging places (each takes the place of the next)', odd: false }
         ];
         for (let tries = 0; tries < 60; tries++) {
           const v = ctx.shuffle(VERT.slice()).slice(0, 2);
@@ -1260,22 +1315,22 @@
       mirrors: ['S3.5', 'S3.13', 'S3.14'],
       gen(rng, ctx) {
         const { stereo, chem } = ctx;
-        // [name LT, name EN, L-form SMILES, top atom, bottom atom, priority order of the groups]
+        // [name LT (genitive), name EN, L-form SMILES, top atom, bottom atom, priority order of the groups]
         const DL = [
-          ['glicerolio aldehidas', 'glyceraldehyde', 'OC[C@H](O)C=O', 4, 1, '$OH$ > $CHO$ > $CH2OH$ > $H$'],
-          ['alaninas', 'alanine', 'C[C@H](N)C(=O)O', 3, 0, '$NH2$ > $COOH$ > $CH3$ > $H$'],
-          ['serinas', 'serine', 'OC[C@H](N)C(=O)O', 4, 1, '$NH2$ > $COOH$ > $CH2OH$ > $H$'],
-          ['cisteinas', 'cysteine', 'SC[C@H](N)C(=O)O', 4, 1, '$NH2$ > $CH2SH$ > $COOH$ > $H$'],
-          ['fenilalaninas', 'phenylalanine', 'c1ccccc1C[C@H](N)C(=O)O', 9, 6, '$NH2$ > $COOH$ > $CH2C6H5$ > $H$'],
-          ['valinas', 'valine', 'CC(C)[C@H](N)C(=O)O', 5, 1, '$NH2$ > $COOH$ > $CH(CH3)2$ > $H$'],
-          ['leucinas', 'leucine', 'CC(C)C[C@H](N)C(=O)O', 6, 3, '$NH2$ > $COOH$ > $CH2CH(CH3)2$ > $H$'],
-          ['metioninas', 'methionine', 'CSCC[C@H](N)C(=O)O', 6, 3, '$NH2$ > $COOH$ > $CH2CH2SCH3$ > $H$'],
-          ['pieno rūgštis', 'lactic acid', 'C[C@H](O)C(=O)O', 3, 0, '$OH$ > $COOH$ > $CH3$ > $H$'],
-          ['glicerino rūgštis', 'glyceric acid', 'OC[C@H](O)C(=O)O', 4, 1, '$OH$ > $COOH$ > $CH2OH$ > $H$'],
-          ['asparto rūgštis', 'aspartic acid', 'OC(=O)C[C@H](N)C(=O)O', 6, 3, '$NH2$ > $COOH$ > $CH2COOH$ > $H$'],
-          ['glutamo rūgštis', 'glutamic acid', 'OC(=O)CC[C@H](N)C(=O)O', 7, 4, '$NH2$ > $COOH$ > $CH2CH2COOH$ > $H$'],
-          ['2-aminobutano rūgštis', '2-aminobutanoic acid', 'CC[C@H](N)C(=O)O', 4, 1, '$NH2$ > $COOH$ > $CH2CH3$ > $H$'],
-          ['tirozinas', 'tyrosine', 'Oc1ccc(cc1)C[C@H](N)C(=O)O', 10, 7, '$NH2$ > $COOH$ > $CH2C6H4OH$ > $H$']
+          ['glicerolio aldehido', 'glyceraldehyde', 'OC[C@H](O)C=O', 4, 1, '$OH$ > $CHO$ > $CH2OH$ > $H$'],
+          ['alanino', 'alanine', 'C[C@H](N)C(=O)O', 3, 0, '$NH2$ > $COOH$ > $CH3$ > $H$'],
+          ['serino', 'serine', 'OC[C@H](N)C(=O)O', 4, 1, '$NH2$ > $COOH$ > $CH2OH$ > $H$'],
+          ['cisteino', 'cysteine', 'SC[C@H](N)C(=O)O', 4, 1, '$NH2$ > $CH2SH$ > $COOH$ > $H$'],
+          ['fenilalanino', 'phenylalanine', 'c1ccccc1C[C@H](N)C(=O)O', 9, 6, '$NH2$ > $COOH$ > $CH2C6H5$ > $H$'],
+          ['valino', 'valine', 'CC(C)[C@H](N)C(=O)O', 5, 1, '$NH2$ > $COOH$ > $CH(CH3)2$ > $H$'],
+          ['leucino', 'leucine', 'CC(C)C[C@H](N)C(=O)O', 6, 3, '$NH2$ > $COOH$ > $CH2CH(CH3)2$ > $H$'],
+          ['metionino', 'methionine', 'CSCC[C@H](N)C(=O)O', 6, 3, '$NH2$ > $COOH$ > $CH2CH2SCH3$ > $H$'],
+          ['pieno rūgšties', 'lactic acid', 'C[C@H](O)C(=O)O', 3, 0, '$OH$ > $COOH$ > $CH3$ > $H$'],
+          ['glicerino rūgšties', 'glyceric acid', 'OC[C@H](O)C(=O)O', 4, 1, '$OH$ > $COOH$ > $CH2OH$ > $H$'],
+          ['asparto rūgšties', 'aspartic acid', 'OC(=O)C[C@H](N)C(=O)O', 6, 3, '$NH2$ > $COOH$ > $CH2COOH$ > $H$'],
+          ['glutamo rūgšties', 'glutamic acid', 'OC(=O)CC[C@H](N)C(=O)O', 7, 4, '$NH2$ > $COOH$ > $CH2CH2COOH$ > $H$'],
+          ['2-aminobutano rūgšties', '2-aminobutanoic acid', 'CC[C@H](N)C(=O)O', 4, 1, '$NH2$ > $COOH$ > $CH2CH3$ > $H$'],
+          ['tirozino', 'tyrosine', 'Oc1ccc(cc1)C[C@H](N)C(=O)O', 10, 7, '$NH2$ > $COOH$ > $CH2C6H4OH$ > $H$']
         ];
         const [lt, en, lsmi, top, bot, pri] = ctx.pick(DL);
         const isD = rng() < 0.5;
@@ -1328,7 +1383,7 @@
           }
         ];
         return {
-          q: [{ p: t('Pavaizduotas ' + lt + ' (' + en + ') stereoizomeras Fišerio projekcija.', 'A stereoisomer of ' + en + ' is drawn as a Fischer projection.') }, { fischer: { smi, top, bottom: bot } }],
+          q: [{ p: t('Fišerio projekcija pavaizduotas ' + lt + ' stereoizomeras.', 'A stereoisomer of ' + en + ' is drawn as a Fischer projection.') }, { fischer: { smi, top, bottom: bot } }],
           steps,
           why: t('$D,L$ sistema lygina su glicerolio aldehidu: kai oksiduočiausia grupė viršuje, funkcinė grupė dešinėje reiškia $D$, kairėje – $L$. $R,S$ sistema remiasi pakaitų vyresniškumu, todėl raidės nebūtinai sutampa, o sukimo ženklo nenusako nė viena.',
             'The $D,L$ system compares with glyceraldehyde: with the most oxidised group at the top, a functional group on the right means $D$, on the left $L$. The $R,S$ system is based on substituent priorities, so the letters do not necessarily agree, and neither predicts the sign of rotation.'),
@@ -1428,7 +1483,7 @@
           else tb = tagsOf(n);
           const A = build(ta), B = build(tb);
           if (classify(A, B) !== kind) continue;
-          const rotB = rng() < 0.5;
+          const rotB = (A === B) || rng() < 0.5;     // identical SMILES are always shown turned, never as the same picture twice
           const mols = [{ smi: A }, { smi: B, opts: rotB ? { rotate: 180 } : {} }];
           return {
             q: [{ p: t('Palyginkite dvi pavaizduotas molekules.', 'Compare the two drawn molecules.') }, { mol: mols }],
@@ -1475,10 +1530,13 @@
       gen(rng, ctx) {
         const { stereo, chem } = ctx;
         const POOL = ['H', 'H', 'CH3', 'Et', 'Cl', 'Br', 'OH', 'NH2', 'COOH', 'CHO', 'CH2OH', 'CN', 'SH', 'Ph'];
+        // no two heteroatom groups, and no OH / NH2 / SH together with a halogen, on one alkene carbon
+        const HET = ['OH', 'NH2', 'SH'], HAL = ['Cl', 'Br'];
+        const heteroClash = (a, b) => (HET.includes(a) && (HET.includes(b) || HAL.includes(b))) || (HET.includes(b) && HAL.includes(a));
         const pair = () => {
           for (let k = 0; k < 40; k++) {
             const a = ctx.pick(POOL), b = ctx.pick(POOL);
-            if (a !== b) return [a, b];
+            if (a !== b && !heteroClash(a, b)) return [a, b];
           }
           return ['H', 'CH3'];
         };
@@ -1555,7 +1613,7 @@
           { smi: 'ClCCCl', bond: [1, 2], front: 'Cl', back: 'Cl', lt: '1,2-dichloretano C1–C2 ryšys', en: 'the C1–C2 bond of 1,2-dichloroethane' },
           { smi: 'BrCCBr', bond: [1, 2], front: 'Br', back: 'Br', lt: '1,2-dibrometano C1–C2 ryšys', en: 'the C1–C2 bond of 1,2-dibromoethane' },
           { smi: 'OCCC', bond: [1, 2], front: 'OH', back: 'CH3', lt: '1-propanolio C1–C2 ryšys', en: 'the C1–C2 bond of 1-propanol' },
-          { smi: 'CCCC', bond: [0, 1], front: 'CH3', back: 'CH2CH3', lt: 'butano C1–C2 ryšys', en: 'the C1–C2 bond of butane' }
+          { smi: 'CCCCC', bond: [1, 2], front: 'CH3', back: 'CH2CH3', lt: 'pentano C2–C3 ryšys', en: 'the C2–C3 bond of pentane' }
         ];
         const p = ctx.pick(P);
         const X = p.front, Y = p.back;
@@ -1673,7 +1731,7 @@
                 ],
                 answer: 0,
                 hint: t('Pažiūrėkite, kokie atomai yra arti ašinio pakaito toje pačioje ciklo pusėje.', 'Look at which atoms lie close to an axial substituent on the same side of the ring.'),
-                solution: t('Ašinis pakaitas yra arti dviejų kitų ašinių atomų toje pačioje pusėje (prie atomų 3 ir 5), todėl jie stumia vienas kitą. Kampinės įtempties kėdėje nėra, užstotų padėčių taip pat.', 'An axial substituent sits close to two other axial atoms on the same side (on carbons 3 and 5), so they repel each other. A chair has neither angle strain nor eclipsed positions.')
+                solution: t('Ašinis pakaitas yra arti dviejų kitų ašinių atomų toje pačioje pusėje (per vieną atomą nuo pakaito abiem kryptimis), todėl jie stumia vienas kitą. Kampinės įtempties kėdėje nėra, užstotų padėčių taip pat.', 'An axial substituent sits close to two other axial atoms on the same side (one atom away from the substituent carbon on each side), so they repel each other. A chair has neither angle strain nor eclipsed positions.')
               }
             ],
             why: t('Cikloheksano kėdėje pakaitas gali būti ašinis arba ekvatorinis, o ciklo inversija šias padėtis sukeičia. Ekvatorinė padėtis stabilesnė, nes ašinis pakaitas sąveikauja su kitais ašiniais atomais toje pačioje ciklo pusėje.', 'In the cyclohexane chair a substituent is axial or equatorial, and ring inversion swaps the two positions. Equatorial is more stable because an axial substituent interacts with the other axial atoms on the same side of the ring.'),
@@ -1778,7 +1836,7 @@
                 hint: t('Kiekvienas dvigubojo ryšio atomas turi $CH3$ ir $H$. Ar galima jas sukeisti taip, kad gautųsi kita medžiaga?', 'Each carbon of the double bond carries $CH3$ and $H$. Can they be swapped to give a different substance?'),
                 solution: t('Kiekvienas dvigubojo ryšio atomas turi du skirtingus pakaitus, o sukimasis apie dvigubąjį ryšį negalimas, todėl egzistuoja cis ir trans izomerai ($π$-diastereomerai). Jie achiraliniai, todėl enantiomerų nėra.', 'Each carbon of the double bond has two different substituents and rotation is impossible, so cis and trans isomers ($π$-diastereomers) exist. They are achiral, so there are no enantiomers.') }
             ],
-            why: t('Padėties izomerai skiriasi funkcinės grupės ar dvigubojo ryšio vieta. Atskira klausimas yra tai, ar kuris nors iš jų dar turi stereoizomerų.', 'Position isomers differ in the place of a functional group or double bond. Whether either of them also has stereoisomers is a separate question.'),
+            why: t('Padėties izomerai skiriasi funkcinės grupės ar dvigubojo ryšio vieta. Atskiras klausimas yra tai, ar kuris nors iš jų dar turi stereoizomerų.', 'Position isomers differ in the place of a functional group or double bond. Whether either of them also has stereoisomers is a separate question.'),
             src: 'L5 p4',
             claims: [{ formula: ['C=CCC', 'C4H8'] }, { formula: ['CC=CC', 'C4H8'] }]
           },
@@ -1865,7 +1923,7 @@
                 options: [{ text: t('Tautomerai (laktamas ir laktimas)', 'Tautomers (lactam and lactim)') }, { text: t('Rezonansinės formulės', 'Resonance structures') }, { text: t('Enantiomerai', 'Enantiomers') }, { text: t('Grandinės izomerai', 'Chain isomers') }],
                 answer: 0,
                 hint: t('Palyginkite, ar tarp struktūrų pasikeitė atomų (vandenilio) padėtis, ar tik elektronų išsidėstymas.', 'Compare whether the position of an atom (a hydrogen) differs between the structures or only the electron distribution.'),
-                solution: t('$N–H$ vandenilis pasikeitė į $O–H$, o dvigubas ryšys persikėlė iš $C=O$ į $C=N$: pasikeitė atomo padėtis, todėl tai ne rezonansinės formulės, o tautomerai (amido ir imino formos).', 'The $N–H$ hydrogen turned into an $O–H$ and the double bond moved from $C=O$ to $C=N$: the position of an atom changed, so these are not resonance structures but tautomers (the amide and imine forms).') },
+                solution: t('$N–H$ vandenilis pasikeitė į $O–H$, o dvigubas ryšys persikėlė iš $C=O$ į $C=N$: pasikeitė atomo padėtis, todėl tai ne rezonansinės formulės, o tautomerai (amido ir iminolio (laktimo) formos).', 'The $N–H$ hydrogen turned into an $O–H$ and the double bond moved from $C=O$ to $C=N$: the position of an atom changed, so these are not resonance structures but tautomers (the amide (lactam) and imidic acid / iminol (lactim) forms).') },
               { prompt: t('Kuris atomas „keliauja“ iš vienos formos į kitą?', 'Which atom “travels” from one form to the other?'), kind: 'choice',
                 options: [{ text: t('Vandenilis nuo azoto prie deguonies', 'A hydrogen from nitrogen to oxygen') }, { text: t('Azotas', 'The nitrogen') }, { text: t('Anglies atomas', 'A carbon atom') }, { text: t('Nė vienas, keičiasi tik elektronai', 'None, only electrons move') }],
                 answer: 0,
@@ -1904,10 +1962,10 @@
             steps: [
               { prompt: t('Kuri pora yra tautomerai?', 'Which pair are tautomers?'), kind: 'choice',
                 options: [
-                  { scheme: { items: [{ smi: 'CCCCC' }, { arrow: '↔' }, { smi: 'CC(C)CC' }] } },
+                  { scheme: { items: [{ smi: 'CCCCC' }, { arrow: '→' }, { smi: 'CC(C)CC' }] } },
                   { scheme: { items: [{ smi: 'CC(=O)C' }, { arrow: '⇌' }, { smi: 'CC(O)=C' }] } },
-                  { scheme: { items: [{ smi: 'CCO' }, { arrow: '↔' }, { smi: 'COC' }] } },
-                  { scheme: { items: [{ smi: 'C/C=C\\C' }, { arrow: '↔' }, { smi: 'C/C=C/C' }] } }
+                  { scheme: { items: [{ smi: 'CCO' }, { arrow: '→' }, { smi: 'COC' }] } },
+                  { scheme: { items: [{ smi: 'C/C=C\\C' }, { arrow: '→' }, { smi: 'C/C=C/C' }] } }
                 ],
                 answer: 1,
                 hint: t('Tautomerai greitai virsta vienas kitu, kai protonas pereina iš vienos vietos į kitą. Kurioje poroje skiriasi tik vandenilio ir dvigubojo ryšio padėtis?', 'Tautomers interconvert quickly when a proton moves from one place to another. In which pair do only the positions of a hydrogen and a double bond differ?'),
@@ -2203,6 +2261,37 @@
           why: t('Optinis neaktyvumas gali kilti iš dviejų priežasčių: molekulės simetrijos (mezoforma) arba dviejų enantiomerų kompensacijos (racematas). Tai skirtingos medžiagos.', 'Optical inactivity can have two origins: the symmetry of the molecule (meso form) or the compensation of two enantiomers (racemate). They are different substances.'),
           src: 'L5 p35',
           claims: [{ stereoisomers: ['OC(=O)C(O)C(O)C(=O)O', 3] }]
+        },
+        {
+          id: 'u05.reasons.10',
+          q: [
+            { p: t('Pavaizduota 2,3-dibrombutano molekulė Fišerio projekcija.', 'A molecule of 2,3-dibromobutane is drawn as a Fischer projection.') },
+            { fischer: { rows: [{ left: 'H', right: 'Br' }, { left: 'H', right: 'Br' }], top: 'CH3', bottom: 'CH3' } }
+          ],
+          steps: [
+            {
+              prompt: t('Ar ši molekulė chiralinė?', 'Is this molecule chiral?'),
+              kind: 'choice',
+              options: [
+                { text: t('Ne: ji turi simetrijos plokštumą (mezoforma), nors turi du chiralinius centrus.', 'No: it has a plane of symmetry (a meso form) although it has two chiral centres.') },
+                { text: t('Taip, nes turi du chiralinius centrus.', 'Yes, because it has two chiral centres.') },
+                { text: t('Taip, nes abu $Br$ yra dešinėje.', 'Yes, because both $Br$ are on the right.') },
+                { text: t('Negalima nustatyti iš Fišerio projekcijos.', 'It cannot be decided from a Fischer projection.') }
+              ],
+              answer: 0,
+              hint: t('Palyginkite viršutinę ir apatinę pusę: ar jos viena kitos atspindys?', 'Compare the upper and the lower half: are they mirror images of each other?'),
+              solution: t('Abu $Br$ yra tame pačioje pusėje, todėl horizontali plokštuma tarp $C2$ ir $C3$ yra simetrijos plokštuma: viena pusė yra kitos atspindys. Molekulė achiralinė – tai mezoforma.', 'Both $Br$ are on the same side, so the horizontal plane between $C2$ and $C3$ is a plane of symmetry: one half is the mirror image of the other. The molecule is achiral: a meso form.')
+            },
+            {
+              prompt: t('Kiek stereoizomerų turi 2,3-dibrombutanas?', 'How many stereoisomers does 2,3-dibromobutane have?'),
+              kind: 'number', answer: { value: 3, tol: 0 },
+              hint: t('Dvi vienodai pakeistos chiralinių centrų pusės sumažina skaičių, palyginti su $2^n$.', 'Two identically substituted halves reduce the number compared with $2^n$.'),
+              solution: t('Yra pora enantiomerų ($R,R$ ir $S,S$) ir viena mezoforma ($R,S$): iš viso 3 stereoizomerai, o ne $2^2 = 4$.', 'There is a pair of enantiomers ($R,R$ and $S,S$) and one meso form ($R,S$): 3 stereoisomers in all, not $2^2 = 4$.')
+            }
+          ],
+          why: t('Chiralumą lemia visos molekulės simetrija, o ne chiralinių centrų skaičius. Fišerio projekcijoje užstotoje konformacijoje simetrijos plokštumą matome iš karto: jei viršutinė pusė atspindi apatinę, molekulė mezo.', 'Chirality depends on the symmetry of the whole molecule, not on the number of chiral centres. In the eclipsed Fischer projection a plane of symmetry is seen at once: if the upper half mirrors the lower one the molecule is meso.'),
+          src: 'L5 p69',
+          claims: [{ stereoisomers: ['CC(Br)C(Br)C', 3] }, { chiral: ['C[C@H](Br)[C@H](Br)C', false] }]
         }
       ]
     },
@@ -2238,7 +2327,7 @@
             },
             {
               prompt: t('Koks etano sukimosi barjeras, kJ/mol?', 'What is the rotational barrier of ethane, in kJ/mol?'), kind: 'number', answer: { value: 12, tol: 0.5 },
-              hint: t('Tai nedidelė vertė, panaši į kelis kJ/mol dešimtis.', 'It is a small value, about one or two dozen kJ/mol.'),
+              hint: t('Skaičius mažesnis už 20 kJ/mol.', 'The number is below 20 kJ/mol.'),
               solution: t('Etano barjeras yra 12 kJ/mol: toks mažas, kad kambario temperatūroje molekulė laisvai sukasi.', 'The barrier of ethane is 12 kJ/mol: so low that at room temperature the molecule rotates freely.')
             }
           ],
@@ -2404,7 +2493,7 @@
                 { text: t('Metilas yra užstotas su žiedo anglimis.', 'The methyl is eclipsed with ring carbons.') }
               ],
               answer: 0, hint: t('Kas yra arti ašinio pakaito toje pačioje pusėje?', 'What is close to an axial substituent on the same side?'),
-              solution: t('Ašinis pakaitas yra arti dviejų kitų ašinių $H$ (prie $C3$ ir $C5$), todėl atsiranda atostūmis, kainuojantis apie 7,5 kJ/mol.', 'An axial substituent is close to two other axial $H$ (on $C3$ and $C5$), giving a repulsion that costs about 7.5 kJ/mol.')
+              solution: t('Ašinis pakaitas yra arti dviejų kitų ašinių $H$ toje pačioje pusėje (per vieną atomą nuo pakaito), todėl atsiranda atostūmis, kainuojantis apie 7,5 kJ/mol.', 'An axial substituent is close to two other axial $H$ on the same side (one atom away from the substituent carbon on each side), giving a repulsion that costs about 7.5 kJ/mol.')
             }
           ],
           why: t('Ciklo inversija sukeičia ašines ir ekvatorines padėtis. Pusiausvyroje vyrauja forma, kurioje pakaitas ekvatorinis, t. y. nutolęs nuo žiedo.', 'Ring inversion swaps axial and equatorial positions. In a monosubstituted cyclohexane the form with the substituent equatorial (farther from the ring) predominates.'),
@@ -2471,7 +2560,7 @@
         {
           id: 'u05.confreason.10',
           q: [
-            { p: t('$β$-D-Gliukopiranozės kėdės (šešta viršūnė be užrašo yra ciklo deguonis, 5 padėtis).', 'The chairs of $β$-D-glucopyranose (the unlabelled sixth vertex, position 5, is the ring oxygen).') },
+            { p: t('$β$-D-Gliukopiranozės kėdės (šešta viršūnė be užrašo, esanti tarp anglies su $CH2OH$ ir anglies su $OH$, yra ciklo deguonis).', 'The chairs of $β$-D-glucopyranose (the unlabelled sixth vertex, between the carbon with $CH2OH$ and the carbon with $OH$, is the ring oxygen).') },
             { chair: { subs: [{ pos: 6, ax: false, label: 'OH' }, { pos: 1, ax: false, label: 'OH' }, { pos: 2, ax: false, label: 'OH' }, { pos: 3, ax: false, label: 'OH' }, { pos: 4, ax: false, label: 'CH2OH' }] }, caption: t('Kėdė A', 'Chair A') },
             { chair: { subs: [{ pos: 6, ax: false, label: 'OH' }, { pos: 1, ax: false, label: 'OH' }, { pos: 2, ax: false, label: 'OH' }, { pos: 3, ax: false, label: 'OH' }, { pos: 4, ax: false, label: 'CH2OH' }], flip: true }, caption: t('Kėdė B', 'Chair B') }
           ],
@@ -2525,26 +2614,29 @@
             t('Prie vieno atomo $CH2OH$ vyresnė už $H$, prie kito $CH3$ vyresnė už $H$; jos priešingose pusėse.', 'On one carbon $CH2OH$ outranks $H$, on the other $CH3$ outranks $H$; they are on opposite sides.'),
             t('Kai kiekvienas atomas turi po vandenilį, vyresnysis pakaitas yra tiesiog kitas pakaitas, todėl $Z$ sutampa su cis, $E$ su trans.', 'When each carbon carries a hydrogen the senior substituent is simply the other group, so $Z$ coincides with cis and $E$ with trans.'), 'S3.7'),
           mk(2, 'C/C=C(/C)CO', t('2-metil-2-buten-1-olis', '2-methylbut-2-en-1-ol'), [0, 4], 'Z', 1, 2,
-            t('Prie C2: $CH2OH$ vyresnė už $CH3$ (deguonis); prie C3: $CH3$ vyresnė už $H$.', 'On C2: $CH2OH$ outranks $CH3$ (oxygen); on C3: $CH3$ outranks $H$.'),
-            t('Čia cis,trans sąvokos nebetinka: $CH3$ grupės yra priešingose pusėse, bet vyresnioji prie C2 yra ne metilas, o $CH2OH$, todėl konfigūracija $Z$.', 'Cis and trans no longer fit here: the $CH3$ groups are on opposite sides, but the senior group on C2 is $CH2OH$, not methyl, so the configuration is $Z$.'), 'S3.7'),
+            t('Prie 3 atomo: $CH2OH$ vyresnė už $CH3$ (deguonis); prie 2 atomo: $CH3$ vyresnė už $H$.', 'On atom 3: $CH2OH$ outranks $CH3$ (oxygen); on atom 2: $CH3$ outranks $H$.'),
+            t('Čia cis,trans sąvokos nebetinka: $CH3$ grupės yra priešingose pusėse, bet vyresnioji prie 3 atomo yra ne metilas, o $CH2OH$, todėl konfigūracija $Z$.', 'Cis and trans no longer fit here: the $CH3$ groups are on opposite sides, but the senior group on atom 3 is $CH2OH$, not methyl, so the configuration is $Z$.'), 'S3.7'),
           mk(3, 'Br/C(Cl)=C/F', t('1-brom-1-chlor-2-fluoretenas', '1-bromo-1-chloro-2-fluoroethene'), [0, 4], 'E', 1, 3,
             t('Prie vieno atomo $Br$ vyresnis už $Cl$; prie kito $F$ vyresnis už $H$.', 'On one carbon $Br$ outranks $Cl$; on the other $F$ outranks $H$.'),
             t('Pakaitų vyresniškumą lemia atominis skaičius: $Br$ > $Cl$, $F$ > $H$.', 'The priorities follow atomic number: $Br$ > $Cl$, $F$ > $H$.'), 'S3.7'),
           mk(4, 'CC/C(C)=C/C(=O)O', t('3-metil-2-penteno rūgštis', '3-methylpent-2-enoic acid'), [1, 5], 'E', 2, 4,
-            t('Prie C3: $CH2CH3$ vyresnė už $CH3$ (antrasis atomas $C,H,H$ prieš $H,H,H$); prie C2: $COOH$ vyresnė už $H$.', 'On C3: $CH2CH3$ outranks $CH3$ (second atoms $C,H,H$ over $H,H,H$); on C2: $COOH$ outranks $H$.'),
+            t('Prie 3 atomo: $CH2CH3$ vyresnė už $CH3$ (antrasis atomas $C,H,H$ prieš $H,H,H$); prie 5 atomo: $COOH$ vyresnė už $H$.', 'On atom 3: $CH2CH3$ outranks $CH3$ (second atoms $C,H,H$ over $H,H,H$); on atom 5: $COOH$ outranks $H$.'),
             t('Vienodus pirmuosius atomus ($C$ ir $C$) reikia skirti pagal toliau prijungtus atomus.', 'Tied first atoms ($C$ and $C$) must be separated by the atoms attached further out.'), 'S3.17'),
           mk(5, 'Cl/C(C)=C/C(=O)O', t('3-chlor-2-buteno rūgštis', '3-chlorobut-2-enoic acid'), [0, 4], 'E', 1, 3,
-            t('Prie C3: $Cl$ vyresnis už $CH3$; prie C2: $COOH$ vyresnė už $H$.', 'On C3: $Cl$ outranks $CH3$; on C2: $COOH$ outranks $H$.'),
+            t('Prie 2 atomo: $Cl$ vyresnis už $CH3$; prie 4 atomo: $COOH$ vyresnė už $H$.', 'On atom 2: $Cl$ outranks $CH3$; on atom 4: $COOH$ outranks $H$.'),
             t('Halogenas visada vyresnis už anglį; priešingose pusėse esantys vyresnieji pakaitai reiškia $E$.', 'A halogen always outranks carbon; senior substituents on opposite sides mean $E$.'), 'S3.17'),
           mk(6, 'C/C(C(=O)O)=C' + BS + 'C(=O)O', t('2-metil-2-buteno dirūgštis', '2-methylbut-2-enedioic acid'), [2, 6], 'E', 1, 5,
-            t('Prie C2: $COOH$ vyresnė už $CH3$; prie C3: $COOH$ vyresnė už $H$.', 'On C2: $COOH$ outranks $CH3$; on C3: $COOH$ outranks $H$.'),
+            t('Prie 2 atomo: $COOH$ vyresnė už $CH3$; prie 6 atomo: $COOH$ vyresnė už $H$.', 'On atom 2: $COOH$ outranks $CH3$; on atom 6: $COOH$ outranks $H$.'),
             t('Čia abu vyresnieji pakaitai yra $COOH$ grupės; jų santykinė padėtis lemia $E$ (mezakono rūgštis) arba $Z$ (citrakono rūgštis).', 'Both senior substituents here are $COOH$ groups; their relative position decides $E$ (mesaconic acid) or $Z$ (citraconic acid).'), 'S3.17'),
           mk(7, 'Oc1ccc(/C=C/c2cc(O)cc(O)c2)cc1', null, [4, 7], 'E', 5, 6,
             t('Prie abiejų dvigubojo ryšio atomų yra arilo grupė ir $H$; vyresnė arilo grupė (anglis prieš vandenilį).', 'Each carbon of the double bond carries an aryl group and $H$; the aryl group is senior (carbon over hydrogen).'),
             t('Dviejų arilų priešingos pusės reiškia $E$ (trans): tokią konfigūraciją turi gamtinis resveratrolis.', 'Two aryl groups on opposite sides mean $E$ (trans): natural resveratrol has this configuration.'), 'S3.17'),
           mk(8, 'N#C/C=C' + BS + 'C(=O)O', t('3-cian-2-propeno rūgštis', '3-cyanoprop-2-enoic acid'), [1, 4], 'Z', 2, 3,
-            t('Prie C2: $C≡N$ ($N,N,N$) vyresnė už $H$; prie C3: $COOH$ vyresnė už $H$.', 'On C2: $C≡N$ ($N,N,N$) outranks $H$; on C3: $COOH$ outranks $H$.'),
-            t('Abu nevandeniliniai pakaitai toje pačioje pusėje: tai cis ir $Z$ izomeras.', 'Both non-hydrogen groups on the same side: the cis and $Z$ isomer.'), 'S3.17')
+            t('Prie 3 atomo: $C≡N$ ($N,N,N$) vyresnė už $H$; prie 4 atomo: $COOH$ vyresnė už $H$.', 'On atom 3: $C≡N$ ($N,N,N$) outranks $H$; on atom 4: $COOH$ outranks $H$.'),
+            t('Abu nevandeniliniai pakaitai toje pačioje pusėje: tai cis ir $Z$ izomeras.', 'Both non-hydrogen groups on the same side: the cis and $Z$ isomer.'), 'S3.17'),
+          mk(9, 'COC(=O)/C(C(=O)O)=C(/CC)C=C', null, [2, 11], 'Z', 4, 8,
+            t('Prie 5 atomo: $CO2CH3$ ir $COOH$ abu $(O,O,O)$, tad lyginama toliau: $O–CH3$ (anglis) vyresnė už $O–H$, todėl vyresnis esteris; prie 9 atomo: vinilas $(C,C,H)$ vyresnis už etilą $(C,H,H)$.', 'On atom 5: $CO2CH3$ and $COOH$ are both $(O,O,O)$, so go further out: $O–CH3$ (carbon) outranks $O–H$, so the ester is senior; on atom 9: vinyl $(C,C,H)$ outranks ethyl $(C,H,H)$.'),
+            t('Kai pirmųjų dviejų atomų aibės vienodos, lyginama toliau iki pirmojo skirtumo. Metilesterio ir vinilo grupės yra toje pačioje pusėje, todėl konfigūracija $Z$.', 'When the sets of the first two spheres tie, keep going outward to the first point of difference. The ester and vinyl groups are on the same side, so the configuration is $Z$.'), 'S3.17')
         ];
       })()
     }
