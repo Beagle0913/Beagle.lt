@@ -67,6 +67,13 @@
             src: 'T p141, p145, p147'
           },
           {
+            mol: [
+              { smi: 'C1CCNC1', name: t('pirolidinas', 'pyrrolidine') },
+              { smi: 'C1CCNCC1', name: t('piperidinas', 'piperidine') }
+            ],
+            src: 'T p141'
+          },
+          {
             rule: t('Sotieji azoto heterociklai (pirolidinas, piperidinas) elgiasi kaip paprasti antriniai aminai. Aromatinių heterociklų savybes lemia tai, ar azoto laisvoji pora priklauso aromatinei sistemai.',
               'Saturated nitrogen heterocycles (pyrrolidine, piperidine) behave like ordinary secondary amines. The properties of aromatic heterocycles depend on whether the nitrogen lone pair belongs to the aromatic system.'),
             src: 'T p141'
@@ -165,12 +172,12 @@
               head: [t('Bazė', 'Base'), t('Konjuguotosios rūgšties pKa (apytiksliai)', 'Conjugate acid pKa (approx.)'), t('Kodėl', 'Why')],
               rows: [
                 [{ smi: 'C1CCNCC1' }, f('11'), t('laisva $sp^3^$ pora, alkilo grupių $+I$', 'free $sp^3^$ pair, $+I$ of the alkyl groups')],
-                [{ smi: IMIDAZOLE }, f('7'), t('N-3 pora laisva, bet žiedas turi du azotus', 'the N-3 pair is free, but the ring is electron-poorer than benzene')],
+                [{ smi: IMIDAZOLE }, f('7'), t('N-3 pora laisva, o protonuotas katijonas stabilizuotas rezonansu: krūvį dalija abu azotai', 'the N-3 pair is free, and the cation is stabilised by resonance: both nitrogens share the charge')],
                 [{ smi: PYRIDINE }, f('5'), t('pora laisva, bet ant $sp^2^$ orbitalės (arčiau branduolio)', 'the pair is free, but in an $sp^2^$ orbital (held closer to the nucleus)')],
                 [{ smi: PYRROLE }, f('−4'), t('pora sekstete; protonas jungtųsi prie anglies, ne prie azoto', 'the pair is in the sextet; a proton would go to carbon, not nitrogen')]
               ]
             },
-            caption: t('Bazingumas mažėja iš viršaus į apačią. Reikšmės iš Klein.', 'Basicity decreases from top to bottom. Values from Klein.'),
+            caption: t('Bazingumas mažėja iš viršaus į apačią. Orientacinės reikšmės (vadovėlyje jų nėra).', 'Basicity decreases from top to bottom. Approximate values (not given in the course book).'),
             src: 'Klein, T p141, p143'
           },
           {
@@ -196,7 +203,7 @@
           {
             example: {
               q: [
-                { p: t('Nikotinas turi du azoto atomus. Prijungęs vieną ekvivalentą $HCl$, jis duoda druską $C10H15N2Cl$, du – druską $C10H16N2Cl2$. Kuris azotas protonuojamas pirmas? Azotai pažymėti raidėmis.', 'Nicotine has two nitrogen atoms. After taking up one equivalent of $HCl$ it gives the salt $C10H15N2Cl$, after two the salt $C10H16N2Cl2$. Which nitrogen is protonated first? The nitrogens are marked with letters.') },
+                { p: t('Du azoto atomus turintis alkaloidas su vienu ekvivalentu $HCl$ duoda druską $C10H15N2Cl$, su dviem – druską $C10H16N2Cl2$. Kuris azotas protonuojamas pirmas? Azotai pažymėti raidėmis.', 'Nicotine has two nitrogen atoms. After taking up one equivalent of $HCl$ it gives the salt $C10H15N2Cl$, after two the salt $C10H16N2Cl2$. Which nitrogen is protonated first? The nitrogens are marked with letters.') },
                 { mol: { smi: 'CN1CCCC1c1cccnc1', opts: { numbers: { 1: 'a', 10: 'b' } } } }
               ],
               steps: [
@@ -224,7 +231,7 @@
         blocks: [
           { h: t('Elektronų perteklius ir deficitas', 'Electron excess and electron deficiency') },
           {
-            rule: t('Pirolas (ir furanas, tiofenas) yra elektronų perteklinis: 6 elektronai tenka 5 atomams, todėl SEAr vyksta lengvai, su švelniais reagentais, ties $C-2$. Piridinas elektronų deficitinis (elektronų tankis pasislinkęs prie $N$): reikia daug griežtesnių sąlygų, pakaitas patenka į $C-3$, išeiga maža.',
+            rule: t('Pirolas (ir furanas, tiofenas) yra elektronų perteklinis: 6 elektronai tenka 5 atomams, todėl SEAr vyksta lengvai, su švelniais reagentais, ties $C-2$. Piridinas yra elektronų deficitinis (elektronų tankis pasislinkęs prie $N$): reikia daug griežtesnių sąlygų, pakaitas patenka į $C-3$, išeiga maža.',
               'Pyrrole (and furan, thiophene) is electron-rich: 6 electrons on 5 atoms, so SEAr is easy, with mild reagents, at $C-2$. Pyridine is electron-poor (the density is pulled towards $N$): much harsher conditions are needed, the substituent enters at $C-3$, and the yield is low.'),
             src: 'T p141-144'
           },
@@ -241,7 +248,7 @@
             src: 'T p142'
           },
           {
-            p: t('Pirolas halogeninamas be katalizatoriaus: su jodu pakeičiami visi keturi $C-H$ vandeniliai ir susidaro tetrajodpirolas (jodolas, antiseptikas). Stiprių rūgščių pirolas nepakelia, todėl jis nitrinamas acetilnitratu, o sulfoninamas kompleksu $SO3$·piridinas.',
+            p: t('Pirolas halogeninamas be katalizatoriaus: su jodu pakeičiami visi keturi $C-H$ vandeniliai ir susidaro tetrajodpirolas (jodolas, antiseptikas). Stiprios rūgštys suardo pirolą, todėl jis nitrinamas acetilnitratu, o sulfoninamas kompleksu $SO3$·piridinas.',
               'Pyrrole is halogenated without a catalyst: with iodine all four $C-H$ hydrogens are replaced to give tetraiodopyrrole (iodol, an antiseptic). Strong acids destroy pyrrole, so it is nitrated with acetyl nitrate and sulfonated with $SO3$·pyridine.'),
             src: 'T p142, Klein'
           },
@@ -413,7 +420,7 @@
           {
             example: {
               q: [
-                { p: t('Pirolas ir piridinas acetilinami acetanhidridu. Kuris reaguoja SEAr būdu ir kuriame azotas veikia kaip nukleofilas?', 'Pyrrole and pyridine are acetylated with acetic anhydride. Which reacts by SEAr, and in which does nitrogen act as a nucleophile?') }
+                { p: t('Su acetanhidridu pirolas ir piridinas elgiasi skirtingai. Per kurį atomą reaguoja kiekvienas ir koks tai mechanizmas?', 'Pyrrole and pyridine behave differently towards acetic anhydride. Through which atom does each react, and by what mechanism?') }
               ],
               steps: [
                 [{ p: t('Pirolo azotas neturi laisvos poros (ji sekstete). Elektronų perteklinis žiedas atakuoja acilo elektrofilą ties $C-2$: SEAr.', 'The pyrrole nitrogen pair is in the sextet, so the electron-rich ring attacks the acyl electrophile at $C-2$: SEAr.') }, { mol: { smi: 'CC(=O)c1ccc[nH]1' } }],
@@ -497,7 +504,7 @@
           },
           {
             mol: [
-              { smi: 'O=C1C=CNC(=O)N1.O=C1C=CNC(=O)N1', opts: { highlight: { atoms: [0, 7, 8, 15], tone: 2 } }, caption: t('Uracilo dimeras: pažymėti dalyvaujantys atomai.', 'Uracil dimer: the atoms that take part are marked.') },
+              { smi: 'O=C1C=CNC(=O)N1.O=C1C=CNC(=O)N1', opts: { highlight: { atoms: [6, 7, 14, 15], tone: 2 } }, caption: t('Uracilo dimeras: pažymėti dalyvaujantys atomai ($N-3-H$ ir $C-2=O$).', 'Uracil dimer: the atoms that take part are marked ($N-3-H$ and $C-2=O$).') },
               { smi: ADENINE, opts: { highlight: { atoms: [0, 2], tone: 2 } }, caption: t('Adeninas: aminogrupė ir N-1 jungiasi su timinu.', 'Adenine: the amino group and N-1 bond to thymine.') },
               { smi: THYMINE, opts: { highlight: { atoms: [3, 5], tone: 2 } }, caption: t('Timinas: $N-3-H$ ir $C-4=O$ jungiasi su adeninu.', 'Thymine: $N-3-H$ and $C-4=O$ bond to adenine.') }
             ],
@@ -580,7 +587,7 @@
             [t('Azoto pora', 'Nitrogen pair'), t('sekstete (N–H)', 'in the sextet (N–H)'), t('N-1 sekstete, N-3 laisva', 'N-1 in the sextet, N-3 free'), t('laisva, žiedo plokštumoje', 'free, in the ring plane')],
             [t('Bazingumas', 'Basicity'), t('beveik nėra', 'almost none'), t('vidutinis (pKa ≈ 7)', 'moderate (pKa ≈ 7)'), t('silpna bazė (pKa ≈ 5)', 'weak base (pKa ≈ 5)')],
             [t('Rūgštingumas', 'Acidity'), t('$N-H$, pKa ≈ 17', '$N-H$, pKa ≈ 17'), t('$N-H$, pKa ≈ 14 (amfoterinis)', '$N-H$, pKa ≈ 14 (amphoteric)'), t('nėra', 'none')],
-            [t('SEAr', 'SEAr'), t('lengvai, $C-2$, švelnūs reagentai', 'easy, $C-2$, mild reagents'), t('lengvai (elektronų perteklinis)', 'easy (electron-rich)'), t('sunkiai, $C-3$, > 300 °C', 'hard, $C-3$, > 300 °C')],
+            [t('SEAr', 'SEAr'), t('lengvai, $C-2$, švelnūs reagentai', 'easy, $C-2$, mild reagents'), t('nemokoma (kurse nenagrinėjama)', 'not covered in the course'), t('sunkiai, $C-3$, > 300 °C', 'hard, $C-3$, > 300 °C')],
             [t('N kaip nukleofilas', 'N as nucleophile'), t('ne (reaguoja $C-2$)', 'no (reacts at $C-2$)'), t('taip (N-3)', 'yes (N-3)'), t('taip: $CH3I$ → $N$-metilpiridinio jodidas', 'yes: $CH3I$ → $N$-methylpyridinium iodide')]
           ]
         },
@@ -721,7 +728,8 @@
           const { chem, react } = ctx;
           const POOL = ['CN1CCCC1c1cccnc1', 'C1CCNC(C1)c1cccnc1', 'NCc1cccnc1', 'NCCc1cnc[nH]1', 'CN(C)Cc1cccnc1', 'C1CCN(C1)Cc1cccnc1', 'NCCc1cccnc1', 'NCc1cnc[nH]1',
             'CCN(CC)CCc1cccnc1', 'C1CNC(C1)c1cccnc1', 'CN(C)c1ccncc1', 'Nc1ccncc1', 'Nc1ccccn1', 'CN(C)c1ccccn1', 'C1CCN(CC1)c1ccncc1', 'NC(=O)c1cccnc1', 'NC(=O)c1ccncc1',
-            'c1c[nH]cn1', 'Cn1ccnc1', 'c1ccc2[nH]cnc2c1', 'Cc1ncc[nH]1'];
+            'c1c[nH]cn1', 'Cn1ccnc1', 'c1ccc2[nH]cnc2c1', 'Cc1ncc[nH]1',
+            'CN1CCCC1c1ccncc1', 'CN(C)CCc1ccncc1', 'NCCc1ccncc1', 'CNC(=O)c1cccnc1', 'CC(=O)Nc1ccncc1', 'CCN(CC)c1ccncc1'];
           const smi = ctx.pick(POOL);
           const X = ctx.pick(['Cl', 'Br', 'I']);
           const m = chem.parse(smi);
@@ -781,7 +789,7 @@
               t('Aromatinis azotas visada bazingesnis dėl rezonanso.', 'An aromatic nitrogen is always the stronger base because of resonance.'),
               t('Pirmas protonuojamas azotas, esantis arčiau žiedo.', 'The nitrogen closer to the ring is protonated first.')],
             aryl: [t('Protonuojant žiedo azotą, katijoną papildomai stabilizuoja aminogrupės pora (rezonansas), o aminogrupės pora jau yra konjuguota su žiedu.', 'When the ring nitrogen is protonated, the cation is further stabilised by the pair of the amino group (resonance), and the amino pair is already conjugated with the ring.'),
-              t('Aminogrupė yra alifatinė, todėl bazingesnė už piridino azotą.', 'The amino group is aliphatic and therefore a stronger base than the pyridine nitrogen.'),
+              t('Aminogrupės azotas yra $sp^3^$, todėl bazingesnis už piridino azotą.', 'The amino nitrogen is $sp^3^$, so it is more basic than the pyridine nitrogen.'),
               t('Piridino azoto pora yra aromatiniame sekstete.', 'The pyridine nitrogen pair is in the aromatic sextet.'),
               t('Protonas visada jungiasi prie pakaito, o ne prie žiedo.', 'A proton always bonds to the substituent, never to the ring.')],
             amide: [t('Amido azoto pora delokalizuota į $C=O$ grupę, todėl nebazinė; piridino tipo azoto pora laisva.', 'The amide nitrogen pair is delocalised into the $C=O$ group and is not basic; the pyridine-type nitrogen pair is free.'),
@@ -796,6 +804,12 @@
           const opt = (s) => ({ mol: { smi: s } });
           const wrong = [];
           sites.concat(others).forEach((s) => { if (s.i !== top.i) { try { const w = protonate([s.i]); chem.parse(w); wrong.push(w); } catch (e) { /* skip */ } } });
+          const allN = sites.concat(others).map((x) => x.i);
+          if (wrong.length < 2 && allN.length >= 2) {
+            // a common slip: every nitrogen protonated by one equivalent of acid
+            const d = protonate(allN) + ('.[' + X + '-]').repeat(allN.length - 1);
+            try { chem.parse(d); wrong.push(d); } catch (e) { /* skip */ }
+          }
           const steps = [
             {
               prompt: t('Bakstelėkite azoto atomą, kuris protonuojamas pirmas (su 1 ekv. $H' + X + '$).', 'Tap the nitrogen atom that is protonated first (with 1 equiv. of $H' + X + '$).'),
@@ -847,13 +861,21 @@
             { id: 'fur', head: 'o1', name: t('furanas', 'furan'), nh: false },
             { id: 'thi', head: 's1', name: t('tiofenas', 'thiophene'), nh: false }
           ];
-          const SUBS = [{ r: '', lt: '', en: '' }, { r: 'C', lt: '2-metil', en: '2-methyl' }, { r: 'CC', lt: '2-etil', en: '2-ethyl' }];
+          const SUBS = [
+            { r: 'C', lt: '2-metil', en: '2-methyl', nlt: '1,2-dimetilpirolas', nen: '1,2-dimethylpyrrole' },
+            { r: 'CC', lt: '2-etil', en: '2-ethyl', nlt: '2-etil-1-metilpirolas', nen: '2-ethyl-1-methylpyrrole' },
+            { r: 'CCC', lt: '2-propil', en: '2-propyl', nlt: '1-metil-2-propilpirolas', nen: '1-methyl-2-propylpyrrole' },
+            { r: 'CCCC', lt: '2-butil', en: '2-butyl', nlt: '2-butil-1-metilpirolas', nen: '2-butyl-1-methylpyrrole' }
+          ];
           const ES = [
             { frag: '[N+](=O)[O-]', reagent: 'CH3COONO2', lt: 'nitrinimas', en: 'nitration', plt: 'nitro', pen: 'nitro' },
             { frag: 'S(=O)(=O)O', reagent: 'SO3, C5H5N', lt: 'sulfoninimas', en: 'sulfonation', plt: 'sulfo', pen: 'sulfo' },
             { frag: 'C(C)=O', reagent: '(CH3CO)2O', lt: 'acilinimas', en: 'acylation', plt: 'acetil', pen: 'acetyl' }
           ];
-          const h = ctx.pick(HEADS), s = ctx.pick(SUBS), e = ctx.pick(ES);
+          let h, s, e;
+          // Ac2O acylates only pyrrole-type rings and SO3-pyridine sulfonation is not used for thiophene (T p142)
+          do { h = ctx.pick(HEADS); s = ctx.pick(SUBS); e = ctx.pick(ES); }
+          while ((!['pyr', 'nme'].includes(h.id) && e.frag === 'C(C)=O') || (h.id === 'thi' && e.frag === 'S(=O)(=O)O'));
           const sub = h.head + 'c' + (s.r ? '(' + s.r + ')' : '') + 'ccc1';
           const m = chem.parse(sub);
           const hetero = m.atoms.findIndex((a, i) => a.aromatic && a.el !== 'C');
@@ -902,7 +924,7 @@
           ];
           return {
             q: [
-              { p: t('Heterociklas ' + (s.lt ? s.lt + '-' : '') + h.name.lt + ' reaguoja su švelniu reagentu ($' + e.reagent + '$): ' + e.lt + '.', 'The heterocycle ' + (s.en ? s.en + '-' : '') + h.name.en + ' reacts with a mild reagent ($' + e.reagent + '$): ' + e.en + '.') },
+              { p: t('Heterociklas ' + (h.id === 'nme' ? s.nlt : s.lt + h.name.lt) + ' reaguoja su reagentu ($' + e.reagent + '$): ' + e.lt + '.', 'The heterocycle ' + (h.id === 'nme' ? s.nen : s.en + h.name.en) + ' reacts with the reagent ($' + e.reagent + '$): ' + e.en + '.') },
               { scheme: { items: [{ smi: sub }, { arrow: '→', above: f(e.reagent) }] } }
             ],
             steps,
@@ -946,8 +968,8 @@
                 solution: t('Šeši $π$ elektronai: keturi iš dviejų $C=C$ ir du iš azoto poros. Atidavus porą protonui, sekstetas subyrėtų.', 'There are six $π$ electrons: four from two $C=C$ bonds and two from the nitrogen pair. If the pair were given to a proton, the sextet would fall apart.')
               }
             ],
-            why: t('Bazingumą lemia azoto poros prieinamumas. Sotus aminas turi laisvą $sp^3^$ porą, imidazolo ir piridino azoto pora laisva, bet ant $sp^2^$ orbitalės, o pirolo pora yra aromatiniame sekstete.',
-              'Basicity is set by the availability of the nitrogen pair. A saturated amine has a free $sp^3^$ pair, the imidazole and pyridine pairs are free but in $sp^2^$ orbitals, and the pyrrole pair is in the aromatic sextet.'),
+            why: t('Bazingumą lemia azoto poros prieinamumas ir susidarančio katijono stabilumas. Sotus aminas turi laisvą $sp^3^$ porą; imidazolo ir piridino azoto pora laisva ant $sp^2^$ orbitalės, bet imidazolio katijoną stabilizuoja rezonansas (krūvį dalija du azotai), todėl imidazolas bazingesnis už piridiną; pirolo pora yra aromatiniame sekstete.',
+              'Basicity depends on how available the nitrogen pair is and how stable the cation is. A saturated amine has a free $sp^3^$ pair; the imidazole and pyridine pairs are free in $sp^2^$ orbitals, but the imidazolium cation is stabilised by resonance (two nitrogens share the charge), so imidazole is a stronger base than pyridine; the pyrrole pair is in the aromatic sextet.'),
             src: 'T p141, p143, Klein',
             claims: [{ aromatic: [PYRROLE, true] }, { aromatic: [PYRIDINE, true] }]
           },
@@ -1099,7 +1121,7 @@
           {
             id: 'u16.basicity.8',
             q: [
-              { p: t('Nikotinas su 1 ekv. $HCl$ sudaro kristalų pavidalo druską, kurios molekulinė formulė $C10H15N2Cl$. Su 2 ekv. susidaro kita druska, $C10H16N2Cl2$.', 'Nicotine gives a crystalline salt of molecular formula $C10H15N2Cl$ with 1 equiv. of $HCl$. With 2 equiv. another salt, $C10H16N2Cl2$, forms.') },
+              { p: t('Nikotiną apdorojus 1 ekv. $HCl$, gaunama kristalinė druska $C10H15N2Cl$; panaudojus 2 ekv. $HCl$, susidaro kitokia druska, $C10H16N2Cl2$.', 'Nicotine gives a crystalline salt of molecular formula $C10H15N2Cl$ with 1 equiv. of $HCl$. With 2 equiv. another salt, $C10H16N2Cl2$, forms.') },
               { mol: { smi: 'CN1CCCC1c1cccnc1', opts: { numbers: { 1: 'a', 10: 'b' } } } }
             ],
             steps: [
@@ -1148,9 +1170,9 @@
               },
               {
                 prompt: t('Kuris azotas 4-(dimetilamino)piridine protonuojamas?', 'Which nitrogen of 4-(dimethylamino)pyridine is protonated?'),
-                kind: 'atoms', mol: { smi: 'CN(C)c1ccncc1', opts: { numbers: 'all' } }, answer: [5],
+                kind: 'atoms', mol: { smi: 'CN(C)c1ccncc1', opts: { numbers: 'all' } }, answer: [6],
                 hint: t('Aminogrupės pora jau konjuguota su žiedu.', 'The pair of the amino group is already conjugated with the ring.'),
-                solution: t('Protonuojamas žiedo azotas (atomas Nr. 6): kationo krūvis dalijasi tarp žiedo azoto ir aminogrupės.', 'The ring nitrogen (atom no. 6) is protonated: the charge of the cation is shared by the ring nitrogen and the amino group.')
+                solution: t('Protonuojamas žiedo azotas (atomas Nr. 7): kationo krūvį dalija žiedo azotas ir aminogrupė.', 'The ring nitrogen (atom no. 7) is protonated: the charge of the cation is shared by the ring nitrogen and the amino group.')
               }
             ],
             why: t('Elektronus teikiantis pakaitas ($+M$) 4 padėtyje didina žiedo azoto bazingumą, nes katijonas turi papildomą rezonansinę formulę. Aminogrupės azotas lieka nebaziniu, nes jo pora dalyvauja konjugacijoje.', 'An electron-donating substituent ($+M$) at position 4 increases the basicity of the ring nitrogen, because the cation gains an extra resonance structure. The amino nitrogen stays non-basic, because its pair takes part in the conjugation.'),
@@ -1240,7 +1262,7 @@
               kind: 'choice',
               options: [mo('OS(=O)(=O)c1cccnc1'), mo('OS(=O)(=O)c1ccccn1'), mo('OS(=O)(=O)c1ccncc1'), mo('[O-]S(=O)(=O)[n+]1ccccc1')],
               answer: 0,
-              hint: t('Paskutinis variantas yra sieros trioksido adduktas su azotu, o ne SEAr produktas. Kurią žiedo padėtį pasirenka SEAr piridine?', 'The last option is a sulfur trioxide adduct on nitrogen, not an SEAr product. Which ring position does SEAr choose in pyridine?'),
+              hint: t('Ar sulfoninimo produktas turi turėti ryšį su azotu, ar su žiedo anglimi? Kurią žiedo padėtį pasirenka SEAr piridine?', 'Should the sulfonation product have a bond to nitrogen or to a ring carbon? Which ring position does SEAr choose in pyridine?'),
               solution: [{ p: t('SEAr vyksta ties $C-3$ ir sieros rūgšties ryšys su anglimi tvirtas: pyridin-3-sulfonrūgštis.', 'SEAr takes place at $C-3$ and gives a stable carbon–sulfur bond: pyridine-3-sulfonic acid.') }, { mol: { smi: 'OS(=O)(=O)c1cccnc1' } }]
             }],
             why: t('Kaip ir nitrinimas, sulfoninimas piridine vyksta tik griežtomis sąlygomis ir duoda 3-pakeistą produktą. Šiuo atveju elektrofilas atakuoja anglį, ne azotą, nes $N-SO3$ adduktas grįžtamas.', 'Like nitration, sulfonation of pyridine takes place only under harsh conditions and gives the 3-substituted product. The electrophile ends up on carbon, not nitrogen, because the $N-SO3$ adduct is reversible.'),
@@ -1277,7 +1299,7 @@
               {
                 prompt: t('Bakstelėkite anglį, prie kurios prisijungia hidridas (pagal vadovėlį).', 'Tap the carbon at which the hydride adds (as in the course book).'),
                 kind: 'atoms', mol: { smi: '[n+]1(C)ccccc1', opts: { numbers: { 0: '1', 2: '2', 3: '3', 4: '4', 5: '5', 6: '6' } } }, answer: [4],
-                hint: t('Hidridas – nukleofilas; ieškokite elektronų deficitinės padėties, priešingos azotui.', 'Hydride is a nucleophile; look for an electron-poor position, the one opposite nitrogen.'),
+                hint: t('Hidridas yra nukleofilas: kuriose žiedo padėtyse elektronų deficitas didžiausias?', 'Hydride is a nucleophile: at which ring positions is the electron deficiency greatest?'),
                 solution: t('Hidridas jungiasi prie $C-4$ (žiedo numeracija; atomas Nr. 4 brėžinyje): susidaro 1,4-dihidropiridinas.', 'Hydride bonds to $C-4$ (ring numbering; label 4 in the drawing): a 1,4-dihydropyridine forms.')
               },
               {
@@ -1368,7 +1390,7 @@
           {
             id: 'u16.nuc.1',
             q: [
-              { p: t('Pirolas ir piridinas reaguoja su acetanhidridu. Vienu atveju vyksta SEAr, kitu azotas veikia kaip nukleofilas.', 'Pyrrole and pyridine react with acetic anhydride. In one case SEAr takes place, in the other nitrogen acts as a nucleophile.') },
+              { p: t('Su acetanhidridu pirolas ir piridinas elgiasi skirtingai: vienas reaguoja per žiedo anglį, kitas per azotą.', 'Pyrrole and pyridine behave differently towards acetic anhydride: one reacts through a ring carbon, the other through nitrogen.') },
               { mol: [{ smi: PYRROLE }, { smi: PYRIDINE }] }
             ],
             steps: [
@@ -1713,7 +1735,7 @@
                 prompt: t('Kuri forma yra nukleorūgščių sudėtyje?', 'Which form is found in nucleic acids?'),
                 kind: 'choice', options: [tx('laktamo (dioksoforma)', 'lactam (dioxo form)'), tx('laktimo (dihidroksi)', 'lactim (dihydroxy)'), tx('mišri laktimo–laktamo', 'mixed lactim–lactam')], answer: 0,
                 hint: t('Kuri forma turi amido tipo grupes?', 'Which form has amide-type groups?'),
-                solution: t('Laktamo forma, stabilesnė dėl amido grupių konjugacijos. Laktimo forma yra labai maža tarp-pusiausvyros dalis.', 'The lactam form, more stable thanks to the conjugation of the amide groups. The lactim form is a very small part of the equilibrium mixture.')
+                solution: t('Laktamo forma, stabilesnė dėl amido grupių konjugacijos. Laktimo forma yra labai maža pusiausvyros mišinio dalis.', 'The lactam form, more stable thanks to the conjugation of the amide groups. The lactim form is a very small part of the equilibrium mixture.')
               }
             ],
             why: t('Tautomerai yra izomerai, kurie greitai tarpusavyje virsta perkeliant vandenilį ir dvigubąjį ryšį. Uracilo atveju pusiausvyra labai pasislinkusi į laktamo formą.', 'Tautomers are isomers that interconvert quickly by moving a hydrogen and a double bond. For uracil the equilibrium lies far on the lactam side.'),
@@ -1863,10 +1885,10 @@
                 solution: t('Karbonilo deguonys O-2 ir O-4 turi laisvas poras.', 'The carbonyl oxygens O-2 and O-4 have lone pairs.')
               },
               {
-                prompt: t('Kiek vandenilinių ryšių turi ciklinis dimeras, kuriame $N-3-H$ jungiasi su kitos molekulės $C-4=O$ ir atvirkščiai?', 'How many hydrogen bonds does the cyclic dimer have in which the $N-3-H$ of each molecule bonds to the $C-4=O$ of the other?'),
+                prompt: t('Kiek vandenilinių ryšių turi ciklinis dimeras, kuriame kiekvienos molekulės $N-3-H$ jungiasi su kitos molekulės $C-2=O$?', 'How many hydrogen bonds does the cyclic dimer have in which the $N-3-H$ of each molecule bonds to the $C-2=O$ of the other?'),
                 kind: 'number', answer: { value: 2, tol: 0 },
                 hint: t('Kiekviena molekulė vienu metu yra ir donoras, ir akceptorius.', 'Each molecule is at the same time a donor and an acceptor.'),
-                solution: t('Du ryšiai: $N-3-H···O-4$ vienoje pusėje ir $O-4···H-N-3$ kitoje.', 'Two bonds: $N-3-H···O-4$ on one side and $O-4···H-N-3$ on the other.')
+                solution: t('Du ryšiai: $N-3-H···O-2$ vienoje pusėje ir $O-2···H-N-3$ kitoje.', 'Two bonds: $N-3-H···O-2$ on one side and $O-2···H-N-3$ on the other.')
               }
             ],
             why: t('Vandenilinį ryšį sudaro donoras ($N-H$) ir akceptorius ($C=O$). Laktamo formoje abu yra molekulėje, todėl atsiranda poros ir dimerai.', 'A hydrogen bond forms between a donor ($N-H$) and an acceptor ($C=O$). In the lactam form both are in the molecule, so pairs and dimers form.'),
@@ -1885,11 +1907,11 @@
               {
                 prompt: t('Bakstelėkite du timino atomus, kurie jungiasi su adeninu.', 'Tap the two atoms of thymine that bond to adenine.'),
                 kind: 'atoms', mol: { smi: THYMINE, opts: { numbers: { 0: 'N1', 1: 'C2', 2: 'O2', 3: 'N3', 4: 'C4', 5: 'O4', 6: 'C5', 8: 'C6' } } }, answer: [3, 5],
-                hint: t('Šoninės $N-1$ ir $C-2=O$ yra ant tos pusės, kurioje yra cukrus.', '$N-1$ and $C-2=O$ are on the side of the sugar.'),
+                hint: t('$N-1$ ir $C-2=O$ yra toje žiedo pusėje, prie kurios jungiasi cukrus.', '$N-1$ and $C-2=O$ are on the side of the sugar.'),
                 solution: t('$N-3-H$ ir $C-4=O$: tai ta pusė, kuri žiede priešinga cukrui.', '$N-3-H$ and $C-4=O$: this is the side of the ring away from the sugar.')
               }
             ],
-            why: t('A–T pora: du ryšiai, $N-H···O$ ir $N···H-N$. Cukrus ($N-1$ prie timino) lieka už poravimo pusės, todėl poravimui sukuriama tinkama geometrija.', 'The A–T pair has two bonds, $N-H···O$ and $N···H-N$. The sugar ($N-1$ of thymine) stays on the outer side of the pairing face, which gives the right geometry for pairing.'),
+            why: t('A–T pora: du ryšiai, $N-H···O$ ir $N···H-N$. Cukrus ($N-1$ prie timino) lieka už poravimo pusės, todėl poravimosi pusėje lieka tik $N-3-H$ ir $C-4=O$.', 'The A–T pair has two bonds, $N-H···O$ and $N···H-N$. The sugar ($N-1$ of thymine) stays on the outer side of the pairing face, so only $N-3-H$ and $C-4=O$ are left on the pairing face.'),
             src: 'S7.16, Klein'
           },
           {
@@ -1974,11 +1996,11 @@
                 tx('Poroje A–T yra du vandeniliniai ryšiai.', 'The A–T pair has two hydrogen bonds.'),
                 tx('Poroje G–C yra du vandeniliniai ryšiai.', 'The G–C pair has two hydrogen bonds.'),
                 tx('Donoras yra $N-H$, akceptorius – $C=O$.', 'The donor is $N-H$, the acceptor is $C=O$.'),
-                tx('Vandeniliniai ryšiai susidaro tarp dviejų pirimidino bazių.', 'Hydrogen bonds form between two pyrimidine bases.')
+                tx('Poroje A–T abi bazės yra purinai.', 'In the A–T pair both bases are purines.')
               ],
               answer: [0, 1, 3],
-              hint: t('Pamatykite, kiek ryšių turi G–C.', 'Recall how many bonds G–C has.'),
-              solution: t('Teisingi pirmas, antras ir ketvirtas. G–C turi tris ryšius, o poruojasi purinas su pirimidinu (A–T, G–C).', 'The first, second and fourth are correct. G–C has three bonds, and pairing is between a purine and a pyrimidine (A–T, G–C).')
+              hint: t('Prisiminkite, kiek ryšių turi G–C.', 'Recall how many bonds G–C has.'),
+              solution: t('Teisingi pirmas, antras ir ketvirtas. G–C turi tris ryšius, o DNR poroje visada poruojasi purinas su pirimidinu (A–T, G–C).', 'The first, second and fourth are correct. G–C has three bonds, and in a DNA base pair a purine always pairs with a pyrimidine (A–T, G–C).')
             }],
             why: t('Vandeniliniai ryšiai silpni, bet jų gausa stabilizuoja dvigubą spiralę.', 'Hydrogen bonds are weak, but their large number stabilises the double helix.'),
             src: 'T p145, Klein'
@@ -2088,7 +2110,7 @@
               {
                 prompt: t('Kurį iš ryšių atakuoja elektrofilas uracilo laktimo formoje?', 'Which bond of the lactim form of uracil does the electrophile attack?'),
                 kind: 'choice', options: [tx('$C-5=C-6$ ryšį (ties $C-5$)', 'the $C-5=C-6$ bond (at $C-5$)'), tx('$C-2=N-1$ ryšį', 'the $C-2=N-1$ bond'), tx('$C-4-O$ ryšį', 'the $C-4-O$ bond')], answer: 0,
-                hint: t('Elektrofilas atakuoja $π$ ryšį su didžiausiu elektronų tankiu.', 'The electrophile attacks the $π$ bond with the highest electron density.'),
+                hint: t('Kuris ryšys elektronų turtingiausias ir kodėl?', 'Which bond is the most electron-rich, and why?'),
                 solution: [{ p: t('$C-5=C-6$ $π$ ryšys yra elektronų turtingiausias (aktyvuotas $OH$ grupėmis), todėl atakuojamas ties $C-5$.', 'The $C-5=C-6$ $π$ bond is the most electron-rich (activated by the $OH$ groups), so it is attacked at $C-5$.') },
                   { mech: [{ scheme: { items: [{ smi: URACIL_LACTIM }, { plus: true }, { smi: 'O=[N+]=O' }] }, arrows: [{ from: { m: 0, b: [6, 7] }, to: { m: 1, a: 1 } }, { from: { m: 1, b: [1, 2] }, to: { m: 1, a: 2 } }], note: t('1 stadija: $π$ elektronai atakuoja $NO2+$.', 'Stage 1: the $π$ electrons attack $NO2+$.') }] }]
               }
