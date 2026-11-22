@@ -115,7 +115,9 @@ h2:focus, h3:focus, section:focus { outline: none; }
 .mechsteps { display: grid; gap: 10px; }
 .mechnote { font-size: 14px; color: var(--ink2); }
 .tablewrap { overflow-x: auto; margin: 10px 0; }
-.tbl { border-collapse: collapse; min-width: 50%; }
+.tbl { border-collapse: collapse; max-width: 100%; }
+.tbl th, .tbl td { overflow-wrap: anywhere; }
+.tbl svg { max-width: 100%; height: auto; }
 .tbl th, .tbl td { border: 1px solid var(--line); padding: 6px 12px; text-align: left; vertical-align: middle; }
 .tbl th { background: color-mix(in srgb, var(--line) 35%, transparent); font-weight: 600; }
 .example { border: 1.5px dashed var(--line); border-radius: 6px; padding: 10px 14px; margin: 14px 0; }
@@ -253,6 +255,8 @@ line.hit.bad { stroke: color-mix(in srgb, var(--bad) 50%, transparent); }
 .tap .hit { touch-action: manipulation; }
 
 @media (max-width: 700px) {
+  .tbl { width: 100%; font-size: 14px; }
+  .tbl th, .tbl td { padding: 4px 6px; }
   .top { padding: 12px 14px 6px; }
   .app { padding: 0 12px 40px; }
   .brand { font-size: 26px; }

@@ -193,10 +193,11 @@
     }
     if (b.table) {
       const wrap = el('div', 'tablewrap'), t = el('table', 'tbl'), hr = el('tr');
+      const cellW = Math.max(70, Math.floor(colW() / Math.max(1, b.table.head.length)) - (narrow() ? 14 : 28));
       for (const c of b.table.head) hr.append(richEl('th', '', c));
       const thead = el('thead'); thead.append(hr); t.append(thead);
       const tb = el('tbody');
-      for (const r of b.table.rows) { const tr = el('tr'); for (const c of r) { const td = el('td'); if (c && c.smi) td.append(molNode(c)); else rich(td, c); tr.append(td); } tb.append(tr); }
+      for (const r of b.table.rows) { const tr = el('tr'); for (const c of r) { const td = el('td'); if (c && c.smi) td.append(molNode(c, { maxWidth: cellW })); else rich(td, c); tr.append(td); } tb.append(tr); }
       t.append(tb); wrap.append(t); parent.append(wrap);
       if (b.caption) parent.append(richEl('p', 'cap', b.caption));
       return;
