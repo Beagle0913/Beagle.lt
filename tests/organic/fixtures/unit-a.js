@@ -51,7 +51,14 @@
           hint: t('Metanas turi vieną anglį.', 'Methane has one carbon.'), solution: t('Metanas $CH4$, etanas $C2H6$.', 'Methane $CH4$, ethane $C2H6$.')
         }
       ],
-      why: t('Alkano pavadinimas rodo anglių skaičių grandinėje.', 'An alkane name tells the number of carbons in the chain.')
+      why: t('Alkano pavadinimas rodo anglių skaičių grandinėje.', 'An alkane name tells the number of carbons in the chain.'),
+      claims: [
+        { formula: ['CCCCC', 'C5H12'] }, { name: ['CCCCC', t('pentanas', 'pentane')] },
+        { cip: ['C[C@H](N)C(=O)O', 1, 'S'] }, { ez: ['C/C=C/C', 1, 2, 'E'] }, { centres: ['C[C@H](N)C(=O)O', [1]] },
+        { stereoisomers: ['C[C@H](N)C(=O)O', 2] }, { isomers: ['C5H12', 3] }, { hyb: ['C=C', 0, 'sp2'] }, { carbon: ['CC(C)C', 1, 3] },
+        { sigmaPi: ['C=C', 5, 1] }, { aromatic: ['c1ccccc1', true] }, { react: ['ae.hx', ['CC=C'], { X: 'Br' }, 'CC(C)Br'] },
+        { same: ['OCC', 'CCO'] }, { chiral: ['C[C@H](N)C(=O)O', true] }
+      ]
     }
   ];
 
