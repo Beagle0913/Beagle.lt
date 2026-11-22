@@ -291,7 +291,7 @@ function checkUnit(unit, opts) {
     for (const lang of ['lt', 'en']) {
       const s = T[lang];
       let m;
-      if (!curNumbered && (m = /(?:\bNr\.?|\bno\.)\s*\d+|\batom\p{L}*\s+\d+/iu.exec(s))) R.err(loc, lang + ' text refers to an atom number ("' + m[0] + '") but no molecule here shows numbers: add opts.numbers to the molecule', tag);
+      if (!curNumbered && (m = /\bNr\.\s*\d+|\bno\.\s*\d+|\b[Aa]tom(?:as|o|u|ą|ai)?\s+\d+|\b[Cc]arbon\s+\d+|\bC-\d+/u.exec(s.replace(/\$[^$]*\$/g, ' ')))) R.err(loc, lang + ' text refers to an atom number ("' + m[0] + '") but no molecule here shows numbers: add opts.numbers to the molecule', tag);
       if ((m = /\bskyri\p{L}*\s+\d+|\bsection\s+\d+|\b\d+\s+skyriuje|\b\d+\s+section\b/iu.exec(s))) R.err(loc, lang + ' text refers to a section number ("' + m[0] + '"): sections are not numbered in the trainer; name the section instead', tag);
     }
     for (const lang of ['lt', 'en']) {
@@ -874,6 +874,9 @@ test('validator: claims on notes blocks, numbered examples, text lint', () => {
   only(withBlock({ p: T('Pentinos formulė.', 'The pentyne formula.') }), /genitive of -inas is -ino/);
   only(withBlock({ p: T('Propanos formulė.', 'The propane formula.') }), /genitive of -anas is -ano/);
   assert.deepEqual(run(withBlock({ p: T('Buteno formulė ir dienos metu.', 'The butene formula.') })).errors, []);
+  // formulas such as NR2 / NR3+ are not atom-number references; neither is anything inside $...$
+  for (const ok of ['Aminai: –NR2 ir NR3+ grupės.', 'Amines: NR2, NR3 and NR4+ groups.', 'Grupė $Nr. 2$ ir $atom 3$.', 'Nr 5 be taško', 'Daug atomų 3 vietose']) assert.deepEqual(run(withBlock({ p: T(ok, ok + ' (en)') })).errors, [], ok);
+  for (const bad of ['Žr. Nr. 3.', 'Žr. no. 3.', 'Atomas 2', 'atomo 4', 'carbon 2', 'C-3']) assert.equal(run(withBlock({ p: T(bad, bad + ' (en)') })).errors.length, 2, bad);
   // atom-number and section-number references
   r = run(withBlock({ p: T('Žiūrėkite atomą 3.', 'Look at atom 3.') })); assert.equal(r.errors.length, 2);
   assert.match(r.errors[0], /^\[u01\] notes section "more": lt text refers to an atom number \("atomą 3"\)/);
