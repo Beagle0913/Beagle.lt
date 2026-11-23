@@ -369,10 +369,11 @@ const VIEW = {
         for (let col = 0; col < 6; col++) {
           const k = row * 6 + col;
           const tile = node(g, 'g', { transform: 'translate(' + (28 + col * 126) + ' ' + (30 + row * 84) + ')' });
-          const inner = node(tile, 'g', { transform: 'scale(0.155)' });
+          const anim = node(tile, 'g'); // carries the animation; a CSS transform would override the tile's SVG transform
+          const inner = node(anim, 'g', { transform: 'scale(0.155)' });
           const rot = SEQ.slice(k % 5) + SEQ.slice(0, k % 5);
           trace(inner, rot, 400, 14);
-          F(4, tile, 'pop', t);
+          F(4, anim, 'pop', t);
           t += 0.045;
         }
       }
