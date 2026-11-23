@@ -63,3 +63,19 @@ test('scene titles exist in lt and en', () => {
   assert.equal(L.scenes[0].title.lt, 'Kirpimas');
   assert.equal(L.scenes[5].title.en, 'Read the sequence');
 });
+
+test('ui strings have the same keys and placeholders in lt and en, all non-empty', () => {
+  const { lt, en } = ENG.STR;
+  assert.deepEqual(Object.keys(lt).sort(), Object.keys(en).sort());
+  for (const k of Object.keys(lt)) {
+    assert.ok(typeof lt[k] === 'string' && lt[k].trim() && typeof en[k] === 'string' && en[k].trim(), k);
+    assert.deepEqual((lt[k].match(/\{\w+\}/g) || []).sort(), (en[k].match(/\{\w+\}/g) || []).sort(), 'placeholders of ' + k);
+  }
+  assert.equal(ENG.fmt('Scena {n}/{m}', { n: 2, m: 6 }), 'Scena 2/6');
+});
+
+test('the tap step carries its two feedback lines and the sections are named', () => {
+  const tap = steps[19];
+  assert.ok(tap.right && tap.wrong);
+  assert.deepEqual(Object.keys(L.sections), ['8.3', '8.4', '8.7']);
+});

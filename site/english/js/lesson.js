@@ -8,6 +8,7 @@
     id: 'ch8-cloning',
     title: 'Clone a gene',
     chapter: 'Ch 8 · 8.3, 8.4, 8.7',
+    sections: { '8.3': 'Cutting and joining DNA', '8.4': 'Molecular cloning', '8.7': 'DNA sequencing' },
     scenes: [
       {
         id: 'cut', title: { lt: 'Kirpimas', en: 'Cut' },
@@ -51,7 +52,7 @@
           c("A single cell divides again and again into a visible spot on the agar: a ___.", "colony", ["plasmid", "insert", "vector"]),
           c("All the cells in it come from one parent cell, so they form a ___.", "clone", ["vector", "insert", "palindrome"]),
           c("The agar also contains a colourless compound that turns blue when β-galactosidase cleaves it: ___.", "X-gal", ["ampicillin", "phosphatase", "ddNTPs"]),
-          { type: 'tap', text: "Tap a colony that carries our gene.", term: "blue-white screening" }
+          { type: 'tap', text: "Tap a colony that carries our gene.", term: "blue-white screening", right: "White: the insert is in lacZ, so no blue.", wrong: "Blue: lacZ is intact, so there is no insert." }
         ]
       },
       {
