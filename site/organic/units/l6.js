@@ -862,13 +862,13 @@
             q: [{ p: t('Propanonas (acetonas) kaitinamas su šarminiu $Cu(OH)2$ taip pat, kaip metanalis.', 'Propanone (acetone) is heated with alkaline $Cu(OH)2$ in the same way as methanal.') }],
             steps: [ch(t('Ką stebėsite?', 'What will you see?'),
               [
-                ['Spalva nepasikeičia, nes ketonai šio reagento neredukuoja.', 'No colour change, because ketones do not reduce this reagent.'],
+                ['Geltonos ar raudonos nuosėdos nesusidaro, nes ketonai šio reagento neredukuoja (mėlynos nuosėdos kaitinant gali patamsėti).', 'No yellow or red precipitate forms, because ketones do not reduce this reagent (on heating the blue precipitate may darken).'],
                 ['Geltona, paskui raudona nuosėda.', 'A yellow, then red precipitate.'],
                 ['Vario veidrodis.', 'A copper mirror.'],
                 ['Tirpalas tampa žalias.', 'The solution turns green.']
               ], 0,
               t('Ar ketonas turi vandenilio prie karbonilo anglies, kurį galima oksiduoti?', 'Does a ketone have a hydrogen on the carbonyl carbon that can be oxidised?'),
-              t('Ketonai neoksiduojasi švelniai nenutraukiant $C-C$ ryšio, todėl $Cu(II)$ nesiredukuoja ir liekama prie mėlynos spalvos.', 'Ketones cannot be oxidised mildly without breaking a $C-C$ bond, so $Cu(II)$ is not reduced and the blue colour remains.'))],
+              t('Ketonai neoksiduojasi švelniai nenutraukiant $C-C$ ryšio, todėl $Cu(II)$ nesiredukuoja ir raudonų ar geltonų nuosėdų nėra; kaip ir be aldehido, kaitinamos mėlynos nuosėdos gali patamsėti, nes susidaro juodas $CuO$.', 'Ketones cannot be oxidised mildly without breaking a $C-C$ bond, so $Cu(II)$ is not reduced and no red or yellow precipitate forms; as with any compound that is not a reducing agent, the heated blue precipitate may darken to black $CuO$.'))],
             why: t('Šis neigiamas rezultatas yra svarbus: jis atskiria aldehidus nuo ketonų.', 'This negative result is important: it separates aldehydes from ketones.'),
             src: 'LW6 p3'
           },

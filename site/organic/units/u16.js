@@ -1062,7 +1062,7 @@
               ],
               answer: [0, 1, 3],
               hint: t('Atskirkite pirolo ir piridino tipo azotus.', 'Tell the pyrrole-type and pyridine-type nitrogens apart.'),
-              solution: t('Teisingi pirmas, antras ir ketvirtas. Azotai nevienodi (Nr. 1 – pirolo tipo, Nr. 3 – piridino tipo), o piperidinas (pKa ≈ 11) bazingesnis už imidazolą (≈ 7).', 'The first, second and fourth are correct. The nitrogens differ (no. 1 pyrrole type, no. 3 pyridine type), and piperidine (pKa ≈ 11) is more basic than imidazole (≈ 7).')
+              solution: t('Teisingi teiginiai apie sekstetą, apie protono prijungimą prie azoto Nr. 3 ir apie $N-H$ vandenilio pakeitimą metalu. Azotai nevienodi (Nr. 1 – pirolo tipo, Nr. 3 – piridino tipo), o piperidinas (pKa ≈ 11) bazingesnis už imidazolą (≈ 7), todėl du kiti teiginiai klaidingi.', 'The statements about the sextet, about a proton binding to nitrogen no. 3 and about replacing the $N-H$ hydrogen by a metal are correct. The nitrogens differ (no. 1 pyrrole type, no. 3 pyridine type), and piperidine (pKa ≈ 11) is more basic than imidazole (≈ 7), so the other two statements are wrong.')
             }],
             why: t('Du skirtingi azoto tipai viename žiede daro imidazolą amfoterinį: N-3 yra bazinis centras, N-1–H – rūgštinis.', 'Two different nitrogen types in one ring make imidazole amphoteric: N-3 is the basic centre and N-1–H the acidic one.'),
             src: 'T p143',
@@ -1284,7 +1284,7 @@
               ],
               answer: [0, 1, 3],
               hint: t('Atskirkite, ar piridino azoto pora yra sekstete, ar žiedo plokštumoje.', 'Decide whether the pyridine nitrogen pair is in the sextet or in the ring plane.'),
-              solution: t('Teisingi pirmas, antras ir ketvirtas. Piridino azoto pora yra ne sekstete, o žiedo plokštumoje, ir elektronų skaičius toks pat kaip benzeno (6).', 'The first, second and fourth are correct. The pyridine nitrogen pair is not in the sextet but in the ring plane, and the electron count equals that of benzene (6).')
+              solution: t('Teisingos priežastys: elektroneigiamas azotas traukia elektronus, rūgštyje susidaro piridinio katijonas, o žiedo anglys (ypač C-2 ir C-4) turi dalinį teigiamą krūvį. Piridino azoto pora yra ne sekstete, o žiedo plokštumoje, ir elektronų skaičius toks pat kaip benzeno (6).', 'The correct reasons are the electron withdrawal by the electronegative nitrogen, the pyridinium cation formed in acid, and the partial positive charge on the ring carbons (especially C-2 and C-4). The pyridine nitrogen pair is not in the sextet but in the ring plane, and the electron count equals that of benzene (6).')
             }],
             why: t('Piridinas yra elektronų deficitinis dėl elektroneigiamo azoto ir dažnai protonuojamas reakcijos terpėje. Todėl jam reikia daug griežtesnių sąlygų nei benzenui.', 'Pyridine is electron-poor because of the electronegative nitrogen and is often protonated in the reaction medium. It therefore needs much harsher conditions than benzene.'),
             src: 'T p143-144'
@@ -1729,7 +1729,7 @@
                 prompt: t('Kuri struktūra yra uracilo laktimo (dihidroksi) forma?', 'Which structure is the lactim (dihydroxy) form of uracil?'),
                 kind: 'choice', options: [mo(URACIL_LACTIM), mo('N1=C(O)NC(=O)C=C1'), mo('N1C(=O)N=C(O)C=C1'), mo('N1C(=O)NC(=O)C=C1')], answer: 0,
                 hint: t('Laktimo forma neturi $C=O$ grupių, o turi $C-OH$ ir $C=N$.', 'The lactim form has no $C=O$ groups, only $C-OH$ and $C=N$.'),
-                solution: t('Abi karbonilo grupės virtusios hidroksilu: $N-C(OH)=N$ abiejose padėtyse. Dvi struktūros su vienu $C=O$ yra mišrios laktimo–laktamo formos, o paskutinė – laktamo.', 'Both carbonyl groups have become hydroxyl: $N-C(OH)=N$ at both positions. The two structures with one $C=O$ are the mixed lactim–lactam forms, and the last one is the lactam.')
+                solution: t('Abi karbonilo grupės virtusios hidroksilu: $N-C(OH)=N$ abiejose padėtyse. Dvi struktūros su vienu $C=O$ yra mišrios laktimo–laktamo formos, o struktūra su abiem $C=O$ – laktamo.', 'Both carbonyl groups have become hydroxyl: $N-C(OH)=N$ at both positions. The two structures with one $C=O$ are the mixed lactim–lactam forms, and the structure with both $C=O$ groups is the lactam.')
               },
               {
                 prompt: t('Kuri forma yra nukleorūgščių sudėtyje?', 'Which form is found in nucleic acids?'),
@@ -1776,7 +1776,7 @@
               prompt: t('Kuri tautomerinė forma nukleorūgštyse yra citozino laktamo forma?', 'Which tautomeric form is the lactam form of cytosine found in nucleic acids?'),
               kind: 'choice', options: [mo(CYTOSINE), mo('N1=C(O)N=C(N)C=C1'), mo('N1C(=O)NC(=N)C=C1')], answer: 0,
               hint: t('Laktamo forma turi ciklinę amido grupę ($N-C=O$) ir aminogrupę.', 'The lactam form has a cyclic amide group ($N-C=O$) and an amino group.'),
-              solution: [{ p: t('Pirmoji struktūra turi $C-2=O$ ir $NH2$ prie $C-4$. Antroji – laktimo forma ($C-OH$), trečioji – iminoforma, kurios nukleorūgštyse nėra.', 'The first structure has $C-2=O$ and $NH2$ on $C-4$. The second is the lactim form ($C-OH$), and the third is an imino form, which is not the one in nucleic acids.') }, { mol: { smi: CYTOSINE } }]
+              solution: [{ p: t('Teisinga struktūra turi $C-2=O$ ir $NH2$ prie $C-4$. Struktūra su $C-OH$ yra laktimo forma, o su $C=NH$ grupe – iminoforma, kurios nukleorūgštyse nėra.', 'The correct structure has $C-2=O$ and $NH2$ on $C-4$. The structure with $C-OH$ is the lactim form, and the one with a $C=NH$ group is an imino form, which is not the one in nucleic acids.') }, { mol: { smi: CYTOSINE } }]
             }],
             why: t('Citozinas nukleorūgštyse turi laktamo formą su laisva aminogrupe; tai lemia jo vandenilinių ryšių rinkinį poravime su guaninu.', 'Cytosine in nucleic acids has the lactam form with a free amino group; this fixes its set of hydrogen bonds in pairing with guanine.'),
             src: 'T p149',
@@ -2000,7 +2000,7 @@
               ],
               answer: [0, 1, 3],
               hint: t('Prisiminkite, kiek ryšių turi G–C.', 'Recall how many bonds G–C has.'),
-              solution: t('Teisingi pirmas, antras ir ketvirtas. G–C turi tris ryšius, o DNR poroje visada poruojasi purinas su pirimidinu (A–T, G–C).', 'The first, second and fourth are correct. G–C has three bonds, and in a DNA base pair a purine always pairs with a pyrimidine (A–T, G–C).')
+              solution: t('Teisingi teiginiai: vandenilinis ryšys silpnesnis už kovalentinį, A–T pora turi du ryšius, o donoras yra $N-H$, akceptorius – $C=O$. G–C turi tris ryšius, o DNR poroje visada poruojasi purinas su pirimidinu (A–T, G–C).', 'The correct statements are that a hydrogen bond is weaker than a covalent one, that the A–T pair has two bonds, and that the donor is $N-H$ and the acceptor $C=O$. G–C has three bonds, and in a DNA base pair a purine always pairs with a pyrimidine (A–T, G–C).')
             }],
             why: t('Vandeniliniai ryšiai silpni, bet jų gausa stabilizuoja dvigubą spiralę.', 'Hydrogen bonds are weak, but their large number stabilises the double helix.'),
             src: 'T p145, Klein'
@@ -2188,7 +2188,7 @@
               ],
               answer: [0, 1, 3],
               hint: t('Prisiminkite, kuri forma aromatinė ir kuri padėtis aktyviausia.', 'Recall which form is aromatic and which position is the most active.'),
-              solution: t('Teisingi pirmas, antras ir ketvirtas: SEAr per laktimo formą, produktas – 5-nitrouracilas.', 'The first, second and fourth are correct: SEAr through the lactim form, and the product is 5-nitrouracil.')
+              solution: t('Teisingi teiginiai: reakcija yra SEAr, joje dalyvauja laktimo tautomeras, o nitrogrupė patenka į $C-5$ – produktas yra 5-nitrouracilas, ne 6-nitro darinys, ir ne ant azoto.', 'The correct statements are that the reaction is SEAr, that the lactim tautomer takes part, and that the nitro group goes to $C-5$: the product is 5-nitrouracil, not the 6-nitro compound, and not on nitrogen.')
             }],
             why: t('Uracilo nitrinimas sujungia du dalykus: tautomeriją (laktimo forma yra aromatinė) ir orientaciją (aktyvuoja $OH$ grupės).', 'The nitration of uracil combines two ideas: tautomerism (the lactim form is aromatic) and orientation (activated by the $OH$ groups).'),
             src: 'S7.16'

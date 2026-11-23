@@ -259,6 +259,33 @@ function smilesLike(text) {
 }
 const GENITIVE = /(?:met|et|prop|but|pent|heks|hept|okt|non|dek|adi)(an|en|in)os(?![\p{L}])/iu;
 
+// Option-position references. The player shuffles choice and multi options, so a solution, hint or "why" must not point at an option by
+// its place ("the first, second and fourth are correct", "the last one", "Teisingi pirmas ir antras"): say which statement it is by content.
+// Ordinals that mean something else (the first stage, the second equivalent) are fine; a problem or step with fixedOrder: true is skipped.
+const ORD_EN = '(?:first|second|third|fourth|fifth|last)';
+const ORD_LT = String.raw`(?:pirm|antr|treči|ketvirt|penkt|paskutin)(?!in|iau)\p{L}*`;
+const ORD_REFS = {
+  en: [
+    new RegExp(String.raw`\b(?:the\s+)?` + ORD_EN + String.raw`\s+(?:option|options|answer|answers|statement|statements|choice|choices|variant|equation|equations|observation|observations)\b`, 'i'),
+    new RegExp(String.raw`\bonly\s+the\s+` + ORD_EN + String.raw`\s+(?:is|are|one)\b`, 'i'),
+    new RegExp(String.raw`\bthe\s+last\s+one\b`, 'i'),
+    new RegExp(String.raw`\b(?:the\s+)?` + ORD_EN + String.raw`(?:\s+(?:one|two|three|four))?(?:\s+and\s+(?:the\s+)?` + ORD_EN + String.raw`)?\s+(?:is|are|was|were)\s+(?:both\s+)?(?:correct|right|true|false|wrong|incorrect)\b`, 'i'),
+    new RegExp(String.raw`\b` + ORD_EN + String.raw`,\s+(?:the\s+)?` + ORD_EN + String.raw`,?\s+(?:and\s+|or\s+)?(?:the\s+)?` + ORD_EN + String.raw`\s+(?:is|are|were)\b`, 'i')
+  ],
+  lt: [
+    new RegExp(String.raw`(?<![\p{L}])` + ORD_LT + String.raw`\s+(?:variant\p{L}*|atsakym\p{L}*|teigin\p{L}*|lygt\p{L}*|stebėjim\p{L}*)`, 'iu'),
+    new RegExp(String.raw`(?<![\p{L}])(?:teising\p{L}*|neteising\p{L}*|klaiding\p{L}*)\s+(?:tik\s+)?` + ORD_LT, 'iu'),
+    new RegExp(String.raw`(?<![\p{L}])` + ORD_LT + String.raw`,?\s+(?:ir|ar)\s+` + ORD_LT + String.raw`\s+(?:yra|teising|neteising|klaiding)`, 'iu')
+  ]
+};
+function ordinalRef(T) {
+  for (const lang of ['lt', 'en']) {
+    const s = String(T[lang]).replace(/\$[^$]*\$/g, ' ');
+    for (const re of ORD_REFS[lang]) { const m = re.exec(s); if (m) return lang + ' text points at an option by its position ("' + m[0] + '")'; }
+  }
+  return null;
+}
+
 // Views are rendered once (both languages) to catch arrows to missing atoms, bad specs, NaN in the output.
 const viewCache = new Map();
 function viewProblem(kind, spec) {
@@ -278,6 +305,21 @@ function viewProblem(kind, spec) {
     viewCache.set(key, r);
   }
   return viewCache.get(key);
+}
+// A lone-pair arrow ref ({m, lp}) must name an atom that has a lone pair: N, O, S, P, a halogen, or any negatively charged atom.
+const LONE_PAIR_EL = ['N', 'O', 'S', 'P', 'F', 'Cl', 'Br', 'I'];
+function lonePairProblem(step) {
+  if (!isObj(step) || !isObj(step.scheme) || !Array.isArray(step.scheme.items) || !Array.isArray(step.arrows)) return null;
+  const mols = step.scheme.items.filter((it) => isObj(it) && typeof it.smi === 'string');
+  for (const ar of step.arrows) {
+    for (const ref of [ar && ar.from, ar && ar.to]) {
+      if (!isObj(ref) || ref.lp === undefined || !mols[ref.m]) continue;
+      const p = parse(mols[ref.m].smi);
+      const a = p.err ? null : p.mol.atoms[ref.lp];
+      if (a && !LONE_PAIR_EL.includes(a.el) && !(a.charge < 0)) return 'has a lone-pair arrow on atom ' + ref.lp + ' (' + a.el + ') of ' + mols[ref.m].smi + ', which has no lone pair';
+    }
+  }
+  return null;
 }
 const VIEW_KINDS = ['mech', 'scheme', 'resonance', 'fischer', 'newman', 'chair'];
 
@@ -359,7 +401,7 @@ function checkUnit(unit, opts) {
   // every T, every Mol, every number under node
   function scan(node, loc, tag, parentKey) {
     if (Array.isArray(node)) {
-      if (parentKey === 'mech') node.forEach((st, i) => { const e = isObj(st) ? viewProblem('mech', st) : null; if (e) R.err(loc, 'mechanism step ' + i + ' ' + e, tag); });
+      if (parentKey === 'mech') node.forEach((st, i) => { const e = isObj(st) ? viewProblem('mech', st) : null; if (e) R.err(loc, 'mechanism step ' + i + ' ' + e, tag); const lp = lonePairProblem(st); if (lp) R.err(loc, 'mechanism step ' + i + ' ' + lp, tag); });
       if (parentKey === 'resonance') { const e = viewProblem('resonance', node); if (e) R.err(loc, 'resonance block ' + e, tag); }
       node.forEach((x) => scan(x, loc, tag, parentKey)); return;
     }
@@ -459,12 +501,23 @@ function checkUnit(unit, opts) {
   }
   const claimCache = new Map();
 
+  // solution, hint and why of a problem that has a choice or multi step must not refer to options by position (see ORD_REFS)
+  function ordinalChecks(p, type, prob, tag) {
+    const steps = Array.isArray(p.steps) ? p.steps : [];
+    if (p.fixedOrder || !steps.some((s) => isObj(s) && (s.kind === 'choice' || s.kind === 'multi'))) return;
+    const texts = (node, out) => { if (isT(node)) out.push(node); else if (Array.isArray(node)) node.forEach((x) => texts(x, out)); else if (isObj(node)) Object.values(node).forEach((x) => texts(x, out)); return out; };
+    const check = (node, part) => texts(node, []).forEach((T) => { const msg = ordinalRef(T); if (msg) R.err(L(type, prob, part), msg + ': describe the option by its content, because the options are shuffled', tag); });
+    check(p.why, 'why');
+    steps.forEach((s, i) => { if (isObj(s) && !s.fixedOrder && (s.kind === 'choice' || s.kind === 'multi')) { check(s.solution, 'steps[' + i + '].solution'); check(s.hint, 'steps[' + i + '].hint'); } });
+  }
+
   function problemChecks(p, type, prob, tag) {
     if (!isObj(p)) return;
     curNumbered = hasNumberedMol(p);
     scan(p.q, L(type, prob, 'q'), tag, 'q');
     (Array.isArray(p.steps) ? p.steps : []).forEach((s, i) => { scan(s, L(type, prob, 'steps[' + i + ']'), tag, 'step'); stepChecks(s, i, type, prob, tag, p); });
     scan(p.why, L(type, prob, 'why'), tag, 'why');
+    ordinalChecks(p, type, prob, tag);
     (Array.isArray(p.claims) ? p.claims : []).forEach((c, k) => runClaim(c, L(type, prob, 'claims[' + k + ']'), tag));
   }
   const safely = (fn, loc, tag) => { try { fn(); } catch (e) { if (!R.errs.size) R.err(loc, 'validator error: ' + e.message, tag); } };
@@ -932,6 +985,43 @@ test('validator: views are rendered (mechanism arrows to a missing atom)', () =>
   only(withBlock(mechBlock({ m: 0, a: 99 })), /notes section "more": mechanism step 0 does not render [(]lt[)]: .*99/);
   const u = fresh(); bankOf(u).q.push(mechBlock({ m: 0, a: 99 }));
   only(u, /type u01.bank, problem u01.bank.1, q: mechanism step 0 does not render/);
+});
+
+test('validator: a lone-pair arrow needs an atom with a lone pair', () => {
+  const lpBlock = (smi, lp) => ({ mech: [{ scheme: { items: [{ smi, opts: { lonePairs: true } }, { plus: true }, { smi: 'Cl', opts: { allH: true } }] }, arrows: [{ from: { m: 0, lp }, to: { m: 1, a: 'H0' } }], note: T('Protonavimas', 'Protonation') }] });
+  const withBlock = (b) => { const u = fresh(); u.notes[1].blocks.push(b); return u; };
+  assert.deepEqual(run(withBlock(lpBlock('CC(C)=O', 3))).errors, []);   // oxygen
+  assert.deepEqual(run(withBlock(lpBlock('C[CH2-]', 1))).errors, []);   // negatively charged carbon
+  only(withBlock(lpBlock('CC(C)=O', 2)), /mechanism step 0 has a lone-pair arrow on atom 2 \(C\) of CC\(C\)=O, which has no lone pair/);
+  const u = fresh(); bankOf(u).q.push(lpBlock('CCC', 0));
+  only(u, /type u01.bank, problem u01.bank.1, q: mechanism step 0 has a lone-pair arrow on atom 0 \(C\)/);
+});
+
+test('validator: choice and multi texts must not point at options by position', () => {
+  const bad = [
+    ['Teisingi pirmas, antras ir ketvirtas.', 'The first, second and fourth are correct.'],
+    ['Neteisingas tik antrasis.', 'Only the second is wrong.'],
+    ['Teisingi pirmieji du teiginiai.', 'The first two are correct.'],
+    ['Trečiasis variantas netinka.', 'The third option does not fit.'],
+    ['Pirmoji lygtis subalansuota.', 'The first equation is balanced.'],
+    ['Paskutinis variantas yra produktas.', 'The last one is the product.']
+  ];
+  for (const [lt, en] of bad) {
+    let u = fresh(); bankOf(u).steps[0].solution = T(lt, en);
+    let r = run(u);
+    assert.equal(r.errors.length, 1, en);
+    assert.match(r.errors[0], /text points at an option by its position/, en);
+    u = fresh(); bankOf(u).why = T(lt, en);
+    assert.match(run(u).errors[0] || '', /why: .*points at an option by its position/, en);
+  }
+  // ordinals that mean a stage, an equivalent or a drawn molecule are fine, and so is a problem that says its order is fixed
+  const ok = [['Pirmoji stadija lėta, pirmiausia dvi sferos.', 'The first stage is slow; the first two spheres tie.'], ['Antrasis ekvivalentas jungiasi prie kitos anglies.', 'The second equivalent adds to the other carbon.']];
+  for (const [lt, en] of ok) { const u = fresh(); bankOf(u).steps[0].solution = T(lt, en); assert.deepEqual(run(u).errors, [], en); }
+  let u = fresh(); bankOf(u).steps[0].solution = T('Pirmasis junginys neturi $α$-H.', 'The first compound has no $α$-H, the first two are correct.'); bankOf(u).steps[0].fixedOrder = true;
+  assert.deepEqual(run(u).errors, []);
+  // steps that are not choice or multi are not checked
+  u = fresh(); bankOf(u).steps.forEach((s) => { s.kind = s.kind; }); bankOf(u).steps[2].hint = T('Pirmas ir antras teisingi.', 'The first two are correct.');
+  assert.deepEqual(run(u).errors, []);
 });
 
 test('validator: ready flags and unit files agree', () => {

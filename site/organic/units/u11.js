@@ -149,8 +149,8 @@
         { mol: { smi: 'CC(O)CC(C)C', name: t('4-metil-2-pentanolis', '4-methyl-2-pentanol') } },
         { h: t('Alkoholių klasės', 'Classes of alcohols') },
         {
-          p: t('Alkoholio klasę nusako anglis, prie kurios prijungta $OH$: pirminėje ji turi vieną kaimynę anglį, antrinėje – dvi, tretinėje – tris. Klasė svarbiausia, nes nuo jos priklauso halogeninimo mechanizmas, dehidratacija ir oksidacija.',
-            'The class of an alcohol is set by the carbon that carries the $OH$: it has one carbon neighbour in a primary alcohol, two in a secondary and three in a tertiary one. The class matters most, because it decides the mechanism of halogenation, the dehydration and the oxidation.'),
+          p: t('Alkoholio klasę nusako anglis, prie kurios prijungta $OH$: pirminėje ji turi vieną kaimynę anglį (metanolis, neturintis anglies kaimynės, taip pat laikomas pirminiu), antrinėje – dvi, tretinėje – tris. Klasė svarbiausia, nes nuo jos priklauso halogeninimo mechanizmas, dehidratacija ir oksidacija.',
+            'The class of an alcohol is set by the carbon that carries the $OH$: it has one carbon neighbour in a primary alcohol (methanol, with no carbon neighbour, is counted as primary too), two in a secondary and three in a tertiary one. The class matters most, because it decides the mechanism of halogenation, the dehydration and the oxidation.'),
           src: 'L11 p8, p20'
         },
         { mol: [{ smi: 'CCCO', caption: t('pirminis: 1-propanolis', 'primary: 1-propanol') }, { smi: 'CCC(C)O', caption: t('antrinis: 2-butanolis', 'secondary: 2-butanol') }, { smi: 'CC(C)(C)O', caption: t('tretinis: 2-metil-2-propanolis', 'tertiary: 2-methyl-2-propanol') }], src: 'L11 p8' },
@@ -881,8 +881,8 @@
         return {
           q: [{ p: t('Išnagrinėkite alkoholį.', 'Examine this alcohol.') }, { mol: { smi: alc } }],
           steps,
-          why: t('Alkoholio klasę nusako anglis su OH: pirminėje yra viena anglies kaimynė (arba nė vienos), antrinėje dvi, tretinėje trys. Klasė lemia, kaip alkoholis reaguoja: oksidacijoje, halogeninime, dehidratacijoje.',
-            'The class of an alcohol is set by the carbon that carries the OH: one carbon neighbour for primary, two for secondary, three for tertiary. The class decides how the alcohol behaves in oxidation, halogenation and dehydration.'),
+          why: t('Alkoholio klasę nusako anglis su OH: pirminėje yra viena anglies kaimynė (metanolis, neturintis nė vienos, taip pat laikomas pirminiu), antrinėje dvi, tretinėje trys. Klasė lemia, kaip alkoholis reaguoja: oksidacijoje, halogeninime, dehidratacijoje.',
+            'The class of an alcohol is set by the carbon that carries the OH: one carbon neighbour for primary (methanol, with none, is counted as primary too), two for secondary, three for tertiary. The class decides how the alcohol behaves in oxidation, halogenation and dehydration.'),
           src: 'L11 p2, p27'
         };
       }
@@ -1861,7 +1861,7 @@
           'Palyginkite alkoholio ir $OH-$ konjuguotosios rūgšties (vandens) stiprumą.', 'Compare the alcohol with the conjugate acid of $OH-$ (water).',
           'Su natriu alkoholis reaguoja, nes natris yra stiprus reduktorius (elektronų donoras), bet alkoholio rūgštingumas toks silpnas, kad $OH-$ jo beveik nedeprotonuoja.', 'An alcohol reacts with sodium because sodium is a very strong reductant, but its acidity is so weak that $OH-$ cannot deprotonate it appreciably.')
       ],
-      why: t('Alkoholiai yra silpnos rūgštys ($pKa$ 15–18), nusileidžia vandeniui, fenoliams ir karboksirūgštims. Todėl alkoksidui gauti reikia stipresnės bazės už $OH-$.', 'Alcohols are weak acids ($pKa$ 15–18), weaker than water, phenols and carboxylic acids. So an alkoxide needs a stronger base than $OH-$.'),
+      why: t('Alkoholiai yra silpnos rūgštys ($pKa$ 15–18), maždaug tokios pat silpnos kaip vanduo (metanolis šiek tiek stipresnis, tretiniai alkoholiai silpnesni) ir silpnesnės už fenolius bei karboksirūgštis. Todėl alkoksidui gauti reikia stipresnės bazės už $OH-$.', 'Alcohols are weak acids ($pKa$ 15–18), about as weak as water (methanol slightly stronger, tertiary alcohols weaker), and weaker than phenols and carboxylic acids. So an alkoxide needs a stronger base than $OH-$.'),
       src: 'L11 p6'
     },
     {

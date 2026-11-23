@@ -379,7 +379,7 @@
         },
         {
           scheme: { items: [{ smi: 'Oc1ccc(O)cc1' }, { plus: true }, { smi: 'CC(C)=C[CH2+]' }, { arrow: '→' }, { smi: 'CC(C)=CCc1cc(O)ccc1O' }] },
-          caption: t('Alkilinimas gyvajame organizme: alilo tipo katijonas pakeičia žiedo vandenilį.', 'Alkylation in a living organism: an allyl-type cation replaces a ring hydrogen.'), src: 'L9 p18, p20'
+          caption: t('Modelis: hidrochinonas ir trumpas alilo tipo katijonas vietoj naftaleno darinio ir fitilo katijono. Alkilinimas gyvajame organizme: alilo tipo katijonas pakeičia žiedo vandenilį.', 'Model: hydroquinone and a short allyl-type cation in place of the naphthalene derivative and the phytyl cation. Alkylation in a living organism: an allyl-type cation replaces a ring hydrogen.'), src: 'L9 p18, p20'
         },
         { practice: 'u09.sear' }
       ]
@@ -1889,7 +1889,7 @@
         steps: [
           { prompt: t('Pažymėkite pagrindinius produktus.', 'Pick the main products.'), kind: 'multi', options: [ml('Cc1ccccc1C(C)=O'), ml('Cc1ccc(cc1)C(C)=O'), ml('Cc1cccc(c1)C(C)=O'), ml('CC(=O)Cc1ccccc1')], answer: [0, 1],
             hint: t('Ką kreipia metilgrupė? Ir ar acilas gali prisijungti prie metilo?', 'What does a methyl group direct? And can the acyl group bond to the methyl?'),
-            solution: t('Metilas – o-/p-orientantas, todėl acetilgrupė patenka į o- ir p- padėtis. Fenilacetonas (ketvirtas variantas) reikalautų pakeisti metilo vandenilį.', 'Methyl is an o/p director, so the acetyl group goes to the o and p positions. The fourth option would need a methyl hydrogen replaced.') }
+            solution: t('Metilas – o-/p-orientantas, todėl acetilgrupė patenka į o- ir p- padėtis. Fenilacetonas (acilgrupė ant metilo) reikalautų pakeisti metilo vandenilį.', 'Methyl is an o/p director, so the acetyl group goes to the o and p positions. The product with the acyl group on the methyl group would need a methyl hydrogen replaced.') }
         ],
         why: t('Acilinimas yra SEAr: acilio jonas atakuoja žiedą pagal pakaito orientaciją.', 'Acylation is SEAr: the acylium ion attacks the ring according to the directing effect.'),
         src: 'L9 p35', claims: [{ react: ['sear', ['Cc1ccccc1'], { E: 'C(C)=O' }, 'Cc1ccc(cc1)C(C)=O'] }, { react: ['sear', ['Cc1ccccc1'], { E: 'C(C)=O' }, 'Cc1ccccc1C(C)=O'] }]

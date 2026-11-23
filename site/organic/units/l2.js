@@ -537,7 +537,7 @@
               ['distiliavimą reikia tuoj pat nutraukti', 'the distillation must be stopped at once']
             ], 0, t('Ar kintanti temperatūra liudytų grynumą?', 'Would a changing temperature suggest purity?'),
               t('Pastovi temperatūra intervale 1–2 °C rodo, kad distiliuojasi beveik gryna medžiaga.', 'A constant temperature within 1–2 °C shows that an almost pure substance is distilling.'))],
-            why: t('Gryna medžiaga verda pastovioje temperatūroje, mišinys – kintančioje.', 'A pure substance boils at constant temperature, a mixture over a range.'),
+            why: t('Gryna medžiaga (ar azeotropas) verda pastovioje temperatūroje, įprastas mišinys – temperatūrų intervale.', 'A pure substance (or an azeotrope) boils at constant temperature; an ordinary mixture over a range.'),
             src: 'LW2 p2, p6'
           },
           {
@@ -923,19 +923,14 @@
           }
 
           // nclass: judge the distillate from the refractive index
-          let x;
-          for (let tries = 0; tries < 80; tries++) {
-            x = ctx.int(13330, 13600) / 10000;
-            if (Math.abs(x - 1.3560) > 0.0006 && Math.abs(x - 1.3380) > 0.0006) break;
-            x = null;
-          }
-          if (x === null) throw new Error('l2.calc: no index');
-          const cls = x >= 1.3560 ? 0 : (x <= 1.3380 ? 2 : 1);
+          // the index is drawn well inside one answer band (edges 1.338 and 1.356), so that interpolating between water and acetone agrees with the key
+          const cls = ctx.pick([0, 1, 2]);
+          const x = (cls === 0 ? ctx.int(13575, 13600) : cls === 1 ? ctx.int(13470, 13500) : ctx.int(13330, 13350)) / 10000;
           return {
             q: [{ p: t('Distiliato lūžio rodiklis $n_D^20$ yra ' + lt(x, 4) + '. Gryno acetono – 1,3588, vandens – 1,3330.', 'The refractive index of the distillate $n_D^20$ is ' + fmt(x, 4) + '. For pure acetone it is 1.3588 and for water 1.3330.') }],
             steps: [ch(t('Ką galima teigti apie distiliatą?', 'What can be said about the distillate?'), [
               ['beveik gryna acetonas (lūžio rodiklis nuo 1,356)', 'practically pure acetone (index from 1.356)'],
-              x < 1.3459 ? ['acetonas su dideliu vandens kiekiu', 'acetone with a large amount of water'] : ['acetonas su pastebimu vandens kiekiu', 'acetone with a noticeable amount of water'],
+              ['acetonas su pastebimu vandens kiekiu', 'acetone with a noticeable amount of water'],
               ['daugiausia vanduo (rodiklis iki 1,338)', 'mostly water (index up to 1.338)']
             ], cls,
             t('Kuris yra arčiau – 1,3588 ar 1,3330?', 'Which is closer, 1.3588 or 1.3330?'),

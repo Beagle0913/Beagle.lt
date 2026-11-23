@@ -605,8 +605,8 @@
         },
         { scheme: { items: [M('CC(=O)O'), PLUS, M('O'), EQ, M('CC(=O)[O-]'), PLUS, M('[OH3+]')] }, caption: t('Acto rūgštis vandenyje: acetato ir oksonio jonai.', 'Acetic acid in water: acetate and hydronium ions.'), src: 'L4 p8' },
         {
-          p: t('$Ka = [CH3COO^-^][H3O^+^] / [CH3COOH]$. Acto rūgščiai $1,75·10^−5^$ ($Ka$): Ka maža: acto rūgštis vandenyje disocijuoja tik nežymiai (skaidrė pateikia tik iliustraciją: maždaug dvi iš šimto tūkstančių molekulių). Patogiau naudoti neigiamą logaritmą, $pKa = −lg Ka$; acto rūgšties $pKa$ yra 4,75.',
-            '$Ka = [CH3COO^-^][H3O^+^] / [CH3COOH]$. For acetic acid $Ka = 1.75·10^−5^$: Ka is small: acetic acid dissociates only slightly in water (the slide gives only an illustration: roughly two molecules in a hundred thousand). It is more convenient to use the negative logarithm: $pKa = −lg Ka$, for acetic acid $pKa = 4.75$.'),
+          p: t('$Ka = [CH3COO^-^][H3O^+^] / [CH3COOH]$. Acto rūgščiai $1,75·10^−5^$ ($Ka$): Ka maža: acto rūgštis vandenyje disocijuoja tik nežymiai. Ka nėra disociavusios dalies dydis: 0,1 mol/L acto rūgšties tirpale disocijuoja tik apie 1 % molekulių. Patogiau naudoti neigiamą logaritmą, $pKa = −lg Ka$; acto rūgšties $pKa$ yra 4,75.',
+            '$Ka = [CH3COO^-^][H3O^+^] / [CH3COOH]$. For acetic acid $Ka = 1.75·10^−5^$: Ka is small: acetic acid dissociates only slightly in water. Ka is not the fraction dissociated: in a 0.1 mol/L solution of acetic acid only about 1 % of the molecules are dissociated. It is more convenient to use the negative logarithm: $pKa = −lg Ka$, for acetic acid $pKa = 4.75$.'),
           src: 'L4 p9, T p33'
         },
         {
@@ -738,8 +738,8 @@
           src: 'L4 p21, T p35'
         },
         {
-          p: t('Aromatinė karboksirūgštis (benzenkarboksirūgštis, 4,2) šiek tiek stipresnė už alifatinę (4,75): neigiamas krūvis gali delokalizuotis žiede. Tai pat galioja pakaitams žiedo $p$-padėtyje: akceptoriniai (nitro, chloras) rūgštingumą didina, donoriniai (alkilas, alkoksi) mažina.',
-            'An aromatic carboxylic acid (benzoic acid, 4.2) is slightly stronger than an aliphatic one (4.75): the negative charge can be delocalised into the ring. The same direction holds for substituents in the $p$ position of the ring: acceptors (nitro, chlorine) raise the acidity, donors (alkyl, alkoxy) lower it.'),
+          p: t('Aromatinė karboksirūgštis (benzenkarboksirūgštis, 4,2) šiek tiek stipresnė už alifatinę (4,75): fenilgrupė (sp² anglis) traukia elektronus stipriau nei alkilgrupė, todėl anijoną šiek tiek stabilizuoja; kurse tai aprašoma kaip žiedo elektronus ištraukiantis poveikis. Ta pati kryptis galioja pakaitams žiedo $p$-padėtyje: akceptoriniai (nitro, chloras) rūgštingumą didina, donoriniai (alkilas, alkoksi) mažina.',
+            'An aromatic carboxylic acid (benzoic acid, 4.2) is slightly stronger than an aliphatic one (4.75): the phenyl group (an sp² carbon) withdraws electrons more than an alkyl group does, which stabilises the anion a little; the course book describes this as the electron-withdrawing effect of the ring. The same direction holds for substituents in the $p$ position of the ring: acceptors (nitro, chlorine) raise the acidity, donors (alkyl, alkoxy) lower it.'),
           src: 'T p35, L4 p21, p23'
         },
         { h: t('4. Tirpiklis', '4. The solvent') },
@@ -1432,12 +1432,12 @@
       q: [{ p: t('Palyginkite trijų karboksirūgščių rūgštingumą.', 'Compare the acidity of three carboxylic acids.') }, { mol: [M('CC(=O)O'), M('C(=O)O'), M('OC(=O)c1ccccc1')] }],
       steps: [
         orderStep(['C(=O)O', 'OC(=O)c1ccccc1', 'CC(=O)O'], HINT_ANION, t('Skruzdžių rūgštis (3,7) > benzenkarboksirūgštis (4,2) > acto rūgštis (4,75).', 'Formic acid (3.7) > benzoic acid (4.2) > acetic acid (4.75).')),
-        reasonStep(t('Metilgrupė yra donoras (+I) ir destabilizuoja karboksilatą; fenilas neturi tokio poveikio ir krūvis gali delokalizuotis žiede; skruzdžių rūgštyje donoro nėra.', 'The methyl group is a donor (+I) and destabilises the carboxylate; phenyl lacks this effect and the charge can be delocalised in the ring; formic acid has no donor at all.'), [
+        reasonStep(t('Metilgrupė yra donoras (+I) ir destabilizuoja karboksilatą; fenilas (sp² anglis) elektronus traukia stipriau nei alkilas ir anijoną šiek tiek stabilizuoja (kurso knygoje – žiedo elektronus ištraukiantis poveikis); skruzdžių rūgštyje donoro nėra.', 'The methyl group is a donor (+I) and destabilises the carboxylate; phenyl (an sp² carbon) withdraws electrons more than an alkyl group and stabilises the anion a little (the course book calls it the electron-withdrawing effect of the ring); formic acid has no donor at all.'), [
           t('Fenilas yra stipresnis donoras už metilą, todėl benzenkarboksirūgštis stipresnė.', 'Phenyl is a stronger donor than methyl, so benzoic acid is stronger.'),
           t('Rūgštingumą lemia tik anglies atomų skaičius: daugiau – stipresnė.', 'Acidity depends only on the number of carbon atoms: more means stronger.'),
           t('Skruzdžių rūgštis silpniausia, nes neturi alkilgrupės, kuri stabilizuotų anijoną.', 'Formic acid is the weakest because it has no alkyl group to stabilise the anion.')], t('Palyginkite, kokie pakaitai yra prie karboksilo grupės: donorai ar ne.', 'Compare the groups attached to the carboxyl group: are they donors?'))
       ],
-      why: t('Alkilgrupės (+I) mažina rūgštingumą (3,7 / 4,75 / 5,0 eilėje HCOOH, CH3COOH, (CH3)3CCOOH), o nepakeista aromatinė karboksirūgštis šiek tiek stipresnė už alifatinę, nes krūvis gali delokalizuotis žiede.', 'Alkyl groups (+I) lower acidity (3.7 / 4.75 / 5.0 in the series HCOOH, CH3COOH, (CH3)3CCOOH), and an unsubstituted aromatic carboxylic acid is slightly stronger than the aliphatic one because the charge can be delocalised into the ring.'),
+      why: t('Alkilgrupės (+I) mažina rūgštingumą (3,7 / 4,75 / 5,0 eilėje HCOOH, CH3COOH, (CH3)3CCOOH), o nepakeista aromatinė karboksirūgštis šiek tiek stipresnė už alifatinę, nes fenilgrupė (sp² anglis) elektronus traukia stipriau nei alkilgrupė ir anijoną šiek tiek stabilizuoja.', 'Alkyl groups (+I) lower acidity (3.7 / 4.75 / 5.0 in the series HCOOH, CH3COOH, (CH3)3CCOOH), and an unsubstituted aromatic carboxylic acid is slightly stronger than the aliphatic one because the phenyl group (an sp² carbon) withdraws electrons more than an alkyl group and stabilises the anion a little.'),
       src: 'L4 p20, T p35'
     },
     {

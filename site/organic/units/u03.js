@@ -932,7 +932,7 @@
             anion: t('Anijonas turi pilną neigiamą krūvį ir dalį jo perduoda grandinei, todėl didina elektronų tankį.', 'An anion has a full negative charge and passes part of it to the chain, so it raises the electron density.')
           }[x.k];
           const dl = {};
-          if (x.s < 0) { dl[xAtoms[0]] = '-'; dl[near] = '+'; if (n > 1) dl[near - 1] = '+'; }
+          if (x.s < 0) { if (x.k === 'hal' || x.k === 'het') dl[xAtoms[0]] = '-'; dl[near] = '+'; if (n > 1) dl[near - 1] = '+'; }
           else { dl[near] = '-'; if (n > 1) dl[near - 1] = '-'; }
           const sign = x.s < 0 ? '−I' : '+I';
           return {
@@ -1710,13 +1710,13 @@
           {
             id: 'u03.natural.4',
             q: [
-              { p: t('(R)-Karvonas suteikia kvapą kmynų sėkloms.', '(R)-Carvone gives caraway seeds their smell.') },
-              { mol: { smi: 'CC1=CC[C@H](CC1=O)C(C)=C', opts: { numbers: 'all' } } }
+              { p: t('(S)-Karvonas suteikia kvapą kmynų sėkloms (o (R)-karvonas kvepia mėta).', '(S)-Carvone gives caraway seeds their smell ((R)-carvone smells of spearmint).') },
+              { mol: { smi: 'CC1=CC[C@@H](CC1=O)C(C)=C', opts: { numbers: 'all' } } }
             ],
             steps: [
               {
                 prompt: t('Bakstelėkite atomus, sudarančius konjuguotąją sistemą.', 'Tap the atoms that form the conjugated system.'),
-                kind: 'atoms', mol: { smi: 'CC1=CC[C@H](CC1=O)C(C)=C', opts: { numbers: 'all' } }, answer: [1, 2, 6, 7],
+                kind: 'atoms', mol: { smi: 'CC1=CC[C@@H](CC1=O)C(C)=C', opts: { numbers: 'all' } }, answer: [1, 2, 6, 7],
                 hint: t('Surasite $C=C$ ir $C=O$, tarp kurių yra tik vienas viengubasis ryšys.', 'Find the $C=C$ and $C=O$ with only one single bond between them.'),
                 solution: t('Žiedo $C=C$ (Nr. 2, 3) ir $C=O$ (Nr. 7, 8) sujungti per $C2−C7$: 4 atomai. Izopropenilo $C=C$ (Nr. 9, 11) izoliuotas.', 'The ring $C=C$ (no. 2, 3) and the $C=O$ (no. 7, 8) are joined through $C2−C7$: 4 atoms. The isopropenyl $C=C$ (no. 9, 11) is isolated.')
               },
@@ -1729,7 +1729,7 @@
             ],
             why: t('Karbonilo grupė prie ciklo $C=C$ sudaro $π,π$-sistemą, o metilo grupė ir izopropenilo grupė į ją neįeina.', 'A carbonyl group next to a ring $C=C$ forms a $π,π$ system, while the methyl group and the isopropenyl group are not part of it.'),
             src: 'S2.11',
-            claims: [{ chiral: ['CC1=CC[C@H](CC1=O)C(C)=C', true] }, { cip: ['CC1=CC[C@H](CC1=O)C(C)=C', 4, 'R'] }]
+            claims: [{ chiral: ['CC1=CC[C@@H](CC1=O)C(C)=C', true] }, { cip: ['CC1=CC[C@@H](CC1=O)C(C)=C', 4, 'S'] }]
           },
           {
             id: 'u03.natural.5',
@@ -2081,7 +2081,7 @@
                 ],
                 answer: [0, 2, 3, 4],
                 hint: t('Pagalvokite, ar rezonansas yra dviejų realių dalelių pusiausvyra.', 'Think about whether resonance is an equilibrium of two real particles.'),
-                solution: t('Neteisingas tik antrasis: rezonansas nėra pusiausvyra. Dalelė viena, ir ji yra formulių hibridas.', 'Only the second is wrong: resonance is not an equilibrium. There is one particle, and it is a hybrid of the structures.')
+                solution: t('Neteisingas tik teiginys apie pusiausvyrą tarp dviejų skirtingų dalelių: rezonansas nėra pusiausvyra. Dalelė viena, ir ji yra formulių hibridas.', 'Only the statement about an equilibrium between two different particles is wrong: resonance is not an equilibrium. There is one particle, and it is a hybrid of the structures.')
               }
             ],
             why: t('Rezonansas yra užrašymo būdas elektronų delokalizacijai parodyti, o ne cheminė reakcija.', 'Resonance is a way of writing electron delocalisation, not a chemical reaction.'),
@@ -3108,7 +3108,7 @@
                 ],
                 answer: [0, 1],
                 hint: t('Prisiminkite dvi išimtis: žemyn grupe ir erdvinius trukdžius.', 'Recall the two exceptions: down a group and steric hindrance.'),
-                solution: t('Teisingi pirmieji du: žemyn grupe nukleofiliškumas didėja, bazingumas mažėja. Trečias ir ketvirtas neteisingi, nes erdviniai trukdžiai nukleofiliškumą sumažina.', 'The first two are correct: down a group nucleophilicity grows and basicity falls. The third and fourth are wrong because steric hindrance reduces nucleophilicity.')
+                solution: t('Teisingi teiginiai apie $HS-$ ir apie alkoholius bei tiolius: žemyn grupe nukleofiliškumas didėja, bazingumas mažėja. Teiginys, kad stipri bazė visada yra stiprus nukleofilas, ir teiginys apie tret-butoksidą neteisingi, nes erdviniai trukdžiai nukleofiliškumą sumažina.', 'The statements about $HS-$ and about alcohols and thiols are correct: down a group nucleophilicity grows and basicity falls. The statement that a strong base is always a strong nucleophile and the one about tert-butoxide are wrong because steric hindrance reduces nucleophilicity.')
               }
             ],
             why: t('Bazingumas yra protono prisijungimas, nukleofiliškumas – prisijungimas prie kitų atomų, todėl jie turi skirtingas išimtis.', 'Basicity is taking up a proton, nucleophilicity is bonding to other atoms, so they have different exceptions.'),
@@ -3418,7 +3418,7 @@
           },
           {
             id: 'u03.arrows.6',
-            q: [{ p: t('Acetonas protonuojamas vandenilio chloridu.', 'Acetone is protonated by hydrogen chloride.') }, { scheme: { items: [{ smi: 'CC(C)=O', opts: { lonePairs: [2] } }, { plus: true }, { smi: 'Cl' }, { arrow: '→' }, { smi: 'CC(C)=[OH+]' }, { plus: true }, { smi: '[Cl-]' }] } }],
+            q: [{ p: t('Acetonas protonuojamas vandenilio chloridu.', 'Acetone is protonated by hydrogen chloride.') }, { scheme: { items: [{ smi: 'CC(C)=O', opts: { lonePairs: [3] } }, { plus: true }, { smi: 'Cl' }, { arrow: '→' }, { smi: 'CC(C)=[OH+]' }, { plus: true }, { smi: '[Cl-]' }] } }],
             steps: [
               {
                 prompt: t('Kurie lenktų rodyklių pavaizdavimas teisingas?', 'Which description of the curved arrows is correct?'),
@@ -3432,7 +3432,7 @@
                 answer: 0,
                 hint: ARROW_HINT,
                 solution: [{ p: t('Deguonis turi laisvųjų porų, todėl jos atiduodamos protonui, o $H−Cl$ ryšys suyra.', 'Oxygen has lone pairs, so one is given to the proton and the $H−Cl$ bond breaks.') }, {
-                  mech: [{ scheme: { items: [{ smi: 'CC(C)=O', opts: { lonePairs: [2] } }, { plus: true }, { smi: 'Cl', opts: { allH: true } }, { arrow: '→' }, { smi: 'CC(C)=[OH+]' }, { plus: true }, { smi: '[Cl-]' }] }, arrows: [{ from: { m: 0, lp: 2 }, to: { m: 1, a: 'H0' } }, { from: { m: 1, b: [0, 'H0'] }, to: { m: 1, a: 0 } }] }]
+                  mech: [{ scheme: { items: [{ smi: 'CC(C)=O', opts: { lonePairs: [3] } }, { plus: true }, { smi: 'Cl', opts: { allH: true } }, { arrow: '→' }, { smi: 'CC(C)=[OH+]' }, { plus: true }, { smi: '[Cl-]' }] }, arrows: [{ from: { m: 0, lp: 3 }, to: { m: 1, a: 'H0' } }, { from: { m: 1, b: [0, 'H0'] }, to: { m: 1, a: 0 } }] }]
                 }]
               },
               {
@@ -3565,7 +3565,7 @@
             id: 'u03.products.2',
             q: [
               { p: t('Pagal rodyklių parodytą elektronų porų judėjimą nustatykite produktus.', 'Taking the movement of the electron pairs into account, predict the products of the reaction.') },
-              { mech: [{ scheme: { items: [{ smi: '[OH-]', opts: { lonePairs: true } }, { plus: true }, { smi: 'CC(C)=O', opts: { allH: true } }] }, arrows: [{ from: { m: 0, lp: 0 }, to: { m: 1, a: 'H0' } }, { from: { m: 1, b: [0, 'H0'] }, to: { m: 1, b: [0, 1] } }, { from: { m: 1, b: [1, 2] }, to: { m: 1, a: 2 } }] }] }
+              { mech: [{ scheme: { items: [{ smi: '[OH-]', opts: { lonePairs: true } }, { plus: true }, { smi: 'CC(C)=O', opts: { allH: true } }] }, arrows: [{ from: { m: 0, lp: 0 }, to: { m: 1, a: 'H0' } }, { from: { m: 1, b: [0, 'H0'] }, to: { m: 1, b: [0, 1] } }, { from: { m: 1, b: [1, 3] }, to: { m: 1, a: 3 } }] }] }
             ],
             steps: [
               {
@@ -3575,7 +3575,7 @@
                 answer: 0,
                 hint: t('Sekite pirmąją rodyklę: ji nukreipta į $α$ vandenilį, o ne į karbonilo anglį.', 'Follow the first arrow: it points to an $α$ hydrogen and not to the carbonyl carbon.'),
                 solution: [{ p: t('Hidroksidas atplėšia $α$ protoną, $C−H$ elektronai sudaro $C=C$ ryšį, o $C=O$ $π$ elektronai pereina deguoniui. Susidaro enolato jonas ir vanduo.', 'Hydroxide removes the $α$ proton, the $C−H$ electrons form the $C=C$ bond and the $C=O$ $π$ electrons go to oxygen. The enolate ion and water form.') }, {
-                  mech: [{ scheme: { items: [{ smi: '[OH-]', opts: { lonePairs: true } }, { plus: true }, { smi: 'CC(C)=O', opts: { allH: true } }, { arrow: '→' }, { smi: 'O' }, { plus: true }, { smi: 'C=C([O-])C' }] }, arrows: [{ from: { m: 0, lp: 0 }, to: { m: 1, a: 'H0' } }, { from: { m: 1, b: [0, 'H0'] }, to: { m: 1, b: [0, 1] } }, { from: { m: 1, b: [1, 2] }, to: { m: 1, a: 2 } }] }]
+                  mech: [{ scheme: { items: [{ smi: '[OH-]', opts: { lonePairs: true } }, { plus: true }, { smi: 'CC(C)=O', opts: { allH: true } }, { arrow: '→' }, { smi: 'O' }, { plus: true }, { smi: 'C=C([O-])C' }] }, arrows: [{ from: { m: 0, lp: 0 }, to: { m: 1, a: 'H0' } }, { from: { m: 1, b: [0, 'H0'] }, to: { m: 1, b: [0, 1] } }, { from: { m: 1, b: [1, 3] }, to: { m: 1, a: 3 } }] }]
                 }]
               },
               {

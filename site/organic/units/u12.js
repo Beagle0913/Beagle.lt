@@ -1541,7 +1541,7 @@
             { e: 'C1CCOC1', ring: true }, { e: 'C1CCCOC1', ring: true },
             { e: 'COc1ccccc1', aryl: (X) => [X + 'c1ccccc1', 'CO'] }, { e: 'CCOc1ccccc1', aryl: (X) => [X + 'c1ccccc1', 'CCO'] },
             { e: 'COc1ccc(C)cc1', aryl: (X) => [X + 'c1ccc(C)cc1', 'CO'] }, { e: 'CCCOCCC' }, { e: 'CC(C)OC(C)C' }, { e: 'CCCOCc1ccccc1' }, { e: 'COC(C)(C)CC' },
-            { e: 'CCOC(C)CC' }, { e: 'CCCCOC(C)(C)C' }, { e: 'CC(C)OCC(C)C' }, { e: 'CCCCOCCCC' }
+            { e: 'CCOC(C)CC' }, { e: 'CCCCOC(C)(C)C' }, { e: 'CCCCOCCCC' }
           ];
           const uniq = (list) => { const seen = []; return list.filter((s) => { if (seen.some((x) => same(ctx, x, s))) return false; seen.push(s); return true; }); };
           // two equivalents of acid: both ends become C-X; identical fragments are listed twice (2 x) and water is included

@@ -1150,7 +1150,7 @@
         ].map(s => ({ scheme: s.scheme })),
         answer: [0, 1],
         hint: t('Augimo reakcijoje radikalas sunaudojamas, bet kitas radikalas atsiranda: radikalų skaičius nesikeičia.', 'In a propagation step one radical is used up and another appears: the number of radicals stays the same.'),
-        solution: t('Augimas: $Br•$ atplėšia vandenilį ir susidaro etilradikalas, o šis atplėšia bromo atomą ir atsinaujina $Br•$. Trečioji reakcija yra iniciacija, ketvirtoji ir penktoji – nutrūkimas.', 'Propagation: $Br•$ removes a hydrogen and an ethyl radical forms, which takes a bromine atom and regenerates $Br•$. The third step is initiation, the fourth and fifth are termination.')
+        solution: t('Augimas: $Br•$ atplėšia vandenilį ir susidaro etilradikalas, o šis atplėšia bromo atomą ir atsinaujina $Br•$. Reakcija, kurioje $Br2$ skyla nuo šviesos, yra iniciacija, o radikalų jungimasis tarpusavyje ar su $Br•$ – nutrūkimas.', 'Propagation: $Br•$ removes a hydrogen and an ethyl radical forms, which takes a bromine atom and regenerates $Br•$. The step in which $Br2$ splits in light is initiation, and the steps in which radicals combine with each other or with $Br•$ are termination.')
       }],
       why: t('Augimo reakcijos sudaro ciklą: radikalas reaguoja su molekule ir sukuria naują radikalą, todėl grandinė gali tęstis.', 'The propagation steps form a cycle: a radical reacts with a molecule and makes a new radical, so the chain can go on.'),
       src: 'L6 p7'
@@ -1378,7 +1378,7 @@
         ],
         answer: 0,
         hint: t('Anglis turi virsti $CO$, o visas vandenilis – vandeniu.', 'Carbon must become $CO$ and all hydrogen must become water.'),
-        solution: t('Pirmoji lygtis subalansuota ir vandenilis tampa vandeniu, santykis $CH4 : O2 = 2 : 3$. Antroji – visiškas degimas, trečioji vandenilį palieka laisvą, o kurso lygtyse vandenilis virsta vandeniu.', 'The first equation is balanced, with all hydrogen going to water, and the ratio $CH4 : O2$ is $2 : 3$. The second is complete combustion, the third leaves free hydrogen, while in the course equations hydrogen goes to water.')
+        solution: t('Lygtis su $2 CH4 + 3 O2$ subalansuota ir vandenilis tampa vandeniu, santykis $CH4 : O2 = 2 : 3$. Lygtis su $CO2$ – visiškas degimas, lygtis su $H2$ vandenilį palieka laisvą, o kurso lygtyse vandenilis virsta vandeniu.', 'The equation with $2 CH4 + 3 O2$ is balanced, with all hydrogen going to water, and the ratio $CH4 : O2$ is $2 : 3$. The one giving $CO2$ is complete combustion, the one giving $H2$ leaves free hydrogen, while in the course equations hydrogen goes to water.')
       }],
       why: t('Nepilnoje oksidacijoje deguonies mažiau: $2 : 3$ vietoj $1 : 2$, o anglis virsta $CO$.', 'In incomplete oxidation there is less oxygen: $2 : 3$ instead of $1 : 2$, and carbon becomes $CO$.'),
       src: 'L6 p18'

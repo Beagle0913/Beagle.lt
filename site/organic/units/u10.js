@@ -659,8 +659,8 @@
         blocks: [
           { h: t('Stabilizuoti karbokatijonai', 'Stabilised carbocations') },
           {
-            p: t('Jei halogenas prijungtas prie anglies šalia $C=C$ (alilo) ar benzeno žiedo (benzilo), jonizacija lengva: katijono krūvis delokalizuojasi konjugacijos būdu. Stabilumo eilė: benzilkatijonas > alilkatijonas > tretinis > antrinis > pirminis > metilkatijonas.',
-              'If the halogen sits on a carbon next to a $C=C$ (allylic) or a benzene ring (benzylic), ionisation is easy: the charge of the cation is delocalised by conjugation. Stability order: benzylic > allylic > tertiary > secondary > primary > methyl.'),
+            p: t('Jei halogenas prijungtas prie anglies šalia $C=C$ (alilo) ar benzeno žiedo (benzilo), jonizacija lengva: katijono krūvis delokalizuojasi konjugacijos būdu. Pagal kurso katijonų stabilumo eilę (L7 p9): benzilkatijonas > alilkatijonas > tretinis > antrinis > pirminis > metilkatijonas. Ši eilė lygina katijonus: nepakeistų pirminių benzilo ir alilo halogenidų tikrieji SN1 greičiai ne visada didesni už tretinių.',
+              'If the halogen sits on a carbon next to a $C=C$ (allylic) or a benzene ring (benzylic), ionisation is easy: the charge of the cation is delocalised by conjugation. By the course’s order of cation stability (L7 p9): benzylic > allylic > tertiary > secondary > primary > methyl. This order compares cations; for unsubstituted primary benzyl and allyl halides the real SN1 rates are not always above those of tertiary ones.'),
             src: 'L7 p9, S5.11'
           },
           {
@@ -673,8 +673,8 @@
           },
           { h: t('Du skirtingi halogenidai, vienas katijonas', 'Two different halides, one cation') },
           {
-            p: t('3-brom-1-butenas yra antrinis, o 1-brom-2-butenas – pirminis alilo halogenidas. Abu praranda bromidą ir sudaro tą patį alilo katijoną, todėl SN1 greičiai beveik vienodi. Vanduo gali pulti bet kurį katijono galą, tad iš abiejų gaunamas tas pats dviejų alkoholių mišinys.',
-              '3-bromobut-1-ene is a secondary and 1-bromobut-2-ene a primary allylic halide. Both lose bromide and form the same allyl cation, so their SN1 rates are almost equal. Water may attack either end of the cation, so both give the same mixture of two alcohols.'),
+            p: t('3-brom-1-butenas yra antrinis, o 1-brom-2-butenas – pirminis alilo halogenidas. Abu praranda bromidą ir sudaro tą patį alilo katijoną, todėl SN1 greičiai beveik vienodi (kaip teigia seminaras). Vanduo gali pulti bet kurį katijono galą, tad iš abiejų gaunamas tas pats dviejų alkoholių mišinys.',
+              '3-bromobut-1-ene is a secondary and 1-bromobut-2-ene a primary allylic halide. Both lose bromide and form the same allyl cation, so their SN1 rates are almost equal (as the seminar states). Water may attack either end of the cation, so both give the same mixture of two alcohols.'),
             src: 'S5.11'
           },
           {
@@ -786,7 +786,7 @@
         list: [
           t('Nueinančioji grupė: RI > RBr > RCl > RF (silpniausia bazė išeina geriausiai).', 'Leaving group: RI > RBr > RCl > RF (the weakest base leaves best).'),
           t('Nukleofilas: alkoksidas > hidroksidas >> karboksilatas > alkoholis > vanduo; anijonas stipresnis už konjuguotąją rūgštį.', 'Nucleophile: alkoxide > hydroxide >> carboxylate > alcohol > water; an anion is stronger than its conjugate acid.'),
-          t('Katijono stabilumas: benzilkatijonas > alilkatijonas > tretinis > antrinis > pirminis > metilkatijonas.', 'Cation stability: benzylic > allylic > tertiary > secondary > primary > methyl.'),
+          t('Katijono stabilumas pagal kurso eilę (L7 p9): benzilkatijonas > alilkatijonas > tretinis > antrinis > pirminis > metilkatijonas.', 'Cation stability by the course’s order (L7 p9): benzylic > allylic > tertiary > secondary > primary > methyl.'),
           t('Pirminiai: SN2 (ir E2). Tretiniai: su stipria baze E2, kitaip SN1 ir E1. Antriniai: su stipria baze daugiausia E2, su silpnai baziniu nukleofilu aprotoniniame tirpiklyje SN2.', 'Primary: SN2 (and E2). Tertiary: E2 with a strong base, otherwise SN1 and E1. Secondary: mostly E2 with a strong base, SN2 with a weakly basic nucleophile in an aprotic solvent.'),
           t('Zaicevo taisyklė: dominuoja alkenas, kurio prie $C=C$ daugiau alkilgrupių.', 'Zaitsev’s rule: the alkene with more alkyl groups on the $C=C$ predominates.'),
           t('Vinilo ir arilo halogenidai SN1 ir SN2 būdu nereaguoja; alilo ir benzilo halogenidai SN1 reaguoja lengvai.', 'Vinyl and aryl halides do not react by SN1 or SN2; allylic and benzylic halides undergo SN1 readily.'),
@@ -1369,7 +1369,7 @@
               ],
               answer: [0, 1, 2],
               hint: t('Prisiminkite lentelę: SN2 yra bimolekulinė vienos stadijos reakcija.', 'Recall the comparison: SN2 is a bimolecular one-stage reaction.'),
-              solution: t('Teisingi pirmieji trys. Karbokatijonas ir racematas – SN1 požymiai, o protoniniai tirpikliai skatina SN1.', 'The first three are true. A carbocation and a racemate belong to SN1, and protic solvents favour SN1.')
+              solution: t('Teisingi teiginiai apie vieną stadiją, užpuolimą iš priešingos pusės ir greičio priklausomybę nuo abiejų reagentų. Karbokatijonas ir racematas – SN1 požymiai, o protoniniai tirpikliai skatina SN1.', 'The statements about one stage, backside attack and the rate depending on both reagents are true. A carbocation and a racemate belong to SN1, and protic solvents favour SN1.')
             }],
             why: t('SN2 požymiai: viena stadija, puolimas iš nugaros, konfigūracijos inversija, greitis $k[RX][Nu]$. SN1 požymiai: dvi stadijos, karbokatijonas, racematas, greitis $k[RX]$.',
               'Features of SN2: one stage, backside attack, inversion of configuration, rate $k[RX][Nu]$. Features of SN1: two stages, a carbocation, a racemate, rate $k[RX]$.'),
@@ -1708,7 +1708,7 @@
               ], 0, t('Kiek rezonansinių formulių galima parašyti?', 'How many resonance structures can be written?'),
                 t('Krūvis pasiskirsto orto ir para padėtyse, todėl katijonas ypač stabilus.', 'The charge is spread to the ortho and para positions, so the cation is especially stable.'))
             ],
-            why: t('Rezonansas stabilizuoja katijoną stipriau nei hiperkonjugacija. Todėl benzilo ir alilo halogenidai jonizuojasi lengviau net už tretinius, nors jie gali būti pirminiai.', 'Resonance stabilises a cation more than hyperconjugation does. Benzylic and allylic halides therefore ionise more easily even than tertiary ones, although they may be primary.'),
+            why: t('Rezonansas stabilizuoja katijoną stipriau nei hiperkonjugacija. Pagal kurso katijonų stabilumo eilę (L7 p9) benzilo ir alilo halogenidai jonizuojasi lengviau net už tretinius, nors jie gali būti pirminiai.', 'Resonance stabilises a cation more than hyperconjugation does. By the course’s order of cation stability (L7 p9), benzylic and allylic halides ionise more easily even than tertiary ones, although they may be primary.'),
             src: 'L7 p9, S5.11'
           },
           {
@@ -1958,7 +1958,7 @@
         bank: [
           {
             id: 'u10.allyl.1',
-            q: [{ p: t('3-chlor-1-pentenas ir 1-chlor-2-pentenas reaguoja su vandeniu SN1 būdu beveik vienodu greičiu, nors pirmasis yra antrinis, o antrasis – pirminis halogenidas.', '3-chloropent-1-ene and 1-chloropent-2-ene react with water by SN1 at almost the same rate, although the first is a secondary and the second a primary halide.') },
+            q: [{ p: t('3-chlor-1-pentenas ir 1-chlor-2-pentenas reaguoja su vandeniu SN1 būdu beveik vienodu greičiu (kaip teigia seminaras), nors pirmasis yra antrinis, o antrasis – pirminis halogenidas.', '3-chloropent-1-ene and 1-chloropent-2-ene react with water by SN1 at almost the same rate (as the seminar states), although the first is a secondary and the second a primary halide.') },
               { mol: [{ smi: 'C=CC(Cl)CC', name: t('3-chlor-1-pentenas', '3-chloropent-1-ene'), caption: t('antrinis', 'secondary') }, { smi: 'ClCC=CCC', name: t('1-chlor-2-pentenas', '1-chloropent-2-ene'), caption: t('pirminis', 'primary') }] }],
             steps: [
               cho(t('Kodėl jų greičiai panašūs?', 'Why are their rates similar?'), [
@@ -2097,7 +2097,7 @@
               hint: t('Kuriuos katijonus stabilizuoja rezonansas?', 'Which cations are stabilised by resonance?'),
               solution: t('a duoda benzilo, c – alilo katijoną: rezonansas stabilizuoja stipriau už alkilgrupes. b duotų antrinį, d – pirminį alkilo katijoną.', 'a gives a benzylic and c an allylic cation: resonance stabilises more than alkyl groups do. b would give a secondary and d a primary alkyl cation.')
             }],
-            why: t('Pagal kurso katijonų stabilumo eilę benzilkatijonas > alilkatijonas > tretinis > antrinis > pirminis > metilkatijonas, benzilo ir alilo halogenidai jonizuojasi lengviausiai.', 'By the course’s order of cation stability, benzylic > allylic > tertiary > secondary > primary > methyl, benzylic and allylic halides ionise most readily.'),
+            why: t('Pagal kurso katijonų stabilumo eilę (L7 p9) benzilkatijonas > alilkatijonas > tretinis > antrinis > pirminis > metilkatijonas, benzilo ir alilo halogenidai jonizuojasi lengviausiai.', 'By the course’s order of cation stability (L7 p9), benzylic > allylic > tertiary > secondary > primary > methyl, benzylic and allylic halides ionise most readily.'),
             src: 'L7 p9, S5.11'
           },
           {

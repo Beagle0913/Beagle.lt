@@ -88,7 +88,7 @@
       { id: 'hotacid', l: t('$KMnO4$, $H3O+$, $t°$', '$KMnO4$, $H3O+$, $t°$'), o: () => harshProducts(ctx, smi),
         w: t('$C=C$ ryšys nutrūko, gautos rūgštys ir (ar) ketonai: karštas rūgštus $KMnO4$.', 'The $C=C$ bond was cleaved to acids and (or) ketones: hot acidic $KMnO4$.') },
       { id: 'hotalk', l: t('$KMnO4$, $OH-$, $t°$', '$KMnO4$, $OH-$, $t°$'), o: () => harshProducts(ctx, smi).map(toCarboxylate),
-        w: t('$C=C$ ryšys nutrūko, o rūgštys yra druskų pavidalu: karštas šarminis $KMnO4$.', 'The $C=C$ bond was cleaved and the acids are present as salts: hot alkaline $KMnO4$.') }
+        w: t('$C=C$ ryšys nutrūko, o rūgštys yra druskų pavidalu (galinė $=CH2$ šarmingoje terpėje baigiasi karbonatu): karštas šarminis $KMnO4$.', 'The $C=C$ bond was cleaved and the acids are present as salts (a terminal $=CH2$ ends as carbonate in alkali): hot alkaline $KMnO4$.') }
     ];
   }
   // two reagents that differ only in the form of the acid, or in H/Br direction, are offered together on purpose; hot acid and hot alkali never
@@ -625,8 +625,8 @@
         },
         { h: t('Oksidacinis skilimas', 'Oxidative cleavage') },
         {
-          p: t('Rūgščioje terpėje skilimas vyksta ir šaltyje, ir kaitinant, o šarminėje bei neutralioje – tik kaitinant (šarminėje gaunamos rūgščių druskos). Kiekvienas dvigubojo ryšio atomas virsta karbonilo anglimi, o jos tipas priklauso nuo pakaitų.',
-            'In acid the cleavage takes place both cold and hot; in alkaline or neutral medium only when heated (in alkali the acids form as salts). Each double-bond carbon becomes a carbonyl carbon whose type depends on its substituents.'),
+          p: t('Rūgščioje terpėje skilimas vyksta ir šaltyje, ir kaitinant, o šarminėje bei neutralioje – tik kaitinant (šarminėje gaunamos rūgščių druskos, o galinė $=CH2$ grupė baigiasi karbonatu, nes bazė pasisavina $CO2$). Kiekvienas dvigubojo ryšio atomas virsta karbonilo anglimi, o jos tipas priklauso nuo pakaitų.',
+            'In acid the cleavage takes place both cold and hot; in alkaline or neutral medium only when heated (in alkali the acids form as salts, and a terminal $=CH2$ ends as carbonate because the base takes up the $CO2$). Each double-bond carbon becomes a carbonyl carbon whose type depends on its substituents.'),
           src: 'L7 p24'
         },
         {
@@ -781,16 +781,23 @@
   // chain length, locant of the C=C and substituents read from the Lithuanian name (null if the name is not of the simple form)
   function nameDetail(ltName) {
     const roots = { et: 2, prop: 3, but: 4, pent: 5, heks: 6, hept: 7, okt: 8 };
-    const m = /^(?:(.+?)-)?(?:(\d+)-)?(ciklo)?(et|prop|but|pent|heks|hept|okt)en(?:as|o)?$/.exec(ltName);
+    const m = /^(.*?)(ciklo)?(et|prop|but|pent|heks|hept|okt)en(?:as|o)?$/.exec(ltName);
     if (!m) return null;
-    const ring = !!m[3];
-    return { n: roots[m[4]], loc: m[2] || '1', ring, sub: m[1] || '' };
+    const ring = !!m[2];
+    let head = m[1];
+    let loc = '1';
+    if (!ring) {
+      // the number just before the root is the locant of the C=C ("2-butenas", "3,3-dimetil-1-butenas"); with none ("2-metilpropenas") it is 1
+      const h = /^(?:(.+)-)?(\d+)-$/.exec(head);
+      if (h) { loc = h[2]; head = h[1] || ''; }
+    }
+    return { n: roots[m[3]], loc, ring, sub: head, subEn: head.replace(/(di|tri|tetra)?(metil|etil|propil|butil|izopropil|chlor|brom|jod|fluor)/g, (x, mult, stem) => (mult || '') + ({ metil: 'methyl', etil: 'ethyl', propil: 'propyl', butil: 'butyl', izopropil: 'isopropyl', chlor: 'chloro', brom: 'bromo', jod: 'iodo', fluor: 'fluoro' })[stem]) };
   }
   function nameSolution(lt, enName) {
     const d = nameDetail(lt);
     if (!d) return t('Pavadinimas: ' + lt + '. Pagrindinė grandinė ar žiedas, pakaitai ir jų numeriai skaitomi iš struktūros.', 'The name is ' + enName + ': the parent chain or ring, the substituents and their numbers are read from the structure.');
     return t('Pavadinimas: ' + lt + '. Pagrindinė ' + (d.ring ? 'žiedas' : 'grandinė') + ' turi ' + d.n + ' C atomus, dvigubojo ryšio numeris pavadinime – ' + d.loc + (d.sub ? ', pakaitai: ' + d.sub : ', pakaitų nėra') + '.',
-      'The name is ' + enName + '. The parent ' + (d.ring ? 'ring' : 'chain') + ' has ' + d.n + ' carbons, the locant of the double bond is ' + d.loc + (d.sub ? ', substituents: ' + d.sub : ', no substituents') + '.');
+      'The name is ' + enName + '. The parent ' + (d.ring ? 'ring' : 'chain') + ' has ' + d.n + ' carbons, the locant of the double bond is ' + d.loc + (d.sub ? ', substituents: ' + d.subEn : ', no substituents') + '.');
   }
   const nameStep = (ctx, smi, prompt) => {
     const lt = ctx.name.name(smi, { lang: 'lt' });
@@ -1658,7 +1665,7 @@
           options: [{ mol: { smi: 'CCC(C)C1(Cl)CCCC1' } }, { mol: { smi: 'CCC(C)(Cl)C1CCCC1' } }, { mol: { smi: 'CCC(C)C1CCCC1Cl' } }, { mol: { smi: 'CCC(C)(Cl)C1(Cl)CCCC1' } }],
           answer: [0, 1],
           hint: t('Chloras jungiasi prie teigiamos anglies kiekvienu atveju.', 'Chlorine bonds to the positive carbon in each case.'),
-          solution: t('Du tretiniai katijonai duoda du izomerinius chloralkanus. Trečiasis variantas reikalautų antrinio katijono, ketvirtasis – antros HCl molekulės.', 'Two tertiary cations give two isomeric chloroalkanes. The third option would need a secondary cation, the fourth a second HCl.')
+          solution: t('Du tretiniai katijonai duoda du izomerinius chloralkanus. Produktas su chloru ant gretimos žiedo anglies reikalautų antrinio katijono, o dichloridas – antros HCl molekulės.', 'Two tertiary cations give two isomeric chloroalkanes. The product with chlorine on the neighbouring ring carbon would need a secondary cation, and the dichloride a second HCl.')
         }
       ],
       why: t('Abu katijonai tretiniai, todėl jų stabilumas panašus ir susidaro du produktai. Tai Markovnikovo taisyklės ribos: ji nenurodo vieno atsakymo, kai tipai vienodi.', 'Both cations are tertiary, so their stability is similar and two products form. This is a limit of Markovnikov’s rule: it gives no single answer when the types are equal.'),
@@ -2004,7 +2011,7 @@
         hint: t('Kas atsitinka su reagentu, kai jis prisijungia prie $C=C$ arba oksiduoja jį?', 'What happens to the reagent when it adds to a $C=C$ or oxidises it?'),
         solution: t('Etenas prijungia bromą ir oksiduojamas $KMnO4$: abu reagentai sunaudojami, todėl spalvos išnyksta ($MnO2$ – rudas). Likę variantai reikštų, kad reagentai nereagavo.', 'Ethene adds bromine and is oxidised by $KMnO4$: both reagents are consumed, so the colours disappear ($MnO2$ is brown). The other options would mean that the reagents did not react.')
       }],
-      why: t('Du pirmieji stebėjimai yra dvigubojo ryšio testai: reagentas sunaudojamas ir spalva išnyksta.', 'The first two observations are tests for a double bond: the reagent is consumed and the colour disappears.'),
+      why: t('Du stebėjimai, kai spalva išnyksta, yra dvigubojo ryšio testai: reagentas sunaudojamas.', 'The two observations in which the colour disappears are tests for a double bond: the reagent is consumed.'),
       src: 'LW6 p1'
     },
     {

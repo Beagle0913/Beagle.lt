@@ -443,8 +443,8 @@
       blocks: [
         { h: t('Diazonio grupė kaip nueinančioji grupė', 'The diazonium group as a leaving group') },
         {
-          p: t('Arildiazonio jonas $ArN2+$ turi puikią nueinančią grupę: azoto molekulę $N2$. Todėl diazonio grupę galima pakeisti daugeliu kitų grupių, tokių, kurių tiesiogiai į žiedą įvesti sunku (cianogrupė, jodas, fluoras, hidroksilas). Reakcijos vyksta šaltame tirpale, išsiskiria $N2$.',
-            'The aryldiazonium ion $ArN2+$ has an excellent leaving group: the nitrogen molecule $N2$. The diazonium group can therefore be replaced by many others, some of which are hard to put on a ring directly (cyano, iodo, fluoro, hydroxyl). The reactions run in cold solution and $N2$ is evolved.'),
+          p: t('Arildiazonio jonas $ArN2+$ turi puikią nueinančią grupę: azoto molekulę $N2$. Todėl diazonio grupę galima pakeisti daugeliu kitų grupių, tokių, kurių tiesiogiai į žiedą įvesti sunku (cianogrupė, jodas, fluoras, hidroksilas). Diazotinimas atliekamas šaltyje, o hidrolizei iki fenolio ir $HBF4$ stadijai reikia kaitinti; išsiskiria $N2$.',
+            'The aryldiazonium ion $ArN2+$ has an excellent leaving group: the nitrogen molecule $N2$. The diazonium group can therefore be replaced by many others, some of which are hard to put on a ring directly (cyano, iodo, fluoro, hydroxyl). Diazotisation is done cold; hydrolysis to the phenol and the $HBF4$ step need heating. $N2$ is evolved.'),
           src: 'T p99'
         },
         {
@@ -1332,7 +1332,12 @@
         steps.push({
           prompt: t('Pasirinkite produkto struktūrą.', 'Pick the structure of the product.'),
           kind: 'choice', options: opts, answer: 0,
-          hint: cat === 'tert_ar' ? t('Aktyvuotame žiede elektrofilas pasirenka vieną iš dviejų padėčių; kuri mažiau užkrauta?', 'On an activated ring the electrophile picks one of two positions; which one is less hindered?') : t('Pirminis aromatinis aminas šaltyje: ką azotas virsta, kai jį veikia $NO+$?', 'A primary aromatic amine in the cold: what does the nitrogen become with $NO+$?'),
+          hint: ({
+            tert_ar: t('Aktyvuotame žiede elektrofilas pasirenka vieną iš dviejų padėčių; kuri mažiau užkrauta?', 'On an activated ring the electrophile picks one of two positions; which one is less hindered?'),
+            prim_ar: t('Pirminis aromatinis aminas šaltyje: ką azotas virsta, kai jį veikia $NO+$?', 'A primary aromatic amine in the cold: what does the nitrogen become with $NO+$?'),
+            sec: t('Antrinis aminas: kiek $N-H$ vandenilių gali pakeisti $NO+$?', 'A secondary amine: how many $N-H$ hydrogens can $NO+$ replace?'),
+            tert_al: t('Tretinis alifatinis aminas neturi $N-H$: ką jis dar gali daryti su rūgštimi?', 'A tertiary aliphatic amine has no $N-H$: what can it still do with an acid?')
+          })[cat],
           solution: ({
             prim_ar: t('Susidaro arildiazonio chloridas $ArN2+ Cl-$; fenolis atsirastų tik šildant.', 'The aryldiazonium chloride $ArN2+ Cl-$ forms; the phenol would appear only on warming.'),
             sec: t('$NO+$ pakeičia vienintelį $N-H$ vandenilį: $R2N-N=O$.', '$NO+$ replaces the single $N-H$ hydrogen: $R2N-N=O$.'),
@@ -1506,7 +1511,7 @@
             solution: t('Nitro grupė traukia elektronus ir mažina elektronų tankį ant azoto, o metilo grupė jį didina.', 'The nitro group withdraws electrons and lowers the density on nitrogen, while a methyl group raises it.')
           }
         ],
-        why: t('Žiede esantys elektronų donorai didina aromatinio amino bazingumą, akceptoriai – mažina; efektas didžiausias $p$-padėtyje.', 'Electron donors on the ring raise the basicity of an aromatic amine, acceptors lower it; the effect is largest in the para position.'),
+        why: t('Žiede esantys elektronų donorai didina aromatinio amino bazingumą, akceptoriai – mažina; efektas didelis $o$- ir $p$-padėtyse.', 'Electron donors on the ring raise the basicity of an aromatic amine, acceptors lower it; the effect is large in the ortho and para positions.'),
         src: 'Klein'
       },
       {
