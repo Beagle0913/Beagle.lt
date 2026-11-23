@@ -70,3 +70,15 @@ test('animations come from classes and delays set through the style object', () 
   assert.ok(animated.length > 5);
   assert.equal(doc.styleWrites.filter((w) => w[1] === 'style-attribute').length, 0);
 });
+
+test('no animated element carries an SVG transform attribute (the CSS animation would override it)', () => {
+  const { doc, ENG } = boot(JS);
+  for (const id of Object.keys(COUNTS)) {
+    for (let n = 0; n <= COUNTS[id]; n++) {
+      const svg = doc.createElementNS('', 'svg');
+      ENG.drawScene(svg, id, n, true);
+      const bad = findAll(svg, (e) => e.nodeType === 1 && /\bfx\b|\bfx-/.test(e.className) && e.getAttribute('transform') !== null);
+      assert.equal(bad.length, 0, `${id} n=${n}: ${bad.length} animated element(s) with a transform attribute`);
+    }
+  }
+});
