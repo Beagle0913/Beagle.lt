@@ -21,7 +21,7 @@ Trainer site served at https://beagle.lt/. Plain HTML, CSS and JavaScript: no bu
 - `main` publishes. Once the site is live, work on a branch and open a pull request. Do not commit to `main` directly.
 - Every page carries the Content-Security-Policy meta tag used by `site/index.html`. Do not loosen it. No inline scripts, no inline event handlers, no third-party scripts, no analytics.
 - Text that comes from `trainers.json` or from browser storage goes on the page with `textContent`, never as HTML. Links built from `trainers.json` must stay on this site.
-- Every piece of interface text exists in Lithuanian and English. Lithuanian is the default.
+- Every piece of interface text exists in Lithuanian and English. Lithuanian is the default. Exception: the English trainer (`site/english/`) is English only, page and listing alike (user's decision, 2026-11-23).
 - A change to a maths generator is made in both languages (`gen*.js` and `lt*.js`).
 - Browser storage keys: `beagle-lang` for the site language, `beagle-<trainer id>-v1` for a trainer's progress.
 - List only trainers that exist. No "coming soon" entries.

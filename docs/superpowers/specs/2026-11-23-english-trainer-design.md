@@ -152,3 +152,9 @@ Plural/singular forms (inserts, primers, clones, colonies, vectors, ddNTP) map t
 ## Left to the builder
 
 The visual style (it should sit with the site's look: fonts already loaded by the site, clean SVG), the exact animations, the file split inside `site/english/`, and the interface wording in LT/EN (short, natural Lithuanian).
+
+## Change 2026-11-23: English only
+
+At the user's request, the English trainer drops Lithuanian entirely. This replaces the "Interface text exists in LT and EN" constraint above for this trainer only (CLAUDE.md records the exception).
+- The page is `<html lang="en">` with no LT/EN buttons. Every interface string, scene title and the no-JS note is English only. The trainer neither reads nor writes `beagle-lang`. The shared top bar follows `lang="en"`.
+- `trainers.json`: the `lt` values of name, summary and note equal the `en` values (the shared code needs both keys). The static rows in `site/index.html` and `site/404.html` show the English text.
