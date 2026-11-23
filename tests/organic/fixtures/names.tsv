@@ -1,0 +1,410 @@
+smiles	lt	en	source
+CC(C)CC	2-metilbutanas	2-methylbutane	in the course: lecture 1; lecture 5
+CC1CC(C)CC1	1,3-dimetilciklopentanas	1,3-dimethylcyclopentane	in the course: lecture 1
+CC=C(C)C	2-metil-2-butenas	2-methylbut-2-ene	in the course: lecture 1; lecture 11
+CC1C=CCCC1	3-metilcikloheksenas	3-methylcyclohex-1-ene	in the course: lecture 1
+CC#CC(C)C	4-metil-2-pentinas	4-methylpent-2-yne	in the course: lecture 1
+CCc1cccc(C)c1	1-etil-3-metilbenzenas	1-ethyl-3-methylbenzene	in the course: lecture 1
+CC(I)C	2-jodpropanas	2-iodopropane	in the course: lecture 1
+CCCO	1-propanolis	propan-1-ol	in the course: lecture 1; lecture 13
+OCc1ccccc1	fenilmetanolis	phenylmethanol	in the course: lecture 1
+Cc1ccc(O)cc1C	3,4-dimetilfenolis	3,4-dimethylphenol	in the course: lecture 1
+CCCS	1-propantiolis	propane-1-thiol	in the course: lecture 1
+Sc1ccccc1	benzentiolis	benzenethiol	in the course: lecture 1
+COC(C)C	2-metoksipropanas	2-methoxypropane	in the course: lecture 1
+CCSC	metiltioetanas	(methylsulfanyl)ethane	in the course: lecture 1
+OS(=O)(=O)c1ccccc1	benzensulfonrūgštis	benzenesulfonic acid	in the course: lecture 1; lecture 4
+CCN	etanaminas	ethanamine	in the course: lecture 1; lecture 4
+CCNC	N-metiletanaminas	N-methylethanamine	in the course: lecture 1
+CCN(C)C	N,N-dimetiletanaminas	N,N-dimethylethanamine	in the course: lecture 1
+CCC=O	propanalis	propanal	in the course: lecture 1; lecture 13
+Cc1cccc(C=O)c1	3-metilbenzenkarbaldehidas	3-methylbenzaldehyde	in the course: lecture 1
+CCCC(C)=O	2-pentanonas	pentan-2-one	in the course: lecture 1
+O=C1CCCC1	ciklopentanonas	cyclopentanone	in the course: lecture 1; lecture 13; seminar 6
+CC(O)=O	etano rūgštis	ethanoic acid	in the course: lecture 1
+OC(=O)c1ccccc1	benzenkarboksirūgštis	benzoic acid	in the course: lecture 1; lab 1; lab 4; lecture 4; seminar 6; seminar 7; lecture 9
+[Na+].[O-]C(=O)CC	natrio propanoatas	sodium propanoate	in the course: lecture 1
+[K+].[O-]C(=O)C1CCCCC1	kalio cikloheksankarboksilatas	potassium cyclohexanecarboxylate	in the course: lecture 1
+CCCC(=O)OCC	etilbutanoatas	ethyl butanoate	in the course: lecture 1
+COC(=O)c1ccccc1	metilbenzenkarboksilatas	methyl benzoate	in the course: lecture 1
+CC(N)=O	etanamidas	ethanamide	in the course: lecture 1
+NC(=O)C1CCCCC1	cikloheksankarboksamidas	cyclohexanecarboxamide	in the course: lecture 1; seminar 1
+CC#N	etannitrilas	ethanenitrile	in the course: lecture 1
+N#CC1CCCCC1	cikloheksankarbonitrilas	cyclohexanecarbonitrile	in the course: lecture 1
+CC(Cl)=O	etanoilchloridas	ethanoyl chloride	in the course: lecture 1; seminar 1; seminar 6
+ClC(=O)c1ccccc1	benzenkarbonilchloridas	benzoyl chloride	in the course: lecture 1
+CC(=O)OC(C)=O	etano rūgšties anhidridas	ethanoic anhydride	in the course: lecture 1
+O=CC(O)C(O)C(O)C(O)CO	2,3,4,5,6-pentahidroksiheksanalis	2,3,4,5,6-pentahydroxyhexanal	in the course: lecture 1
+O=C1CC=CCC1	3-cikloheksenonas	cyclohex-3-en-1-one	in the course: lecture 1
+O=C1CC=C(C)CC1	4-metil-3-cikloheksenonas	4-methylcyclohex-3-en-1-one	in the course: lecture 1
+ClCC(C)C([N+](=O)[O-])C(C)C	1-chlor-2,4-dimetil-3-nitropentanas	1-chloro-2,4-dimethyl-3-nitropentane	in the course: lecture 1
+C=C(CCl)C([N+](=O)[O-])C(C)C	2-chlormetil-4-metil-3-nitro-1-pentenas	2-(chloromethyl)-4-methyl-3-nitropent-1-ene	in the course: lecture 1
+O=CC1CCC(O)C(=O)C1	4-hidroksi-3-oksocikloheksankarbaldehidas	4-hydroxy-3-oxocyclohexane-1-carbaldehyde	in the course: lecture 1
+O=Cc1ccc(C#N)cc1	4-formilbenzenkarbonitrilas	4-formylbenzonitrile	in the course: lecture 1
+CC(O)C(C)CC#C	3-metil-5-heksin-2-olis	3-methylhex-5-yn-2-ol	in the course: lecture 1
+CC=CC=C(C)C(C)Cl	6-chlor-5-metil-2,4-heptadienas	6-chloro-5-methylhepta-2,4-diene	in the course: lecture 1
+NC(CC(C)(C)C)C(O)=O	2-amino-4,4-dimetilpentano rūgštis	2-amino-4,4-dimethylpentanoic acid	in the course: lecture 1
+CC(C)(C)CC(N)=O	3,3-dimetilbutanamidas	3,3-dimethylbutanamide	in the course: lecture 1
+OC(=O)CCc1ccccc1	3-fenilpropano rūgštis	3-phenylpropanoic acid	in the course: lecture 1
+OC(=O)C1C=C(C)C(Br)CC1	4-brom-3-metil-2-cikloheksenkarboksirūgštis	4-bromo-3-methylcyclohex-2-ene-1-carboxylic acid	in the course: lecture 1
+CC(=O)CC(=O)OCC	etil-3-oksobutanoatas	ethyl 3-oxobutanoate	in the course: lecture 1; seminar 1
+CCC(C)CC#N	3-metilpentannitrilas	3-methylpentanenitrile	in the course: lecture 1; seminar 1
+CCC(=O)NC	N-metilpropanamidas	N-methylpropanamide	in the course: lecture 1; seminar 1
+CCC(CC)CC(C)(C)C	4-etil-2,2-dimetilheksanas	4-ethyl-2,2-dimethylhexane	derived by the rules (seminar 1 task 1)
+OCC(=O)O	hidroksietano rūgštis	2-hydroxyethanoic acid	in the course: seminar 1
+OC(=O)C1=CCCC1	1-ciklopentenkarboksirūgštis	cyclopent-1-ene-1-carboxylic acid	in the course: seminar 1
+BrC(=O)c1ccccc1	benzenkarbonilbromidas	benzoyl bromide	derived by the rules (seminar 1 task 15d)
+CCCC(N)=O	butanamidas	butanamide	in the course: seminar 1
+Sc1cccc(C#N)c1	3-merkaptobenzenkarbonitrilas	3-sulfanylbenzonitrile	in the course: seminar 1
+[Na+].[O-]C(=O)c1ccc(C=O)cc1	natrio 4-formilbenzenkarboksilatas	sodium 4-formylbenzoate	in the course: seminar 1
+NC(CS)C(O)=O	2-amino-3-merkaptopropano rūgštis	2-amino-3-sulfanylpropanoic acid	in the course: seminar 7
+CC(C)=CCCC(C)=CCO	3,7-dimetil-2,6-oktadien-1-olis	3,7-dimethylocta-2,6-dien-1-ol	derived by the rules (seminar 1 task 9 geraniol)
+COc1cc(CC=C)ccc1O	2-metoksi-4-(2-propenil)fenolis	2-methoxy-4-(prop-2-en-1-yl)phenol	derived by the rules (seminar 1 task 9 eugenol)
+C=O	metanalis	methanal	in the course: lecture 13
+CC(C)=O	propanonas	propan-2-one	in the course: seminar 6
+COc1cc(C=O)ccc1O	4-hidroksi-3-metoksibenzenkarbaldehidas	4-hydroxy-3-methoxybenzaldehyde	derived by the rules (seminar 1 task 10 vanillin)
+O=CC=Cc1ccccc1	3-fenilpropenalis	3-phenylprop-2-enal	derived by the rules (seminar 1 task 10 cinnamaldehyde; seminar 6 task 14)
+ClC(Cl)(Cl)Cl	tetrachlormetanas	tetrachloromethane	in the course: lecture 6
+ClC(Cl)Cl	trichlormetanas	trichloromethane	in the course: lecture 6
+CCOCC	etoksietanas	ethoxyethane	in the course: lecture 12
+CC(C)O	2-propanolis	propan-2-ol	in the course: lecture 12
+CCOC(C)=O	etiletanoatas	ethyl ethanoate	derived by the rules (seminar 1 task 11)
+CN(C)C=O	N,N-dimetilmetanamidas	N,N-dimethylmethanamide	derived by the rules (seminar 1 task 11)
+CC(=O)OCCC(C)C	3-metilbutiletanoatas	3-methylbutyl ethanoate	derived by the rules (seminar 1 task 12 banana)
+OC(=O)C(O)=O	etano dirūgštis	ethanedioic acid	derived by the rules (seminar 1 task 14)
+OC(=O)CC(O)=O	propano dirūgštis	propanedioic acid	in the course: lecture 7
+OC(=O)CCC(O)=O	butano dirūgštis	butanedioic acid	in the course: seminar 3
+OC(=O)CCCC(O)=O	pentano dirūgštis	pentanedioic acid	derived by the rules (seminar 1 task 14)
+CC(O)C(O)=O	2-hidroksipropano rūgštis	2-hydroxypropanoic acid	derived by the rules (seminar 1 task 14)
+OC(=O)CC(O)C(O)=O	2-hidroksibutano dirūgštis	2-hydroxybutanedioic acid	derived by the rules (seminar 1 task 14)
+OC(=O)C(O)C(O)C(O)=O	2,3-dihidroksibutano dirūgštis	2,3-dihydroxybutanedioic acid	in the course: seminar 3
+CC(=O)C(O)=O	2-oksopropano rūgštis	2-oxopropanoic acid	in the course: lecture 13
+CC(=O)CC(O)=O	3-oksobutano rūgštis	3-oxobutanoic acid	derived by the rules (seminar 1 task 14)
+OC(=O)CC(=O)C(O)=O	2-oksobutano dirūgštis	2-oxobutanedioic acid	derived by the rules (seminar 1 task 14)
+OC(=O)CCC(=O)C(O)=O	2-oksopentano dirūgštis	2-oxopentanedioic acid	derived by the rules (seminar 1 task 14)
+CC(C)C(=O)C(C)C	2,4-dimetil-3-pentanonas	2,4-dimethylpentan-3-one	derived by the rules (seminar 6 task 1)
+CCCC=O	butanalis	butanal	derived by the rules (seminar 6 task 1)
+ClC(Cl)(Cl)C=O	trichloretanalis	2,2,2-trichloroethanal	in the course: lecture 13; seminar 6
+OCCCO	1,3-propandiolis	propane-1,3-diol	derived by the rules (seminar 6 task 3)
+O=CCc1ccccc1	feniletanalis	2-phenylethanal	in the course: seminar 6
+O=Cc1ccccc1	benzenkarbaldehidas	benzaldehyde	in the course: lecture 1; lecture 13; seminar 4; Funkcinių gr
+COC(C)=O	metiletanoatas	methyl ethanoate	in the course: seminar 6
+CC(=O)Cc1ccccc1	1-fenil-2-propanonas	1-phenylpropan-2-one	in the course: seminar 6
+OC(=O)c1ccccc1O	2-hidroksibenzenkarboksirūgštis	2-hydroxybenzoic acid	derived by the rules (seminar 6 task 20)
+Cc1cccc(c1)C(O)=O	3-metilbenzenkarboksirūgštis	3-methylbenzoic acid	derived by the rules (seminar 6 task 22)
+OCCCCC(O)=O	5-hidroksipentano rūgštis	5-hydroxypentanoic acid	derived by the rules (seminar 6 task 18)
+CCOC(=O)c1ccccc1	etilbenzenkarboksilatas	ethyl benzoate	in the course: lecture 1
+OCCO	1,2-etandiolis	ethane-1,2-diol	in the course: lecture 12; lecture 7
+CCS	etantiolis	ethanethiol	in the course: lecture 12
+O=Cc1ccccc1C=O	1,2-benzendikarbaldehidas	benzene-1,2-dicarbaldehyde	derived by the rules (seminar 6 task 11)
+Nc1ccc(O)cc1	4-aminofenolis	4-aminophenol	in the course: lecture 12
+CCNCC	N-etiletanaminas	N-ethylethanamine	derived by the rules (seminar 6 task 22)
+CC(=O)Nc1ccc(O)cc1	N-(4-hidroksifenil)etanamidas	N-(4-hydroxyphenyl)ethanamide	derived by the rules (seminar 6 task 23 paracetamol)
+CCN(CC)C(=O)c1cccc(C)c1	N,N-dietil-3-metilbenzenkarboksamidas	N,N-diethyl-3-methylbenzamide	derived by the rules (seminar 6 task 22 DEET)
+CNC(C)C	N-metil-2-propanaminas	N-methylpropan-2-amine	derived by the rules (seminar 7 task 4)
+CCCCN(C)CC	N-etil-N-metil-1-butanaminas	N-ethyl-N-methylbutan-1-amine	in the course: seminar 7
+NC1CCCCC1	cikloheksanaminas	cyclohexanamine	in the course: lecture 3; seminar 7
+Nc1ccccc1	benzenaminas	aniline	derived by the rules (seminar 7 task 7)
+CCCNC	N-metil-1-propanaminas	N-methylpropan-1-amine	in the course: seminar 7
+Nc1ccc(Br)cc1	4-brombenzenaminas	4-bromoaniline	derived by the rules (seminar 7 task 9)
+CCc1ccc(N)cc1	4-etilbenzenaminas	4-ethylaniline	derived by the rules (lecture 4 (bases))
+CCOc1ccc(N)cc1	4-etoksibenzenaminas	4-ethoxyaniline	derived by the rules (lecture 4 (bases))
+Nc1ccc(cc1)[N+](=O)[O-]	4-nitrobenzenaminas	4-nitroaniline	derived by the rules (lecture 4 (bases))
+NC1CCC(Br)CC1	4-bromcikloheksanaminas	4-bromocyclohexan-1-amine	in the course: lecture 3
+CC(=O)Oc1ccccc1C(O)=O	2-acetiloksibenzenkarboksirūgštis	2-(acetyloxy)benzoic acid	derived by the rules (seminar 1 task 3 aspirin)
+Oc1ccc(cc1)[N+](=O)[O-]	4-nitrofenolis	4-nitrophenol	in the course: seminar 5
+Oc1c(Br)cc(Br)cc1Br	2,4,6-tribromfenolis	2,4,6-tribromophenol	in the course: lecture 12
+Oc1c(cc(cc1[N+](=O)[O-])[N+](=O)[O-])[N+](=O)[O-]	2,4,6-trinitrofenolis	2,4,6-trinitrophenol	in the course: lecture 12
+NC(Cc1cc(I)c(O)c(I)c1)C(O)=O	2-amino-3-(4-hidroksi-3,5-dijodfenil)propano rūgštis	2-amino-3-(4-hydroxy-3,5-diiodophenyl)propanoic acid	derived by the rules (lecture (amino acids))
+NC(CO)C(O)=O	2-amino-3-hidroksipropano rūgštis	2-amino-3-hydroxypropanoic acid	in the course: seminar 3
+CC(N)C(O)=O	2-aminopropano rūgštis	2-aminopropanoic acid	in the course: lecture 13; seminar 3
+NC(Cc1ccc(O)cc1)C(O)=O	2-amino-3-(4-hidroksifenil)propano rūgštis	2-amino-3-(4-hydroxyphenyl)propanoic acid	derived by the rules (lecture (amino acids))
+C=CCC	1-butenas	but-1-ene	in the course: lecture 10; seminar 5
+CC=CC	2-butenas	but-2-ene	in the course: lecture 1; lecture 11; seminar 5; lecture 5
+C=CCCC	1-pentenas	pent-1-ene	in the course: seminar 4
+CC=CCC	2-pentenas	pent-2-ene	in the course: seminar 4
+CC=CCCC	2-heksenas	hex-2-ene	in the course: lecture 7
+CCC=CCC	3-heksenas	hex-3-ene	in the course: lecture 7
+C=CC	propenas	propene	derived by the rules (lecture 7)
+C=C	etenas	ethene	in the course: lecture 2; lab 6
+C#CCCC	1-pentinas	pent-1-yne	in the course: seminar 4; lecture 8
+C#CCCCC	1-heksinas	hex-1-yne	in the course: lecture 8
+CCCCC#CCCCC	5-decinas	dec-5-yne	derived by the rules (lecture 8)
+CC#CCC	2-pentinas	pent-2-yne	in the course: lecture 1; lecture 10
+C#CCC(C)C	4-metil-1-pentinas	4-methylpent-1-yne	in the course: seminar 4
+CC#C	propinas	propyne	in the course: lecture 8
+C#C	etinas	ethyne	in the course: lecture 2
+C=C=C	propadienas	propa-1,2-diene	in the course: lecture 8
+C=CC=C	1,3-butadienas	buta-1,3-diene	in the course: lecture 3; lecture 8
+C=CCC=C	1,4-pentadienas	penta-1,4-diene	in the course: lecture 8
+C=CC=CC=C	1,3,5-heksatrienas	hexa-1,3,5-triene	in the course: lecture 3
+C=CCC=C(C)CC	5-metil-1,4-heptadienas	5-methylhepta-1,4-diene	in the course: lecture 7
+ClC=CC	1-chlorpropenas	1-chloroprop-1-ene	in the course: lecture 7
+C=C(Cl)C	2-chlorpropenas	2-chloroprop-1-ene	in the course: lecture 7; lecture 8
+C=CC(C)Br	3-brom-1-butenas	3-bromobut-1-ene	in the course: seminar 5
+BrCC=CC	1-brom-2-butenas	1-bromobut-2-ene	in the course: seminar 5
+CC(C)=C	2-metilpropenas	2-methylprop-1-ene	in the course: lecture 10
+CC1=CCCCC1	1-metilcikloheksenas	1-methylcyclohex-1-ene	in the course: lecture 11
+CC(Cl)(Cl)C	2,2-dichlorpropanas	2,2-dichloropropane	in the course: lecture 8
+BrCC(Br)C	1,2-dibrompropanas	1,2-dibromopropane	in the course: seminar 3
+BrCCCBr	1,3-dibrompropanas	1,3-dibromopropane	in the course: lecture 8
+ClCCCCCCl	1,5-dichlorpentanas	1,5-dichloropentane	in the course: seminar 3
+ClCCC	1-chlorpropanas	1-chloropropane	in the course: lecture 10
+ICCC	1-jodpropanas	1-iodopropane	in the course: lecture 8
+CCC(C)Br	2-brombutanas	2-bromobutane	in the course: lecture 10
+CC(C)(C)Br	2-brom-2-metilpropanas	2-bromo-2-methylpropane	in the course: lecture 10; lecture 12
+OCCCl	2-chloretanolis	2-chloroethan-1-ol	in the course: lecture 10
+BrCCCCCCCC	1-bromoktanas	1-bromooctane	derived by the rules (lecture 10)
+CBr	brommetanas	bromomethane	in the course: lecture 10
+CI	jodmetanas	iodomethane	in the course: lecture 10
+Clc1ccccc1Cl	1,2-dichlorbenzenas	1,2-dichlorobenzene	in the course: lecture 5
+CC1(O)CCCCC1	1-metilcikloheksanolis	1-methylcyclohexan-1-ol	in the course: lecture 11
+OC1CCCC1	ciklopentanolis	cyclopentanol	in the course: lecture 13
+OC1CCCCC1	cikloheksanolis	cyclohexanol	in the course: lecture 11; lecture 12
+OC1CCCCC1O	1,2-cikloheksandiolis	cyclohexane-1,2-diol	in the course: lecture 5
+OCCCCO	1,4-butandiolis	butane-1,4-diol	in the course: lecture 12
+OCC(O)CO	1,2,3-propantriolis	propane-1,2,3-triol	in the course: lecture 12
+CC(O)CC	2-butanolis	butan-2-ol	in the course: lecture 5
+OCCCC	1-butanolis	butan-1-ol	in the course: lecture 12; lecture 13
+CC(C)CCO	3-metil-1-butanolis	3-methylbutan-1-ol	in the course: lecture 12
+CO	metanolis	methanol	in the course: lecture 11; lecture 13; seminar 2
+CCO	etanolis	ethanol	in the course: lecture 11; lab 2; lecture 4; lab 6; Funkcinių gr
+CCCCCCCCCCO	1-dekanolis	decan-1-ol	derived by the rules (lecture 11)
+CC(O)(C)C	2-metil-2-propanolis	2-methylpropan-2-ol	derived by the rules (lecture 11)
+CC(C)CCS	3-metil-1-butantiolis	3-methylbutane-1-thiol	in the course: lecture 12
+CCCCCCCCS	1-oktantiolis	octane-1-thiol	derived by the rules (lecture 12)
+CS	metantiolis	methanethiol	in the course: lecture 12
+SCC(O)CS	1,3-dimerkapto-2-propanolis	1,3-disulfanylpropan-2-ol	in the course: lecture 12
+OCCC(C)(C)S	3-merkapto-3-metil-1-butanolis	3-methyl-3-sulfanylbutan-1-ol	in the course: lecture 12
+CCCCCCC=O	heptanalis	heptanal	derived by the rules (lecture 13)
+CC(O)C#N	2-hidroksipropannitrilas	2-hydroxypropanenitrile	in the course: lecture 13
+CCC(O)C(C)C=O	3-hidroksi-2-metilpentanalis	3-hydroxy-2-methylpentanal	in the course: lecture 13
+CC(O)CC=O	3-hidroksibutanalis	3-hydroxybutanal	in the course: lecture 1
+OCCCCC=O	5-hidroksipentanalis	5-hydroxypentanal	in the course: lecture 13
+OC(CC)OC	1-metoksi-1-propanolis	1-methoxypropan-1-ol	in the course: lecture 13
+COC(OC)CC	1,1-dimetoksipropanas	1,1-dimethoxypropane	in the course: lecture 13
+COC1(O)CCCC1C	2-metil-1-metoksiciklopentanolis	1-methoxy-2-methylcyclopentan-1-ol	in the course: lecture 13
+COC1(OC)CCCC1C	2-metil-1,1-dimetoksiciklopentanas	1,1-dimethoxy-2-methylcyclopentane	in the course: lecture 13
+COc1ccccc1	metoksibenzenas	methoxybenzene	in the course: lecture 12; seminar 4; lecture 6; lecture 9
+CCOc1ccccc1	etoksibenzenas	ethoxybenzene	in the course: lecture 12; seminar 4; lecture 6; lecture 9
+CSc1ccccc1	metiltiobenzenas	(methylsulfanyl)benzene	in the course: lecture 10
+[O-][N+](=O)c1ccccc1	nitrobenzenas	nitrobenzene	in the course: seminar 4; lecture 9
+Brc1ccccc1	brombenzenas	bromobenzene	in the course: seminar 4
+Cc1ccccc1	metilbenzenas	methylbenzene	in the course: lecture 1
+CCC1CCCCC1	etilcikloheksanas	ethylcyclohexane	in the course: lecture 5; lecture 6
+CC1CCCC1	metilciklopentanas	methylcyclopentane	in the course: lecture 1; seminar 4
+CC1CC1	metilciklopropanas	methylcyclopropane	in the course: lecture 5
+COC1CC1	metoksiciklopropanas	methoxycyclopropane	derived by the rules (a general example, no course source)
+COC1CCCC1	metoksiciklopentanas	methoxycyclopentane	lecture 11 slide 16 (the drawing is cyclopentyl methyl ether; the slide label metoksiciklopropanas is the deliberate error)
+CC(C)C	2-metilpropanas	2-methylpropane	in the course: lecture 10; lecture 11; lecture 12; lecture 7
+CC(C)(C)C	2,2-dimetilpropanas	2,2-dimethylpropane	in the course: lecture 5
+CCC(CC)CC	3-etilpentanas	3-ethylpentane	in the course: seminar 3
+CC(C)C(C)(C)C	2,2,3-trimetilbutanas	2,2,3-trimethylbutane	derived by the rules (lecture 6)
+CC(C)CCCCCCCCCCCCCCC	2-metilheptadekanas	2-methylheptadecane	in the course: lecture 6
+CCCC	butanas	butane	in the course: seminar 4; lecture 6
+CCCCC	pentanas	pentane	in the course: lecture 5; lecture 6
+CCC	propanas	propane	in the course: lecture 10; lecture 6
+CC	etanas	ethane	in the course: lecture 6
+C	metanas	methane	in the course: lecture 6
+CCCCCCCCCCC	undekanas	undecane	in the course: lecture 6
+C1CC1	ciklopropanas	cyclopropane	in the course: lecture 5; lecture 6; lecture 8
+C1CCC1	ciklobutanas	cyclobutane	in the course: lecture 5; lecture 6
+C1CCCC1	ciklopentanas	cyclopentane	in the course: lecture 13; lecture 5; lecture 6
+C1CCCCC1	cikloheksanas	cyclohexane	in the course: lecture 6
+C1=CCCCC1	cikloheksenas	cyclohexene	in the course: lecture 1
+c1ccccc1	benzenas	benzene	in the course: lecture 12; lab 3; lecture 3; seminar 4; lecture 9
+ClCCl	dichlormetanas	dichloromethane	in the course: lab 3; lecture 6
+ClC=C	chloretenas	chloroethene	derived by the rules (lecture 10)
+CCCCC1CCCCC1	butilcikloheksanas	butylcyclohexane	derived by the rules (lecture 6)
+CCCN	1-propanaminas	propan-1-amine	in the course: seminar 7
+CN	metanaminas	methanamine	derived by the rules (lecture 4)
+CCN(CC)CC	N,N-dietiletanaminas	N,N-diethylethanamine	derived by the rules (lecture 15)
+CC(C)CC(C)(C)C	2,2,4-trimetilpentanas	2,2,4-trimethylpentane	derived by the rules (generated alkane)
+CCC(C)C(C)CC	3,4-dimetilheksanas	3,4-dimethylhexane	derived by the rules (generated alkane)
+CC(C)C(C)CC(C)C	2,3,5-trimetilheksanas	2,3,5-trimethylhexane	derived by the rules (generated alkane)
+CC1CCCC1(C)C	1,1,2-trimetilciklopentanas	1,1,2-trimethylcyclopentane	derived by the rules (generated ring)
+CCC1CCCCC1C	1-etil-2-metilcikloheksanas	1-ethyl-2-methylcyclohexane	derived by the rules (generated ring)
+Cc1ccc(C)c(C)c1	1,2,4-trimetilbenzenas	1,2,4-trimethylbenzene	derived by the rules (generated benzene)
+Brc1ccccc1Cl	1-brom-2-chlorbenzenas	1-bromo-2-chlorobenzene	derived by the rules (generated benzene)
+Clc1ccc(Cl)cc1	1,4-dichlorbenzenas	1,4-dichlorobenzene	in the course: lecture 5
+Cc1cc(C)cc(C)c1	1,3,5-trimetilbenzenas	1,3,5-trimethylbenzene	derived by the rules (generated benzene)
+CC1=CC(C)=CC=C1	1,3-dimetilbenzenas	1,3-dimethylbenzene	derived by the rules (generated benzene)
+C1=CC=CCC1	1,3-cikloheksadienas	cyclohexa-1,3-diene	derived by the rules (generated ring)
+CC1C=CCC1	3-metilciklopentenas	3-methylcyclopent-1-ene	derived by the rules (generated ring)
+CC1CC=CCC1	4-metilcikloheksenas	4-methylcyclohex-1-ene	derived by the rules (generated ring)
+C1CCCCCCC1	ciklooktanas	cyclooctane	derived by the rules (generated ring)
+C=CC(C)O	3-buten-2-olis	but-3-en-2-ol	derived by the rules (generated alkenol)
+OCC=CC	2-buten-1-olis	but-2-en-1-ol	derived by the rules (generated alkenol)
+C=CCO	2-propen-1-olis	prop-2-en-1-ol	derived by the rules (generated alkenol)
+C#CCO	2-propin-1-olis	prop-2-yn-1-ol	derived by the rules (generated alkynol)
+C#CC(C)O	3-butin-2-olis	but-3-yn-2-ol	derived by the rules (generated alkynol)
+C=CC(C)=O	3-buten-2-onas	but-3-en-2-one	derived by the rules (generated alkenone)
+CC=CC=O	2-butenalis	but-2-enal	derived by the rules (generated alkenal)
+CC=CC(O)=O	2-buteno rūgštis	but-2-enoic acid	derived by the rules (generated alkenoic acid)
+C=CC(O)=O	propeno rūgštis	prop-2-enoic acid	in the course: seminar 4
+C=C(C)C(O)=O	2-metilpropeno rūgštis	2-methylprop-2-enoic acid	derived by the rules (generated alkenoic acid)
+C=CC#N	propennitrilas	prop-2-enenitrile	derived by the rules (generated nitrile)
+C=CC(N)=O	propenamidas	prop-2-enamide	derived by the rules (generated amide)
+COC(=O)C=C	metilpropenoatas	methyl prop-2-enoate	derived by the rules (generated ester)
+C#CC=CC	3-penten-1-inas	pent-3-en-1-yne	derived by the rules (generated enyne)
+C=CCC#C	1-penten-4-inas	pent-1-en-4-yne	derived by the rules (generated enyne)
+CC(=O)CC(C)=O	2,4-pentandionas	pentane-2,4-dione	derived by the rules (generated dione)
+O=C1C=CC(=O)C=C1	2,5-cikloheksadien-1,4-dionas	cyclohexa-2,5-diene-1,4-dione	in the course: lecture 12
+CCC(=O)CC	3-pentanonas	pentan-3-one	derived by the rules (generated ketone)
+CCC(C)=O	butanonas	butan-2-one	in the course: lecture 5; lecture 7
+O=C1CCCCC1	cikloheksanonas	cyclohexanone	in the course: lecture 11; lecture 13
+CCC(=O)c1ccccc1	1-fenil-1-propanonas	1-phenylpropan-1-one	derived by the rules (generated ketone)
+CC(=O)c1ccccc1	1-feniletanonas	1-phenylethan-1-one	derived by the rules (generated ketone)
+NCCO	2-aminoetanolis	2-aminoethan-1-ol	derived by the rules (generated amino alcohol)
+NCCN	1,2-etandiaminas	ethane-1,2-diamine	derived by the rules (generated diamine)
+NCCCCCCN	1,6-heksandiaminas	hexane-1,6-diamine	derived by the rules (generated diamine)
+N#CCCC#N	butandinitrilas	butanedinitrile	derived by the rules (generated dinitrile)
+O=CCCC=O	butandialis	butanedial	derived by the rules (generated dialdehyde)
+CC(=O)CCC(O)=O	4-oksopentano rūgštis	4-oxopentanoic acid	derived by the rules (generated keto acid)
+O=CCC(C)=O	3-oksobutanalis	3-oxobutanal	derived by the rules (generated keto aldehyde)
+NCCC=O	3-aminopropanalis	3-aminopropanal	derived by the rules (generated amino aldehyde)
+CCC(Cl)=O	propanoilchloridas	propanoyl chloride	derived by the rules (generated acyl halide)
+CCS(O)(=O)=O	etansulfonrūgštis	ethanesulfonic acid	derived by the rules (generated sulfonic acid)
+Cc1ccc(cc1)S(O)(=O)=O	4-metilbenzensulfonrūgštis	4-methylbenzene-1-sulfonic acid	derived by the rules (generated sulfonic acid)
+[Na+].CC([O-])=O	natrio etanoatas	sodium ethanoate	derived by the rules (generated salt)
+[K+].[O-]C(=O)c1ccccc1	kalio benzenkarboksilatas	potassium benzoate	derived by the rules (generated salt)
+COC(=O)CC	metilpropanoatas	methyl propanoate	derived by the rules (generated ester)
+CCCOC(C)=O	propiletanoatas	propyl ethanoate	derived by the rules (generated ester)
+CC(C)OC(C)=O	izopropiletanoatas	isopropyl ethanoate	derived by the rules (generated ester)
+CNC(=O)c1ccccc1	N-metilbenzenkarboksamidas	N-methylbenzamide	derived by the rules (generated amide)
+CC(C)S	2-propantiolis	propane-2-thiol	derived by the rules (generated thiol)
+N#Cc1ccccc1	benzenkarbonitrilas	benzonitrile	in the course: seminar 1; lecture 1
+CC(=O)Cl	etanoilchloridas	ethanoyl chloride	in the course: seminar 1; lecture 1; seminar 6
+OC(=O)c1ccccc1C(O)=O	1,2-benzendikarboksirūgštis	benzene-1,2-dicarboxylic acid	derived by the rules (generated benzene diacid)
+OC(=O)C1CCCCC1	cikloheksankarboksirūgštis	cyclohexanecarboxylic acid	derived by the rules (generated ring acid)
+OC(=O)CCCCC(O)=O	heksano dirūgštis	hexanedioic acid	derived by the rules (generated diacid)
+OC(=O)CCC=C	4-penteno rūgštis	pent-4-enoic acid	derived by the rules (generated alkenoic acid)
+OCC(O)C(O)CO	1,2,3,4-butantetraolis	butane-1,2,3,4-tetrol	derived by the rules (generated polyol)
+C(c1ccccc1)c1ccccc1	benzilbenzenas	benzylbenzene	derived by the rules (generated arene (ring preferred over chain))
+C=Cc1ccccc1	feniletenas	phenylethene	derived by the rules (generated arene)
+CC=Cc1ccccc1	1-fenilpropenas	1-phenylprop-1-ene	derived by the rules (generated arene; lecture 9)
+CC(C)(C)c1ccccc1	tret-butilbenzenas	tert-butylbenzene	derived by the rules (generated arene)
+CC(C)c1ccccc1	izopropilbenzenas	isopropylbenzene	derived by the rules (generated arene)
+Cc1ccccc1Br	1-brom-2-metilbenzenas	1-bromo-2-methylbenzene	derived by the rules (generated benzene; lecture 9 (2-bromtoluenas))
+Cc1ccc(Br)cc1	1-brom-4-metilbenzenas	1-bromo-4-methylbenzene	derived by the rules (generated benzene; lecture 9 (4-bromtoluenas))
+FC(F)(F)C(O)=O	trifluoretano rūgštis	2,2,2-trifluoroethanoic acid	derived by the rules (generated acid)
+ClCC(=O)O	chloretano rūgštis	2-chloroethanoic acid	derived by the rules (generated acid)
+CC(Cl)C(O)=O	2-chlorpropano rūgštis	2-chloropropanoic acid	derived by the rules (generated acid)
+CCC(Br)C(=O)OC	metil-2-brombutanoatas	methyl 2-bromobutanoate	derived by the rules (generated ester)
+OCCOC	2-metoksietanolis	2-methoxyethan-1-ol	derived by the rules (generated ether alcohol)
+COCCOC	1,2-dimetoksietanas	1,2-dimethoxyethane	derived by the rules (generated ether)
+CCOCCOCC	1,2-dietoksietanas	1,2-diethoxyethane	derived by the rules (generated ether)
+CC(C)OC(C)C	2-izopropoksipropanas	2-isopropoxypropane	derived by the rules (generated ether)
+CCN(CC)C(C)C	N,N-dietil-2-propanaminas	N,N-diethylpropan-2-amine	derived by the rules (generated amine)
+CN(C)c1ccccc1	N,N-dimetilbenzenaminas	N,N-dimethylaniline	derived by the rules (generated amine)
+CNc1ccccc1	N-metilbenzenaminas	N-methylaniline	derived by the rules (generated amine)
+NCc1ccccc1	fenilmetanaminas	phenylmethanamine	derived by the rules (generated amine)
+CC(N)CC	2-butanaminas	butan-2-amine	derived by the rules (generated amine)
+NC(=O)CCC(N)=O	butandiamidas	butanediamide	derived by the rules (generated diamide)
+CC(=O)NC	N-metiletanamidas	N-methylethanamide	derived by the rules (generated amide)
+CC(C)=C1CCCCC1	izopropilidencikloheksanas	isopropylidenecyclohexane	in the course: seminar 4
+C=C1CCCCC1	metilidencikloheksanas	methylidenecyclohexane	derived by the rules (generated ylidene)
+c1ccc(cc1)Nc1ccccc1	N-fenilbenzenaminas	N-phenylaniline	derived by the rules (seminar 7 task 7 (the sheet writes N,N-difenilaminas))
+OC=O	metano rūgštis	methanoic acid	derived by the rules (seminar 6 task 15 (formic acid))
+COC=O	metilmetanoatas	methyl methanoate	derived by the rules (generated ester)
+NC=O	metanamidas	methanamide	derived by the rules (generated amide)
+CNC	N-metilmetanaminas	N-methylmethanamine	derived by the rules (generated amine)
+CC(C)N	2-propanaminas	propan-2-amine	derived by the rules (generated amine)
+CC(C)=CC(C)C	2,4-dimetil-2-pentenas	2,4-dimethylpent-2-ene	derived by the rules (generated alkene)
+CC(Cl)CC(O)CC	5-chlor-3-heksanolis	5-chlorohexan-3-ol	derived by the rules (generated numbering)
+Cc1cc(Cl)ccc1Br	1-brom-4-chlor-2-metilbenzenas	1-bromo-4-chloro-2-methylbenzene	derived by the rules (generated numbering and alphabet)
+CCCC(CCCl)CCC	4-(2-chloretil)heptanas	4-(2-chloroethyl)heptane	derived by the rules (generated complex substituent)
+CCCC(CCCl)(CCCl)CCC	4,4-bis(2-chloretil)heptanas	4,4-bis(2-chloroethyl)heptane	derived by the rules (generated complex substituent)
+Cc1ccc(cc1)C(=O)c1ccccc1	fenil(4-metilfenil)metanonas	(4-methylphenyl)(phenyl)methanone	derived by the rules (generated ketone)
+NC(=O)CC(C)C#N	3-cianbutanamidas	3-cyanobutanamide	derived by the rules (generated seniority)
+OC(=O)CCC#N	3-cianpropano rūgštis	3-cyanopropanoic acid	derived by the rules (generated seniority)
+CC(C)Cc1ccc(cc1)C(C)C(O)=O	2-(4-izobutilfenil)propano rūgštis	2-(4-isobutylphenyl)propanoic acid	derived by the rules (generated arene acid)
+Oc1ccc(Cl)cc1Cl	2,4-dichlorfenolis	2,4-dichlorophenol	derived by the rules (generated phenol)
+Cc1ccc(N)cc1O	5-amino-2-metilfenolis	5-amino-2-methylphenol	derived by the rules (generated phenol)
+COc1ccc(C)cc1	1-metil-4-metoksibenzenas	1-methoxy-4-methylbenzene	derived by the rules (fix round 1 English alphabetical numbering)
+COC1CCC(C)CC1	1-metil-4-metoksicikloheksanas	1-methoxy-4-methylcyclohexane	derived by the rules (fix round 1 English alphabetical numbering)
+CC(OC)CC(C)C	2-metil-4-metoksipentanas	2-methoxy-4-methylpentane	derived by the rules (fix round 1 English alphabetical numbering)
+CCc1ccccc1OCC	1-etil-2-etoksibenzenas	1-ethoxy-2-ethylbenzene	derived by the rules (fix round 1 English alphabetical numbering)
+CC1CC1OC	1-metil-2-metoksiciklopropanas	1-methoxy-2-methylcyclopropane	derived by the rules (fix round 1 English alphabetical numbering)
+OC(=O)c1cc(OC)cc(C)c1	3-metil-5-metoksibenzenkarboksirūgštis	3-methoxy-5-methylbenzoic acid	derived by the rules (fix round 1 English alphabetical numbering)
+Ic1cccc(C(C)C)c1	1-izopropil-3-jodbenzenas	1-iodo-3-isopropylbenzene	derived by the rules (fix round 1 English alphabetical numbering)
+OC1C(C)CCCC1S	2-merkapto-6-metilcikloheksanolis	2-methyl-6-sulfanylcyclohexan-1-ol	derived by the rules (fix round 1 the two languages number differently here)
+ClCC(=O)NC	2-chlor-N-metiletanamidas	2-chloro-N-methylethanamide	derived by the rules (fix round 1 amide with an N locant)
+CNCC(=O)NC	N-metil-2-metilaminoetanamidas	N-methyl-2-(methylamino)ethanamide	derived by the rules (fix round 1 amide with an N locant)
+OCC(=O)Nc1ccccc1	N-fenil-2-hidroksietanamidas	2-hydroxy-N-phenylethanamide	derived by the rules (fix round 1 amide with an N locant)
+CCN(CC)CC(=O)Nc1c(C)cccc1C	2-dietilamino-N-(2,6-dimetilfenil)etanamidas	2-(diethylamino)-N-(2,6-dimethylphenyl)ethanamide	in the course: lecture 1
+ClCC1CCC(CCl)CC1	1,4-bis(chlormetil)cikloheksanas	1,4-bis(chloromethyl)cyclohexane	derived by the rules (fix round 1 bis for compound substituents)
+COCc1ccc(COC)cc1	1,4-bis(metoksimetil)benzenas	1,4-bis(methoxymethyl)benzene	derived by the rules (fix round 1 bis for compound substituents)
+CCNc1ccc(NCC)cc1C(O)=O	2,5-bis(etilamino)benzenkarboksirūgštis	2,5-bis(ethylamino)benzoic acid	derived by the rules (fix round 1 bis for compound substituents)
+CNCCN(C)C	N,N,N'-trimetil-1,2-etandiaminas	N,N,N'-trimethylethane-1,2-diamine	derived by the rules (fix round 1 N and N-prime)
+CN(C)CCNC	N,N,N'-trimetil-1,2-etandiaminas	N,N,N'-trimethylethane-1,2-diamine	derived by the rules (fix round 1 N and N-prime, other atom order)
+CNC(=O)CC(=O)N(C)C	N,N,N'-trimetilpropandiamidas	N,N,N'-trimethylpropanediamide	derived by the rules (fix round 1 N and N-prime)
+COC(=O)CC(O)=O	metoksikarboniletano rūgštis	3-methoxy-3-oxopropanoic acid	derived by the rules (fix round 1 alkoxycarbonyl prefix)
+NC(=O)CC(O)=O	karbamoiletano rūgštis	3-amino-3-oxopropanoic acid	derived by the rules (fix round 1 carbamoyl prefix)
+ClC(=O)c1ccc(cc1)C(O)=O	4-chlorformilbenzenkarboksirūgštis	4-(chlorocarbonyl)benzoic acid	derived by the rules (fix round 1 lecture 1 slide 45 (haloformil))
+OC(=O)CC(O)C(=O)NC	3-hidroksi-3-(N-metilkarbamoil)propano rūgštis	3-hydroxy-4-(methylamino)-4-oxobutanoic acid	derived by the rules (fix round 1 carbamoyl prefix)
+CCCCCCCCC=CCCCCCCCC(O)=O	9-oktadeceno rūgštis	octadec-9-enoic acid	derived by the rules (lecture 6/7 fatty acids)
+C=CC(C=C)C#CC#C	5-etenil-6-hepten-1,3-diinas	5-ethenylhept-6-en-1,3-diyne	derived by the rules (tests criterion b of lecture 1 slide 54; not a course example)
+CC(C)c1cccc(C(C)C)c1O	2,6-diizopropilfenolis	2,6-diisopropylphenol	derived by the rules (seminar 1 task 3 (propofol))
+COC	metoksimetanas	methoxymethane	in the course: lecture 12; lecture 5
+CCCC(C)CC	3-metilheksanas	3-methylhexane	derived by the rules (seminar 1 task 8a)
+CCCC(C)C(C)CC	3,4-dimetilheptanas	3,4-dimethylheptane	derived by the rules (seminar 1 task 8b)
+CC(C)=C(C)CC(C)CC	2,3,5-trimetil-2-heptenas	2,3,5-trimethylhept-2-ene	derived by the rules (seminar 1 task 8c)
+C#CC(C)(C)C	3,3-dimetil-1-butinas	3,3-dimethylbut-1-yne	derived by the rules (seminar 1 task 8d)
+CCCC(=O)OC	metilbutanoatas	methyl butanoate	derived by the rules (seminar 1 task 12)
+CC(=O)OCCCC	butiletanoatas	butyl ethanoate	derived by the rules (seminar 1 task 12)
+NCCCCN	1,4-butandiaminas	butane-1,4-diamine	derived by the rules (lecture 15 (putrescine))
+CCCNCC	N-etil-1-propanaminas	N-ethylpropan-1-amine	derived by the rules (seminar 7 task 1)
+OC(=O)c1ccc(N)cc1N	2,4-diaminobenzenkarboksirūgštis	2,4-diaminobenzoic acid	derived by the rules (fix round 1 )
+CCN(CC)c1ccccc1	N,N-dietilbenzenaminas	N,N-diethylaniline	derived by the rules (seminar 7 task 1)
+COCC	metoksietanas	methoxyethane	derived by the rules (lecture 12)
+CCOC(C)C	2-etoksipropanas	2-ethoxypropane	derived by the rules (lecture 12)
+SC1CCCC1	ciklopentantiolis	cyclopentanethiol	derived by the rules (lecture 12)
+CCNCCC(C)(CC)C=O	2-etil-4-etilamino-2-metilbutanalis	2-ethyl-4-(ethylamino)-2-methylbutanal	derived by the rules (fix round 1 )
+CCOCc1ccccc1	etoksimetilbenzenas	(ethoxymethyl)benzene	derived by the rules (lecture 12 (benzyl ethyl ether))
+O=C1C=CC(C)(C)C=C1	4,4-dimetil-2,5-cikloheksadienonas	4,4-dimethylcyclohexa-2,5-dien-1-one	derived by the rules (lecture 13)
+COC(=O)c1ccccc1OC	metil-2-metoksibenzenkarboksilatas	methyl 2-methoxybenzoate	derived by the rules (fix round 1 )
+OC(=O)C=Cc1ccccc1	3-fenilpropeno rūgštis	3-phenylprop-2-enoic acid	derived by the rules (lecture 13 (cinnamic acid))
+CCC(=O)O[Na]	natrio propanoatas	sodium propanoate	in the course: lecture 1
+C=CCOCC#C	3-(2-propinoksi)propenas	3-[(prop-2-yn-1-yl)oxy]prop-1-ene	derived by the rules (fix round 2 alkene chain before alkyne chain)
+C=COC#C	etinoksietenas	(ethynyloxy)ethene	derived by the rules (fix round 2 alkene chain before alkyne chain)
+C=CC(C=C)C#C	3-etinil-1,4-pentadienas	3-ethynylpenta-1,4-diene	derived by the rules (fix round 2 alkene chain before alkyne chain)
+C=CC(C)OC(C)C#C	3-(1-metil-2-propinoksi)-1-butenas	3-[(1-methylprop-2-yn-1-yl)oxy]but-1-ene	derived by the rules (fix round 2 alkene chain before alkyne chain)
+C=CCSCC#C	3-(2-propiniltio)propenas	3-(prop-2-yn-1-ylsulfanyl)prop-1-ene	derived by the rules (fix round 2 alkene chain before alkyne chain)
+CNC1CCCCC1	N-metilcikloheksanaminas	N-methylcyclohexanamine	derived by the rules (fix round 2 )
+NCC1CCCCC1	cikloheksilmetanaminas	cyclohexylmethanamine	derived by the rules (fix round 2 )
+CNCc1ccccc1	1-fenil-N-metilmetanaminas	N-methyl-1-phenylmethanamine	derived by the rules (fix round 2 C locant with an N locant)
+CN(C)Cc1ccccc1	1-fenil-N,N-dimetilmetanaminas	N,N-dimethyl-1-phenylmethanamine	derived by the rules (fix round 2 C locant with an N locant)
+CNCC1CCCCC1	1-cikloheksil-N-metilmetanaminas	1-cyclohexyl-N-methylmethanamine	derived by the rules (fix round 2 C locant with an N locant)
+CCOC(=O)C(O)=O	etoksikarbonilmetano rūgštis	2-ethoxy-2-oxoethanoic acid	derived by the rules (fix round 2 IUPAC English main for acid derivatives)
+c1cc[nH]c1	null	null	lecture 1 (pyrrole); out of scope
+c1ccncc1	null	null	lecture 1 (pyridine); out of scope
+C1CCOC1	null	null	lecture 1 (tetrahydrofuran); out of scope
+C1COCCO1	null	null	lecture 1 (dioxane); out of scope
+C1CO1	null	null	lecture 1 (oxirane); out of scope
+C1OC(OC1)c1ccccc1	null	null	lecture 13 (2-phenyl-1,3-dioxolane); out of scope
+c1ccc2ccccc2c1	null	null	lecture 9 (naphthalene); fused ring
+c1ccc2cc3ccccc3cc2c1	null	null	lecture 9 (anthracene); fused ring
+O=c1cc[nH]c(=O)[nH]1	null	null	seminar 1 task 5 (uracil); heterocycle
+Cn1cnc2c1c(=O)n(C)c(=O)n2C	null	null	lab 3 (caffeine); heterocycle
+C1CC2CCC1C2	null	null	bridged ring
+C1CCC2(CC1)CCCC2	null	null	spiro ring
+C1CC2CC1CC2	null	null	bicyclic system
+c1ccc(cc1)-c1ccccc1	null	null	ring assembly (biphenyl)
+CC[NH3+].[Cl-]	null	null	ammonium salt
+NC(N)=O	null	null	urea (two heteroatoms on one carbonyl)
+O=C=O	null	null	carbon dioxide
+C#N	null	null	hydrogen cyanide
+CC(=O)OC(=O)CC	null	null	mixed anhydride
+CCOC(=O)CC(=O)OCC	null	null	diester
+CC(=O)SC	null	null	thioester
+CC=NC	null	null	imine
+CC=NO	null	null	oxime
+NN	null	null	hydrazine
+COOC	null	null	peroxide
+CS(C)(=O)=O	null	null	sulfone
+CS(C)=O	null	null	sulfoxide
+CP(C)C	null	null	phosphorus
+[Na+].[Na+].[O-]C(=O)C(=O)[O-]	null	null	disalt
+OC(=O)CC(O)(CC(O)=O)C(O)=O	2-hidroksi-1,2,3-propantrikarboksirūgštis	2-hydroxypropane-1,2,3-tricarboxylic acid	derived by the rules (seminar 1 task 14 (citric acid))
+CC(=O)OC(C)=O.O	null	null	mixture

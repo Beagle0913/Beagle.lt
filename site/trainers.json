@@ -12,6 +12,19 @@
         "lt": "Pagal VU GMC pratybas · LT / EN",
         "en": "Based on the VU GMC course exercises · LT / EN"
       }
+    },
+    {
+      "id": "organic",
+      "path": "organic/",
+      "name": { "lt": "Organinė chemija", "en": "Organic chemistry" },
+      "summary": {
+        "lt": "Visas kursas: nomenklatūra, cheminis ryšys, rūgštys ir bazės, izomerija, angliavandeniliai, halogendariniai, alkoholiai, fenoliai, eteriai, karbonilo junginiai, karboksirūgštys, aminai, heterociklai ir laboratoriniai darbai.",
+        "en": "The whole course: nomenclature, bonding, acids and bases, isomerism, hydrocarbons, haloalkanes, alcohols, phenols, ethers, carbonyl compounds, carboxylic acids, amines, heterocycles and the lab works."
+      },
+      "note": {
+        "lt": "Pagal VU GMC Organinės chemijos kursą · LT / EN",
+        "en": "Based on the VU GMC Organic Chemistry course · LT / EN"
+      }
     }
   ]
 }
