@@ -66,8 +66,8 @@
         blocks: [
           { h: t('Eteno gavimas', 'Preparing ethene') },
           {
-            p: t('Etanolis su koncentruota sieros rūgštimi pirmiausia sudaro etanolio ir sieros rūgšties esterį. Kaitinamas esteris skyla: išsiskiria etenas ir atsistato sieros rūgštis. Iš viso tai etanolio dehidratacija, vandens eliminavimas. Į mišinį dedamas žiupsnelis $Al2O3$, kuris palengvina vandens atskilimą ir ramina virimą.',
-              'Ethanol and concentrated sulfuric acid first form the sulfuric acid ester of ethanol. On heating the ester breaks down: ethene is released and the sulfuric acid is regenerated. Overall this is dehydration of the alcohol, an elimination of water. A pinch of $Al2O3$ is added to the mixture; it helps the loss of water and calms the boiling.'),
+            p: t('Etanolis su koncentruota sieros rūgštimi pirmiausia sudaro etanolio ir sieros rūgšties esterį. Kaitinamas esteris skyla: išsiskiria etenas ir atsistato sieros rūgštis. Iš viso tai etanolio dehidratacija, vandens eliminavimas. Į mišinį įberiamas žiupsnelis $Al2O3$: jis veikia kaip virimo agentas (mišinys verda tolygiai, mažiau putoja) ir gali šiek tiek palengvinti vandens atskilimą.',
+              'Ethanol and concentrated sulfuric acid first form ethyl hydrogen sulfate (the sulfuric acid ester of ethanol). On heating the ester breaks down: ethene is released and the sulfuric acid is regenerated. Overall this is dehydration of the alcohol, an elimination of water. A pinch of $Al2O3$ goes into the mixture: it acts as a boiling aid (the mixture boils evenly and foams less) and may slightly assist the loss of water.'),
             src: 'LW6 p1'
           },
           {
@@ -82,8 +82,8 @@
             src: 'LW6 p1'
           },
           {
-            p: t('Dujos pirmiausia praleidžiamos pro geltoną bromo vandenį, paskui pro violetinį kalio permanganato tirpalą. Abu bandymai rodo dvigubąjį (ir trigubąjį) ryšį.',
-              'The gas is first led through yellow bromine water and then through violet potassium permanganate solution. Both tests reveal a double (or triple) bond.'),
+            p: t('Dujos pirmiausia praleidžiamos pro geltoną bromo vandenį, paskui pro violetinį kalio permanganato tirpalą. Abu bandymai rodo dvigubąjį (ir trigubąjį) ryšį. Vandeninėje terpėje dalis eteno duoda 2-bromoetanolį (bromhidriną); kurse – 1,2-dibrometanas. Kartais kartu išsiskiria $SO2$ ir $CO2$ (iš sieros rūgšties ir anglėjančio etanolio): $SO2$ irgi pablukina bromo vandenį ir $KMnO4$.',
+              'The gas is first led through yellow bromine water and then through violet potassium permanganate solution. Both tests reveal a double (or triple) bond. In water part of the ethene gives 2-bromoethanol (a bromohydrin); the course shows 1,2-dibromoethane. Sometimes $SO2$ and $CO2$ form as well (from sulfuric acid and charring ethanol): $SO2$ also decolourises bromine water and $KMnO4$.'),
             src: 'LW6 p1'
           },
           {
@@ -134,19 +134,19 @@
             src: 'LW6 p1'
           },
           {
-            p: t('Kai naftalenas ištirpsta, viršuje atsiranda oranžinis alyvos pavidalo sluoksnis. Jį supylus į šaltą vandenį, nitrojunginys nusileidžia ant dugno ir sukietėja į geltonas nuosėdas: jis sunkesnis už vandenį ir jame netirpsta. Geltona spalva būdinga nitrojunginiams.',
-              'When the naphthalene has dissolved, an orange oily layer appears on top. Poured into cold water, the nitro compound sinks to the bottom and solidifies into a yellow solid: it is denser than water and insoluble in it. A yellow colour is typical of nitro compounds.'),
+            p: t('Kai naftalenas ištirpsta, viršuje atsiranda oranžinis alyvos pavidalo sluoksnis. Į atvėsintą mišinį įpylus 5 ml šalto vandens, nitrojunginys nusileidžia ant dugno ir sukietėja į geltonas nuosėdas: jis sunkesnis už vandenį ir jame netirpsta. Geltona spalva būdinga nitrojunginiams. Papildomai plonasluoksne chromatografija galima atskirti produktą nuo naftaleno: nitronaftalenas poliškesnis, todėl turi mažesnį $R_f$.',
+              'When the naphthalene has dissolved, an orange oily layer appears on top. When 5 ml of cold water is added to the cooled mixture, the nitro compound sinks to the bottom and solidifies into a yellow solid: it is denser than water and insoluble in it. A yellow colour is typical of nitro compounds. As an extra, thin-layer chromatography separates the product from naphthalene: nitronaphthalene is more polar, so its $R_f$ is smaller.'),
             src: 'LW6 p1'
           },
           { h: t('Absoliutaus etanolio gavimas', 'Preparing absolute ethanol') },
           {
-            p: t('Į sausą mėgintuvėlį su baltais bevandenio $CuSO4$ milteliais įpilkite apie 3 ml etanolio, gerai supurtykite ir palaukite, kol kietos dalelės nusės. Bevandenis sulfatas suriša vandenį į kristalhidratą, kuris yra melsvas: $CuSO4 + 5 H2O → CuSO4·5H2O$. Ištirpęs vanduo pašalinamas chemiškai, o spalvos pokytis rodo, kad vanduo tikrai buvo. Gautas absoliutus (bevandenis) etanolis nupilamas nuo nuosėdų.',
-              'White anhydrous $CuSO4$ powder is placed in a dry test tube, 2–3 ml of ethanol are added, and the tube is shaken and left to settle. The anhydrous sulfate binds water as a pale blue crystal hydrate: $CuSO4 + 5 H2O → CuSO4·5H2O$. The dissolved water is removed chemically, and the colour change shows that water was really there. The absolute (anhydrous) ethanol is poured off the solid.'),
+            p: t('Į sausą mėgintuvėlį su baltais bevandenio $CuSO4$ milteliais įpilkite apie 3 ml etanolio, gerai supurtykite ir palaukite, kol kietos dalelės nusės. Bevandenis sulfatas suriša vandenį į kristalhidratą, kuris yra melsvas: $CuSO4 + 5 H2O → CuSO4·5H2O$. Vandens dalis surišama kristalhidratu, ir gaunamas gerokai sausesnis (kurso aprašyme – „absoliutus“) etanolis; visiškai sausam etanoliui reikia stipresnio džiovinimo (pvz., $CaO$ ir distiliavimo). Spalvos pokytis rodo, kad vanduo tikrai buvo. Gautas etanolis nupilamas nuo nuosėdų.',
+              'White anhydrous $CuSO4$ powder is placed in a dry test tube, 2–3 ml of ethanol are added, and the tube is shaken and left to settle. The anhydrous sulfate binds water as a pale blue crystal hydrate: $CuSO4 + 5 H2O → CuSO4·5H2O$. Part of the water is bound as the hydrate and a much drier ethanol results (the course text calls it "absolute"); fully dry ethanol needs stronger drying (for example $CaO$ followed by distillation). The colour change shows that water was really there. The ethanol is poured off the solid.'),
             src: 'LW6 p1'
           },
           {
             rule: t('Etanolis su vandeniu sudaro azeotropinį mišinį: 78,15 °C temperatūroje distiliuojasi 95,5 % etanolis, todėl frakcine distiliacija bevandenio etanolio negausi. Vandenį reikia surišti chemiškai.',
-              'Ethanol and water form an azeotropic mixture: at 78.15 °C a 95.5 % ethanol distils over, so fractional distillation cannot give absolute ethanol. The water must be bound chemically.'),
+              'Ethanol and water form an azeotropic mixture: at 78.15 °C 95.5 % ethanol distils over, so fractional distillation cannot give absolute ethanol. The water must be bound chemically.'),
             src: 'LW6 p1'
           },
           { practice: 'l6.observe' }
@@ -184,7 +184,7 @@
           },
           {
             scheme: { items: [{ smi: 'OCC(O)CO', name: t('1,2,3-propantriolis', 'propane-1,2,3-triol') }, { plus: true }, { smi: 'O[Cu]O' }, { arrow: '→' }, { smi: CUGLY }, { plus: true }, { smi: 'O' }] },
-            caption: t('Schemoje parodyta vario ir dviejų glicerolio liekanų struktūra; susidaro $2 H2O$.', 'The scheme shows copper with two glycerol residues; $2 H2O$ is released.'),
+            caption: t('Parodytas supaprastintas chelatas: kiekviena glicerolio liekana jungiasi su variu dviem gretimais deguonimis (viena – kovalentiškai, kita – donoriniu ryšiu iš $OH$). Lygtis: $Cu(OH)2 + 2 C3H8O3 → Cu(C3H7O3)2 + 2 H2O$.', 'A simplified chelate: each glycerol residue binds copper through two neighbouring oxygens (one covalent, one donor bond from $OH$). Equation: $Cu(OH)2 + 2 C3H8O3 → Cu(C3H7O3)2 + 2 H2O$.'),
             src: 'LW6 p2'
           },
           {
@@ -205,7 +205,7 @@
         blocks: [
           { h: t('Etanolio oksidacija', 'Oxidation of ethanol') },
           {
-            p: t('Dviejuose mėgintuvėliuose sumaišoma po mililitrą vienamolės sieros rūgšties ir po pusę mililitro etanolio. Pirmasis gauna dichromato tirpalo (0,2 M), antrasis – permanganato (0,03 M), po 1 ml; abu šildomi, kol spalva pasikeičia. Pirminis alkoholis oksiduojamas į aldehidą, o šis toliau į karboksirūgštį.',
+            p: t('Dviejuose mėgintuvėliuose sumaišoma po mililitrą 1 M sieros rūgšties ir po pusę mililitro etanolio. Pirmasis gauna dichromato tirpalo (0,2 M), antrasis – permanganato (0,03 M), po 1 ml; abu šildomi, kol spalva pasikeičia. Pirminis alkoholis oksiduojamas į aldehidą, o šis toliau į karboksirūgštį.',
               'Into two test tubes go 1 ml of 1 M $H2SO4$ and 0.5 ml of ethanol each. To one is added 1 ml of 0.2 M $K2Cr2O7$, to the other 1 ml of 0.03 M $KMnO4$; the mixtures are heated until the colour changes. The primary alcohol is oxidised to an aldehyde and then on to a carboxylic acid.'),
             src: 'LW6 p2'
           },
@@ -245,13 +245,13 @@
           },
           { h: t('Aldehidų oksidacija $Cu(OH)2$', 'Oxidation of aldehydes by $Cu(OH)2$') },
           {
-            p: t('Į formaldehido tirpalą su $NaOH$ lašinamas $CuSO4$, kol atsiranda pastovus drumstis ($Cu(OH)2$). Šildoma tik viršutinė dalis, o apatinė lieka mėlyna kaip kontrolė. Aldehidas oksiduojamas į rūgštį (šarminėje terpėje į druską), o $Cu(II)$ redukuojasi: geltonas $CuOH$ pereina į raudoną $Cu2O$, o metanalis gali redukuoti ir iki metalinio vario, kuris nusėda ant mėgintuvėlio sienelių (vario veidrodis).',
-              'Copper sulfate is added dropwise to a formaldehyde solution containing $NaOH$ until a lasting turbidity of $Cu(OH)2$ appears. Only the upper part is heated, the lower part stays blue as a control. The aldehyde is oxidised to an acid (to its salt in alkaline medium) while $Cu(II)$ is reduced: yellow $CuOH$ turns into red $Cu2O$, and methanal can reduce copper even to the metal, which deposits on the tube wall (copper mirror).'),
+            p: t('Į formaldehido tirpalą su $NaOH$ lašinamas $CuSO4$, kol atsiranda pastovus drumstis ($Cu(OH)2$). Šildoma tik viršutinė dalis, o apatinė lieka mėlyna kaip kontrolė. Aldehidas oksiduojamas į rūgštį (šarminėje terpėje į druską), o $Cu(II)$ redukuojasi: geltonas $CuOH$ pereina į raudoną $Cu2O$, o metanalis gali redukuoti ir iki metalinio vario, kuris nusėda ant mėgintuvėlio sienelių (vario veidrodis). Be aldehido kaitinamas $Cu(OH)2$ tik skyla į juodą $CuO$.',
+              'Copper sulfate is added dropwise to a formaldehyde solution containing $NaOH$ until a lasting turbidity of $Cu(OH)2$ appears. Only the upper part is heated, the lower part stays blue as a control. The aldehyde is oxidised to an acid (to its salt in alkaline medium) while $Cu(II)$ is reduced: yellow $CuOH$ turns into red $Cu2O$, and methanal can reduce copper even to the metal, which deposits on the tube wall (copper mirror). Without an aldehyde, heated $Cu(OH)2$ merely decomposes to black $CuO$.'),
             src: 'LW6 p3'
           },
           {
             scheme: { items: [{ smi: 'C=O', name: t('metanalis', 'methanal') }, { plus: true }, { smi: 'O[Cu]O' }, { arrow: '→', above: f('t°') }, { smi: 'O=CO', name: t('metano rūgštis', 'methanoic acid') }, { plus: true }, { smi: 'O' }, { plus: true }, { smi: '[Cu]O' }] },
-            caption: t('Spalvų eilė: mėlyna, geltona ($CuOH$), raudona ($Cu2O$), vario veidrodis ($Cu$).', 'Colour sequence: blue, yellow ($CuOH$), red ($Cu2O$), copper mirror ($Cu$).'),
+            caption: t('Lygtis su koeficientais: $HCHO + 2 Cu(OH)2 → HCOOH + 2 CuOH + H2O$. Spalvų eilė: mėlyna, geltona ($CuOH$), raudona ($Cu2O$), vario veidrodis ($Cu$).', 'Equation with coefficients: $HCHO + 2 Cu(OH)2 → HCOOH + 2 CuOH + H2O$. Colour sequence: blue, yellow ($CuOH$), red ($Cu2O$), copper mirror ($Cu$).'),
             src: 'LW6 p3'
           },
           {
@@ -293,8 +293,8 @@
           },
           { h: t('Šifo bazės sintezė', 'Synthesis of a Schiff base') },
           {
-            p: t('Benzenkarbaldehidas ir anilinas, imami vienodais lašų skaičiais (po tris), sumaišomi kambario temperatūroje. Amino grupė nukleofiliškai prisijungia prie aldehido karbonilo anglies, o po to atskyla vanduo ir susidaro $C=N$ ryšys. Gaunama kieta gelsva medžiaga, kuri atšaldoma, stiklo lazdele pasukinėjama sienelė, kad prasidėtų kristalizacija, ir perkristalinama iš etanolio.',
-              'Three drops each of benzaldehyde and aniline are mixed at room temperature. The amino group adds nucleophilically to the carbonyl carbon of the aldehyde, then water is lost and a $C=N$ bond forms. A yellowish solid results; it is cooled, the wall is scratched with a glass rod to start crystallisation, and the solid is recrystallised from ethanol.'),
+            p: t('Benzenkarbaldehidas ir anilinas, imami vienodais lašų skaičiais (po tris), sumaišomi kambario temperatūroje. Amino grupė nukleofiliškai prisijungia prie aldehido karbonilo anglies, o po to atskyla vanduo ir susidaro $C=N$ ryšys. Gaunama kieta gelsva medžiaga, kuri atšaldoma, stiklo lazdele pasukinėjama sienelė, kad prasidėtų kristalizacija (kurso paaiškinime – gryninama kristalinant iš etanolio).',
+              'Three drops each of benzaldehyde and aniline are mixed at room temperature. The amino group adds nucleophilically to the carbonyl carbon of the aldehyde, then water is lost and a $C=N$ bond forms. A yellowish solid results; it is cooled, the wall is scratched with a glass rod to start crystallisation (the course explanation purifies it by crystallisation from ethanol).'),
             src: 'LW6 p3'
           },
           {
@@ -324,8 +324,8 @@
             src: 'LW6 p3'
           },
           {
-            p: t('Mišinys išpilamas į šaltą vandenį (apie 5 ml). Esterio tankis mažesnis nei vandens ir jis vandenyje netirpsta, todėl plūduriuoja viršuje; esterių kvapas malonus, vaisių, todėl jį galima atpažinti uostant (atsargiai, ranka paviliojant garus).',
-              'The mixture is poured into 5 ml of cold water. The ester is less dense than water and immiscible with it, so a layer forms on top; esters smell pleasantly fruity, so the smell identifies them (sniff carefully by wafting the vapour towards you).'),
+            p: t('Mišinys atvėsinamas, po to į jį įpilama 5 ml šalto vandens. Esterio tankis mažesnis nei vandens ir jis vandenyje netirpsta, todėl plūduriuoja viršuje; esterių kvapas malonus, vaisių, todėl jį galima atpažinti uostant (atsargiai, ranka pamojuojant garus link nosies).',
+              'The mixture is cooled and diluted with 5 ml of cold water. The ester is less dense than water and immiscible with it, so a layer forms on top; esters smell pleasantly fruity, so the smell identifies them (sniff carefully by wafting the vapour towards you).'),
             src: 'LW6 p3'
           },
           {
@@ -350,12 +350,12 @@
           },
           {
             scheme: { items: [{ smi: 'O=C1OC(=O)c2ccccc12', name: t('ftalio anhidridas', 'phthalic anhydride') }, { plus: true }, { smi: PHENOL }, { arrow: '→', above: f('H2SO4') }, { smi: PHTH }] },
-            caption: t('Reakcijai reikia 2 molių fenolio; produktas fenolftaleinas, bespalvis laktonas.', 'The reaction needs 2 mol of phenol; the product is phenolphthalein, a colourless lactone.'),
+            caption: t('Reakcijai reikia 2 molių fenolio; išsiskiria $H2O$. Produktas – fenolftaleinas, bespalvis laktonas.', 'The reaction needs 2 mol of phenol and releases $H2O$; the product is phenolphthalein, a colourless lactone.'),
             src: 'LW6 p3'
           },
           {
             scheme: { items: [{ smi: PHTH }, { arrow: '⇌', above: f('2 NaOH') }, { smi: PHTH_ION }] },
-            caption: t('Šarminėje terpėje laktono žiedas atsiveria, vienas žiedas tampa chinoidiniu, o visi trys žiedai sujungiami konjuguotos sistemos: tirpalas raudonai violetinis.', 'In alkaline medium the lactone ring opens, one ring becomes quinoid and all three rings are joined in one conjugated system: the solution is red-violet.'),
+            caption: t('Šarminėje terpėje laktono žiedas atsiveria ir vienas žiedas tampa chinoidiniu: dvi para-pakeistos žiedų sistemos sujungiamos per centrinę anglį į vieną konjuguotą sistemą, todėl tirpalas raudonai violetinis (kurso apraše – „visus žiedus apimanti“ sistema).', 'In alkali the lactone ring opens and one ring becomes quinoid: the two para-substituted rings are joined through the central carbon into one conjugated system, hence the red-violet colour (the course text speaks of a system "spanning all rings").'),
             src: 'LW6 p4'
           },
           {
@@ -396,7 +396,7 @@
       {
         list: [
           t('Bevandenio etanolio negalima gauti distiliacija: azeotropas 95,5 %.', 'Absolute ethanol cannot be made by distillation: the azeotrope is 95.5 %.'),
-          t('Šifo bazės ir esterio sintezėje svarbu santykis ir sausi reagentai.', 'For the Schiff base and ester syntheses the ratio and dry reagents matter.'),
+          t('Šifo bazės sintezėje svarbus santykis 1 : 1; esterinimas yra grįžtamas.', 'For the Schiff base the 1 : 1 ratio matters; esterification is reversible.'),
           t('Karštą stiklą šaltu vandeniu aušinti negalima.', 'Never cool hot glass with cold water.')
         ]
       }
@@ -422,7 +422,7 @@
               t('Pirmiausia paruoškite viską, kas reikalinga dujoms priimti, ir tik tada pradėkite kaitinti.', 'First prepare everything that will receive the gas, and only then start to heat.'),
               t('Gaunamo eteno negalima laikyti: jis iškart turi patekti į priimantį tirpalą. Todėl pirma paruošiami mėgintuvėliai su reagentais, paskui sudedamas mišinys, kaitinama, o dujos eina iš eilės pro du tirpalus.', 'The ethene cannot be stored: it must go straight into the receiving solution. So the tubes with reagents are prepared first, then the mixture is made up and heated, and the gas passes through the two solutions in turn.')
             )],
-            why: t('Dujų gavimas kaitinant reikalauja, kad priimantys tirpalai jau stovėtų: kitaip dalis eteno prarandama, o bandymo tvarka (pirma bromas, paskui $KMnO4$) prarandama.', 'Gas prepared by heating needs the receivers ready: otherwise part of the ethene is lost and the test order (bromine first, then $KMnO4$) is lost.'),
+            why: t('Kad dujos nenueitų veltui, priimantys tirpalai turi būti paruošti prieš kaitinimą; tvarka (pirma bromas, paskui $KMnO4$) leidžia palyginti abu bandymus su ta pačia dujų srove.', 'So that no gas is wasted, the receiving solutions must be ready before heating; the order (bromine first, then $KMnO4$) lets you compare both tests on the same gas stream.'),
             src: 'LW6 p1'
           },
           {
@@ -435,7 +435,7 @@
                 ['Užkimšti kamščiu su oro kondensatoriumi', 'Close with a stopper carrying an air condenser'],
                 ['Kaitinti verdančio vandens vonioje, purtant, kol naftalenas ištirps', 'Heat in a boiling water bath, shaking, until the naphthalene has dissolved'],
                 ['Pastebėti viršuje oranžinį alyvos sluoksnį', 'Note the orange oily layer on top'],
-                ['Supilti mišinį į šaltą vandenį ir stebėti, kaip junginys nusėda ir sukietėja', 'Pour the mixture into cold water and watch the compound settle and solidify']
+                ['Į atvėsintą mišinį įpilti 5 ml šalto vandens ir stebėti, kaip junginys nusėda ir sukietėja', 'Add 5 ml of cold water to the cooled mixture and watch the compound settle and solidify']
               ],
               t('Šaltas vanduo pilamas paskutinis: jis ne dalis reakcijos, o būdas produktą išskirti.', 'Cold water comes last: it is not part of the reaction but a way to separate the product.'),
               t('Pirma reagentai ir uždarymas su kondensatoriumi, paskui kaitinimas ir stebėjimas, o išskyrimas vandeniu darbo pabaigoje.', 'Reagents and closing with the condenser come first, then heating and observing, and separation with water at the end.')
@@ -506,13 +506,13 @@
                 ['Sumaišyti acto rūgštį, izopentanolį ir lašą konc. $H2SO4$', 'Mix acetic acid, isopentanol and a drop of conc. $H2SO4$'],
                 ['Uždaryti kamščiu su oro kondensatoriumi', 'Close with a stopper carrying an air condenser'],
                 ['Šildyti karštoje vandens vonioje maždaug dešimt minučių', 'Heat in a boiling water bath for 7–10 min'],
-                ['Supilti į šaltą vandenį', 'Pour into cold water'],
+                ['Atvėsinti ir praskiesti 5 ml šalto vandens', 'Cool and dilute with 5 ml of cold water'],
                 ['Atpažinti sluoksnį viršuje ir pauostyti', 'Identify the layer on top and sniff carefully']
               ],
               t('Kaitinama su kondensatoriumi, o skiedžiama tik po to.', 'Heating goes with the condenser, and dilution comes only afterwards.'),
               t('Reakcijos mišinys pirmiausia sudaromas ir kaitinamas, o esteris išskiriamas vandeniu tik pabaigoje, nes jis lengvesnis už vandenį ir plūduriuoja viršuje.', 'The reaction mixture is made and heated first, and the ester is separated with water at the end, because it is less dense than water and floats.')
             )],
-            why: t('Kondensatorius grąžina nulakstančius garus, o supylimas į vandenį atskiria nesimaišantį esterį nuo vandenyje tirpių rūgščių.', 'The condenser returns vapours that would escape, and pouring into water separates the immiscible ester from the water-soluble acids.'),
+            why: t('Kondensatorius grąžina nulakstančius garus, o praskiedimas vandeniu atskiria nesimaišantį esterį nuo vandenyje tirpių rūgščių.', 'The condenser returns vapours that would escape, and dilution with water separates the immiscible ester from the water-soluble acids.'),
             src: 'LW6 p3'
           },
           {
@@ -587,14 +587,14 @@
                 ['$KOH$, kuris kristalizuojasi iš tirpalo.', '$KOH$ crystallising out of solution.']
               ], 0,
               t('Kuris elementas pakeičia oksidacijos laipsnį ir kokią spalvą turi jo junginiai?', 'Which element changes its oxidation state, and what colour are its compounds?'),
-              t('Violetinis $MnO4-$ ($Mn+7$) priima elektronus ir virsta rudu $MnO2$ ($Mn+4$). Etenas atiduoda elektronus ir virsta diolių: $3 C2H4 + 2 KMnO4 + 4 H2O → 3 HOCH2CH2OH + 2 MnO2 + 2 KOH$.', 'Violet $MnO4-$ ($Mn+7$) takes up electrons and becomes brown $MnO2$ ($Mn+4$). Ethene gives up electrons and becomes the diol: $3 C2H4 + 2 KMnO4 + 4 H2O → 3 HOCH2CH2OH + 2 MnO2 + 2 KOH$.')
+              t('Violetinis $MnO4-$ ($Mn+7$) priima elektronus ir virsta rudu $MnO2$ ($Mn+4$). Etenas atiduoda elektronus ir virsta dioliu: $3 C2H4 + 2 KMnO4 + 4 H2O → 3 HOCH2CH2OH + 2 MnO2 + 2 KOH$.', 'Violet $MnO4-$ ($Mn+7$) takes up electrons and becomes brown $MnO2$ ($Mn+4$). Ethene gives up electrons and becomes the diol: $3 C2H4 + 2 KMnO4 + 4 H2O → 3 HOCH2CH2OH + 2 MnO2 + 2 KOH$.')
             )],
             why: t('Šis bandymas rodo oksidaciją: spalva keičiasi, nes keičiasi mangano oksidacijos laipsnis, o diolis lieka tirpale.', 'This test shows an oxidation: the colour change is due to the change of the oxidation state of manganese, and the diol product stays in solution.'),
             src: 'LW6 p1'
           },
           {
             id: 'l6.why.3',
-            q: [{ p: t('Po naftaleno nitrinimo oranžinis mišinys supilamas į 5 ml šalto vandens.', 'After the nitration of naphthalene the orange mixture is poured into 5 ml of cold water.') }],
+            q: [{ p: t('Po naftaleno nitrinimo į atvėsintą oranžinį mišinį įpilama 5 ml šalto vandens.', 'After the nitration of naphthalene, 5 ml of cold water is added to the cooled orange mixture.') }],
             steps: [ch(
               t('Kodėl produktas nusėda ant dugno ir sukietėja?', 'Why does the product settle on the bottom and solidify?'),
               [
@@ -621,7 +621,7 @@
                 ['Distiliuojant etanolis suyra.', 'Ethanol decomposes on distillation.']
               ], 0,
               t('Kas atsitinka su garų sudėtimi, kai mišinys verda pastovia temperatūra?', 'What happens to the composition of the vapour when the mixture boils at a constant temperature?'),
-              t('Azeotropinis mišinys virsta garais ir skysčiu su ta pačia sudėtimi (čia 95,5 % etanolio, 78,15 °C), todėl pakartotinė distiliacija jo nebeskiria. Vandenį reikia surišti chemiškai, pavyzdžiui, $CuSO4$.', 'An azeotropic mixture gives vapour and liquid of the same composition (here 95.5 % ethanol, 78.15 °C), so repeated distillation no longer separates it. Water must be bound chemically, for example by $CuSO4$.')
+              t('Azeotropinio mišinio garai ir skystis turi tą pačią sudėtį (čia 95,5 % etanolio, 78,15 °C), todėl pakartotinė distiliacija jo nebeskiria. Vandenį reikia surišti chemiškai, pavyzdžiui, $CuSO4$.', 'An azeotropic mixture gives vapour and liquid of the same composition (here 95.5 % ethanol, 78.15 °C), so repeated distillation no longer separates it. Water must be bound chemically, for example by $CuSO4$.')
             )],
             why: t('Frakcinė distiliacija remiasi garų ir skysčio sudėties skirtumu. Azeotropas šį skirtumą panaikina, todėl reikalingas cheminis vandens surišimas.', 'Fractional distillation relies on a difference between vapour and liquid composition. The azeotrope removes that difference, so chemical binding of water is needed.'),
             src: 'LW6 p1'
@@ -630,9 +630,9 @@
             id: 'l6.why.5',
             q: [{ p: t('Natris dedamas į etanolį, kuris iš pradžių džiovintas $CuSO4$, o ne į 95 % etanolį.', 'Sodium is added to ethanol that has first been dried with $CuSO4$, not to 95 % ethanol.') }],
             steps: [ch(
-              t('Kodėl pavyzdys turi būti bevandenis?', 'Why must the sample be anhydrous?'),
+              t('Kodėl pavyzdys turi būti kuo sausesnis?', 'Why must the sample be as dry as possible?'),
               [
-                ['Vanduo reaguotų su natriu ir sudarytų $NaOH$, todėl vėlesnis fenolftaleino bandymas būtų klaidingas.', 'Water would react with sodium and form $NaOH$, so the later phenolphthalein test would be misleading.'],
+                ['Vanduo reaguotų su natriu ir sudarytų $NaOH$, todėl vėlesnis fenolftaleino bandymas būtų klaidingas; etanolis turi būti kuo sausesnis.', 'Water would react with sodium and form $NaOH$, so the later phenolphthalein test would be misleading; the ethanol must be as dry as possible.'],
                 ['Vanduo sulėtintų $H2$ degimą.', 'Water would slow the burning of $H2$.'],
                 ['Natris tirpsta tik gryname etanolyje.', 'Sodium dissolves only in pure ethanol.'],
                 ['Vanduo susijungtų su etoksidu į stabilų hidratą.', 'Water would combine with ethoxide to a stable hydrate.']
@@ -713,7 +713,7 @@
           },
           {
             id: 'l6.why.10',
-            q: [{ p: t('Esterinimo mišinys su lašu konc. $H2SO4$ kaitinamas, paskui supilamas į vandenį, ir ant vandens plūduriuoja skaidrus sluoksnis.', 'The esterification mixture with a drop of conc. $H2SO4$ is heated and then poured into water, and a clear layer floats on the water.') }],
+            q: [{ p: t('Esterinimo mišinys su lašu konc. $H2SO4$ kaitinamas, atvėsinamas ir praskiedžiamas vandeniu, ir ant vandens plūduriuoja skaidrus sluoksnis.', 'The esterification mixture with a drop of conc. $H2SO4$ is heated, cooled and diluted with water, and a clear layer floats on the water.') }],
             steps: [ch(
               t('Kokia sieros rūgšties paskirtis ir kodėl sluoksnis viršuje?', 'What is the role of sulfuric acid, and why is the layer on top?'),
               [
@@ -948,7 +948,7 @@
             steps: [{
               prompt: t('Suporuokite oksidatorių ir jo pokytį.', 'Match each oxidant with its change.'), kind: 'match',
               answer: {
-                left: [{ text: t('$K2Cr2O7$ + $H2SO4$', '$K2Cr2O7$ + $H2SO4$') }, { text: t('$KMnO4$ + $H2SO4$', '$KMnO4$ + $H2SO4$') }, { text: t('$KMnO4$ neutraliai ar šarmingai', '$KMnO4$ in neutral or alkaline medium') }],
+                left: [{ text: t('$K2Cr2O7$ + $H2SO4$', '$K2Cr2O7$ + $H2SO4$') }, { text: t('$KMnO4$ + $H2SO4$', '$KMnO4$ + $H2SO4$') }, { text: t('$KMnO4$ neutralioje terpėje', '$KMnO4$ in neutral medium') }],
                 right: [{ text: t('oranžinė spalva pereina į žalią ($Cr3+$)', 'orange changes to green ($Cr3+$)') }, { text: t('violetinė spalva išnyksta ($Mn2+$ bespalvis)', 'violet disappears ($Mn2+$ is colourless)') }, { text: t('rudos $MnO2$ nuosėdos', 'brown $MnO2$ precipitate') }],
                 pairs: [0, 1, 2]
               },
@@ -1013,11 +1013,11 @@
               prompt: t('Suporuokite skystį ir rezultatą be kaitinimo arba su juo.', 'Match each liquid with the result, without or with heating.'), kind: 'match',
               answer: {
                 left: [{ text: t('Etanolis', 'Ethanol') }, { text: t('Glicerolis', 'Glycerol') }, { text: t('Metanalis', 'Methanal') }],
-                right: [{ text: t('nuosėdos nesikeičia net kaitinant', 'the precipitate does not change even on heating') }, { text: t('ištirpsta jau šaltyje, tirpalas tamsiai mėlynas', 'dissolves in the cold, the solution is deep blue') }, { text: t('ištirpsta tik kaitinant ir atsiranda raudona nuosėda', 'reacts only on heating, a red precipitate appears') }],
+                right: [{ text: t('šaltyje nuosėdos nesikeičia, kaitinant tik pajuoduoja ($CuO$)', 'unchanged in the cold, only turns black ($CuO$) on heating') }, { text: t('ištirpsta jau šaltyje, tirpalas tamsiai mėlynas', 'dissolves in the cold, the solution is deep blue') }, { text: t('kaitinant pagelsta, paskui parausta ($Cu2O$), gali atsirasti vario veidrodis', 'turns yellow on heating, then red ($Cu2O$); a copper mirror may form') }],
                 pairs: [0, 1, 2]
               },
               hint: t('Kuris iš trijų reaguoja šaltyje ir kodėl?', 'Which of the three reacts in the cold, and why?'),
-              solution: t('Glicerolis sudaro kompleksą ir šaltyje; metanalis redukuoja $Cu(II)$ tik kaitinant; etanolis nereaguoja.', 'Glycerol forms the complex in the cold; methanal reduces $Cu(II)$ only on heating; ethanol does not react.')
+              solution: t('Glicerolis sudaro kompleksą jau šaltyje; metanalis redukuoja $Cu(II)$ tik kaitinant (geltona, raudona); etanolis nereaguoja, o kaitinamas $Cu(OH)2$ tik skyla į juodą $CuO$.', 'Glycerol forms the complex already in the cold; methanal reduces $Cu(II)$ only on heating (yellow, red); ethanol does not react, and heated $Cu(OH)2$ merely decomposes to black $CuO$.')
             }],
             why: t('Kompleksavimas ir redukcija yra skirtingi procesai, todėl ir sąlygos skirtingos: šaltis ir kaitinimas.', 'Complexation and reduction are different processes, hence the different conditions: cold and heating.'),
             src: 'LW6 p2'
@@ -1067,7 +1067,7 @@
             id: 'l6.products.3',
             q: [{ scheme: { items: [{ smi: 'C=C' }, { arrow: '→', above: f('KMnO4, H2O') }] } }],
             steps: [
-              ch(t('Koks organinis produktas susidaro šaltame neutralioje ar šarmingoje terpėje?', 'Which organic product forms in the cold, in neutral or alkaline medium?'),
+              ch(t('Koks organinis produktas susidaro šaltoje neutralioje ar šarminėje terpėje?', 'Which organic product forms in the cold, in neutral or alkaline medium?'),
                 [['1,2-etandiolis', 'ethane-1,2-diol'], ['etano rūgštis', 'ethanoic acid'], ['metanalis', 'methanal'], ['oksalo rūgštis', 'oxalic acid']], 0,
                 t('Švelnus oksidatorius prie dvigubojo ryšio prijungia dvi $OH$ grupes ir nenutraukia anglies grandinės.', 'A mild oxidant adds two $OH$ groups across the double bond without breaking the carbon chain.'),
                 t('Švelniai oksiduojant jungiasi dvi $OH$ grupės: $HOCH2CH2OH$. Rūgštys ir aldehidai atsirastų nutraukus $C=C$ (stipri oksidacija).', 'Mild oxidation adds two $OH$ groups: $HOCH2CH2OH$. Acids and aldehydes would arise from cleavage of $C=C$ (harsh oxidation).'))
@@ -1083,7 +1083,7 @@
               ch(t('Kuris mononitrojunginys susidaro daugiausia?', 'Which mononitro compound forms mainly?'),
                 [['1-nitronaftalenas', '1-nitronaphthalene'], ['2-nitronaftalenas', '2-nitronaphthalene'], ['1,5-dinitronaftalenas', '1,5-dinitronaphthalene'], ['1-naftolis', '1-naphthol']], 0,
                 t('Kurioje padėtyje elektrofilas gauna stabilesnį tarpinį katijoną?', 'In which position does the electrophile give the more stable intermediate cation?'),
-                t('Atakuojant padėtį 1 katijonas turi daugiau rezonansinių formulių su nepažeistu benzeno žiedu, todėl α produktas vyrauja. Dinitrojungimui reikia griežtesnių sąlygų.', 'Attack at position 1 gives a cation with more resonance structures that keep an intact benzene ring, so the α product dominates. Dinitration needs harsher conditions.')),
+                t('Atakuojant padėtį 1 katijonas turi daugiau rezonansinių formulių su nepažeistu benzeno žiedu, todėl α produktas vyrauja. Dinitravimui reikia griežtesnių sąlygų.', 'Attack at position 1 gives a cation with more resonance structures that keep an intact benzene ring, so the α product dominates. Dinitration needs harsher conditions.')),
               ch(t('Koks mechanizmas?', 'Which mechanism?'),
                 [['SEAr', 'SEAr'], ['AE', 'AE'], ['SN1', 'SN1'], ['AN', 'AN']], 0,
                 t('Aromatinis žiedas, elektrofilas $NO2+$, išlaikomas aromatiškumas.', 'An aromatic ring, the electrophile $NO2+$, aromaticity is kept.'),
@@ -1113,7 +1113,7 @@
               ch(t('Kokia druska susidaro?', 'Which salt forms?'),
                 [['natrio etoksidas', 'sodium ethoxide'], ['natrio acetatas', 'sodium acetate'], ['natrio karbonatas', 'sodium carbonate'], ['etilnatris', 'ethylsodium']], 0,
                 t('Koks atomas išsiskiria kaip $H2$: kuris vandenilis rūgštus?', 'Which atom is released as $H2$: which hydrogen is acidic?'),
-                t('Rūgštus yra $O-H$ vandenilis, todėl natris jį pakeičia ir susidaro $CH3CH2O^-Na^+$. Acetatas atsirastų tik oksiduotas alkoholis.', 'The $O-H$ hydrogen is the acidic one, so sodium replaces it to give $CH3CH2O^-Na^+$. An acetate would require an oxidised alcohol.'))
+                t('Rūgštus yra $O-H$ vandenilis, todėl natris jį pakeičia ir susidaro $CH3CH2O^-Na^+$. Acetatas atsirastų tik oksiduojant alkoholį.', 'The $O-H$ hydrogen is the acidic one, so sodium replaces it to give $CH3CH2O^-Na^+$. An acetate would require an oxidised alcohol.'))
             ],
             why: t('Metalas pakeičia rūgštaus $O-H$ vandenilį ir išskiria $H2$; $C-H$ vandeniliai tam per silpnai rūgštūs.', 'The metal replaces the acidic $O-H$ hydrogen and releases $H2$; the $C-H$ hydrogens are far too weakly acidic.'),
             src: 'LW6 p2',
@@ -1181,7 +1181,7 @@
             const m = ctx.int(20, 90) / 10;                      // g of isopentanol
             const theo = m / 88.15 * 130.18;                     // 1 : 1
             const obt = Math.round(theo * ctx.int(35, 90)) / 100; // g obtained
-            const y = obt / theo * 100;
+            const y = obt / Number(theo.toFixed(2)) * 100;
             return {
               q: [{ p: t('Izopentilacetatas ($M$ = 130,18 g/mol) gaunamas iš izopentanolio ($M$ = 88,15 g/mol); abiejų reagentų kiekiai lygūs 1 : 1. Naudota ' + lt(m, 1) + ' g izopentanolio (rūgšties pertekliuje), po išskyrimo gauta ' + lt(obt, 2) + ' g esterio.',
                 'Isopentyl acetate ($M$ = 130.18 g/mol) is made from isopentanol ($M$ = 88.15 g/mol), 1 : 1. ' + fmt(m, 1) + ' g of isopentanol was used (acid in excess) and ' + fmt(obt, 2) + ' g of ester was obtained after work-up.') }],
@@ -1203,7 +1203,7 @@
             const phen = 2 * m / 148.12 * 94.11;                 // g of phenol needed (2 equivalents)
             const theo = m / 148.12 * 318.32;                    // phenolphthalein 1 : 1
             const obt = Math.round(theo * ctx.int(40, 85)) / 100;
-            const y = obt / theo * 100;
+            const y = obt / Number(theo.toFixed(2)) * 100;
             return {
               q: [{ p: t('Fenolftaleinas ($M$ = 318,32 g/mol) gaunamas iš ftalio anhidrido ($M$ = 148,12 g/mol) ir fenolio ($M$ = 94,11 g/mol). Imta ' + lt(m, 1) + ' g ftalio anhidrido, fenolio tiek, kad jo būtų dvigubai daugiau molių; gauta ' + lt(obt, 2) + ' g fenolftaleino.',
                 'Phenolphthalein ($M$ = 318.32 g/mol) is made from phthalic anhydride ($M$ = 148.12 g/mol) and phenol ($M$ = 94.11 g/mol). ' + fmt(m, 1) + ' g of phthalic anhydride was taken, with phenol in twice the number of moles; ' + fmt(obt, 2) + ' g of phenolphthalein was obtained.') }],
@@ -1324,11 +1324,11 @@
                 ['Oro kondensatorius: garai vamzdelyje kondensuojasi ir grįžta į mišinį.', 'An air condenser: vapours condense in the tube and return to the mixture.'],
                 ['Dujų vamzdelis: dujos nuvedamos į kitą tirpalą.', 'A gas tube: the gas is led into another solution.'],
                 ['Lašinamoji piltuvė: reagentas pilamas lašais.', 'A dropping funnel: reagent is added by drops.'],
-                ['Liebigo šaldytuvas: produktas distiliuojamas.', 'A Liebig condenser: the product is distilled.']
+                ['Lybigo kondensatorius: produktas distiliuojamas.', 'A Liebig condenser: the product is distilled.']
               ], 0,
               t('Ar vamzdelis sujungtas su kitu indu, ar lieka atviras viršuje?', 'Is the tube connected to another vessel, or is it open at the top?'),
-              t('Vamzdelis atviras viršuje, o ilgas ir šaltas oro srautas kondensuoja garus, todėl mišinys nesugeria. Dujų vamzdelis būtų sulenktas ir nuleistas į kitą indą.', 'The tube is open at the top and the long cool surface condenses vapours so that nothing is lost. A gas tube would be bent and lowered into another vessel.'))],
-            why: t('Kaitinant lakias medžiagas atvirame indelyje jos garuotų. Oro kondensatorius yra paprasčiausias refliukso įrenginys.', 'On heating volatile substances in an open vessel they would evaporate. An air condenser is the simplest reflux device.'),
+              t('Vamzdelis atviras viršuje, o ilgas ir šaltas oro srautas kondensuoja garus, todėl mišinys neišgaruoja. Dujų vamzdelis būtų sulenktas ir nuleistas į kitą indą.', 'The tube is open at the top and the long cool surface condenses vapours so that nothing is lost. A gas tube would be bent and lowered into another vessel.'))],
+            why: t('Kaitinant lakias medžiagas atvirame indelyje jos garuotų. Oro kondensatorius yra paprasčiausias grįžtamojo kondensatoriaus pakaitalas.', 'On heating volatile substances in an open vessel they would evaporate. An air condenser is the simplest reflux device.'),
             src: 'LW6 p1'
           },
           {
@@ -1342,7 +1342,7 @@
                 ['Išlyginti slėgį, kad kamštis neišlėktų.', 'To equalise the pressure so that the stopper does not pop out.']
               ], 0,
               t('Kur patenka dujos po to, kai pasiekia vamzdelio galą?', 'Where does the gas go after it reaches the end of the tube?'),
-              t('Dujų vamzdelis veda etenas į bromo vandenį ar permanganatą, kad dujos reaguotų su reagentu.', 'The gas tube leads the ethene into bromine water or permanganate so that it reacts with the reagent.'))],
+              t('Dujų vamzdelis veda eteną į bromo vandenį ar permanganatą, kad dujos reaguotų su reagentu.', 'The gas tube leads the ethene into bromine water or permanganate so that it reacts with the reagent.'))],
             why: t('Gaunamas dujas sunku laikyti, todėl jos tiesiai nuvedamos į reagentą. Vamzdelio galas turi būti po skysčio paviršiumi.', 'Gases are hard to store, so they are led directly into the reagent. The end of the tube must be below the liquid surface.'),
             src: 'LW6 p1'
           },
@@ -1378,7 +1378,7 @@
           },
           {
             id: 'l6.apparatus.5',
-            q: [{ p: t('Šifo bazė neiškrisdavo, kol pasukinėjote vidinę mėgintuvėlio sienelę plona stikline lazdele.', 'The Schiff base would not crystallise until you rubbed the inner wall of the tube with a thin glass rod.') }],
+            q: [{ p: t('Šifo bazė neiškrito, kol nepatrynėte vidinės mėgintuvėlio sienelės stikline lazdele.', 'The Schiff base did not crystallise until you rubbed the inner wall of the test tube with a glass rod.') }],
             steps: [ch(t('Kodėl taip daroma?', 'Why is this done?'),
               [
                 ['Brūkštelėjimai sukuria kristalizacijos centrus ir kristalai pradeda augti.', 'Scratches create nucleation sites and crystals start to grow.'],
@@ -1393,17 +1393,17 @@
           },
           {
             id: 'l6.apparatus.6',
-            q: [{ p: t('Tamsiame kambaryje fluoresceino tirpalą apšviečiate įtaisu, kuris skleidžia nematomą trumpųjų bangų spinduliuotę.', 'In a dark room you illuminate the fluorescein solution with a device that emits invisible short-wavelength radiation.') }],
+            q: [{ p: t('Tamsiame kambaryje fluoresceino tirpalą apšviečiate įtaisu, kuris skleidžia nematomą spinduliuotę, kurios bangos ilgis trumpesnis už violetinės šviesos ir kuria žadinama fluorescencija.', 'In a dark room you illuminate the fluorescein solution with a device that emits invisible radiation of shorter wavelength than violet light, used to excite fluorescence.') }],
             steps: [ch(t('Koks tai įtaisas?', 'Which device is this?'),
               [
                 ['UV lempa', 'A UV lamp'],
                 ['Infraraudonųjų spindulių šildytuvas', 'An infrared heater'],
                 ['Magnetinė maišyklė', 'A magnetic stirrer'],
-                ['Rentgeno aparatas', 'An X-ray machine']
+                ['Mikrobangų krosnelė', 'A microwave oven']
               ], 0,
               t('Fluorescencijai žadinti naudojama trumpesnė už matomą šviesą spinduliuotė.', 'Fluorescence is excited by radiation of shorter wavelength than visible light.'),
-              t('Fluoresceinas sugeria UV šviesą ir skleidžia žalią matomą šviesą. Todėl naudojama UV lempa; ji nėra tas pats, kas šildytuvas ar rentgeno aparatas.', 'Fluorescein absorbs UV light and emits green visible light. That is why a UV lamp is used; it is not the same as a heater or an X-ray machine.'))],
-            why: t('Fluorescencijos žadinimui reikia sugeriamos šviesos, kurios energija didesnė už skleidžiamos.', 'Exciting fluorescence needs absorbed light of higher energy than the light that is emitted.'),
+              t('Fluoresceinas sugeria UV šviesą ir skleidžia žalią matomą šviesą. Todėl naudojama UV lempa, o ne šildytuvas ar mikrobangų krosnelė.', 'Fluorescein absorbs UV light and emits green visible light. so a UV lamp is used, not a heater or a microwave oven.'))],
+            why: t('Fluorescencijai žadinti reikia šviesos, kurios fotonų energija didesnė už skleidžiamos šviesos fotonų energiją.', 'Exciting fluorescence needs light whose photons carry more energy than the emitted ones.'),
             src: 'LW6 p4'
           },
           {
@@ -1445,13 +1445,13 @@
         bank: [
           {
             id: 'l6.defence.1',
-            q: [{ p: t('Gynime paklausta: kurie iš trijų dujų – etanas, etenas, etinas – nuspalvina bromo vandenį?', 'At the defence you are asked: which of three gases, ethane, ethene, ethyne, decolourise bromine water?') }],
+            q: [{ p: t('Gynime paklausta: kurie iš trijų dujų – etanas, etenas, etinas – pablukina bromo vandenį?', 'At the defence you are asked: which of three gases, ethane, ethene, ethyne, decolourise bromine water?') }],
             steps: [{
               prompt: t('Pažymėkite visas dujas, kurios pakeičia bromo vandens spalvą.', 'Select every gas that decolourises bromine water.'), kind: 'multi',
               options: [{ text: t('etanas', 'ethane') }, { text: t('etenas', 'ethene') }, { text: t('etinas', 'ethyne') }],
               answer: [1, 2],
               hint: t('Kuriose molekulėse yra daugialypių ryšių?', 'Which molecules contain multiple bonds?'),
-              solution: t('Bromas prisijungia prie dvigubojo ir trigubojo ryšio. Etanas turi tik vienguba ryšį ir spalvos nekeičia.', 'Bromine adds to double and triple bonds. Ethane has only single bonds and does not change the colour.')
+              solution: t('Bromas prisijungia prie dvigubojo ir trigubojo ryšio. Etanas turi tik viengubuosius ryšius ir spalvos nekeičia.', 'Bromine adds to double and triple bonds. Ethane has only single bonds and does not change the colour.')
             }],
             why: t('Bandymas rodo daugialypį ryšį, bet neskiria alkeno nuo alkino.', 'The test shows a multiple bond but does not tell an alkene from an alkyne.'),
             src: 'LW6 p1'
@@ -1480,7 +1480,7 @@
             steps: [
               ch(t('Kas yra azeotropas?', 'What is an azeotrope?'),
                 [['mišinys, kurio garai ir skystis turi tą pačią sudėtį, todėl jis distiliuojasi nekeisdamas sudėties', 'a mixture whose vapour and liquid have the same composition, so it distils without changing'],
-                 ['mišinys, kuris verda žemesnėje temperatūroje nei abu komponentai ir lengvai skiriasi', 'a mixture that boils lower than both components and separates easily'],
+                 ['mišinys, kurio komponentų virimo temperatūros skiriasi daugiau nei 80 °C', 'a mixture whose components boil more than 80 °C apart'],
                  ['mišinys, kuris tirpsta kristalizuojantis', 'a mixture that dissolves on crystallising'],
                  ['junginys, susidarantis iš etanolio ir vandens', 'a compound formed from ethanol and water']], 0,
                 t('Ką distiliavimas galėtų atskirti, jei sudėtis kinta?', 'What could distillation separate if the composition changes?'),

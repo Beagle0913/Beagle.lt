@@ -99,13 +99,13 @@
             src: 'LW1 p2'
           },
           {
-            rule: t('Pabaigus vakuuminį filtravimą, pirmiausia atjungiama žarna nuo siurblio, ir tik tada uždaromas vanduo. Priešingai nutiktų, kad vanduo būtų įsiurbtas atgal į Bunzeno kolbą.',
+            rule: t('Pabaigus vakuuminį filtravimą, pirmiausia atjungiama žarna nuo siurblio, ir tik tada uždaromas vanduo. Priešingu atveju vanduo būtų įsiurbtas atgal į Bunzeno kolbą.',
               'After vacuum filtration, first disconnect the hose from the aspirator and only then shut the water. In the opposite order water would be drawn back into the Bunsen flask.'),
             src: 'LW1 p4'
           },
           {
             p: t('Filtratas renkamas į švarią Erlenmejerio kolbą ir saugomas atidžiai, nes jame yra produktas.',
-              'The filtrate is collected in a clean Erlenmeyer flask and guarded carefully, since the product is in it.'),
+              'The filtrate is collected in a clean Erlenmeyer flask and kept carefully, since the product is in it.'),
             src: 'LW1 p5'
           },
           {
@@ -309,7 +309,7 @@
               t('apskaičiuoti išeigą', 'calculate the yield'),
               t('nustatyti lydymosi temperatūrą', 'determine the melting point'),
               t('aparatūrą išplauti ir grąžinti į vietą', 'wash the apparatus and put it back')],
-            t('Kodėl svėrimas negali būti pirma džiovinimo?', 'Why can weighing not come before drying?'),
+            t('Kodėl svėrimas negali būti prieš džiovinimą?', 'Why can the weighing not come before the drying?'),
             t('Drėgni kristalai sveria daugiau ir lydosi žemiau, todėl pirma džiovinama. Svoris reikalingas išeigai, o lydymosi temperatūra parodo, ar produktas švarus. Plovimas paliekamas pabaigai.', 'Wet crystals weigh more and melt lower, so they are dried first. The mass is needed for the yield, and the melting point shows whether the product is clean. Washing is left to the end.'),
             t('Rezultatai skaičiuojami tik iš sauso produkto, kitaip svoris ir lydymosi temperatūra klaidina.', 'Results are taken only from the dry product, otherwise the mass and the melting point mislead.'), 'LW1 p5')
         ]
@@ -336,7 +336,7 @@
             t('Kodėl filtruojama karštai, o ne atvėsus?', 'Why is it filtered hot rather than cold?'),
             [t('Atvėsus produktas išsiskirtų ir liktų ant filtro kartu su priemaišomis.', 'On cooling the product would crystallise and stay on the filter together with the impurities.'),
               t('Karštas tirpalas greičiau tirpdo filtro popierių.', 'A hot solution dissolves the filter paper faster.'),
-              t('Šaltas tirpalas gali praeiti pro filtrą pernelyg lėtai, bet produktas nepasikeistų.', 'A cold solution may pass the filter too slowly, but the product would stay the same.'),
+              t('Šaltas tirpalas pro popierių nepraeitų, nes jis tampa klampus.', 'A cold solution would not pass through the paper because it becomes viscous.'),
               t('Karštame tirpale priemaišos tampa tirpios.', 'Impurities become soluble in the hot solution.')],
             t('Kur liktų produktas, jei tirpalas atvėstų pirma filtravimo?', 'Where would the product end up if the solution cooled before filtration?'),
             t('Kol tirpalas karštas, produktas ištirpęs ir praeina pro filtrą, o netirpios dalelės ir anglis lieka. Atvėsus produktas kristalizuotųsi ant filtro ir būtų prarastas.', 'While the solution is hot the product is dissolved and passes through, while insoluble particles and charcoal stay behind. If it cooled, the product would crystallise on the filter and be lost.'),
@@ -428,7 +428,7 @@
               t('Naudoti, bet kaitinti iki virimo.', 'Use it, but heat to boiling.'),
               t('Naudoti tik atvėsintą iki 0 °C.', 'Use it, but only cooled to 0 °C.')],
             t('Kiek medžiagos išsiskirtų atvėsus, jei ji ir šaltame tirpiklyje ištirpsta?', 'How much substance would separate on cooling if it already dissolves in the cold solvent?'),
-            t('Tirpiklis, kuris šaltą medžiagą ištirpina, ir vėsinamas didžiąją dalį produkto išlaiko ištirpusį. Greitas ištirpimas tai blogas ženklas, o ne geras.', 'A solvent that dissolves the substance cold also keeps most of the product dissolved when cooled. Quick dissolving is a bad sign, not a good one.'),
+            t('Tirpiklis, kuris šaltą medžiagą ištirpina, ir vėsinamas didžiąją dalį produkto išlaiko ištirpusį. Greitas ištirpimas yra blogas ženklas, o ne geras.', 'A solvent that dissolves the substance cold also keeps most of the product dissolved when cooled. Quick dissolving is a bad sign, not a good one.'),
             t('Kristalinimui reikia pastebimo tirpumo pokyčio su temperatūra.', 'Recrystallisation needs a clear change of solubility with temperature.'), 'LW1 p1'),
           mc('l1.observe.3',
             t('Po karšto filtravimo filtratas šviesus, bet jame plaukioja juodos dalelės.', 'After hot filtration the filtrate is pale, but black particles float in it.'),
@@ -471,7 +471,7 @@
             t('Persotintas tirpalas gali ilgai užsilikti, jei trūksta užuomazgų. Įbrėžimai ar kristaliukas jas sukuria. Jei nepadeda, tirpiklio gali būti per daug ir jį reikia dalį išgarinti.', 'A supersaturated solution can persist for a long time if nuclei are missing. Scratches or a seed crystal provide them. If that does not help, there may be too much solvent and some has to be boiled off.'),
             t('Tai dažniausia kristalinimo problema, ir ji sprendžiama be naujo tirpalo ruošimo.', 'This is the most common recrystallisation problem, and it is solved without making up the solution again.'), 'LW1 p3'),
           mc('l1.observe.7',
-            t('Išdžiovinti kristalai šildymo aparate pradeda skystėti ties 108 °C ir visiškai išsilydo ties 118 °C. Gryna benzenkarboksirūgštis lydosi ties 122 °C.', 'The dried crystals begin to liquefy at 108 °C in the apparatus and are completely melted at 118 °C. Pure benzoic acid melts at 122 °C.'),
+            t('Kristalai po trumpo džiovinimo šildymo aparate pradeda skystėti ties 108 °C ir visiškai išsilydo ties 118 °C. Gryna benzenkarboksirūgštis lydosi ties 122 °C.', 'After only brief drying, the crystals begin to liquefy at 108 °C in the apparatus and are completely melted at 118 °C. Pure benzoic acid melts at 122 °C.'),
             t('Koks yra tikriausias paaiškinimas?', 'What is the most likely explanation?'),
             [t('Kristalai dar neišdžiūvę arba juose liko priemaišų.', 'The crystals are not yet dry or still hold impurities.'),
               t('Kristalai tapo švaresni nei literatūrinė medžiaga.', 'The crystals became purer than the literature material.'),
@@ -502,7 +502,7 @@
           mc('l1.proof.1',
             t('Išdžiovintų kristalų lydymosi intervalas yra 121,5–122,5 °C.', 'The dried crystals melt over 121.5 to 122.5 °C.'),
             t('Kokia išvada pagrįsta?', 'Which conclusion is justified?'),
-            [t('Mėginys artimas gryno junginio, nes intervalas siauras ir artimas literatūrinei vertei.', 'The sample is close to pure, because the range is narrow and near the literature value.'),
+            [t('Mėginys beveik grynas: intervalas siauras ir artimas literatūrinei vertei.', 'The sample is nearly pure: the range is narrow and close to the literature value.'),
               t('Mėginys yra tikrai tik benzenkarboksirūgštis, nes lydymosi temperatūra tokia pati.', 'The sample is certainly benzoic acid, because the melting point is the same.'),
               t('Mėginyje yra daug priemaišų, nes intervalas ne vienas skaičius.', 'The sample contains many impurities, because the range is not a single number.'),
               t('Kristalai dar drėgni, nes intervalas nepasislinko žemyn.', 'The crystals are still damp, because the range has not moved down.')],
@@ -512,7 +512,7 @@
           mc('l1.proof.2',
             t('Nežinomas baltas kietas mėginys lydosi 121–122 °C. Sumaišius su tokiu pat kiekiu benzenkarboksirūgšties, mišinys lydosi 121–122 °C.', 'An unknown white solid melts at 121 to 122 °C. Mixed with an equal amount of benzoic acid, the mixture also melts at 121 to 122 °C.'),
             t('Ką tai įrodo?', 'What does this prove?'),
-            [t('Mėginys yra labai tikėtina ta pati medžiaga kaip benzenkarboksirūgštis.', 'The sample is very probably the same substance as benzoic acid.'),
+            [t('Labai tikėtina, kad mėginys yra ta pati medžiaga kaip benzenkarboksirūgštis.', 'It is very likely the same substance as benzoic acid.'),
               t('Mėginys yra skirtingas junginys, nes lydymosi temperatūra nepasikeitė.', 'The sample is a different compound, because the melting point did not change.'),
               t('Mėginys yra drėgnas, nes lydymosi temperatūra nepasikeitė.', 'The sample is damp, because the melting point did not change.'),
               t('Nieko, nes mišinio lydymosi temperatūra neturi prasmės.', 'Nothing, because the mixture melting point has no meaning.')],
@@ -527,7 +527,7 @@
               t('Mėginys yra gryna benzenkarboksirūgštis, o termometras suklydo.', 'The sample is pure benzoic acid and the thermometer erred.'),
               t('Nieko, nes tokie mišiniai visada lydosi žemiau.', 'Nothing, because such mixtures always melt lower.')],
             t('Kas nutinka mišinio lydymosi temperatūrai, kai dvi medžiagos yra skirtingos?', 'What happens to the mixture melting point when the two substances are different?'),
-            t('Mišinio lydymosi temperatūra smarkiai nukrito ir intervalas išsiplėtė. Taip elgiasi skirtingų medžiagų mišinys, todėl nežinomasis kitas junginys, tik panašios lydymosi temperatūros.', 'The mixture melting point dropped markedly and the range widened. A mixture of different substances behaves like this, so the unknown is another compound with a similar melting point.'),
+            t('Mišinio lydymosi temperatūra smarkiai nukrito ir intervalas išsiplėtė. Taip elgiasi skirtingų medžiagų mišinys, todėl nežinomasis yra kitas junginys, tik panašios lydymosi temperatūros.', 'The mixture melting point dropped markedly and the range widened. A mixture of different substances behaves like this, so the unknown is another compound with a similar melting point.'),
             t('Depresija rodo skirtingumą, nepasikeitimas – tapatumą.', 'A depression shows difference, no change shows identity.'), 'LW1 p4'),
           mc('l1.proof.4',
             t('Pavertus nufiltruotų kristalų masę į išeigą gauta 108 %.', 'Converting the mass of filtered crystals into a yield gave 108 %.'),
@@ -548,7 +548,7 @@
               t('Produktas sureagavo su vandeniu.', 'The product reacted with water.')],
             t('Ar šaltas tirpiklis visiškai netirpina produkto?', 'Does cold solvent dissolve none of the product?'),
             t('Medžiaga šaltame tirpiklyje turi nors ir mažą tirpumą. Tirpale likusi dalis išgarinus atsiranda kristalais. Taip paaiškinama, kodėl išeiga mažesnė už 100 %.', 'The substance has a small solubility in the cold solvent. The part left in solution reappears as crystals when evaporated. This explains why the yield is below 100 %.'),
-            t('Nuostolis kristalinant neišvengiamas ir mažinamas ne tuo, kad vengiama kristalinti, o minimaliu tirpiklio kiekiu.', 'The loss in recrystallisation is unavoidable, and it is reduced by a minimum of solvent, not by avoiding the method.'), 'LW1 p1'),
+            t('Nuostolis kristalinant neišvengiamas ir mažinamas minimaliu tirpiklio kiekiu ir šaltu plovimu.', 'The loss in recrystallisation is unavoidable, and it is reduced by a minimum of solvent, not by avoiding the method.'), 'LW1 p1'),
           mc('l1.proof.6',
             t('Dviejų skirtingų junginių, A ir B, lydymosi temperatūros abi yra 122 °C.', 'Two different compounds, A and B, both have a melting point of 122 °C.'),
             t('Kokia išvada apie vieną mėginį pagrįsta, jei jo lydymosi temperatūra yra 122 °C?', 'Which conclusion about a sample with a melting point of 122 °C is justified?'),
@@ -664,8 +664,8 @@
                 prompt: t('Kiek gramų (daugiausia) kristalų galima gauti atvėsinus?', 'What is the greatest mass of crystals (in g) that can be obtained on cooling?'),
                 kind: 'number', answer: { value: rec, tol: 0.03 },
                 hint: t('Šaltame tirpiklyje to paties tūrio lieka ištirpusios medžiagos dalis.', 'A part of the substance stays dissolved in that same volume of cold solvent.'),
-                solution: t('Šaltame tirpiklyje lieka ' + num(v, 1, 'lt') + ' × ' + num(sc, 1, 'lt') + ' : 100 = ' + num(loss, 2, 'lt') + ' g, todėl kristalų gaunama ' + num(m, 1, 'lt') + ' − ' + num(loss, 2, 'lt') + ' = ' + num(rec, 2, 'lt') + ' g.',
-                  'In the cold solvent ' + num(v, 1, 'en') + ' × ' + num(sc, 1, 'en') + ' : 100 = ' + num(loss, 2, 'en') + ' g stays dissolved, so ' + num(m, 1, 'en') + ' − ' + num(loss, 2, 'en') + ' = ' + num(rec, 2, 'en') + ' g of crystals is obtained.')
+                solution: t('Šaltame tirpiklyje lieka ' + num(v, 1, 'lt') + ' × ' + num(sc, 1, 'lt') + ' : 100 = ' + num(loss, 2, 'lt') + ' g, todėl kristalų gaunama ' + num(m, 1, 'lt') + ' − ' + num(loss, 2, 'lt') + ' = ' + num(m - Number(loss.toFixed(2)), 2, 'lt') + ' g.',
+                  'In the cold solvent ' + num(v, 1, 'en') + ' × ' + num(sc, 1, 'en') + ' : 100 = ' + num(loss, 2, 'en') + ' g stays dissolved, so ' + num(m, 1, 'en') + ' − ' + num(loss, 2, 'en') + ' = ' + num(m - Number(loss.toFixed(2)), 2, 'en') + ' g of crystals is obtained.')
               },
               {
                 prompt: t('Kas atsitiks su atgauta mase, jei tirpiklio imsite dvigubai daugiau?', 'What happens to the recovered mass if twice as much solvent is used?'),
@@ -719,7 +719,7 @@
             opts = [t('Nežinomasis greičiausiai yra benzenkarboksirūgštis.', 'The unknown is most likely benzoic acid.'),
               t('Nežinomasis yra kitas junginys, tik su ta pačia lydymosi temperatūra.', 'The unknown is another compound that has the same melting point.'),
               t('Mišinys nešvarus, todėl nieko negalima teigti.', 'The mixture is impure, so nothing can be said.')];
-            why1 = t('Be nuolydžio mišinys elgiasi kaip viena medžiaga, vadinasi, abu mėginiai tapatūs.', 'With no depression the mixture behaves as a single substance, so the two samples are identical.');
+            why1 = t('Jei mišinio lydymosi temperatūra nesumažėja, mišinys elgiasi kaip viena medžiaga, vadinasi, abu mėginiai tapatūs.', 'If the melting point of the mixture does not drop, the mixture behaves like one substance, so the two samples are identical.');
           } else {
             lo = ctx.int(1000, 1120) / 10; hi = lo + ctx.int(50, 90) / 10;
             q = t('Nežinomas junginys lydosi apie 122 °C, taip pat kaip benzenkarboksirūgštis. Sumaišius su benzenkarboksirūgštimi, mišinys lydosi nuo ' + num(lo, 1, 'lt') + ' iki ' + num(hi, 1, 'lt') + ' °C.',
@@ -748,7 +748,7 @@
                 solution: t('Plotis = ' + num(hi, 1, 'lt') + ' − ' + num(lo, 1, 'lt') + ' = ' + num(width, 1, 'lt') + ' °C.', 'Width = ' + num(hi, 1, 'en') + ' − ' + num(lo, 1, 'en') + ' = ' + num(width, 1, 'en') + ' °C.')
               }
             ],
-            why: t('Grynumą rodo siauras intervalas prie literatūrinės vertės, o tapatybę – mišrioji lydymosi temperatūra: be pokyčio medžiagos tapačios, su nuolydžiu – skirtingos.',
+            why: t('Grynumą rodo siauras intervalas prie literatūrinės vertės, o tapatybę – mišrioji lydymosi temperatūra: be pokyčio medžiagos tapačios, su sumažėjimu – skirtingos.',
               'Purity is shown by a narrow range near the literature value and identity by the mixed melting point: no change means identical substances, a depression means different ones.'),
             src: 'LW1 p4'
           };
@@ -790,7 +790,7 @@
             t('Siauras kaklelis riboja tirpiklio garavimą ir leidžia kolbą sukioti, o plokščias dugnas laiko ją stabiliai. Tokia kolba yra Erlenmejerio.', 'A narrow neck limits evaporation of the solvent and lets the flask be swirled, while the flat bottom keeps it stable. Such a flask is the Erlenmeyer.'),
             t('Kolba be šoninio vamzdelio ir plokščiu dugnu: Erlenmejerio.', 'A flask with a flat bottom and no side arm: Erlenmeyer.'), 'LW1 p5'),
           mc('l1.app.5',
-            t('Plati, žema stiklinė dubenėlio formos taurė, kurioje dedamas ledo ir vandens mišinys, į jį panardinama kolba su tirpalu.', 'A wide, shallow, dish-shaped glass vessel that holds an ice and water mixture, into which the flask with the solution is placed.'),
+            t('Plati, žema stiklinė dubenėlio formos taurė, į kurią pilamas ledo ir vandens mišinys, į jį panardinama kolba su tirpalu.', 'A wide, shallow, dish-shaped glass vessel that holds an ice and water mixture, into which the flask with the solution is placed.'),
             t('Kas tai?', 'What is it?'),
             [t('Kristalizatorius', 'Crystalliser'), t('Eksikatorius', 'Desiccator'), t('Džiovinimo spinta', 'Drying cabinet'), t('Skiriamasis piltuvas', 'Separatory funnel')],
             t('Kur atvėsinamas filtratas, kad kristalai išsiskirtų?', 'Where is the filtrate cooled so that the crystals separate?'),
@@ -851,7 +851,7 @@
             t('Teorija nusako kryptį, bandymas nusprendžia.', 'Theory gives the direction, the experiment decides.'), 'LW1 p1'),
           mc('l1.defence.3',
             t('Studentas pasakoja: „Medžiaga ištirpo šaltame vandenyje, bet aš vis tiek atvėsinau tirpalą ir laukiau kristalų“.', 'A student says: "The substance dissolved in cold water, but I cooled the solution anyway and waited for crystals."'),
-            t('Kas čia nesuprasta?', 'What has been misunderstood?'),
+            t('Ko studentas nesuprato?', 'What has been misunderstood?'),
             [t('Jei medžiaga tirpsta šaltame tirpiklyje, jis netinka, ir atvėsinus kristalų beveik nebus.', 'If the substance dissolves in the cold solvent, the solvent is unsuitable and few crystals will form on cooling.'),
               t('Reikėjo vėsinti ne ledu, o šiluma.', 'It should have been cooled with heat, not ice.'),
               t('Reikėjo pridėti daugiau medžiagos.', 'More substance should have been added.'),
@@ -898,11 +898,11 @@
               t('Sutapimas visada įrodo tapatumą.', 'A coincidence always proves identity.')],
             t('Ką daro skirtingų medžiagų priemaiša lydymosi temperatūrai?', 'What does a foreign substance do to the melting point?'),
             t('Dvi skirtingos medžiagos viena kitai yra priemaiša, todėl mišinys lydosi žemiau. Tapatūs mėginiai sumaišyti neturi kitokio elgesio.', 'Two different substances are impurities to each other, so the mixture melts lower. Identical samples mixed together behave no differently.'),
-            t('Mišinys keičia sutapimo patikimumą iš spėjimo į įrodymą.', 'The mixture turns the match from a guess into a proof.'), 'LW1 p4'),
+            t('Mišinys sutapimą paverčia stipriu, bet ne absoliučiu įrodymu.', 'The mixture turns a coincidence into strong, though not absolute, evidence.'), 'LW1 p4'),
           mc('l1.defence.8',
             t('Dėstytojas klausia, ką daryti, kai tirpalas atvėsta, bet kristalų nėra.', 'The examiner asks what to do when the solution has cooled but no crystals appear.'),
             t('Kokie veiksmai pagrįsti?', 'Which actions are sensible?'),
-            [t('Įtrinti stikliniu lazdele ar įmesti kristaliuką; jei nepadeda – dalį tirpiklio nugarinti.', 'Scratch with a glass rod or add a seed crystal; if that does not help, boil off some of the solvent.'),
+            [t('Įtrinti stikline lazdele ar įmesti kristaliuką; jei nepadeda – dalį tirpiklio nugarinti.', 'Scratch with a glass rod or add a seed crystal; if that does not help, boil off some of the solvent.'),
               t('Pridėti daugiau tirpiklio.', 'Add more solvent.'),
               t('Pridėti daugiau aktyvintos anglies.', 'Add more activated charcoal.'),
               t('Išpilti tirpalą ir pradėti nuo pradžių.', 'Pour the solution away and start from the beginning.')],

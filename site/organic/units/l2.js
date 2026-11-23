@@ -31,8 +31,8 @@
         blocks: [
           { h: t('Ką šis darbas parodo', 'What this lab shows') },
           {
-            p: t('Laboratorijose acetonas plaunant indus sunaudojamas dideliais kiekiais, todėl lieka daug jo atliekų. Jose yra kitų organinių medžiagų ir vandens, bet jei skystį distiliuosime per deflegmatorių, gausime pakankamai gryną acetoną, tinkamą indams plauti iš naujo. Darbe išmokstama atskirti komponentus pagal virimo temperatūrą ir nustatyti gauto skysčio grynumą.',
-              'Laboratories use acetone in large amounts to rinse glassware, so a lot of acetone waste builds up. It contains other organic compounds and water, but distilling it through a dephlegmator gives acetone pure enough to rinse glassware again. The lab teaches how to separate components by boiling point and how to judge the purity of the result.'),
+            p: t('Laboratorijose indams plauti sunaudojama daug acetono, todėl lieka daug jo atliekų. Jose yra kitų organinių medžiagų ir vandens, bet jei skystį distiliuosime per deflegmatorių, gausime pakankamai gryną acetoną, tinkamą indams plauti iš naujo. Darbe išmokstama atskirti komponentus pagal virimo temperatūrą ir nustatyti gauto skysčio grynumą.',
+              'Laboratories use acetone in large amounts to rinse glassware, so a lot of acetone waste builds up. It contains other organic compounds and water, but distilling it through a fractionating column (dephlegmator) gives acetone pure enough to rinse glassware again. The lab teaches how to separate components by boiling point and how to judge the purity of the result.'),
             src: 'LW2 p5'
           },
           {
@@ -86,8 +86,8 @@
           },
           { h: t('Azeotropai', 'Azeotropes') },
           {
-            p: t('Azeotropinio mišinio garai ir skystis turi tokią pačią sudėtį, todėl distiliuojant jis elgiasi kaip viena medžiaga ir frakcine distiliacija jo nesuskaidysi. Pavyzdžiui, etanolis su vandeniu virsta 95,5 % etanolio azeotropu, kurio v. t. 78,15 °C. Absoliutus etanolis gaunamas vandenį cheminiu būdu surišus, pavyzdžiui, virinant su $CaO$.',
-              'An azeotropic mixture gives a vapour with the same composition as the liquid, so it distils like a single substance and fractional distillation cannot split it. For example ethanol and water form a 95.5 % ethanol azeotrope boiling at 78.15 °C. Absolute ethanol is obtained by binding the water chemically, for instance by boiling with $CaO$.'),
+            p: t('Azeotropinio mišinio garai ir skystis turi tokią pačią sudėtį, todėl distiliuojant jis elgiasi kaip viena medžiaga ir jo negalima suskaidyti frakciniu distiliavimu. Pavyzdžiui, etanolis su vandeniu sudaro azeotropą, kuriame yra 95,5 % etanolio ir kuris verda 78,15 °C temperatūroje. Absoliutus etanolis gaunamas vandenį cheminiu būdu surišus, pavyzdžiui, virinant su $CaO$.',
+              'An azeotropic mixture gives a vapour with the same composition as the liquid, so it distils like a single substance and fractional distillation cannot split it. For example ethanol and water form an azeotrope containing 95.5 % ethanol that boils at 78.15 °C. Absolute ethanol is obtained by binding the water chemically, for instance by boiling with $CaO$.'),
             src: 'LW2 p4'
           },
           {
@@ -105,6 +105,7 @@
           {
             list: [
               t('Elektrinė viryklė su vandens vonia (kaitinimas per vonią saugesnis už liepsną ir tolygesnis).', 'An electric hot plate with a water bath (heating through a bath is safer than a flame and more even).'),
+              t('Viurco kolba (distiliavimo kolba su šonine atšaka) – paprastajam distiliavimui.', 'A Würtz flask (distillation flask with a side arm) for simple distillation.'),
               t('Favorskio kolba, kuri vienoje detalėje apjungia kolbą, kolonėlę ir šoninę atšaką; be jos naudojama atskira kolba su atšakos adapteriu ir deflegmatoriumi.', 'A Favorsky flask, which combines flask, column and side arm in one piece; without it, a separate flask with a side-arm adapter and a dephlegmator.'),
               t('Termometras viršutinėje angoje, Lybigo kondensatorius ant stovo, priimtuvas (Erlenmejerio kolbutė) ir matavimo cilindras.', 'A thermometer in the top opening, a Liebig condenser on a stand, a receiver (Erlenmeyer flask) and a graduated cylinder.'),
               t('Pemzos gabalėliai (virimo akmenukai).', 'Pumice pieces (boiling chips).')
@@ -112,8 +113,8 @@
             src: 'LW2 p5'
           },
           {
-            rule: t('Termometro gyvsidabrio rutuliukas turi būti ties atšakos apatiniu kraštu: tada jis rodo garų, o ne kolbos šilumos temperatūrą. Skysčio pilama ne daugiau kaip du trečdaliai kolbos tūrio. Vanduo į kondensatorių įleidžiamas iš apačios.',
-              'The thermometer bulb sits level with the lower edge of the side arm: then it reads the temperature of the vapour, not of the hot flask. The flask holds no more than two thirds of its volume. Water enters the condenser from below.'),
+            rule: t('Termometro gyvsidabrio rutuliuko viršutinis kraštas turi sutapti su atšakos apatinio krašto aukščiu: tada jis rodo garų, o ne kolbos šilumos temperatūrą. Skysčio pilama ne daugiau kaip du trečdaliai kolbos tūrio. Vanduo į kondensatorių įleidžiamas iš apačios.',
+              'The top of the bulb is level with the lower edge of the side arm: then it reads the temperature of the vapour, not of the hot flask. The flask holds no more than two thirds of its volume. Water enters the condenser from below.'),
             src: 'LW2 p2, p5'
           },
           {
@@ -122,7 +123,7 @@
             src: 'LW2 p2'
           },
           {
-            pitfall: t('Niekada nemeskite virimo akmenėlių į jau įkaitusį skystį: jis gali staiga išsiveržti iš kolbos. Pamiršus, kaitinimą išjunkite, leiskite atvėsti ir tik tada įdėkite.',
+            pitfall: t('Niekada nemeskite virimo akmenukų į jau įkaitusį skystį: jis gali staiga išsiveržti iš kolbos. Pamiršus, kaitinimą išjunkite, leiskite atvėsti ir tik tada įdėkite.',
               'Never drop boiling chips into a hot liquid: it can erupt from the flask. If you forgot, switch the heating off, let it cool, and only then add them.'),
             src: 'LW2 p2'
           },
@@ -319,10 +320,10 @@
               ['skystis kolboje užverda', 'the liquid in the flask boils'],
               ['garų žiedas kyla deflegmatoriumi', 'a ring of vapour climbs through the dephlegmator'],
               ['termometro rutuliukas sušlampa ir rodmuo greitai kyla', 'the thermometer bulb is wetted and the reading climbs fast'],
-              ['rodmuo nusistovi ties 55–58 °C', 'the reading settles at 55–58 °C'],
-              ['į priimtuvą krenta lašai', 'drops fall into the receiver']
+              ['į priimtuvą pradeda kristi pirmieji lašai', 'the first drops fall into the receiver'],
+              ['rodmuo nusistovi ties 55–58 °C', 'the reading settles at 55–58 °C']
             ], t('Kol garai nepasiekė termometro, jis nerodo virimo temperatūros.', 'Until the vapour reaches the thermometer, it does not show the boiling point.'),
-              t('Pirmiausia skystis verda, garai pakyla, apgaubia termometrą, rodmuo išaugęs nusistovi, o lašai tuomet jau krenta į priimtuvą.', 'First the liquid boils, vapour rises and surrounds the thermometer, the reading levels off, and the drops are already falling into the receiver.'))],
+              t('Pirmiausia skystis verda, garų žiedas pakyla, apgaubia termometrą ir rodmuo greitai kyla; pradeda lašėti kondensatas, o rodmuo nusistovi ties virimo temperatūra.', 'First the liquid boils, the vapour ring rises and surrounds the thermometer and the reading climbs fast; condensate starts to drip and the reading levels off at the boiling point.'))],
             why: t('Pastovus rodmuo rodo, kad pasiekta pusiausvyra tarp skysčio ir garų ties v. t.', 'A steady reading shows that equilibrium between liquid and vapour has been reached at the boiling point.'),
             src: 'LW2 p2, p6'
           },
@@ -349,7 +350,7 @@
               ['įmesti keletą pemzos gabalėlių', 'add a few pieces of pumice'],
               ['vėl pradėti kaitinti', 'resume heating']
             ], t('Virimo akmenukų niekada neberiama į karštą skystį.', 'Boiling chips are never added to a hot liquid.'),
-              t('Pašalinama šilumos priežastis, laukiama, kol skystis nebevirs, tada dedama ir kaitinama iš naujo.', 'The source of heat is removed, the liquid is allowed to stop boiling, then the chips go in and heating restarts.'))],
+              t('Pašalinamas šilumos šaltinis, laukiama, kol skystis nebevirs, tada dedama ir kaitinama iš naujo.', 'The source of heat is removed, the liquid is allowed to stop boiling, then the chips go in and heating restarts.'))],
             why: t('Perkaitęs skystis be užuomazgų gali užvirti staigiai ir išsiveržti iš kolbos.', 'A superheated liquid without nucleation sites can boil suddenly and erupt from the flask.'),
             src: 'LW2 p2'
           }
@@ -389,7 +390,7 @@
           },
           {
             id: 'l2.why.3',
-            q: Q('Į distiliavimo kolbą galima pilti ne daugiau kaip dvi trečdalius jos tūrio.', 'No more than two thirds of the flask volume may be filled.'),
+            q: Q('Į distiliavimo kolbą galima pilti ne daugiau kaip du trečdalius jos tūrio.', 'No more than two thirds of the flask volume may be filled.'),
             steps: [ch(t('Kodėl?', 'Why?'), [
               ['užverdantis skystis putoja ir gali būti permestas į kondensatorių', 'the boiling liquid foams and may be thrown over into the condenser'],
               ['kad aparatas būtų lengvesnis', 'so that the apparatus is lighter'],
@@ -441,7 +442,7 @@
           },
           {
             id: 'l2.why.7',
-            q: Q('Pirmieji 1–3 ml distiliato surenkami į kitą indą ir pagrindinės frakcijos neprideda.', 'The first 1–3 ml of distillate go into another vessel and are not added to the main fraction.'),
+            q: Q('Pirmieji 1–3 ml distiliato surenkami į kitą indą ir nepridedami prie pagrindinės frakcijos.', 'The first 1–3 ml of distillate go into another vessel and are not added to the main fraction.'),
             steps: [ch(t('Kodėl?', 'Why?'), [
               ['jie turi lakesnių priemaišų ir dar nepasiekta pastovi temperatūra', 'it holds more volatile impurities and the temperature has not yet become steady'],
               ['jie yra švariausias acetonas', 'it is the purest acetone'],
@@ -536,7 +537,7 @@
               ['distiliavimą reikia tuoj pat nutraukti', 'the distillation must be stopped at once']
             ], 0, t('Ar kintanti temperatūra liudytų grynumą?', 'Would a changing temperature suggest purity?'),
               t('Pastovi temperatūra intervale 1–2 °C rodo, kad distiliuojasi beveik gryna medžiaga.', 'A constant temperature within 1–2 °C shows that an almost pure substance is distilling.'))],
-            why: t('Gryna medžiaga virsta pastovioje temperatūroje, mišinys – kintančioje.', 'A pure substance boils at constant temperature, a mixture over a range.'),
+            why: t('Gryna medžiaga verda pastovioje temperatūroje, mišinys – kintančioje.', 'A pure substance boils at constant temperature, a mixture over a range.'),
             src: 'LW2 p2, p6'
           },
           {
@@ -561,7 +562,7 @@
               ['nepakis', 'it does not change'],
               ['taps lygi nuliui', 'it becomes zero']
             ], 0, t('Skystis verda, kai garų slėgis lygus išoriniam.', 'A liquid boils when its vapour pressure equals the external pressure.'),
-              t('Mažesnį slėgį pasiekia žemesnėje temperatūroje esantys garai; perpus sumažinus slėgį v. t. krenta apie 15–20 °C.', 'A lower pressure is matched by vapour at a lower temperature; halving the pressure lowers the boiling point by about 15–20 °C.'))],
+              t('Skystis verda, kai jo garų slėgis tampa lygus išoriniam; kai išorinis slėgis mažesnis, tai įvyksta žemesnėje temperatūroje. Perpus sumažinus slėgį, v. t. krenta apie 15–20 °C.', 'A liquid boils when its vapour pressure equals the external pressure; at lower external pressure this happens at a lower temperature. Halving the pressure lowers the b. p. by about 15–20 °C.'))],
             why: t('Vakuuminis distiliavimas apsaugo jautrias medžiagas nuo skilimo.', 'Vacuum distillation protects sensitive compounds from decomposition.'),
             src: 'LW2 p4'
           },
@@ -594,7 +595,7 @@
               ['frakcija tikrai 100 % gryna', 'the fraction is certainly 100 % pure'],
               ['frakcijoje daug vandens', 'the fraction contains much water'],
               ['aparatūra nesandari', 'the apparatus leaks']
-            ], 0, t('Kuo siaurėja intervalas, tuo kas?', 'The narrower the range, the what?'),
+            ], 0, t('Ką rodo siauras virimo intervalas ir ko jis neįrodo?', 'What does a narrow boiling range show, and what does it not prove?'),
               t('Praktiškai grynu laikomas skystis, kuris distiliuojasi 1–2 °C intervale; dar ne 100 %.', 'A liquid distilling over 1–2 °C counts as practically pure, not necessarily 100 %.'))],
             why: t('Siauras intervalas yra grynumo požymis, bet ne griežtas įrodymas.', 'A narrow range is an indication of purity, not a strict proof.'),
             src: 'LW2 p2'
@@ -633,7 +634,7 @@
               ['distiliuojama gryna medžiaga', 'a pure substance is distilling'],
               ['distiliuojamas azeotropas', 'an azeotrope is distilling'],
               ['kondensatorius veikia gerai', 'the condenser works well']
-            ], 0, t('Kuri medžiaga virsta pastovioje temperatūroje?', 'Which kind of sample boils at constant temperature?'),
+            ], 0, t('Kuri medžiaga verda pastovioje temperatūroje?', 'Which kind of sample boils at constant temperature?'),
               t('Kintanti temperatūra rodo, kad sudėtis nuolat keičiasi.', 'A changing temperature shows that the composition keeps changing.'))],
             why: t('Pastovumas rodo vienalytį junginį ar azeotropą, kitimas – mišinį.', 'Constancy shows a homogeneous compound or an azeotrope, change a mixture.'),
             src: 'LW2 p2'
@@ -667,7 +668,7 @@
           },
           {
             id: 'l2.prove.7',
-            q: Q('Nustatyta nežinomo skysčio v. t. 78 °C, bet lentelėje nurodyta 82 °C esant 760 mm Hg. Šiandien slėgis apie 700 mm Hg.', 'An unknown liquid boils at 78 °C, but the table says 82 °C at 760 mm Hg. Today the pressure is about 700 mm Hg.'),
+            q: Q('Nustatyta nežinomo skysčio v. t. 78 °C, bet lentelėje nurodyta 80,5 °C esant 760 mm Hg. Šiandien slėgis apie 700 mm Hg.', 'An unknown liquid boils at 78 °C, but the table says 80.5 °C at 760 mm Hg. Today the pressure is about 700 mm Hg.'),
             steps: [ch(t('Kuris paaiškinimas tinka?', 'Which explanation fits?'), [
               ['mažesnis slėgis sumažina v. t., todėl skirtumas gali būti natūralus', 'a lower pressure lowers the boiling point, so the difference may be natural'],
               ['skystis tikrai kita medžiaga', 'the liquid is certainly another compound'],
@@ -792,7 +793,7 @@
           },
           {
             id: 'l2.apparatus.8',
-            q: Q('Plati stiklo vamzdis be vandens apvalkalo, 12–16 mm skersmens.', 'A wide glass tube with no water jacket, 12–16 mm across.'),
+            q: Q('Stiklo vamzdis be vandens apvalkalo, 12–16 mm skersmens.', 'A wide glass tube with no water jacket, 12–16 mm across.'),
             steps: [ch(t('Kokiai v. t. jis tinka?', 'For which boiling point is it suitable?'), [
               ['virš 160 °C', 'above 160 °C'],
               ['žemesnei kaip 120 °C', 'below 120 °C'],
@@ -841,9 +842,9 @@
             const V = ctx.pick([50, 100, 150, 250, 500, 750, 1000]);
             const max = V * 2 / 3;
             return {
-              q: [{ p: t('Naudojama ' + V + ' ml tūrio distiliavimo kolba. Skysčio į ją pilama ne daugiau kaip dvi trečdaliai tūrio.', 'A distillation flask of ' + V + ' ml is used. It may hold no more than two thirds of its volume.') }],
+              q: [{ p: t('Naudojama ' + V + ' ml tūrio distiliavimo kolba. Skysčio į ją pilama ne daugiau kaip du trečdaliai tūrio.', 'A distillation flask of ' + V + ' ml is used. It may hold no more than two thirds of its volume.') }],
               steps: [{ prompt: t('Kiek ml skysčio galima pilti daugiausia?', 'What is the greatest volume of liquid in ml?'), kind: 'number', answer: { value: max, tol: 0.7 },
-                hint: t('Dvi trečdaliai tūrio.', 'Two thirds of the volume.'),
+                hint: t('Du trečdaliai tūrio.', 'Two thirds of the volume.'),
                 solution: t('$' + V + ' · 2/3 = ' + lt(max, 1) + '$ ml.', '$' + V + ' · 2/3 = ' + fmt(max, 1) + '$ ml.') }],
               why: t('Likusi dalis skirta putoms ir purslams, kad neišsiveržtų į kondensatorių.', 'The rest is for foam and spray, so they do not reach the condenser.'),
               src: 'LW2 p2'
@@ -870,9 +871,10 @@
 
           if (variant === 'rate') {
             const mins = ctx.pick([2, 3, 4, 5]);
-            const V = ctx.int(8, 60) / 10;
+            const V = ctx.int(9 * mins, 90 * mins) / 10;
             const r = V * 20 / (mins * 60);
-            const cls = r < 1 ? 1 : (r > 2 ? 2 : 0);
+            const rr = Math.round(r * 100) / 100;
+            const cls = rr < 1 ? 1 : (rr > 2 ? 2 : 0);
             return {
               q: [{ p: t('Per ' + mins + ' min priimtuve surinkta ' + lt(V, 1) + ' ml distiliato. Laikykite, kad 1 ml yra apie 20 lašų.', 'In ' + mins + ' min the receiver collected ' + fmt(V, 1) + ' ml of distillate. Take 1 ml as about 20 drops.') }],
               steps: [
@@ -893,14 +895,15 @@
           }
 
           if (variant === 'n') {
-            let a, b, n;
-            for (let tries = 0; tries < 80; tries++) {
-              a = ctx.int(40, 70); b = ctx.int(28, 46);
-              n = Math.sin(a * Math.PI / 180) / Math.sin(b * Math.PI / 180);
-              if (n > 1.2 && n < 1.7 && Math.abs(n - 1.3588) > 0.01) break;
-              n = null;
+            const pairs = [];
+            for (let a0 = 50; a0 <= 65; a0++) {
+              for (let b0 = 28; b0 <= 55; b0++) {
+                const n0 = Math.sin(a0 * Math.PI / 180) / Math.sin(b0 * Math.PI / 180);
+                if (n0 >= 1.33 && n0 <= 1.38 && Math.abs(n0 - 1.3588) > 0.01) pairs.push([a0, b0, n0]);
+              }
             }
-            if (n === null) throw new Error('l2.calc: no angle pair');
+            if (!pairs.length) throw new Error('l2.calc: no angle pair');
+            const [a, b, n] = ctx.pick(pairs);
             return {
               q: [{ p: t('Šviesos spindulys iš oro krinta į skystį kampu $α$ = ' + a + '°, o skystyje lūžta kampu $β$ = ' + b + '°.', 'A light ray goes from air into a liquid at the angle $α$ = ' + a + '° and is refracted in the liquid at the angle $β$ = ' + b + '°.') }],
               steps: [
@@ -932,7 +935,7 @@
             q: [{ p: t('Distiliato lūžio rodiklis $n_D^20$ yra ' + lt(x, 4) + '. Gryno acetono – 1,3588, vandens – 1,3330.', 'The refractive index of the distillate $n_D^20$ is ' + fmt(x, 4) + '. For pure acetone it is 1.3588 and for water 1.3330.') }],
             steps: [ch(t('Ką galima teigti apie distiliatą?', 'What can be said about the distillate?'), [
               ['beveik gryna acetonas (lūžio rodiklis nuo 1,356)', 'practically pure acetone (index from 1.356)'],
-              ['acetonas su pastebimu vandens kiekiu', 'acetone with a noticeable amount of water'],
+              x < 1.3459 ? ['acetonas su dideliu vandens kiekiu', 'acetone with a large amount of water'] : ['acetonas su pastebimu vandens kiekiu', 'acetone with a noticeable amount of water'],
               ['daugiausia vanduo (rodiklis iki 1,338)', 'mostly water (index up to 1.338)']
             ], cls,
             t('Kuris yra arčiau – 1,3588 ar 1,3330?', 'Which is closer, 1.3588 or 1.3330?'),
@@ -990,7 +993,7 @@
           },
           {
             id: 'l2.defence.4',
-            q: Q('Kuo frakcinio distiliavimo įranga nepanaši į paprastąją ir kodėl ji skiria geriau?', 'How does fractional distillation apparatus differ from simple apparatus, and why does it separate better?'),
+            q: Q('Kuo frakcinio distiliavimo įranga skiriasi nuo paprastojo distiliavimo ir kodėl ji skiria geriau?', 'How does fractional distillation apparatus differ from simple apparatus, and why does it separate better?'),
             steps: [ch(t('Pasirinkite.', 'Choose.'), [
               ['tarp kolbos ir kondensatoriaus yra kolona, kurioje garinimas ir kondensavimas vyksta daug kartų', 'a column between flask and condenser, in which vaporisation and condensation repeat many times'],
               ['naudojama didesnė kolba', 'a larger flask is used'],
@@ -1057,7 +1060,7 @@
             id: 'l2.defence.9',
             q: Q('Kokį kondensatorių pasirinkti pagal virimo temperatūrą?', 'Which condenser should be chosen according to the boiling point?'),
             steps: [ch(t('Kuri tvarka teisinga?', 'Which arrangement is correct?'), [
-              ['žemiau 120 °C – vandeniu aušinamas su tekančiu vandeniu, 120–160 °C – su nejudančiu vandeniu, virš 160 °C – oro', 'below 120 °C – water-cooled with flowing water, 120–160 °C – with standing water, above 160 °C – air'],
+              ['žemiau 120 °C – su tekančiu vandeniu, 120–160 °C – su nejudančiu vandeniu, virš 160 °C – oro', 'below 120 °C – water-cooled with flowing water, 120–160 °C – with standing water, above 160 °C – air'],
               ['iki 120 °C – oro, virš 160 °C – su tekančiu vandeniu', 'below 120 °C – air, above 160 °C – running water'],
               ['visais atvejais su tekančiu vandeniu', 'in all cases running water'],
               ['visais atvejais oro', 'in all cases air']

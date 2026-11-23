@@ -78,8 +78,8 @@
               t('Kolboje sumaišoma salicilo rūgštis (0,0145 mol, tai 2 g) su acetanhidridu (apie 0,053 mol, tai 5 ml). Anhidridas yra perteklinis: salicilo rūgštis yra ribojantis reagentas, o perteklius užtikrina visišką sureagavimą.', 'In an Erlenmeyer flask salicylic acid (0.0145 mol, which is 2 g) is mixed with acetic anhydride (about 0.053 mol, which is 5 ml). The anhydride is in excess: salicylic acid is the limiting reagent, and the excess makes the reaction go to completion.'),
               t('Įdedamas tefloninis maišiklis, įjungiama maišyklė ir įlašinami 4 lašai konc. $H2SO4$. Rūgštis protonuoja anhidrido karbonilo deguonį ir padaro jį stipresniu elektrofilu.', 'The Teflon bar goes in, the stirrer is switched on and 4 drops of conc. $H2SO4$ are added. The acid protonates the carbonyl oxygen of the anhydride and makes it a stronger electrophile.'),
               t('Kolba uždengiama kamšteliu ir 30 min maišoma kambario temperatūroje. Salicilo rūgštis ištirpsta, o aspirinas iškrinta nuosėdomis.', 'The flask is covered and stirred for 30 min at room temperature. The salicylic acid dissolves and aspirin separates as a solid.'),
-              t('Lėtai pilama 25 ml distiliuoto vandens ir maišoma dar 5 min. Vanduo suskaido acetanhidrido perteklių į acto rūgštį (reakcija šiluminė, todėl lėtai) ir verčia aspiriną kristalizuotis.', 'Slowly add 25 ml of distilled water and stir for 5 min more. Water breaks down the excess anhydride to acetic acid (the reaction gives off heat, hence slowly) and makes the aspirin crystallise.'),
-              t('Mišinys perpilamas į kristalizatorių su vandeniu ir ledu: žemoje temperatūroje aspirinas tirpsta dar mažiau.', 'The mixture is poured into a crystallising dish with water and ice: at low temperature aspirin dissolves even less.'),
+              t('Lėtai, stipriai maišant, pilama 25 ml distiliuoto vandens ir maišoma dar 5 min. Vanduo suskaido acetanhidrido perteklių į acto rūgštį (reakcija išskiria šilumą, todėl pilama lėtai) ir verčia aspiriną kristalizuotis.', '25 ml of distilled water is added slowly, with vigorous stirring, and the mixture is stirred for 5 min more. Water breaks down the excess anhydride to acetic acid (the reaction gives off heat, hence slowly) and makes the aspirin crystallise.'),
+              t('Kolba su mišiniu įstatoma į kristalizatorių, kuriame yra vandens ir ledo, ir vėsinama 5 min: žemoje temperatūroje aspirinas tirpsta dar mažiau.', 'The flask is placed in a crystalliser with water and ice and chilled for 5 min: at low temperature aspirin dissolves even less.'),
               t('Kristalai filtruojami vakuume Biuchnerio piltuvu ir plaunami keturis kartus po 15 ml ledinio vandens: nuplaunama acto rūgštis ir $H2SO4$. Paskui jie nuspaudžiami stikliniu kamščiu ir sausai nugramdomi ant filtro popieriaus.', 'The crystals are vacuum-filtered on the Büchner funnel and washed four times with 15 ml of ice water: this removes acetic acid and $H2SO4$. They are then pressed with the glass stopper and scraped onto filter paper.'),
               t('Nedidelis kiekis drėgnos medžiagos paimamas $FeCl3$ bandymui, likusi 20 min. džiovinama 80 °C krosnyje, po to sveriama, o termometru nustatoma lydymosi temperatūra.', 'A small amount of the moist product is kept for the $FeCl3$ test, the rest is dried in the oven at 80 °C for 20 min, then weighed, and its melting point is measured.')
             ],
@@ -161,9 +161,14 @@
           },
           { h: t('Išeiga', 'Yield') },
           {
-            rule: t('Išeiga $= m_{gauta} / m_{teor.} · 100$ %. Teorinė masė skaičiuojama iš ribojančio reagento (salicilo rūgšties) santykiu 1 : 1, jei užrašytas lygus kiekis molių.',
-              'Yield $= m_{obtained} / m_{theor.} · 100$ %. The theoretical mass is calculated from the limiting reagent (salicylic acid) in a 1 : 1 ratio.'),
+            rule: t('Išeiga $= m_{gauta} / m_{teor.} · 100$ %. Teorinė masė skaičiuojama iš ribojančio reagento (salicilo rūgšties): lygtyje reagentai jungiasi santykiu 1 : 1, todėl iš 1 mol salicilo rūgšties susidaro 1 mol aspirino.',
+              'Yield $= m_{obtained} / m_{theor.} · 100$ %. The theoretical mass is calculated from the limiting reagent (salicylic acid): the equation is 1 : 1, so 1 mol of salicylic acid gives at most 1 mol of aspirin.'),
             src: 'LW4 p2'
+          },
+          {
+            p: t('Papildomai (nėra darbo apraše) grynumą galima tikrinti plonasluoksne chromatografija: produkto ir salicilo rūgšties dėmių $R_f$ palyginimas toje pačioje plokštelėje.',
+              'Optionally (not in the lab description) purity can be checked by thin-layer chromatography: compare the Rf of the product and of salicylic acid on the same plate.'),
+            src: 'Klein'
           },
           {
             example: {
@@ -229,7 +234,7 @@
             ord(SORT, [
               ['Lėtai įpilti 25 ml distiliuoto vandens', 'Slowly add 25 ml of distilled water'],
               ['Maišyti dar 5 min', 'Stir for another 5 min'],
-              ['Mišinį perpilti į kristalizatorių su vandeniu ir ledu', 'Pour the mixture into the crystallising dish with water and ice'],
+              ['Kolbą su mišiniu pastatyti į kristalizatorių su vandeniu ir ledu', 'Stand the flask in the crystalliser with water and ice'],
               ['Nufiltruoti kristalus Biuchnerio piltuvu', 'Filter the crystals on the Büchner funnel'],
               ['Nuplauti keturis kartus po 15 ml ledinio vandens', 'Wash with four portions of 15 ml of ice water']
             ], t('Pirma sunaikinamas anhidrido perteklius, o tik paskui kristalai atskiriami.', 'First the excess anhydride is destroyed, and only then are the crystals separated.'),
@@ -281,7 +286,7 @@
               ['Išeina acto rūgštis, atsistato karbonilas', 'Acetic acid leaves and the carbonyl is restored'],
               ['Prarandamas protonas: aspirinas', 'A proton is lost: aspirin']
             ], t('Elektrofilas aktyvinamas prieš nukleofilui atakuojant.', 'The electrophile is activated before the nucleophile attacks.'),
-              t('Pirmiausia aktyvuojamas elektrofilas, tada ataka, tarpinis junginys, atskilimas ir deprotonavimas.', 'First the electrophile is activated, then attack, intermediate, elimination and deprotonation.')),
+              t('Pirmiausia aktyvuojamas elektrofilas, tada ataka, tarpinis junginys, pašalinimas ir deprotonavimas.', 'First the electrophile is activated, then attack, intermediate, elimination and deprotonation.')),
             t('Prijungimo ir atskilimo seka yra nukleofilinio acilpakeitimo požymis.', 'The addition–elimination sequence is the mark of nucleophilic acyl substitution.'), 'LW4 p1'),
           P('l4.order.8', t('Baigiate darbą.', 'You finish the work.'),
             ord(SORT, [
@@ -307,7 +312,7 @@
               ['Pašalina vandenį, kuris išsiskiria reakcijoje.', 'It removes the water released in the reaction.'],
               ['Neutralizuoja susidariusią acto rūgštį.', 'It neutralises the acetic acid formed.']
             ], t('Kodėl pakanka tokio mažo kiekio?', 'Why is such a small amount enough?'),
-              t('Katalizatorius sunaudojamas ir atsistato, todėl užtenka keleto lašų. Reakcijoje vanduo nesusidaro, o acto rūgštis lieka.', 'A catalyst is used up and regenerated, so a few drops are enough. No water is formed in the reaction, and acetic acid remains.')),
+              t('Katalizatorius nesunaudojamas: protonas atsistato kiekvieno ciklo pabaigoje, todėl užtenka keleto lašų. Reakcijoje vanduo nesusidaro, o acto rūgštis lieka.', 'A catalyst is not consumed: the proton is regenerated at the end of each cycle, so a few drops are enough. No water is formed in the reaction, and acetic acid remains.')),
             t('Rūgštis keičia kelią, o ne balansą: ji padaro karbonilo anglį labiau teigiamą.', 'The acid changes the path, not the balance: it makes the carbonyl carbon more positive.'), 'LW4 p1'),
           P('l4.why.2', t('Paimta 0,0145 mol rūgšties ir 0,053 mol anhidrido.', '0.0145 mol of the acid and 0.053 mol of the anhydride were taken.'),
             ch(t('Kodėl anhidridas imamas pertekliumi?', 'Why is the anhydride taken in excess?'), [
@@ -318,9 +323,9 @@
             ], t('Kuris reagentas yra ribojantis ir ką darytų jo likutis?', 'Which reagent is limiting and what would its leftover do?'),
               t('Likusi salicilo rūgštis užterštų produktą, o pigus anhidrido perteklius nuplaunamas vandeniu kaip acto rūgštis.', 'Leftover salicylic acid would contaminate the product, while the cheap excess anhydride is removed with water as acetic acid.')),
             t('Pertekliumi imamas lengviau pašalinamas reagentas, kad brangesnis (ar sunkiau pašalinamas) sureaguotų visas.', 'The reagent that is easier to remove is taken in excess so that the other reacts completely.'), 'LW4 p1'),
-          P('l4.why.3', t('Reakcijos kolba uždengiama kamšteliu, o acetanhidridas matuojamas traukos spintoje.', 'The reaction flask is covered and the acetic anhydride is measured in the fume hood.'),
+          P('l4.why.3', t('Reakcijos kolba uždengiama kamšteliu.', 'The reaction flask is closed with a stopper.'),
             ch(t('Kodėl taip daroma?', 'Why is this done?'), [
-              ['Anhidridas aštraus kvapo ir erzina; uždengimas riboja garus (ir drėgmę).', 'The anhydride has a sharp smell and is irritating; covering limits vapours (and moisture).'],
+              ['Kamštelis riboja garų išsiskyrimą ir apsaugo anhidridą nuo oro drėgmės.', 'The stopper limits the escape of vapour and keeps moisture of the air away from the anhydride.'],
               ['Be kamštelio reakcija nevyksta.', 'Without the cover the reaction does not occur.'],
               ['Kad medžiaga nesušaltų.', 'So that the material does not freeze.'],
               ['Kad dujos, kurios išsiskiria, nesprogtų.', 'So that the released gas does not explode.']
@@ -329,14 +334,14 @@
             t('Saugumas yra dalis darbo plano: mažiname garų kiekį prie šaltinio.', 'Safety is part of the plan: vapours are reduced at the source.'), 'LW4 p1'),
           P('l4.why.4', t('Po 30 min į mišinį lėtai pilama 25 ml vandens.', 'After 30 min 25 ml of water is added slowly.'),
             ch(t('Kodėl vanduo pilamas lėtai?', 'Why is the water added slowly?'), [
-              ['Vanduo suskaido acetanhidrido perteklių, o reakcija šiluminė.', 'Water breaks down the excess anhydride, and the reaction gives off heat.'],
+              ['Vanduo suskaido acetanhidrido perteklių, o ši reakcija išskiria šilumą.', 'Water breaks down the excess anhydride, and the reaction gives off heat.'],
               ['Kad aspirinas nesuirtų į dalis.', 'So that aspirin does not break into pieces.'],
               ['Kad mišinys nesušaltų.', 'So that the mixture does not freeze.'],
               ['Kad kristalai taptų didesni nei lede.', 'So that the crystals get bigger than in the ice.']
             ], t('Ką daro vanduo su anhidridu?', 'What does water do to an anhydride?'),
               t('Anhidridas su vandeniu virsta dviem acto rūgšties molekulėmis ir išskiria šilumą. Greitai supylus galėtų ištaškyti.', 'An anhydride with water becomes two molecules of acetic acid and gives off heat. A quick pour could splash.')),
             t('Anhidrido hidrolizė yra egzoterminė, todėl vanduo dedamas atsargiai.', 'Anhydride hydrolysis is exothermic, so water is added carefully.'), 'LW4 p1'),
-          P('l4.why.5', t('Perpylus mišinį į vandenį su ledu iškrenta daug kristalų.', 'When the mixture is poured into water with ice many crystals appear.'),
+          P('l4.why.5', t('Kolbą su mišiniu atvėsinus ledo vonioje iškrenta daug kristalų.', 'When the flask is chilled in an ice bath, many crystals separate.'),
             ch(t('Kodėl aspirinas iškrenta?', 'Why does aspirin separate?'), [
               ['Šaltame vandenyje jis tirpsta mažai, o acto rūgštis ir $H2SO4$ lieka tirpale.', 'It is only slightly soluble in cold water, while acetic acid and $H2SO4$ stay dissolved.'],
               ['Vanduo su ledu sureaguoja su aspirinu ir sudaro nuosėdas.', 'Ice water reacts with aspirin to give a precipitate.'],
@@ -352,7 +357,7 @@
               ['Ledas neutralizuoja $H2SO4$.', 'Ice neutralises the $H2SO4$.'],
               ['Karštas vanduo sumažintų priemaišų kiekį labiau.', 'Hot water would remove more impurities.']
             ], t('Kaip temperatūra veikia kietų medžiagų tirpumą?', 'How does temperature affect the solubility of solids?'),
-              t('Kuo aušriau, tuo mažiau aspirino ištirpsta, o acto rūgštis vis tiek nuplaunama.', 'The colder it is, the less aspirin dissolves, and acetic acid is still washed away.')),
+              t('Kuo šaltesnis vanduo, tuo mažiau aspirino ištirpsta, o acto rūgštis vis tiek nuplaunama.', 'The colder it is, the less aspirin dissolves, and acetic acid is still washed away.')),
             t('Plaunama tuo, kas nuplauna priemaišas, bet nelabai ištirpdo produkto.', 'Washing uses something that removes impurities but hardly dissolves the product.'), 'LW4 p1'),
           P('l4.why.7', t('Kristalai atskiriami Biuchnerio piltuvu, prijungtu prie Bunzeno kolbos.', 'The crystals are separated on a Büchner funnel connected to a Bunsen flask.'),
             ch(t('Kodėl naudojamas vakuuminis filtravimas?', 'Why is vacuum filtration used?'), [
@@ -423,7 +428,7 @@
               ['Baltus dūmus.', 'White fumes.'],
               ['Rudą nuosėdų sluoksnį.', 'A brown precipitate layer.']
             ], t('Kaip suprasti, kaip atrodo teigiamas bandymas?', 'How do you know what a positive test looks like?'),
-              t('Pradinės medžiagos tirpalas visada duoda violetinę spalvą, todėl jį naudojame kaip palyginimą.', 'A solution of the starting material always gives violet, so it serves as a comparison.')),
+              t('Salicilo rūgšties tirpalas duoda violetinę spalvą, todėl jį naudojame kaip palyginimą.', 'A solution of the starting material always gives violet, so it serves as a comparison.')),
             t('Kontrolė parodo, ar reagentas veikia ir kaip atrodo teigiamas atsakymas.', 'A control shows whether the reagent works and how a positive answer looks.'), 'LW4 p2'),
           P('l4.observe.6', t('Aspirino tirpalą kaitinote vandenyje, tada įlašinote $FeCl3$.', 'You heated the aspirin solution in water and then added $FeCl3$.'),
             ch(t('Ką pamatysite?', 'What will you see?'), [
@@ -510,7 +515,7 @@
               ['Kaitinant aspirinas hidrolizavosi į salicilo rūgštį, todėl spalva neįrodo priemaišos pradiniame produkte.', 'On heating aspirin hydrolysed to salicylic acid, so the colour does not prove an impurity in the original product.'],
               ['Produktas buvo nešvarus nuo pradžių.', 'The product was impure from the start.'],
               ['$FeCl3$ reaguoja su karboksilo grupe tik karštyje.', '$FeCl3$ reacts with the carboxyl group only when hot.'],
-              ['Aspirinas pavirto į kitą junginį su viena $OH$ grupe daugiau.', 'Aspirin turned into another compound with an extra $OH$ group.']
+              ['Kaitinant aspirinas dekarboksilinasi ir susidaro fenolis.', 'On heating aspirin loses CO2 and gives phenol.']
             ], t('Kuri sąlyga pasikeitė tarp dviejų bandymų?', 'Which condition changed between the two tests?'),
               t('Karštas vanduo skaldo esterio ryšį. Todėl bandymui reikia šalto vandens.', 'Hot water splits the ester bond. That is why the test needs cold water.')),
             t('Prieš darant išvadą, patikrinkite, ar bandymo sąlygos pačios nekeičia mėginio.', 'Before concluding, check that the test conditions do not change the sample themselves.'), 'LW4 p2'),
@@ -549,7 +554,7 @@
             const m = ctx.int(10, 50) / 10;                  // g salicylic acid
             const theo = m / MS * MA;
             const obt = Math.round(theo * ctx.int(40, 92)) / 100;
-            const y = obt / theo * 100;
+            const y = obt / Number(theo.toFixed(2)) * 100;
             return {
               q: [{ p: t('Aspirino sintezei salicilo rūgšties masė: ' + lt(m, 1) + ' g ($M$ = 138,12 g/mol), acetanhidridas pertekliuje. Išdžiovinus gauta ' + lt(obt, 2) + ' g aspirino ($M$ = 180,16 g/mol).',
                 'For the aspirin synthesis ' + fmt(m, 1) + ' g of salicylic acid ($M$ = 138.12 g/mol) was taken, with acetic anhydride in excess. After drying ' + fmt(obt, 2) + ' g of aspirin ($M$ = 180.16 g/mol) was obtained.') }],
@@ -568,9 +573,14 @@
 
           if (variant === 'excess') {
             const m = ctx.int(10, 40) / 10;                  // g salicylic acid
-            const v = ctx.int(30, 80) / 10;                  // ml anhydride (d = 1.08)
-            const ns = m / MS, nh = v * 1.08 / MH;
-            const ratio = nh / ns;
+            let v, ns, nh, ratio;                            // v: ml anhydride (d = 1.08)
+            for (let tries = 0; tries < 50; tries++) {
+              v = ctx.pick([0, 0, 1]) === 1 ? ctx.int(10, 20) / 10 : ctx.int(30, 80) / 10;
+              ns = m / MS; nh = v * 1.08 / MH;
+              ratio = nh / ns;
+              if (Math.abs(ratio - 1) > 0.1) break;
+            }
+            const saLimits = ratio > 1;
             return {
               q: [{ p: t('Salicilo rūgšties masė ' + lt(m, 1) + ' g ($M$ = 138,12 g/mol), be to ' + lt(v, 1) + ' ml acetanhidrido ($ρ$ = 1,08 g/ml, $M$ = 102,09 g/mol).',
                 'Used: ' + fmt(m, 1) + ' g of salicylic acid ($M$ = 138.12 g/mol) and ' + fmt(v, 1) + ' ml of acetic anhydride ($ρ$ = 1.08 g/ml, $M$ = 102.09 g/mol).') }],
@@ -580,9 +590,10 @@
                   solution: t('$n$(rūgšties) $= ' + lt(ns * 1000, 1) + '$ mmol; $n$(anhidrido) $= ' + lt(v * 1.08 / MH * 1000, 1) + '$ mmol; santykis $= ' + lt(ratio, 1) + '$.',
                     '$n$(acid) $= ' + fmt(ns * 1000, 1) + '$ mmol; $n$(anhydride) $= ' + fmt(v * 1.08 / MH * 1000, 1) + '$ mmol; ratio $= ' + fmt(ratio, 1) + '$.') },
                 ch(t('Kuris reagentas ribojantis?', 'Which reagent is limiting?'), [
-                  ['salicilo rūgštis', 'salicylic acid'], ['acetanhidridas', 'acetic anhydride'], ['jie lygūs', 'they are equal'], ['sieros rūgštis', 'sulfuric acid']
+                  saLimits ? ['salicilo rūgštis', 'salicylic acid'] : ['acetanhidridas', 'acetic anhydride'], saLimits ? ['acetanhidridas', 'acetic anhydride'] : ['salicilo rūgštis', 'salicylic acid'], ['jie lygūs', 'they are equal'], ['sieros rūgštis', 'sulfuric acid']
                 ], t('Reakcija vyksta 1 : 1.', 'The reaction goes 1 : 1.'),
-                  t('Santykis yra didesnis už 1, todėl pertekliuje yra anhidridas, o ribojanti yra salicilo rūgštis.', 'The ratio is above 1, so the anhydride is in excess and salicylic acid is limiting.'))
+                  saLimits ? t('Santykis yra didesnis už 1, todėl pertekliuje yra anhidridas, o ribojanti yra salicilo rūgštis.', 'The ratio is above 1, so the anhydride is in excess and salicylic acid is limiting.')
+                    : t('Santykis yra mažesnis už 1, todėl pertekliuje yra salicilo rūgštis, o ribojantis yra anhidridas.', 'The ratio is below 1, so salicylic acid is in excess and the anhydride is limiting.'))
               ],
               why: t('Reakcijos stechiometrija 1 : 1, todėl mažiau molių turintis reagentas riboja. Anhidridas imamas pertekliumi, kad salicilo rūgštis sureaguotų visa.', 'The stoichiometry is 1 : 1, so the reagent with fewer moles is limiting. The anhydride is in excess so that all the salicylic acid reacts.'),
               src: 'LW4 p1'
@@ -679,11 +690,11 @@
           P('l4.apparatus.1', t('Kūgio formos kolba plokščiu dugnu ir siauru kaklu.', 'A cone-shaped flask with a flat base and a narrow neck.'),
             ch(t('Kas tai?', 'What is it?'), [
               ['Erlenmejerio kolba: reakcijos indas, kurį lengva maišyti ir uždengti.', 'An Erlenmeyer flask: a reaction vessel that is easy to swirl and cover.'],
-              ['Distiliavimo kolba su šoniniu atvamzdžiu.', 'A distilling flask with a side arm.'],
+              ['Distiliavimo kolba su šonine atšaka.', 'A distilling flask with a side arm.'],
               ['Bunzeno kolba.', 'A Bunsen flask.'],
               ['Matavimo cilindras.', 'A measuring cylinder.']
-            ], t('Ar kolba turi šoninį atvamzdį vakuumui?', 'Does the flask have a side arm for a vacuum?'),
-              t('Šoninio atvamzdžio nėra, todėl tai paprasta Erlenmejerio kolba, naudojama sintezei.', 'There is no side arm, so this is an ordinary Erlenmeyer flask used for the synthesis.')),
+            ], t('Ar kolba turi šoninę atšaką vakuumui?', 'Does the flask have a side arm for a vacuum?'),
+              t('Šoninės atšakos nėra, todėl tai paprasta Erlenmejerio kolba, naudojama sintezei.', 'There is no side arm, so this is an ordinary Erlenmeyer flask used for the synthesis.')),
             t('Siauras kaklas mažina garavimą ir leidžia užkimšti ar uždengti.', 'A narrow neck reduces evaporation and allows covering.'), 'LW4 p1'),
           P('l4.apparatus.2', t('Prietaisas po kolba sukuria besisukantį magnetinį lauką, o kolboje sukasi baltas lazdelės pavidalo kūnas.', 'A device under the flask creates a rotating magnetic field, and a white rod-shaped body spins in the flask.'),
             ch(t('Ką aprašo šis vaizdas?', 'What does this describe?'), [
@@ -696,24 +707,24 @@
             t('Maišymas užtikrina tolygų katalizatoriaus pasiskirstymą.', 'Stirring gives an even distribution of the catalyst.'), 'LW4 p1'),
           P('l4.apparatus.3', t('Platus apvalus dubuo žemais šonais, pripildytas vandens ir ledo.', 'A wide round dish with low sides filled with water and ice.'),
             ch(t('Kas tai ir kam reikalinga?', 'What is it and what is it for?'), [
-              ['Kristalizatorius: į jį supilamas mišinys, kad greitai atvėstų ir iškristų kristalai.', 'A crystallising dish: the mixture is poured in to cool fast so that crystals separate.'],
+              ['Kristalizatorius: į jį statoma kolba su mišiniu, kad greitai atvėstų ir iškristų kristalai.', 'Crystalliser: the flask with the mixture is stood in it so that it cools quickly and crystals separate.'],
               ['Distiliavimo kolba.', 'A distilling flask.'],
               ['Džiovinimo indas.', 'A drying vessel.'],
               ['Kaitinimo vonia.', 'A heating bath.']
             ], t('Ar indas skirtas šildyti, ar vėsinti?', 'Is the vessel for heating or for cooling?'),
               t('Didelis paviršius ir ledas greitai atvėsina turinį, todėl aspirinas kristalizuojasi.', 'The large surface and the ice cool the content quickly, so aspirin crystallises.')),
             t('Šaltis sumažina tirpumą ir didina išeigą.', 'Cold lowers solubility and increases the yield.'), 'LW4 p1'),
-          P('l4.apparatus.4', t('Porcelianinis piltuvas su plokščiu skylėtu dugnu, ant jo apvalus filtro popierius, o apačioje gumine movele sujungtas storasienis indas su šoniniu atvamzdžiu.', 'A porcelain funnel with a flat perforated plate, a round filter paper on it, and below it, connected with a rubber seal, a thick-walled vessel with a side arm.'),
+          P('l4.apparatus.4', t('Porcelianinis piltuvas su plokščiu skylėtu dugnu, ant jo apvalus filtro popierius, o apačioje gumine movele sujungtas storasienis indas su šonine atšaka.', 'A porcelain funnel with a flat perforated plate, a round filter paper on it, and below it, connected with a rubber seal, a thick-walled vessel with a side arm.'),
             ch(t('Ką aprašo šis vaizdas?', 'What does this describe?'), [
               ['Biuchnerio piltuvas su Bunzeno kolba: vakuuminis filtravimas.', 'A Büchner funnel with a Bunsen flask: vacuum filtration.'],
               ['Lašinamoji piltuvė su kolba.', 'A dropping funnel with a flask.'],
-              ['Liebigo šaldytuvas.', 'A Liebig condenser.'],
+              ['Lybigo kondensatorius.', 'A Liebig condenser.'],
               ['Soksleto aparatas.', 'A Soxhlet apparatus.']
-            ], t('Kam reikalingas šoninis atvamzdis storasienėje kolboje?', 'What is the side arm on the thick-walled flask for?'),
-              t('Atvamzdis jungiamas prie vakuuminės linijos, todėl skystis išsiurbiamas per kristalus.', 'The side arm connects to the vacuum line, so the liquid is drawn through the crystals.')),
+            ], t('Kam reikalingas šoninė atšaka storasienėje kolboje?', 'What is the side arm on the thick-walled flask for?'),
+              t('Atšaka jungiama prie vakuuminės linijos, todėl skystis išsiurbiamas per kristalus.', 'The side arm connects to the vacuum line, so the liquid is drawn through the crystals.')),
             t('Vakuuminis filtravimas yra greitas ir palieka sausesnę medžiagą.', 'Vacuum filtration is quick and leaves a drier material.'), 'LW4 p1'),
           P('l4.apparatus.5', t('Kūgio formos guminis kūnas, įstumiamas į kolbos kaklą.', 'A cone-shaped rubber body pushed into the neck of the flask.'),
-            ch(t('Koks jo vardas ir paskirtis?', 'What is it called and what does it do?'), [
+            ch(t('Koks jo pavadinimas ir paskirtis?', 'What is it called and what does it do?'), [
               ['Kamštelis: uždaro kolbos angą, riboja garų išsiskyrimą ir apsaugo nuo purslų.', 'A stopper: closes the mouth of the flask, limits the escape of vapours and protects against splashes.'],
               ['Matavimo cilindras.', 'A measuring cylinder.'],
               ['Filtro popierius.', 'Filter paper.'],
@@ -730,10 +741,10 @@
             ], t('Kodėl temperatūra žemesnė už aspirino lydymosi tašką?', 'Why is the temperature below the melting point of aspirin?'),
               t('80 °C pakanka vandeniui išgarinti, bet nelydo ir neskaido aspirino.', '80 °C is enough to evaporate water but does not melt or decompose aspirin.')),
             t('Pasverti reikia išdžiūvusią medžiagą, antraip išeiga bus per didelė.', 'Only dried material should be weighed, otherwise the yield will be too high.'), 'LW4 p1'),
-          P('l4.apparatus.7', t('Cilindras su padalomis, kuriuo matuojami 25 ml skysčio vandens.', 'A cylinder with graduations used to measure 25 ml of liquid water.'),
+          P('l4.apparatus.7', t('Cilindras su padalomis, kuriuo matuojami 25 ml vandens.', 'A cylinder with graduations used to measure 25 ml of liquid water.'),
             ch(t('Kas tai?', 'What is it?'), [
               ['Matavimo cilindras: tūriui matuoti.', 'A measuring cylinder: for measuring volume.'],
-              ['Kolba su atvamzdžiu.', 'A flask with a side arm.'],
+              ['Kolba su atšaka.', 'A flask with a side arm.'],
               ['Kristalizatorius.', 'A crystallising dish.'],
               ['Lašinamoji piltuvė.', 'A dropping funnel.']
             ], t('Ar tai indas reakcijai ar matavimui?', 'Is it for reaction or for measurement?'),
@@ -812,7 +823,7 @@
             ], t('Kur gali dingti kristalai tarp reakcijos ir svėrimo?', 'Where can crystals disappear between the reaction and weighing?'),
               t('Aspirinas šiek tiek tirpsta vandenyje, dalis lieka ant stiklo ir filtro. Be to, reakcija gali nepasibaigti.', 'Aspirin dissolves a little in water, and some stays on the glass and filter. The reaction may also be incomplete.')),
             t('Išeiga mažėja dėl mechaninių nuostolių ir tirpumo, o ne dėl stechiometrijos.', 'Yield falls through mechanical losses and solubility, not through stoichiometry.'), 'LW4 p2'),
-          P('l4.defence.8', t('Po darbo reikia išplauti aparatūrą šiltu vandeniu, išskyrus termometrą.', 'After the work the apparatus is washed with warm water, except the thermometer.'),
+          P('l4.defence.8', t('Kaip po darbo tvarkoma aparatūra?', 'How is the apparatus dealt with after the work?'),
             ch(t('Kokia saugumo ir tvarkos taisyklė galioja?', 'Which safety and housekeeping rule applies?'), [
               ['Plauti šiltu vandeniu, padėti ant stalo, o priemones grąžinti į jų vietas; termometro neplauti šiltu vandeniu.', 'Wash with warm water, put it on the bench and return the equipment to its places; do not wash the thermometer in warm water.'],
               ['Aparatūrą palikti nešvarią kitiems.', 'Leave the apparatus dirty for the next group.'],

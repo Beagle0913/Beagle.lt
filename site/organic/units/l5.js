@@ -53,8 +53,8 @@
           },
           { h: t('Mechanizmas', 'Mechanism') },
           {
-            p: t('Rūgšties $H+$ prisijungia prie dvigubojo ryšio ir susidaro karbokatijonas. Dabar tarp anglies atomų yra tik $σ$ ryšys, todėl galima sukimasis aplink jį. Pasisukus ir atskilus $H+$, dvigubasis ryšys atsistato, bet jau kitoje konfigūracijoje, kurioje abi $COOH$ grupės toliau viena nuo kitos.',
-              'The acid supplies $H+$, which adds to the double bond and gives a carbocation. Now only a $σ$ bond links the two carbons, so rotation around it is possible. After the turn the $H+$ is lost, the double bond re-forms in the other configuration, with the two $COOH$ groups far apart.')
+            p: t('Rūgšties $H+$ laikinai suvienguboja dvigubąjį ryšį: tarp anglių lieka tik $σ$ ryšys, todėl galimas sukimasis aplink jį. Pasisukus ir atskilus $H+$, dvigubasis ryšys atsistato kitoje konfigūracijoje, kurioje abi $COOH$ grupės toliau viena nuo kitos. Čia parodytas supaprastintas modelis (protonas prisijungia prie anglies); tikrovėje protonas greičiausiai prisijungia prie karbonilo deguonies arba chloridas laikinai prisijungia prie C=C, bet esmė ta pati: sukimosi metu π ryšio nėra.',
+              'The acid\'s $H+$ temporarily turns the double bond into a single bond: only a $σ$ bond is left between the carbons, so rotation around it is possible. After the turn the $H+$ is lost and the double bond re-forms in the other configuration, with the two $COOH$ groups far apart. This is a simplified model (the proton adds to carbon); in reality the proton more likely adds to a carbonyl oxygen, or chloride adds reversibly to C=C, but the point is the same: while the molecule rotates, there is no π bond.')
           },
           {
             mech: [{
@@ -82,7 +82,7 @@
         blocks: [
           { h: t('Įranga', 'Apparatus') },
           {
-            p: t('Reikia mažos stiklinėlės ir Erlenmejerio kolbos, elektrinės viryklės su magnetine maišykle, grįžtamojo kondensatoriaus ant kolbos, filtravimo įrangos (stiklinio piltuvėlio ir mėgintuvėlio su atsaka), stiklinio kamštelio kristalams nuspausti, ledo vonios, džiovinimo krosnelės (80 °C) ir spiritinio termometro lydymosi temperatūrai nustatyti.',
+            p: t('Reikia mažos stiklinėlės ir Erlenmejerio kolbos, elektrinės viryklės su magnetine maišykle, grįžtamojo kondensatoriaus ant kolbos, filtravimo įrangos (stiklinio piltuvėlio ir mėgintuvėlio su atšaka), stiklinio kamštelio kristalams nuspausti, ledo vonios, džiovinimo krosnelės (80 °C) ir spiritinio termometro lydymosi temperatūrai nustatyti.',
               'You need a small beaker and an Erlenmeyer flask, an electric hot plate with a magnetic stirrer, a reflux condenser for the flask, filtration equipment (a glass funnel and a flask with a side arm), a glass stopper for pressing crystals, an ice bath, a drying oven (80 °C) and a spirit thermometer for the melting point.'),
             src: 'LW5 p1'
           },
@@ -141,10 +141,15 @@
             src: 'LW5 p2'
           },
           {
+            p: t('Papildomai (nėra darbo apraše) junginius galima palyginti plonasluoksne chromatografija: skaičiuojamas dėmių $R_f$ ir lyginamas toje pačioje plokštelėje.',
+              'Optionally (not in the lab description) compounds can be compared by thin-layer chromatography: the $R_f$ of the spots is calculated and compared on the same plate.'),
+            src: 'Klein'
+          },
+          {
             example: {
-              q: [{ p: t('Paimta 2,00 g anhidrido ($M$ = 98,07 g/mol). Gauta 1,10 g maleino rūgšties ($M$ = 116,07 g/mol). Kokia išeiga?', '2.00 g of anhydride ($M$ = 98.07 g/mol) was taken and 1.10 g of maleic acid ($M$ = 116.07 g/mol) obtained. What is the yield?') }],
+              q: [{ p: t('Paimta 2,00 g anhidrido ($M$ = 98,06 g/mol). Gauta 1,10 g maleino rūgšties ($M$ = 116,07 g/mol). Kokia išeiga?', '2.00 g of anhydride ($M$ = 98.06 g/mol) was taken and 1.10 g of maleic acid ($M$ = 116.07 g/mol) obtained. What is the yield?') }],
               steps: [
-                [{ p: t('Anhidrido molių skaičius: $2,00 / 98,07 = 0,0204$ mol.', 'Moles of anhydride: $2.00 / 98.07 = 0.0204$ mol.') }],
+                [{ p: t('Anhidrido molių skaičius: $2,00 / 98,06 = 0,0204$ mol.', 'Moles of anhydride: $2.00 / 98.06 = 0.0204$ mol.') }],
                 [{ p: t('Santykis 1 : 1, todėl teorinė masė $= 0,0204 · 116,07 = 2,37$ g.', 'The ratio is 1 : 1, so the theoretical mass $= 0.0204 · 116.07 = 2.37$ g.') }],
                 [{ p: t('Išeiga $= 1,10 / 2,37 · 100 = 46$ %.', 'Yield $= 1.10 / 2.37 · 100 = 46$ %.') }]
               ]
@@ -152,8 +157,8 @@
           },
           { h: t('Saugumas', 'Safety') },
           {
-            pitfall: t('Konc. $HCl$ ėsdina ir garuoja: dirbkite su akiniais ir pirštinėmis, geriausia traukos spintoje. Verdant tirpalą grįžtamasis kondensatorius turi būti prijungtas, o kolbos negalima uždaryti kamščiu. Karšto tirpalo ir viryklės nelieskite plikomis rankomis. Aparatūrą (išskyrus termometrą) kruopščiai plaukite karštu vandeniu.',
-              'Conc. $HCl$ is corrosive and fumes: wear goggles and gloves, preferably work in a fume hood. During boiling the reflux condenser must be connected and the flask must never be closed with a stopper. Do not touch the hot solution or hot plate with bare hands. Wash the apparatus (except the thermometer) thoroughly with hot water.'),
+            pitfall: t('Konc. $HCl$ ėsdina ir garuoja: dirbkite su akiniais ir pirštinėmis, geriausia traukos spintoje. Verdant tirpalą grįžtamasis kondensatorius turi būti prijungtas, o kolbos negalima uždaryti kamščiu. Karšto tirpalo ir viryklės nelieskite plikomis rankomis. Aparatūrą (išskyrus termometrą) kruopščiai plaukite šiltu vandeniu.',
+              'Conc. $HCl$ is corrosive and fumes: wear goggles and gloves, preferably work in a fume hood. During boiling the reflux condenser must be connected and the flask must never be closed with a stopper. Do not touch the hot solution or hot plate with bare hands. Wash the apparatus (except the thermometer) thoroughly with warm water.'),
             src: 'LW5 p1-2'
           },
           { practice: 'l5.observe' },
@@ -170,7 +175,7 @@
           t('Mechanizmas: $H+$ prisijungia prie $C=C$, sukimasis aplink $C-C$, $H+$ atskyla.', 'Mechanism: $H+$ adds to $C=C$, rotation about $C-C$, $H+$ is lost.'),
           t('Fumaro rūgštis iškrenta, nes menkai tirpsta; maleino rūgšties vandeniu neplaunama.', 'Fumaric acid precipitates because it is poorly soluble; maleic acid is not washed with water.'),
           t('Lydymosi temperatūros: maleino 140–142 °C, fumaro 299–300 °C (sublimuojasi).', 'Melting points: maleic 140–142 °C, fumaric 299–300 °C (sublimes).'),
-          t('Išeiga = gauta masė / teorinė masė · 100 %; $M$(anhidrido) 98,07, $M$(rūgščių) 116,07 g/mol.', 'Yield = mass obtained / theoretical mass · 100 %; $M$(anhydride) 98.07, $M$(acids) 116.07 g/mol.')
+          t('Išeiga = gauta masė / teorinė masė · 100 %; $M$(anhidrido) 98,06, $M$(rūgščių) 116,07 g/mol.', 'Yield = mass obtained / theoretical mass · 100 %; $M$(anhydride) 98.06, $M$(acids) 116.07 g/mol.')
         ]
       }
     ],
@@ -217,7 +222,7 @@
               ['įstatyti grįžtamąjį kondensatorių', 'fit the reflux condenser'],
               ['prijungti vandens žarneles', 'connect the water hoses'],
               ['įjungti kaitinimą ir maišymą', 'switch on heating and stirring']
-            ], t('Kaitinimas yra paskutinis, kai viskas jau uždaryta ir aušinama.', 'Heating comes last, when everything is in place and cooled.'),
+            ], t('Kaitinimas yra paskutinis, kai viskas jau surinkta ir aušinama.', 'Heating comes last, when everything is in place and cooled.'),
               t('Pirma paruošiama kolba su reagentais, sumontuojamas kondensatorius ir jam tiekamas vanduo, ir tik tada kaitinama.', 'First the flask with reagents is prepared, the condenser is mounted and supplied with water, and only then is the mixture heated.'))],
             why: t('Kaitinti be veikiančio kondensatoriaus negalima: pasišalintų $HCl$ ir vandens garai.', 'You must not heat without a working condenser: $HCl$ and water vapour would escape.'),
             src: 'LW5 p2'
@@ -230,8 +235,8 @@
               ['užsukti vandens čiaupą ir nuimti kondensatorių', 'turn off the water and remove the condenser'],
               ['kolbą aušinti vandens ir ledo vonioje', 'cool the flask in a water and ice bath'],
               ['kristalus nufiltruoti', 'filter off the crystals']
-            ], t('Vandens kondensatoriui negalima nutraukti, kol viskas dar verda.', 'The condenser water must not be stopped while everything is still boiling.'),
-              t('Pirmiausia nutraukiamas šildymas, po to nuimamas kondensatorius ir užsukamas vanduo; tik tada kolba aušinama, kad kuo daugiau fumaro rūgšties išsikristalintų.', 'Heating stops first, then the condenser is removed and the water turned off; only then is the flask cooled so that as much fumaric acid as possible crystallises.'))],
+            ], t('Vandens tiekimo kondensatoriui negalima nutraukti, kol viskas dar verda.', 'The water supply to the condenser must not be stopped while everything is still boiling.'),
+              t('Pirmiausia nutraukiamas šildymas ir maišymas, po to užsukamas vanduo ir nuimamas kondensatorius; tik tada kolba aušinama, kad kuo daugiau fumaro rūgšties išsikristalintų.', 'Heating and stirring stop first, then the water is turned off and the condenser removed; only then is the flask cooled so that as much fumaric acid as possible crystallises.'))],
             why: t('Kuo šaltesnis tirpalas, tuo mažiau fumaro rūgšties jame lieka.', 'The colder the solution, the less fumaric acid stays in it.'),
             src: 'LW5 p2'
           },
@@ -250,7 +255,7 @@
           },
           {
             id: 'l5.order.6',
-            q: Q('Rūgščioje terpėje Z-buten-2-diorūgštis virsta E-izomeru.', 'Acid-catalysed conversion of the Z isomer of but-2-enedioic acid into the E isomer.'),
+            q: Q('Rūgščioje terpėje (Z)-2-buteno dirūgštis virsta (E)-izomeru.', 'Acid-catalysed conversion of the Z isomer of but-2-enedioic acid into the E isomer.'),
             steps: [ord(t('Išdėstykite mechanizmo stadijas.', 'Put the stages of the mechanism in order.'), [
               ['$H+$ prisijungia prie $C=C$ ir susidaro karbokatijonas', '$H+$ adds to $C=C$ and a carbocation forms'],
               ['aplink $C-C$ ryšį pasisuka', 'rotation about the $C-C$ bond'],
@@ -266,8 +271,7 @@
             steps: [ord(t('Išdėstykite skaičiavimo žingsnius.', 'Put the calculation steps in order.'), [
               ['apskaičiuoti pradinį molių skaičių $n = m / M$', 'calculate the starting amount $n = m / M$'],
               ['iš jo gauti teorinę masę', 'get the theoretical mass from it'],
-              ['pasverti gautą produktą', 'weigh the product obtained'],
-              ['gautą masę padalyti iš teorinės ir padauginti iš 100', 'divide the obtained mass by the theoretical one and multiply by 100']
+              ['gautą (pasvertą) masę padalyti iš teorinės ir padauginti iš 100', 'divide the obtained (weighed) mass by the theoretical one and multiply by 100']
             ], t('Išeiga reikalauja ir teorinės, ir realios masės.', 'A yield needs both the theoretical and the real mass.'),
               t('Pirma randama teorinė masė pagal santykį 1 : 1, po to lyginama su tikrąja mase.', 'First the theoretical mass is found by the 1 : 1 ratio, and then compared with the real mass.'))],
             why: t('Išeiga rodo, kokią dalį galimo produkto realiai gavote.', 'The yield shows what fraction of the possible product you actually obtained.'),
@@ -304,7 +308,7 @@
               ['kad susidarytų fumaro rūgštis', 'so that fumaric acid forms'],
               ['kad vanduo greičiau atvėstų iki 0 °C', 'so that the water cools quickly to 0 °C']
             ], 0, t('Pagalvokite apie reakcijos šilumą.', 'Think about the heat of the reaction.'),
-              t('Anhidrido hidrolizė išskiria šilumą, o virš viryklės ją lydėtų kaitimas; tada tirpalas gali ištikšti. Fumaro rūgštis dar nesusidaro, nes nėra katalizatoriaus.', 'Hydrolysis of the anhydride releases heat, and on the plate it would overheat and spatter. Fumaric acid does not yet form, because there is no catalyst.'))],
+              t('Anhidrido hidrolizė išskiria šilumą; virš viryklės tirpalas perkaistų ir galėtų ištikšti. Fumaro rūgštis dar nesusidaro, nes nėra katalizatoriaus (HCl).', 'The hydrolysis of the anhydride gives off heat; on the hot plate the solution would overheat and could spatter. Fumaric acid does not form yet, because there is no catalyst (HCl).'))],
             why: t('Vandens nukleofilas atakuoja anhidrido karbonilo anglį ir atskelia $C-O$ ryšį; reakcija vyksta greitai ir su šiluma.', 'Water acts as a nucleophile on the carbonyl carbon and cleaves the $C-O$ bond; the reaction is fast and gives off heat.'),
             src: 'LW5 p1'
           },
@@ -331,7 +335,7 @@
               ['plaunant ji sublimuojasi', 'it sublimes on washing']
             ], 0, t('Prisiminkite lentelę apie tirpumą.', 'Recall the solubility row of the table.'),
               t('Maleino rūgštis poliška ir sudaro ryšius su vandeniu, todėl plovimas vandeniu pražudytų produktą.', 'Maleic acid is polar and bonds to water, so a water wash would lose the product.'))],
-            why: t('Plaunama tik tuo, kuo produktas netirpsta; fumaro rūgštis šaltame vandenyje tirpsta menkai, todėl ją plauti galima.', 'You wash only with something the product does not dissolve in; fumaric acid is poorly soluble in cold water, so it can be washed.'),
+            why: t('Plaunama tik tirpikliu, kuriame produktas netirpsta; fumaro rūgštis šaltame vandenyje tirpsta menkai, todėl ją plauti galima.', 'You wash only with something the product does not dissolve in; fumaric acid is poorly soluble in cold water, so it can be washed.'),
             src: 'LW5 p1'
           },
           {
@@ -342,7 +346,7 @@
               ['jis paskatina izomerizaciją', 'it promotes the isomerisation'],
               ['jis iš kolbos išsiurbia orą', 'it sucks the air out of the flask'],
               ['jis atskiria $HCl$ nuo vandens distiliuodamas', 'it separates $HCl$ from water by distillation']
-            ], 0, t('Kondensatorius ne eliminuoja produktą, o grąžina garus.', 'The condenser does not remove anything, it returns vapour.'),
+            ], 0, t('Kondensatorius nieko nepašalina, o grąžina garus į kolbą.', 'The condenser does not remove anything, it returns vapour.'),
               t('Garai kyla aušinamu vamzdžiu, vėsta ir nuteka atgal. Taip galima ilgai virinti nepraradus tirpiklio ir rūgšties.', 'Vapour rises in the cooled tube, condenses and runs back. This allows long boiling without losing solvent or acid.'))],
             why: t('Kai mišinį reikia ilgai virinti, o ne distiliuoti, nei tirpiklis, nei lakūs komponentai neturi pasišalinti.', 'When a mixture has to be boiled for a long time rather than distilled, neither solvent nor volatile components may escape.'),
             src: 'LW5 p2'
@@ -548,11 +552,11 @@
           {
             id: 'l5.prove.3',
             q: Q('Pirmųjų kristalų lydymosi riba 125–134 °C.', 'The melting range of the first crystals is 125–134 °C.'),
-            steps: [ch(t('Ką daryti išvadą?', 'What do you conclude?'), [
+            steps: [ch(t('Kokia išvada pagrįsta?', 'What do you conclude?'), [
               ['maleino rūgštis nešvari arba drėgna', 'the maleic acid is impure or damp'],
               ['gauta fumaro rūgštis', 'fumaric acid was obtained'],
               ['gautas grynas anhidridas', 'pure anhydride was obtained'],
-              ['termometras rodo be klaidos', 'the thermometer is exactly right']
+              ['termometras rodo tiksliai', 'the thermometer is exactly right']
             ], 0, t('Riba plati ir žemesnė už literatūrinę.', 'The range is wide and below the literature value.'),
               t('Priemaišos žemina ir praplečia lydymosi ribą, todėl reikalingas džiovinimas ar perkristalinimas.', 'Impurities lower and widen the melting range, so drying or recrystallisation is needed.'))],
             why: t('Lydymosi temperatūros nuokrypis nuo literatūrinės yra grynumo matas.', 'The deviation from the literature melting point measures purity.'),
@@ -573,13 +577,13 @@
           },
           {
             id: 'l5.prove.5',
-            q: Q('Pilant $HCl$ iškrito kristalų; panašus kontrolinis mėginys be $HCl$ ir be kaitinimo kristalų neiškrito.', 'Crystals appeared with $HCl$; a similar control sample without $HCl$ or heating gave none.'),
+            q: Q('Pridėjus $HCl$ ir pakaitinus iškrito kristalų; panašus kontrolinis mėginys be $HCl$ ir be kaitinimo kristalų neiškrito.', 'Crystals appeared with $HCl$; a similar control sample without $HCl$ or heating gave none.'),
             steps: [ch(t('Ką tai rodo?', 'What does this show?'), [
               ['kad izomerizacijai reikalinga rūgštis ir šiluma', 'that isomerisation needs acid and heat'],
               ['kad vanduo pats paverčia izomerus', 'that water alone interconverts the isomers'],
               ['kad kristalai yra druska', 'that the crystals are a salt'],
               ['kad $HCl$ sunaudojamas visas', 'that all the $HCl$ is used up']
-            ], 0, t('Kontrolė keičia tik vieną sąlygą.', 'A control changes only one condition.'),
+            ], 0, t('Kontrolė neturi nei $HCl$, nei kaitinimo.', 'The control has neither $HCl$ nor heating.'),
               t('Be $H+$ ir kaitinimo $π$ ryšys išlieka, todėl kristalai neiškrenta. Tai rodo katalizinį $HCl$ vaidmenį.', 'Without $H+$ and heat the $π$ bond survives, so no crystals form. This shows the catalytic role of $HCl$.'))],
             why: t('Kontrolinis bandymas atskiria, kas iš tiesų sukelia pokytį.', 'A control experiment isolates what really causes the change.'),
             src: 'LW5 p2'
@@ -633,12 +637,12 @@
         bank: [
           { id: 'l5.apparatus.1', desc: ['ilgas stiklinis vamzdis su apvalkalu, kuriuo teka vanduo; dedamas ant kolbos kaklelio, kad garai nesprūstų', 'a long glass tube with a jacket through which water flows; fitted to the neck of the flask so vapours cannot escape'], right: ['grįžtamasis kondensatorius', 'reflux condenser'], other: [['atskirtuvas', 'separatory funnel'], ['Büchnerio piltuvėlis', 'Büchner funnel'], ['pipetė', 'pipette']], why: ['Garai kondensuojasi ir grįžta atgal.', 'Vapours condense and run back.'] },
           { id: 'l5.apparatus.2', desc: ['kūgio formos kolba su siauru kakleliu, kurią galima kaitinti ant viryklės', 'a conical flask with a narrow neck that can be heated on a hot plate'], right: ['Erlenmejerio kolba', 'Erlenmeyer flask'], other: [['matavimo cilindras', 'measuring cylinder'], ['stiklinė lazdelė', 'glass rod'], ['kristalizatorius', 'crystalliser dish']], why: ['Siauras kaklelis mažina garavimą.', 'The narrow neck reduces evaporation.'] },
-          { id: 'l5.apparatus.3', desc: ['storasienis stiklinis indas su šonine atšaka, prijungiamas prie vakuumo; ant jo dedamas piltuvėlis', 'a thick-walled glass vessel with a side arm connected to the vacuum, with a funnel on top'], right: ['mėgintuvėlis su atsaka filtravimui', 'filter flask with a side arm'], other: [['Erlenmejerio kolba su kamščiu', 'plain flask with stopper'], ['dulkių surinkėjas', 'dust collector'], ['dujų plovimo indas', 'gas wash bottle']], why: ['Vakuumas pagreitina filtravimą.', 'Vacuum speeds up the filtration.'] },
+          { id: 'l5.apparatus.3', desc: ['storasienis stiklinis indas su šonine atšaka, prijungiamas prie vakuumo; ant jo dedamas piltuvėlis', 'a thick-walled glass vessel with a side arm connected to the vacuum, with a funnel on top'], right: ['mėgintuvėlis su atšaka filtravimui', 'filter flask with a side arm'], other: [['Erlenmejerio kolba su kamščiu', 'plain flask with stopper'], ['dulkių surinkėjas', 'dust collector'], ['dujų plovimo indas', 'gas wash bottle']], why: ['Vakuumas pagreitina filtravimą.', 'Vacuum speeds up the filtration.'] },
           { id: 'l5.apparatus.4', desc: ['platus seklus stiklinis indas, į kurį pilamas vanduo su ledu, kad jame būtų atšaldomi kristalai ar kolba', 'a wide shallow dish filled with water and ice'], right: ['kristalizatorius (ledo vonia)', 'crystalliser dish (ice bath)'], other: [['džiovinimo krosnelė', 'drying oven'], ['grįžtamasis kondensatorius', 'reflux condenser'], ['magnetinė maišyklė', 'magnetic stirrer']], why: ['Plokščias indas gerai perduoda šilumą.', 'A flat vessel exchanges heat well.'] },
           { id: 'l5.apparatus.5', desc: ['maža teflonu padengta „tabletė“ ar lazdelė, kuri sukasi tirpale, kai po indu yra besisukantis magnetas', 'a small Teflon-coated "pill" or rod that spins in the liquid when a rotating magnet is below the vessel'], right: ['teflono maišikliukas', 'Teflon stirring bar'], other: [['laikiklis', 'clamp'], ['kamštelis', 'stopper'], ['termometras', 'thermometer']], why: ['Magnetas suka maišikliuką.', 'The magnet spins the bar.'] },
           { id: 'l5.apparatus.6', desc: ['stiklinis strypas su plokščiu pagrindu, kuriuo kristalai nuspaudžiami filtre', 'a glass rod with a flat base used to press crystals on the filter'], right: ['stiklinis kamštelis kristalams nuspausti', 'glass stopper for pressing crystals'], other: [['stiklinė lazdelė su šluotele', 'brush on a glass rod'], ['pipetė su guma', 'rubber-bulb pipette'], ['piltuvėlio kamštis', 'funnel stopper']], why: ['Nuspaudžiama, kad skystis būtų išspaustas.', 'Pressing squeezes the liquid out.'] },
           { id: 'l5.apparatus.7', desc: ['šildomas dėžutės pavidalo prietaisas, kuriame džiovinama 80 °C', 'a heated box in which things are dried at 80 °C'], right: ['džiovinimo krosnelė', 'drying oven'], other: [['šaldytuvas', 'refrigerator'], ['garų kaitintuvas', 'steam heater'], ['vakuuminis eksikatorius', 'vacuum desiccator']], why: ['Karštas oras išgarina vandenį.', 'Hot air evaporates the water.'] },
-          { id: 'l5.apparatus.8', desc: ['stiklinis termometras su spiritu, naudojamas apytiksliai lydymosi temperatūrai nustatyti', 'a glass thermometer filled with alcohol, used to get an approximate melting point'], right: ['spiritinis termometras', 'spirit thermometer'], other: [['gyvsidabrinis barometras', 'mercury barometer'], ['pH jutiklis', 'pH electrode'], ['refraktometras', 'refractometer']], why: ['Spiritas netoksiškas, jis nuspalvintas.', 'Alcohol is less toxic and dyed.'] }
+          { id: 'l5.apparatus.8', desc: ['stiklinis termometras su spiritu, naudojamas apytiksliai lydymosi temperatūrai nustatyti', 'a glass thermometer filled with alcohol, used to get an approximate melting point'], right: ['spiritinis termometras', 'spirit thermometer'], other: [['gyvsidabrinis barometras', 'mercury barometer'], ['pH jutiklis', 'pH electrode'], ['refraktometras', 'refractometer']], why: ['Jame nėra gyvsidabrio, todėl jis saugesnis.', 'It contains no mercury, so it is safer.'] }
         ].map(a => ({
           id: a.id,
           q: [{ p: t('Aprašymas: ' + a.desc[0] + '.', 'Description: ' + a.desc[1] + '.') }],
@@ -658,21 +662,21 @@
         gen(rng, ctx) {
           const fmt = (x, d) => x.toFixed(d);
           const lt = (x, d) => fmt(x, d).replace('.', ',');
-          const MA = 98.07, MM = 116.07;
+          const MA = 98.06, MM = 116.07;
           const variant = ctx.pick(['acid', 'fumaric', 'overall', 'mp', 'rf']);
 
           if (variant === 'acid') {
             const m = ctx.int(15, 30) / 10;
             const theo = m / MA * MM;
             const obt = Math.round(theo * ctx.int(30, 85)) / 100;
-            const y = obt / theo * 100;
+            const y = obt / Number(theo.toFixed(2)) * 100;
             return {
-              q: [{ p: t('Maleino rūgščiai gauti paimta ' + lt(m, 2) + ' g anhidrido ($M$ = 98,07 g/mol). Pirmoji kristalų porcija po džiovinimo sveria ' + lt(obt, 2) + ' g ($M$ rūgšties = 116,07 g/mol).',
-                'To obtain maleic acid, ' + fmt(m, 2) + ' g of anhydride ($M$ = 98.07 g/mol) was used. The first crop of crystals weighs ' + fmt(obt, 2) + ' g after drying ($M$ of the acid = 116.07 g/mol).') }],
+              q: [{ p: t('Maleino rūgščiai gauti paimta ' + lt(m, 2) + ' g anhidrido ($M$ = 98,06 g/mol). Pirmoji kristalų porcija po džiovinimo sveria ' + lt(obt, 2) + ' g ($M$ rūgšties = 116,07 g/mol).',
+                'To obtain maleic acid, ' + fmt(m, 2) + ' g of anhydride ($M$ = 98.06 g/mol) was used. The first crop of crystals weighs ' + fmt(obt, 2) + ' g after drying ($M$ of the acid = 116.07 g/mol).') }],
               steps: [
                 { prompt: t('Kokia teorinė maleino rūgšties masė (g)?', 'What is the theoretical mass of maleic acid (g)?'), kind: 'number', answer: { value: theo, tol: 0.03 },
                   hint: t('Santykis 1 : 1; pirmiausia reikia molių.', 'The ratio is 1 : 1; first you need moles.'),
-                  solution: t('$n = ' + lt(m, 2) + ' / 98,07$; masė $= n · 116,07 = ' + lt(theo, 2) + '$ g.', '$n = ' + fmt(m, 2) + ' / 98.07$; mass $= n · 116.07 = ' + fmt(theo, 2) + '$ g.') },
+                  solution: t('$n = ' + lt(m, 2) + ' / 98,06$; masė $= n · 116,07 = ' + lt(theo, 2) + '$ g.', '$n = ' + fmt(m, 2) + ' / 98.06$; mass $= n · 116.07 = ' + fmt(theo, 2) + '$ g.') },
                 { prompt: t('Kokia išeiga (%)?', 'What is the yield (%)?'), kind: 'number', answer: { value: y, tol: 0.6 },
                   hint: t('Gauta masė dalijama iš teorinės.', 'Divide the obtained mass by the theoretical one.'),
                   solution: t('$' + lt(obt, 2) + ' / ' + lt(theo, 2) + ' · 100 = ' + lt(y, 1) + '$ %.', '$' + fmt(obt, 2) + ' / ' + fmt(theo, 2) + ' · 100 = ' + fmt(y, 1) + '$ %.') }
@@ -707,12 +711,12 @@
             const obt = Math.round(theo * ctx.int(15, 60)) / 100;
             const y = obt / theo * 100;
             return {
-              q: [{ p: t('Iš ' + lt(m, 2) + ' g maleino rūgšties anhidrido ($M$ = 98,07 g/mol) po hidrolizės ir izomerizacijos gauta ' + lt(obt, 2) + ' g fumaro rūgšties ($M$ = 116,07 g/mol).',
-                'From ' + fmt(m, 2) + ' g of maleic anhydride ($M$ = 98.07 g/mol), ' + fmt(obt, 2) + ' g of fumaric acid ($M$ = 116.07 g/mol) was obtained after hydrolysis and isomerisation.') }],
+              q: [{ p: t('Iš ' + lt(m, 2) + ' g maleino rūgšties anhidrido ($M$ = 98,06 g/mol) po hidrolizės ir izomerizacijos gauta ' + lt(obt, 2) + ' g fumaro rūgšties ($M$ = 116,07 g/mol).',
+                'From ' + fmt(m, 2) + ' g of maleic anhydride ($M$ = 98.06 g/mol), ' + fmt(obt, 2) + ' g of fumaric acid ($M$ = 116.07 g/mol) was obtained after hydrolysis and isomerisation.') }],
               steps: [
                 { prompt: t('Kiek mmol anhidrido paimta?', 'How many mmol of anhydride were used?'), kind: 'number', answer: { value: m / MA * 1000, tol: 0.5 },
                   hint: t('$n = m / M$, pervesta į mmol.', '$n = m / M$, converted to mmol.'),
-                  solution: t('$' + lt(m, 2) + ' / 98,07 · 1000 = ' + lt(m / MA * 1000, 1) + '$ mmol.', '$' + fmt(m, 2) + ' / 98.07 · 1000 = ' + fmt(m / MA * 1000, 1) + '$ mmol.') },
+                  solution: t('$' + lt(m, 2) + ' / 98,06 · 1000 = ' + lt(m / MA * 1000, 1) + '$ mmol.', '$' + fmt(m, 2) + ' / 98.06 · 1000 = ' + fmt(m / MA * 1000, 1) + '$ mmol.') },
                 { prompt: t('Kokia bendra išeiga (%)?', 'What is the overall yield (%)?'), kind: 'number', answer: { value: y, tol: 0.6 },
                   hint: t('Abu etapai po 1 : 1, todėl teorinė masė žinoma iš pirmo etapo.', 'Both stages are 1 : 1, so the theoretical mass follows from the first stage.'),
                   solution: t('Teorinė masė $= ' + lt(theo, 2) + '$ g; išeiga $= ' + lt(obt, 2) + ' / ' + lt(theo, 2) + ' · 100 = ' + lt(y, 1) + '$ %.', 'Theoretical mass $= ' + fmt(theo, 2) + '$ g; yield $= ' + fmt(obt, 2) + ' / ' + fmt(theo, 2) + ' · 100 = ' + fmt(y, 1) + '$ %.') }
@@ -725,7 +729,7 @@
           if (variant === 'mp') {
             const pure = ctx.pick([true, false]);
             const lo = pure ? ctx.int(139, 140) : ctx.int(120, 134);
-            const width = pure ? ctx.int(1, 3) : ctx.int(5, 10);
+            const width = pure ? ctx.int(1, 2) : ctx.int(5, 10);
             const hi = lo + width;
             return {
               q: [{ p: t('Pirmųjų kristalų lydymosi riba išmatuota ' + lo + '–' + hi + ' °C. Literatūrinė maleino rūgšties lydymosi riba yra 140–142 °C.', 'The melting range of the first crystals was measured as ' + lo + '–' + hi + ' °C. The literature range for maleic acid is 140–142 °C.') }],
@@ -733,7 +737,7 @@
                 { prompt: t('Kokio pločio (°C) yra išmatuota lydymosi riba?', 'How wide (°C) is the measured melting range?'), kind: 'number', answer: { value: width, tol: 0.1 },
                   hint: t('Iš aukštesnės temperatūros atimkite žemesnę.', 'Subtract the lower temperature from the higher.'),
                   solution: t(hi + ' − ' + lo + ' = ' + width + ' °C.', hi + ' − ' + lo + ' = ' + width + ' °C.') },
-                ch(t('Ką sakote apie grynumą?', 'What do you say about purity?'), [
+                ch(t('Ką galima pasakyti apie grynumą?', 'What can be said about purity?'), [
                   ['pakankamai grynas', 'reasonably pure'],
                   ['nešvarus arba drėgnas', 'impure or damp'],
                   ['tai fumaro rūgštis', 'it is fumaric acid'],
@@ -821,14 +825,14 @@
               prompt: t('Bakstelėkite abu anglies atomus, kurie gali prisijungti protoną.', 'Tap both carbons that can receive the proton.'),
               kind: 'atoms', mol: { smi: MALEIC, opts: { numbers: 'all' } }, answer: [3, 4],
               hint: t('Protoną priima $π$ ryšio elektronų pora.', 'The proton is accepted by the $π$ electron pair.'),
-              solution: t('Protoną priima $C=C$ ryšys, t. y. atomai Nr. 4 ir Nr. 5, nes jie yra dvigubojo ryšio galai.', 'The $C=C$ bond accepts the proton, that is carbons no. 4 and no. 5, the ends of the double bond.')
+              solution: t('Protoną priima $C=C$ ryšys, t. y. atomai Nr. 4 ir Nr. 5, nes jie yra dvigubojo ryšio galai. Tai supaprastintas modelis.', 'The $C=C$ bond accepts the proton, that is carbons no. 4 and no. 5, the ends of the double bond. This is the simplified model.')
             }],
             why: t('Dvigubojo ryšio $π$ elektronai yra nukleofilai ir pirmieji atakuoja rūgšties protoną.', 'The $π$ electrons of the double bond are the nucleophile and attack the acid proton first.'),
             src: 'LW5 p1'
           },
           {
             id: 'l5.defence.5',
-            q: Q('Kodėl izomerizacija vyksta tik viena kryptimi, iš maleino į fumaro rūgštį?', 'Why does the isomerisation go in one direction, from maleic to fumaric acid?'),
+            q: Q('Kodėl izomerizacija vyksta daugiausia viena kryptimi, iš maleino į fumaro rūgštį?', 'Why does the isomerisation go mainly one way, from maleic to fumaric acid?'),
             steps: [mu(t('Pažymėkite visus teisingus teiginius.', 'Pick every correct statement.'), [
               ['fumaro rūgštis termodinamiškai stabilesnė (mažiau steriškai trukdo)', 'fumaric acid is thermodynamically more stable (less steric strain)'],
               ['ji iškrenta iš tirpalo, todėl pusiausvyra tolsta nuo maleino rūgšties', 'it precipitates, so the equilibrium moves away from maleic acid'],
@@ -872,9 +876,9 @@
               ['dirbti su akiniais ir pirštinėmis', 'wear goggles and gloves'],
               ['kolbos su virinamu mišiniu neuždaryti kamščiu', 'never close the boiling flask with a stopper'],
               ['prie kondensatoriaus prijungti vandenį prieš kaitinant', 'connect the condenser water before heating'],
-              ['termometrą po darbo plauti karštu vandeniu', 'wash the thermometer with hot water after the work']
+              ['termometrą po darbo plauti šiltu vandeniu', 'wash the thermometer with warm water after the work']
             ], [0, 1, 2], t('Prisiminkite, kaip po darbo tvarkoma aparatūra.', 'Recall how the apparatus is handled after the work.'),
-              t('Rūgštis ėsdina, uždaroje sistemoje kyla slėgis, o kondensatorius turi veikti. Termometras plaunamas ne taip kaip kita aparatūra – jis nustatomas atskirai.', 'The acid is corrosive, a closed system builds pressure, and the condenser must run. The thermometer is not washed like the other apparatus; it is put aside separately.'))],
+              t('Rūgštis ėsdina, uždaroje sistemoje kyla slėgis, o kondensatorius turi veikti. Termometras į aparatūros plovimą neįtraukiamas, kaip nurodyta darbo apraše.', 'The acid is corrosive, a closed system builds pressure, and the condenser must run. The thermometer is not included in the washing, as the lab description says.'))],
             why: t('Saugumo taisyklės kyla iš to, kokias pavojingas savybes turi medžiagos ir kaip jos reaguoja.', 'Safety rules follow from the hazards of the substances and the way they behave.'),
             src: 'LW5 p2'
           }

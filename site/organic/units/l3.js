@@ -55,13 +55,13 @@
           },
           { h: t('Kam beriama soda', 'What the soda is for') },
           {
-            p: t('Arbatos lapeliuose yra rūgščių savybių polifenolių (taninų), kurie dalyvautų ekstrakcijoje ir nuspalvintų ekstraktą. Natrio karbonatas juos paverčia vandenyje tirpiomis natrio druskomis, todėl jos lieka vandeninėje fazėje.',
-              'Tea leaves contain acidic polyphenols (tannins) that would take part in the extraction and colour the extract. Sodium carbonate turns them into water-soluble sodium salts, so they stay in the aqueous phase.'),
+            p: t('Arbatos lapeliuose yra rūgščių savybių polifenolių (taninų), kurie dalyvautų ekstrakcijoje ir nuspalvintų ekstraktą. Natrio karbonatas juos paverčia vandenyje tirpiomis natrio druskomis, todėl jos lieka vandeninėje fazėje. Be to, šarminė terpė suardo kofeino ir taninų kompleksus.',
+              'Tea leaves contain acidic polyphenols (tannins) that would take part in the extraction and colour the extract. Sodium carbonate turns them into water-soluble sodium salts, so they stay in the aqueous phase. The alkaline medium also breaks up caffeine–tannin complexes.'),
             src: 'LW3 p4'
           },
           {
             scheme: { items: [{ smi: GALLIC, name: t('3,4,5-trihidroksibenzenkarboksirūgštis', '3,4,5-trihydroxybenzoic acid') }, { plus: true }, { smi: '[Na+].[Na+].[O-]C([O-])=O' }, { arrow: '→' }, { smi: GALLATE + '.[Na+]' }, { plus: true }, { smi: '[Na+].OC([O-])=O' }] },
-            caption: t('Pavyzdys: galo rūgštis (taninų struktūrinis vienetas) virsta natrio galatu; kofeinas šioje terpėje nesikeičia.', 'Example: gallic acid (a building unit of tannins) becomes sodium gallate; caffeine is unchanged in this medium.'),
+            caption: t('Pavyzdys: galo rūgštis (hidrolizuojamų taninų struktūrinis vienetas) virsta natrio galatu; kofeinas šioje terpėje nesikeičia.', 'Example: gallic acid (building unit of hydrolysable tannins) becomes sodium gallate; caffeine is unchanged in this medium.'),
             src: 'LW3 p4',
             claims: [{ formula: [GALLIC, 'C7H6O5'] }]
           },
@@ -78,8 +78,8 @@
         blocks: [
           { h: t('Principas', 'Principle') },
           {
-            p: t('Ekstrahuojant medžiaga pasiskirsto tarp dviejų nesimaišančių skysčių pagal tai, kur ji tirpsta geriau. Kai tirpalas pilamas į dalijamąjį piltuvą ir kratomas su tirpikliu, ji pereina į tirpiklį, jei tirpsta jame geriau nei vandenyje. Santykis tarp koncentracijų abiejuose sluoksniuose yra pasiskirstymo konstanta $K$.',
-              'In extraction a substance divides between two immiscible liquids according to where it dissolves better. When the solution is shaken with a solvent in a separatory funnel, the substance moves into the solvent if it dissolves better there than in water. The ratio of the concentrations in the two layers is the distribution constant $K$.'),
+            p: t('Ekstrahuojant medžiaga pasiskirsto tarp dviejų nesimaišančių skysčių pagal tai, kur ji tirpsta geriau. Kai tirpalas pilamas į dalijamąjį piltuvą ir kratomas su tirpikliu, ji pereina į tirpiklį, jei tirpsta jame geriau nei vandenyje. Santykis tarp koncentracijų abiejuose sluoksniuose yra pasiskirstymo konstanta $K$: $K$ = c(ekstrahentas) / c(vanduo).',
+              'In extraction a substance divides between two immiscible liquids according to where it dissolves better. When the solution is shaken with a solvent in a separatory funnel, the substance moves into the solvent if it dissolves better there than in water. The ratio of the concentrations in the two layers is the distribution constant $K$: $K$ = c(extractant) / c(water).'),
             src: 'LW3 p1'
           },
           {
@@ -105,6 +105,7 @@
             list: [
               t('Piltuvas pripildomas ne daugiau kaip dviem trečdaliais; ekstrahento būna apie trečdalį tirpalo tūrio.', 'The funnel is filled to at most two thirds; the extractant is about a third of the solution volume.'),
               t('Uždarius kamštį, piltuvas apverčiamas ir kratomas; kas kelias sekundes atsukamas čiaupas, kad išeitų garų perteklius.', 'After the stopper goes on, the funnel is inverted and shaken; every few seconds the tap is opened to let out the excess vapour.'),
+              t('Čiaupą atsukant piltuvo snapelis nukreipiamas aukštyn, nuo savęs ir kitų.', 'When venting, point the stem upwards, away from yourself and others.'),
               t('Piltuvas įtvirtinamas stove, kamštis nuimamas, ir atskirtas apatinis sluoksnis nuleidžiamas pro čiaupą.', 'The funnel is clamped in the stand, the stopper is taken off and the lower layer is run out through the tap.'),
               t('Pasiekus sluoksnių ribą čiaupas užsukamas; viršutinis sluoksnis išpilamas pro viršų, ne pro čiaupą.', 'At the boundary the tap is closed; the upper layer is poured out through the top, not through the tap.')
             ],
@@ -112,7 +113,7 @@
           },
           {
             pitfall: t('Neišmeskite jokio sluoksnio, kol nesate tikri, kuris jų yra ekstraktas. Sluoksnį atpažinsite pagal tankį arba įlašinus lašelį vandens: jis susilieja su vandeniniu sluoksniu. Emulsiją šalina ramus laukimas, kelis lašus sočiojo $NaCl$ tirpalo, etanolio ar acetono, o geriausia – kratyti švelniai.',
-              'Do not discard any layer until you are sure which one is the extract. Identify the layer by density, or add a drop of water: it joins the aqueous layer. An emulsion is cured by patient waiting, a few drops of saturated $NaCl$ solution, ethanol or acetone, and best avoided by shaking gently.'),
+              'Do not discard any layer until you are sure which one is the extract. Identify the layer by density, or add a drop of water: it joins the aqueous layer. An emulsion is broken by patient waiting, a few drops of saturated $NaCl$ solution, ethanol or acetone, and best avoided by shaking gently.'),
             src: 'LW3 p1-2'
           },
           {
@@ -179,7 +180,7 @@
             }
           },
           {
-            pitfall: t('Starto linija turi būti virš eliuento lygio, kitaip medžiaga ištirps indo skystyje, o ne kils plokštele. Neišmatuokite $a$ ir $h$ nuo plokštelės krašto: abu skaičiuojami nuo starto linijos.',
+            pitfall: t('Starto linija turi būti virš eliuento lygio, kitaip medžiaga ištirps indo skystyje, o ne kils plokštele. Nematuokite $a$ ir $h$ nuo plokštelės krašto: abu skaičiuojami nuo starto linijos.',
               'The start line must be above the eluent level, otherwise the sample dissolves in the liquid of the chamber instead of climbing the plate. Do not measure $a$ and $h$ from the edge of the plate: both are counted from the start line.')
           },
           { practice: 'l3.observe' },
@@ -193,7 +194,7 @@
           { h: t('Eiga ir kiekvieno žingsnio paskirtis', 'Procedure and the purpose of each step') },
           {
             list: [
-              t('Vandenyje ištirpinamas natrio karbonatas, įberiama arbata ir mišinys pakaitinamas bei laikomas apie 15 min.: karštame vandenyje kofeinas iš lapelių tirpsta gerai.', 'Sodium carbonate is dissolved in water, tea is added and the mixture is heated and kept for about 15 min: caffeine dissolves well from the leaves in hot water.'),
+              t('Vandenyje užvirinamas natrio karbonatas, indas nukeliamas nuo viryklės, įmerkiami arbatos maišeliai, indas uždengiamas folija ir paliekamas apie 15 min.: karštame vandenyje kofeinas iš lapelių tirpsta gerai.', 'Sodium carbonate is boiled in water, the beaker is taken off the heat, the tea bags are immersed, the beaker is covered with foil and left for about 15 min: caffeine dissolves well from the leaves in hot water.'),
               t('Lapeliai pašalinami ir gerai nuspaudžiami (su pirštinėmis), kad į tirpalą pereitų visas kofeinas.', 'The leaves are removed and pressed well (with gloves) so that all the caffeine gets into the solution.'),
               t('Tirpalas atvėsinamas iki kambario temperatūros, nes karštas chloroformas virtų (virimo t. 61 °C) ir kiltų slėgis.', 'The solution is cooled to room temperature, because hot chloroform would boil (b.p. 61 °C) and build up pressure.'),
               t('Chloroformas naudojamas trimis 20 ml porcijomis; apatiniai sluoksniai renkami į vieną kolbą.', 'Chloroform is used in three portions of 20 ml; the lower layers are collected in one flask.'),
@@ -240,7 +241,7 @@
           t('Kofeinas ($C8H10N4O2$, be $N-H$) iš arbatos ekstrahuojamas karštu vandeniu su $Na2CO3$, tada chloroformu.', 'Caffeine ($C8H10N4O2$, no $N-H$) is extracted from tea with hot water and $Na2CO3$, then into chloroform.'),
           t('Soda taninus paverčia vandenyje tirpiomis druskomis, o kofeinas lieka neutralus.', 'Soda turns tannins into water-soluble salts while caffeine stays neutral.'),
           t('Chloroformas tankesnis už vandenį ir yra apatinis sluoksnis; ekstrahuoti 3 × 20 ml geriau nei 1 × 60 ml.', 'Chloroform is denser than water and forms the lower layer; 3 × 20 ml extracts better than 1 × 60 ml.'),
-          t('Piltuvą kratant išleisti garus; emulsija šalinama laukiant, sočiu $NaCl$ ar švelniai kratant.', 'Vent the funnel while shaking; cure an emulsion by waiting, saturated $NaCl$ or gentle shaking.'),
+          t('Piltuvą kratant išleisti garus; emulsija šalinama laukiant, sočiu $NaCl$ ar švelniai kratant.', 'Vent the funnel while shaking; break an emulsion by waiting, saturated $NaCl$ or gentle shaking.'),
           t('Džiovinti $Na2SO4$, kol grūdeliai laisvai juda; tirpiklį nugarinti rotaciniu garintuvu.', 'Dry with $Na2SO4$ until the grains move freely; remove the solvent on a rotary evaporator.'),
           t('$R_f = a / h$; eliuente chloroformo, etilacetato ir metanolio tūrių santykis $4 : 1 : 1$; UV šviesoje dėmės tamsios.', '$R_f = a / h$; the eluent has chloroform, ethyl acetate and methanol in a volume ratio of $4 : 1 : 1$; spots are dark in UV light.'),
           t('Viena dėmė: priemaišų nematyti; kelios dėmės: mišinys. Kofeino lyd. t. apie 236 °C.', 'One spot: no impurity seen; several spots: a mixture. Caffeine melts at about 236 °C.')
@@ -258,8 +259,9 @@
             id: 'l3.order.1',
             q: Q('Kofeinas išskiriamas iš arbatos ir paruošiamas ekstrahavimui.', 'Caffeine is isolated from tea and prepared for extraction.'),
             steps: [ord(t('Išdėstykite veiksmus teisinga tvarka.', 'Put the actions in the right order.'), [
-              ['ištirpinti $Na2CO3$ vandenyje ir įberti arbatos', 'dissolve $Na2CO3$ in water and add the tea'],
-              ['pakaitinti ir palaikyti apie 15 min.', 'heat and keep for about 15 min.'],
+              ['užvirinti vandenyje $Na2CO3$ tirpalą ir nukelti nuo viryklės', 'boil the $Na2CO3$ solution and take it off the heat'],
+              ['įmerkti arbatos maišelius į nuimtą nuo viryklės karštą tirpalą', 'immerse the tea bags in the hot solution'],
+              ['uždengti ir palaikyti apie 15 min.', 'cover and leave for about 15 min'],
               ['nuspausti lapelius (su pirštinėmis)', 'press out the leaves (with gloves)'],
               ['atvėsinti tirpalą iki kambario temperatūros', 'cool the solution to room temperature'],
               ['perpilti per piltuvėlį į dalijamąjį piltuvą', 'pour it through a funnel into the separatory funnel']
@@ -277,7 +279,7 @@
               ['įtvirtinti piltuvą stove ir palaukti, kol susidarys sluoksniai', 'clamp the funnel in the stand and wait for the layers'],
               ['nuimti kamštį', 'take off the stopper'],
               ['apatinį sluoksnį nuleisti į kolbą', 'run the lower layer into the flask']
-            ], t('Be kamščio nuėmimo skystis pro čiaupą nesitekėtų.', 'Without removing the stopper the liquid would not flow out through the tap.'),
+            ], t('Be kamščio nuėmimo skystis pro čiaupą netekėtų.', 'Without removing the stopper the liquid would not flow out through the tap.'),
               t('Pirma sumaišoma ir pakratoma, po to sluoksniams leidžiama atsiskirti, nuimamas kamštis, kad pateiktų oras, ir tik tada nuleidžiamas apatinis sluoksnis.', 'First the contents are mixed and shaken, then the layers settle, the stopper is taken off to let air in, and only then is the lower layer run out.'))],
             why: t('Nuėmus kamštį, slėgis išsilygina ir skystis teka tolygiai.', 'With the stopper off the pressure equalises and the liquid flows evenly.'),
             src: 'LW3 p1'
@@ -301,7 +303,7 @@
             steps: [ord(t('Išdėstykite džiovinimo veiksmus.', 'Put the drying actions in order.'), [
               ['įberti bevandenio $Na2SO4$ porciją', 'add a portion of anhydrous $Na2SO4$'],
               ['pakratyti kolbą', 'swirl the flask'],
-              ['jei grūdeliai suslimpa, įberti dar', 'if the grains clump, add more'],
+              ['jei grūdeliai sulimpa, įberti dar', 'if the grains clump, add more'],
               ['kai grūdeliai laisvai juda, nupilti tirpalą nuo druskos', 'when the grains move freely, pour the solution off the salt']
             ], t('Paskutinis veiksmas atliekamas tik kai nebelieka vandens.', 'The last action is done only when no water is left.'),
               t('Sulfatas berimas po truputį ir maišomas, kol nebesusidaro gumulų – tai ženklas, kad vandens nebėra.', 'The sulfate is added little by little and swirled until no clumps form, which shows that no water remains.'))],
@@ -318,7 +320,7 @@
               ['išimti, kai frontas netoli viršaus, ir pažymėti jį', 'take it out when the front is near the top and mark it'],
               ['apžiūrėti UV šviesoje ir apvesti dėmes', 'view it in UV light and outline the spots']
             ], t('Frontas pažymimas iškart išėmus, kol eliuentas nenugaravo.', 'The front is marked at once, before the eluent evaporates.'),
-              t('Eliuentas nuo starto iki fronto eina lygiai tiek, kiek reikia, todėl liniją pažymime pirma, o frontą – iškart išėmę.', 'The eluent travels from the start to the front, so the start line comes first and the front is marked right after taking the plate out.'))],
+              t('Starto liniją pažymime prieš eliuuojant, o frontą – iškart išėmę plokštelę, kol eliuentas dar nenugaravo.', 'The start line is marked before developing, the front immediately after the plate is taken out, while the eluent has not yet evaporated.'))],
             why: t('Jei frontas nepažymėtas, išgaravus eliuentui $h$ nebeįmanoma išmatuoti.', 'If the front is not marked, $h$ cannot be measured once the eluent evaporates.'),
             src: 'LW3 p3'
           },
@@ -352,7 +354,7 @@
             id: 'l3.order.8',
             q: Q('Darbas baigtas, laikas tvarkyti vietą ir rašyti aprašą.', 'The work is done; time to tidy up and write up.'),
             steps: [ord(t('Išdėstykite veiksmus.', 'Put the actions in order.'), [
-              ['kofeiną ir chloroformo atliekas sudėti į skirtus indus', 'put the caffeine and chloroform waste into their containers'],
+              ['chloroformo atliekas supilti į halogenintų atliekų indą', 'pour the chloroform waste into the halogenated waste container'],
               ['kruopščiai išplauti stiklo aparatūrą šiltu vandeniu', 'wash the glass apparatus thoroughly with warm water'],
               ['priemones sudėti į joms skirtas vietas', 'put the equipment back into its places'],
               ['sąsiuvinyje užrašyti rezultatus: formulę, mg ir %, $R_f$', 'write the results in the notebook: formula, mg and %, $R_f$'],
@@ -432,7 +434,7 @@
               ['kad sutirštėtų taninai', 'so that the tannins thicken']
             ], 0, t('Palyginkite chloroformo virimo temperatūrą su tirpalo.', 'Compare the boiling point of chloroform with the solution temperature.'),
               t('Kontaktuodamas su karštu tirpalu chloroformas užvirtų, dalis dingtų garais, o piltuve kiltų slėgis.', 'In contact with the hot solution chloroform would boil, part would be lost as vapour and the funnel would build up pressure.'))],
-            why: t('Mažas virimo taškas yra priežastis, dėl kurios chloroformas patogus pašalinti, bet reikalauja atsargumo.', 'A low boiling point makes chloroform easy to remove but calls for care.'),
+            why: t('Maža virimo temperatūra yra priežastis, dėl kurios chloroformas patogus pašalinti, bet reikalauja atsargumo.', 'A low boiling point makes chloroform easy to remove but calls for care.'),
             src: 'LW3 p4-5'
           },
           {
@@ -463,7 +465,7 @@
           },
           {
             id: 'l3.why.8',
-            q: Q('Plokštelė kelia uždengtame inde, kuriame yra eliuento garų.', 'The plate develops in a closed chamber that contains eluent vapour.'),
+            q: Q('Plokštelė eliuojama uždengtame inde, kuriame yra eliuento garų.', 'The plate develops in a closed chamber that contains eluent vapour.'),
             steps: [ch(t('Kodėl indas uždengiamas?', 'Why is the chamber closed?'), [
               ['kad atmosfera prisisotintų garų ir eliuentas negaruotų nuo plokštelės, o frontas kiltų tolygiai', 'so that the atmosphere becomes saturated with vapour, the eluent does not evaporate from the plate and the front rises evenly'],
               ['kad kofeinas negaruotų', 'so that caffeine does not evaporate'],
@@ -504,8 +506,8 @@
               ['trečias tirpiklis', 'a third solvent'],
               ['natrio sulfatas', 'sodium sulfate']
             ], 0, t('Smulkūs vieno skysčio lašeliai kitame.', 'Fine droplets of one liquid in the other.'),
-              t('Smulkūs skysčių lašeliai nesusilieja, nes pakratyta per smarkiai arba mišinyje yra paviršinio aktyvumo medžiagų (taninų). Pagalbos: palaukti, švelniai pasukioti, įlašinti sočiojo $NaCl$.', 'Fine droplets do not coalesce because shaking was too vigorous or surface-active substances (tannins) are present. Remedies: wait, swirl gently, add saturated $NaCl$.'))],
-            why: t('Emulsija – laikinas, o ne naujas junginys; pašalinus ją ekstraktas išsiskiria.', 'An emulsion is a temporary state, not a new compound; once it breaks the extract separates.'),
+              t('Smulkūs skysčių lašeliai nesusilieja, nes pakratyta per smarkiai arba mišinyje yra paviršinio aktyvumo medžiagų (taninų). Kas padeda: palaukti, švelniai pasukioti, įlašinti sočiojo $NaCl$.', 'Fine droplets do not coalesce because shaking was too vigorous or surface-active substances (tannins) are present. Remedies: wait, swirl gently, add saturated $NaCl$.'))],
+            why: t('Emulsija – laikinas darinys, o ne naujas junginys; ją suardžius ekstraktas atsiskiria.', 'An emulsion is a temporary state, not a new compound; once it breaks the extract separates.'),
             src: 'LW3 p1-2'
           },
           {
@@ -564,12 +566,12 @@
             id: 'l3.observe.7',
             q: Q('Nugarinus chloroformą kolboje liko kieta medžiaga.', 'After the chloroform was evaporated a solid was left in the flask.'),
             steps: [ch(t('Ką tikitės matyti?', 'What do you expect to see?'), [
-              ['baltą ar blyškiai gelsvą kristalinį nuosėdą, tai neapdorotas kofeinas', 'a white or pale yellowish crystalline deposit, crude caffeine'],
+              ['baltą ar blyškiai gelsvą kristalinę medžiagą: neišgrynintą kofeiną', 'a white or pale yellowish crystalline solid: crude caffeine'],
               ['skaidrų bespalvį skystį', 'a clear colourless liquid'],
               ['juodą dervą', 'a black tar'],
               ['dujų burbulus', 'gas bubbles']
             ], 0, t('Chloroformas išgaravo; kas liko?', 'The chloroform has evaporated; what is left?'),
-              t('Kofeinas yra kieta kristalinė medžiaga (lyd. t. apie 236 °C), todėl liekanoje likusi ji. Geltonumas rodo nedidelį priemaišų kiekį.', 'Caffeine is a solid crystalline substance (m.p. about 236 °C), so it is what remains. A yellow tint points to a few impurities.'))],
+              t('Kofeinas yra kieta kristalinė medžiaga (lyd. t. apie 236 °C), todėl jis ir lieka kolboje. Geltonas atspalvis rodo nedidelį priemaišų kiekį.', 'Caffeine is a solid crystalline substance (m.p. about 236 °C), so it is what remains. A yellow tint points to a few impurities.'))],
             why: t('Tirpiklis lakus, o kofeinas ne, todėl garinant lieka jis.', 'The solvent is volatile and caffeine is not, so evaporation leaves caffeine behind.'),
             src: 'LW3 p5'
           },
@@ -635,7 +637,7 @@
           },
           {
             id: 'l3.prove.4',
-            q: Q('Kolboje po garinimo liko daug daugiau medžiagos, nei galėjo būti kofeino 4 g arbatos.', 'After evaporation far more substance remained in the flask than 4 g of tea could contain as caffeine.'),
+            q: Q('Kolboje po garinimo liko daug daugiau medžiagos, nei galėjo būti kofeino iš 4 g arbatos.', 'After evaporation far more substance remained in the flask than 4 g of tea could contain as caffeine.'),
             steps: [mu(t('Kokios galimos priežastys?', 'Which causes are possible?'), [
               ['neišgarintas chloroformas ar vandens liekanos', 'chloroform not fully evaporated or residual water'],
               ['pernelyg daug priemaišų (taninų) pateko į ekstraktą', 'too many impurities (tannins) got into the extract'],
@@ -706,11 +708,11 @@
         title: t('Priemonės pagal aprašymą', 'Apparatus from its description'),
         mirrors: ['LW3.1', 'LW3.3', 'LW3.4', 'LW3.6'],
         bank: [
-          { id: 'l3.apparatus.1', desc: ['kriaušės pavidalo stiklinis indas su čiaupu apačioje ir kamščiu viršuje, kuriame kratomi du nesimaišantys skysčiai', 'a pear-shaped glass vessel with a tap at the bottom and a stopper at the top, in which two immiscible liquids are shaken'], right: ['dalijamasis piltuvas', 'separatory funnel'], other: [['Büchnerio piltuvėlis', 'Büchner funnel'], ['grįžtamasis kondensatorius', 'reflux condenser'], ['matavimo cilindras', 'measuring cylinder']], why: ['Čiaupas leidžia nuleisti apatinį sluoksnį.', 'The tap lets the lower layer be drained.'] },
+          { id: 'l3.apparatus.1', desc: ['kriaušės pavidalo stiklinis indas su čiaupu apačioje ir kamščiu viršuje, kuriame kratomi du nesimaišantys skysčiai', 'a pear-shaped glass vessel with a tap at the bottom and a stopper at the top, in which two immiscible liquids are shaken'], right: ['dalijamasis piltuvas', 'separatory funnel'], other: [['Biuchnerio piltuvas', 'Büchner funnel'], ['grįžtamasis kondensatorius', 'reflux condenser'], ['matavimo cilindras', 'measuring cylinder']], why: ['Čiaupas leidžia nuleisti apatinį sluoksnį.', 'The tap lets the lower layer be drained.'] },
           { id: 'l3.apparatus.2', desc: ['apvalus stiklinis indas su šlifuotu kakleliu, kuris jungiamas prie garintuvo ir kuriame lieka nugarinta medžiaga', 'a round glass vessel with a ground-glass neck that connects to the evaporator and in which the evaporated material remains'], right: ['apvaliadugnė šlifinė kolba', 'round-bottom flask with a ground joint'], other: [['Erlenmejerio kolba', 'Erlenmeyer flask'], ['stiklinė', 'beaker'], ['mėgintuvėlis', 'test tube']], why: ['Šlifas sandariai jungia kolbą prie garintuvo.', 'The ground joint seals the flask to the evaporator.'] },
           { id: 'l3.apparatus.3', desc: ['prietaisas, kuriame kolba sukasi šildomoje vonioje, o vakuumas greitai pašalina tirpiklį', 'a device in which a flask rotates over a heated bath and vacuum quickly removes the solvent'], right: ['rotacinis garintuvas', 'rotary evaporator'], other: [['magnetinė maišyklė', 'magnetic stirrer'], ['džiovinimo krosnelė', 'drying oven'], ['distiliavimo kolba', 'distillation flask']], why: ['Sukimas didina paviršių, o vakuumas žemina virimo temperatūrą.', 'Rotation increases the surface area and vacuum lowers the boiling point.'] },
           { id: 'l3.apparatus.4', desc: ['stiklinis indas su dangčiu, kuriame ant dugno pilamas eliuentas, o plokštelė statoma kiek pakreipta', 'a glass jar with a lid in which eluent is poured at the bottom and the plate is stood slightly inclined'], right: ['chromatografijos kamera', 'chromatography chamber'], other: [['eksikatorius', 'desiccator'], ['dalijamasis piltuvas', 'separatory funnel'], ['kristalizatorius', 'crystalliser dish']], why: ['Uždengta kamera prisotinama eliuento garų.', 'The closed chamber is saturated with eluent vapour.'] },
-          { id: 'l3.apparatus.5', desc: ['labai plonas stiklinis vamzdelis, kurio kapiliarine jėga įtraukiamas mėginys, kad jį būtų galima užlašinti ant plokštelės', 'a very thin glass tube that draws up a sample by capillary action so it can be spotted on the plate'], right: ['kapiliaras', 'capillary tube'], other: [['pipetė su guma', 'rubber-bulb pipette'], ['stiklinė lazdelė', 'glass rod'], ['biuretė', 'burette']], why: ['Kapiliaras užlašina labai mažą lašą.', 'The capillary delivers a very small drop.'] },
+          { id: 'l3.apparatus.5', desc: ['labai plonas stiklinis vamzdelis, į kurį kapiliarine jėga įtraukiamas mėginys, kad jį būtų galima užlašinti ant plokštelės', 'a very thin glass tube that draws up a sample by capillary action so it can be spotted on the plate'], right: ['kapiliaras', 'capillary tube'], other: [['pipetė su guma', 'rubber-bulb pipette'], ['stiklinė lazdelė', 'glass rod'], ['biuretė', 'burette']], why: ['Kapiliaras užlašina labai mažą lašą.', 'The capillary delivers a very small drop.'] },
           { id: 'l3.apparatus.6', desc: ['prietaisas, kuris skleidžia nematomą šviesą ir leidžia matyti dėmes plokštelėje', 'a device that emits invisible light and lets you see the spots on the plate'], right: ['ultravioletinė lempa', 'ultraviolet lamp'], other: [['infraraudonųjų spindulių krosnelė', 'infrared heater'], ['stiklinis termometras', 'glass thermometer'], ['refraktometras', 'refractometer']], why: ['Sorbentas fluorescuoja UV šviesoje, o junginiai gesina fluorescenciją.', 'The sorbent fluoresces under UV light, and compounds quench the fluorescence.'] },
           { id: 'l3.apparatus.7', desc: ['plokščias metalinis įrankis, kuriuo iš kolbos išskrapštoma likusi kieta medžiaga', 'a flat metal tool used to scrape the remaining solid out of a flask'], right: ['metalinė mentelė', 'metal spatula'], other: [['stiklinė lazdelė', 'glass rod'], ['žnyplės', 'tongs'], ['laikiklis', 'clamp']], why: ['Mentelė patogi kietai medžiagai skrapštyti.', 'A spatula is handy for scraping solids.'] },
           { id: 'l3.apparatus.8', desc: ['kūgio formos kolba su siauru kakleliu, į kurią renkamas ekstraktas', 'a conical flask with a narrow neck into which the extract is collected'], right: ['Erlenmejerio kolba', 'Erlenmeyer flask'], other: [['apvaliadugnė šlifinė kolba', 'round-bottom flask with a ground joint'], ['mėgintuvėlis su atsaka', 'filter flask with a side arm'], ['matavimo kolba', 'volumetric flask']], why: ['Plokščias dugnas stabilus, kakleliui galima uždėti kamštį.', 'The flat bottom is stable and the neck can take a stopper.'] },
@@ -739,7 +741,7 @@
 
           if (variant === 'content') {
             const tea = ctx.int(35, 45) / 10;
-            const mg = ctx.int(40, 190);
+            const mg = ctx.int(40, Math.floor(tea * 45));
             const pct = mg / 1000 / tea * 100;
             return {
               q: [{ p: t('Ekstrahuota ' + lt(tea, 1) + ' g arbatos. Po garinimo gauta ' + mg + ' mg kofeino.', tea.toFixed(1) + ' g of tea was extracted. After evaporation ' + mg + ' mg of caffeine was obtained.') }],
@@ -761,7 +763,7 @@
             const content = ctx.int(15, 45) / 10;
             const expected = tea * content / 100;
             const obtained = Math.round(expected * ctx.int(40, 90)) / 100;
-            const y = obtained / expected * 100;
+            const y = obtained / Number(expected.toFixed(3)) * 100;
             return {
               q: [{ p: t('Etiketė nurodo, kad arbatoje yra ' + lt(content, 1) + ' % kofeino. Paimta ' + lt(tea, 1) + ' g arbatos, išskirta ' + lt(obtained, 3) + ' g kofeino.', 'The label says the tea holds ' + fmt(content, 1) + ' % caffeine. ' + fmt(tea, 1) + ' g of tea was taken and ' + fmt(obtained, 3) + ' g of caffeine was isolated.') }],
               steps: [
@@ -820,11 +822,11 @@
 
           if (variant === 'mp') {
             const pure = ctx.pick([true, false]);
-            const lo = pure ? ctx.int(233, 236) : ctx.int(212, 228);
-            const width = pure ? ctx.int(1, 3) : ctx.int(6, 12);
+            const lo = pure ? ctx.int(235, 236) : ctx.int(212, 228);
+            const width = pure ? ctx.int(1, 2) : ctx.int(6, 12);
             const hi = lo + width;
             return {
-              q: [{ p: t('Išskirto kofeino lydymosi riba išmatuota ' + lo + '–' + hi + ' °C. Literatūrinė riba apie 235–238 °C.', 'The melting range of the isolated caffeine was measured as ' + lo + '–' + hi + ' °C. The literature range is about 235–238 °C.') }],
+              q: [{ p: t('Išskirto kofeino lydymosi riba išmatuota ' + lo + '–' + hi + ' °C. Literatūrinė riba apie 236–238 °C.', 'The melting range of the isolated caffeine was measured as ' + lo + '–' + hi + ' °C. The literature range is about 236–238 °C.') }],
               steps: [
                 { prompt: t('Kokio pločio (°C) yra riba?', 'How wide (°C) is the range?'), kind: 'number', answer: { value: width, tol: 0.1 },
                   hint: t('Iš aukštesnės temperatūros atimkite žemesnę.', 'Subtract the lower temperature from the higher.'),
@@ -846,25 +848,34 @@
           if (variant === 'dist') {
             const K = ctx.pick([5, 6, 8, 9, 10, 12]);
             const Vw = ctx.pick([30, 40, 50, 60]);
-            const p = ctx.pick([15, 20, 25]);
-            const one = (1 - 1 / (1 + K * (3 * p) / Vw)) * 100;
-            const three = (1 - Math.pow(1 / (1 + K * p / Vw), 3)) * 100;
+            const p = ctx.pick([20, 30]);
+            const pair = ctx.pick([[[1, 3 * p], [3, p]], [[3, p], [2, 1.5 * p]]]);
+            const swap = ctx.pick([false, true]);
+            const ways = swap ? [pair[1], pair[0]] : pair;
+            const ext = w => (1 - Math.pow(1 / (1 + K * w[1] / Vw), w[0])) * 100;
+            const e1 = ext(ways[0]), e2 = ext(ways[1]);
+            const dl = w => w[0] === 1 ? w[1] + ' ml chloroformo vienu kartu' : w[0] + ' porcijomis po ' + w[1] + ' ml';
+            const de = w => w[0] === 1 ? w[1] + ' ml of chloroform at once' : w[0] + ' portions of ' + w[1] + ' ml';
+            const solL = (w, e) => w[0] === 1 ? 'Lieka $1 / (1 + ' + K + ' · ' + w[1] + ' / ' + Vw + ')$; ištraukta ' + lt(e, 1) + ' %.' : 'Lieka $(1 / (1 + ' + K + ' · ' + w[1] + ' / ' + Vw + '))^' + w[0] + '$; ištraukta ' + lt(e, 1) + ' %.';
+            const solE = (w, e) => w[0] === 1 ? 'Left: $1 / (1 + ' + K + ' · ' + w[1] + ' / ' + Vw + ')$; extracted ' + fmt(e, 1) + ' %.' : 'Left: $(1 / (1 + ' + K + ' · ' + w[1] + ' / ' + Vw + '))^' + w[0] + '$; extracted ' + fmt(e, 1) + ' %.';
+            const hintL = t('Vandenyje po kiekvienos porcijos lieka $1 / (1 + K · V_o / V_w)$.', 'After each portion the fraction left in water is $1 / (1 + K · V_o / V_w)$.');
+            const best = ways[0][0] > ways[1][0] ? 0 : 1;
             return {
-              q: [{ p: t('Vandeninėje fazėje (' + Vw + ' ml) yra kofeino; $K$ = ' + K + ' (chloroformas : vanduo). Ekstrahuojama ' + (3 * p) + ' ml chloroformo vienu kartu arba trimis porcijomis po ' + p + ' ml.', 'The aqueous phase (' + Vw + ' ml) contains caffeine; $K$ = ' + K + ' (chloroform : water). It is extracted with ' + (3 * p) + ' ml of chloroform at once or in three portions of ' + p + ' ml.') }],
+              q: [{ p: t('Vandeninėje fazėje (' + Vw + ' ml) yra kofeino; $K$ = ' + K + ' (chloroformas : vanduo). Ekstrahuojama tuo pačiu chloroformo kiekiu dviem būdais: pirmuoju – ' + dl(ways[0]) + ', antruoju – ' + dl(ways[1]) + '.', 'The aqueous phase (' + Vw + ' ml) contains caffeine; $K$ = ' + K + ' (chloroform : water). The same total amount of chloroform is used in two ways: the first way is ' + de(ways[0]) + ', the second ' + de(ways[1]) + '.') }],
               steps: [
-                { prompt: t('Kiek procentų ištraukiama vienu kartu?', 'What percentage is extracted in one go?'), kind: 'number', answer: { value: one, tol: 0.6 },
-                  hint: t('Vandenyje lieka $1 / (1 + K · V_o / V_w)$.', 'The fraction left in water is $1 / (1 + K · V_o / V_w)$.'),
-                  solution: t('Lieka $1 / (1 + ' + K + ' · ' + (3 * p) + ' / ' + Vw + ')$; ištraukta ' + lt(one, 1) + ' %.', 'Left: $1 / (1 + ' + K + ' · ' + (3 * p) + ' / ' + Vw + ')$; extracted ' + fmt(one, 1) + ' %.') },
-                { prompt: t('Kiek procentų ištraukiama trimis porcijomis?', 'What percentage is extracted in three portions?'), kind: 'number', answer: { value: three, tol: 0.6 },
-                  hint: t('Likusi dalis po vienos porcijos pakeliama kubu.', 'The fraction left after one portion is raised to the third power.'),
-                  solution: t('Lieka $(1 / (1 + ' + K + ' · ' + p + ' / ' + Vw + '))^3$; ištraukta ' + lt(three, 1) + ' %.', 'Left: $(1 / (1 + ' + K + ' · ' + p + ' / ' + Vw + '))^3$; extracted ' + fmt(three, 1) + ' %.') },
-                ch(t('Koks būdas geresnis?', 'Which way is better?'), [
-                  ['tris porcijos', 'three portions'],
-                  ['vienas kartas', 'one go'],
+                { prompt: t('Kiek procentų ištraukiama pirmuoju būdu?', 'What percentage is extracted the first way?'), kind: 'number', answer: { value: e1, tol: 0.6 },
+                  hint: hintL,
+                  solution: t(solL(ways[0], e1), solE(ways[0], e1)) },
+                { prompt: t('Kiek procentų ištraukiama antruoju būdu?', 'What percentage is extracted the second way?'), kind: 'number', answer: { value: e2, tol: 0.6 },
+                  hint: hintL,
+                  solution: t(solL(ways[1], e2), solE(ways[1], e2)) },
+                ch(t('Kuris būdas ištraukia daugiau?', 'Which way extracts more?'), [
+                  ['pirmasis', 'the first'],
+                  ['antrasis', 'the second'],
                   ['vienodai', 'both equal'],
                   ['priklauso nuo sluoksnių tvarkos', 'it depends on the order of the layers']
-                ], 0, t('Palyginkite savo du rezultatus.', 'Compare your two results.'),
-                  t('Porcijomis ištraukiama daugiau, nes kiekviena nauja porcija pasiima dalį to, kas liko.', 'Portions extract more, because each new portion takes a share of what remains.'))
+                ], best, t('Palyginkite savo du rezultatus.', 'Compare your two results.'),
+                  t('Daugiau porcijų ištraukia daugiau, nes kiekviena nauja porcija pasiima dalį to, kas liko.', 'More portions extract more, because each new portion takes a share of what remains.'))
               ],
               why: t('Su tuo pačiu tirpiklio kiekiu kelios mažos porcijos ištraukia daugiau nei viena didelė.', 'With the same amount of solvent several small portions extract more than one big portion.'),
               src: 'LW3 p2'
@@ -924,7 +935,7 @@
               hint: t('Ieškokite $C=O$.', 'Look for $C=O$.'),
               solution: t('Karbonilo anglys yra atomai Nr. 7 ir 11.', 'The carbonyl carbons are atoms no. 7 and 11.')
             }],
-            why: t('Šių grupių nėra $N-H$, todėl kofeinas nesudaro tarpmolekulinių vandenilio ryšių pats su savimi ir yra mažiau polinis.', 'With no $N-H$, caffeine cannot form hydrogen bonds with itself and is less polar.'),
+            why: t('Visi trys azoto atomai su pakaitais turi metilą, o $N-H$ neturi nė vienas, todėl kofeinas neturi vandenilio ryšio donoro ir yra mažiau polinis už teofiliną bei teobrominą.', 'All three substituted nitrogens carry a methyl group and none carries $N-H$, so caffeine has no hydrogen-bond donor and is less polar than theophylline and theobromine.'),
             src: 'LW3 p4'
           },
           {
@@ -944,7 +955,7 @@
             id: 'l3.defence.4',
             q: Q('Kokie reikalavimai keliami ekstrahentui?', 'What requirements must an extractant meet?'),
             steps: [mu(t('Pažymėkite visus teisingus.', 'Pick all that are right.'), [
-              ['nesimaišo su ekstrahuojamu tirpikliu', 'does not mix with the solvent being extracted'],
+              ['nesimaišo su pradiniu tirpikliu (vandeniu)', 'does not mix with the original solvent (water)'],
               ['gerai tirpina norimą medžiagą', 'dissolves the wanted substance well'],
               ['lengvai pašalinamas (žema virimo temperatūra)', 'is easy to remove (low boiling point)'],
               ['reaguoja su ekstrahuojama medžiaga', 'reacts with the substance being extracted']
@@ -961,7 +972,7 @@
               kind: 'match',
               answer: {
                 left: [{ text: t('sorbentas', 'sorbent') }, { text: t('eliuentas', 'eluent') }, { text: t('eliuatas', 'eluate') }, { text: t('$R_f$', '$R_f$') }],
-                right: [{ text: t('nejudri fazė, pvz., silikagelis', 'the stationary phase, e.g. silica gel') }, { text: t('judri fazė, tirpiklis', 'the mobile phase, the solvent') }, { text: t('tirpalas su ištirpusiais junginiais, kuris išteka', 'the solution with dissolved compounds that comes out') }, { text: t('dėmės kelio ir fronto kelio santykis', 'the ratio of the spot distance to the front distance') }],
+                right: [{ text: t('nejudri fazė, pvz., silikagelis', 'the stationary phase, e.g. silica gel') }, { text: t('judri fazė, tirpiklis', 'the mobile phase, the solvent') }, { text: t('eliuentas su ištirpusiomis medžiagomis (eliuatas)', 'the solution with dissolved compounds that comes out') }, { text: t('dėmės kelio ir fronto kelio santykis', 'the ratio of the spot distance to the front distance') }],
                 pairs: [0, 1, 2, 3]
               },
               hint: t('Viena fazė nejuda, kita juda.', 'One phase stays, the other moves.'),
@@ -972,7 +983,7 @@
           },
           {
             id: 'l3.defence.6',
-            q: Q('Kofeinas ir silikagelis: kuri jėga lemia $R_f$?', 'Caffeine and silica gel: which force sets the $R_f$?'),
+            q: Q('Kofeinas ir silikagelis: kaip sorbento sąveika veikia $R_f$?', 'Caffeine and silica gel: which force sets the $R_f$?'),
             steps: [ch(t('Kuris teiginys teisingas?', 'Which statement is correct?'), [
               ['kuo stipresnė sąveika su sorbentu, tuo mažesnis $R_f$', 'the stronger the interaction with the sorbent, the smaller the $R_f$'],
               ['kuo stipresnė sąveika su sorbentu, tuo didesnis $R_f$', 'the stronger the interaction with the sorbent, the larger the $R_f$'],
@@ -1004,7 +1015,7 @@
               ['arbatos rūšis', 'the kind of tea'],
               ['išskirtas kofeino kiekis mg ir %', 'the amount of caffeine isolated in mg and %'],
               ['apskaičiuotas $R_f$', 'the calculated $R_f$']
-            ], [0, 1, 2, 3], t('Visi keturi duomenys naudojami išvadose.', 'All four items are used in the conclusions.'),
+            ], [0, 1, 2, 3], t('Ko reikia žmogui, kuris norėtų pakartoti darbą ir patikrinti išvadas?', 'What does a person need who wants to repeat the work and check the conclusions?'),
               t('Rezultatuose rašomi formulė, arbatos rūšis, išskirtas kiekis mg ir % bei $R_f$; išvadose – darbo eiga, kofeino grynumas, ko išmokote ir kokių sunkumų buvo.', 'The results hold the formula, the kind of tea, the amount isolated in mg and % and the $R_f$; the conclusions cover the procedure, the purity of the caffeine, what you learned and any difficulties.'))],
             why: t('Aprašas turi leisti kitam žmogui pakartoti darbą ir patikrinti išvadas.', 'The write-up must let another person repeat the work and check the conclusions.'),
             src: 'LW3 p5'
