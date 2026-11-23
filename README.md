@@ -15,8 +15,11 @@ site/                       everything served at beagle.lt, and nothing else
     index.html  trainer.css  js/…  README.md
   organic/                  the organic chemistry trainer
     index.html  trainer.css  js/…  units/…  README.md
+  english/                  the English trainer ("Clone a gene" vocabulary lesson)
+    index.html  trainer.css  js/…  README.md
 tests/
   organic/                  the organic trainer's tests (engine, units, content checks)
+  english/                  the English trainer's tests (lesson content, engine, pictures, interface)
   math/test.js              the trainer's test suite, moved out of the served folder
   site/                     tests for the shared script and the pages
 .github/workflows/deploy.yml   run the tests, then publish site/
@@ -52,7 +55,7 @@ The home and 404 pages follow this contract: `<body class="home" data-title="KEY
 
 ## Test
 
-`npm test`. It runs the tests for the shared script and the pages, the organic trainer's tests, then the maths trainer's suite. The organic content check uses 40 seeds per generator locally and 300 on CI (`CI=true`); `SEEDS=300 UNIT=u07 node --test tests/organic/content.test.js` checks one unit at full depth.
+`npm test`. It runs the tests for the shared script and the pages, the organic trainer's tests, the English trainer's tests, then the maths trainer's suite. The organic content check uses 40 seeds per generator locally and 300 on CI (`CI=true`); `SEEDS=300 UNIT=u07 node --test tests/organic/content.test.js` checks one unit at full depth.
 
 ## Safety rules
 
