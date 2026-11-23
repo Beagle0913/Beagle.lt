@@ -29,14 +29,14 @@
     {
       "id": "english",
       "path": "english/",
-      "name": { "lt": "Anglų kalba", "en": "English" },
+      "name": { "lt": "English", "en": "English" },
       "summary": {
-        "lt": "Molekulinės biologijos žodynas anglų kalba: DNR kirpimas ir jungimas, molekulinis klonavimas, DNR sekoskaita.",
+        "lt": "Molecular biology vocabulary in English: cutting and joining DNA, molecular cloning, DNA sequencing.",
         "en": "Molecular biology vocabulary in English: cutting and joining DNA, molecular cloning, DNA sequencing."
       },
       "note": {
-        "lt": "Pagal L. A. Allison „Fundamental Molecular Biology“, 8 skyrių · LT / EN",
-        "en": "Based on L. A. Allison, Fundamental Molecular Biology, Ch 8 · LT / EN"
+        "lt": "Based on L. A. Allison, Fundamental Molecular Biology, Ch 8",
+        "en": "Based on L. A. Allison, Fundamental Molecular Biology, Ch 8"
       }
     }
   ]
