@@ -6,7 +6,16 @@
 (function (ENG) {
   'use strict';
   const NS = 'http://www.w3.org/2000/svg';
-  const W = 800, H = 400;
+  // One tight viewBox per scene, fitted to the whole picture (every state, and the outward movement
+// of the cut pieces, plasmids and bolt), so nothing jumps between steps: [x, y, width, height]
+const VIEW = {
+  cut: [108, 0, 580, 330],
+  carrier: [112, 12, 604, 358],
+  join: [12, 24, 590, 340],
+  bacteria: [44, 30, 700, 344],
+  plate: [12, 14, 760, 372],
+  sequence: [20, 6, 760, 392]
+};
   const f = (v) => Math.round(v * 10) / 10;
   let ANIM = false, N = 0;
 
@@ -140,7 +149,7 @@
     } else {
       node(rg, 'path', { d: arc(cx, cy, r, -72, 72) }, 'seg seg-lacz');
     }
-    const pa = pt(cx, cy, r + 34, 170);
+    const pa = pt(cx, cy, r + 34, 150);
     const amp = text(rg, 'amp', pa[0], pa[1] + 6, 'lbl sm lbl-amp');
     const sup = node(amp, 'tspan', { dy: -9, 'font-size': 15 });
     sup.textContent = 'r';
@@ -187,10 +196,10 @@
     if (vis(3)) F(3, ring(g, cx, cy, r, 'glow'), 'pulse');
     node(g, 'path', { d: arc(cx, cy, r, gap, 360 - gap) }, 'plasmid-ring');
     // the insert: waiting at the right, then in the gap
-    const ins = node(g, 'g', joined ? null : { transform: 'translate(300 110)' }, 'insert');
+    const ins = node(g, 'g', joined ? null : { transform: 'translate(230 110)' }, 'insert');
     node(ins, 'line', { x1: gl[0], y1: gl[1], x2: gr[0], y2: gr[1] }, 'ins-bar-line');
     F(1, ins, 'insIn', 0, 1.3);
-    const lab = text(g, 'insert', joined ? cx : gl[0] + 300 + (gr[0] - gl[0]) / 2, joined ? gl[1] + 44 : gl[1] + 110 + 40, 'lbl sm');
+    const lab = text(g, 'insert', joined ? cx : gl[0] + 230 + (gr[0] - gl[0]) / 2, joined ? gl[1] + 44 : gl[1] + 110 + 40, 'lbl sm');
     F(1, lab, 'fade', 1);
     // 5'-phosphates on the vector's ends
     if (!vis(0)) {
@@ -442,7 +451,7 @@
 
   ENG.drawScene = function (svg, sceneId, n, animate) {
     while (svg.firstChild) svg.removeChild(svg.firstChild);
-    svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
+    svg.setAttribute('viewBox', (VIEW[sceneId] || [0, 0, 800, 400]).join(' '));
     N = Math.max(0, n | 0);
     ANIM = !!animate;
     const g = node(svg, 'g', null, 'scene-' + sceneId);

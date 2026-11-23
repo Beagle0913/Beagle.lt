@@ -18,7 +18,7 @@ class FakeEl {
     this.children = [];
     this.parentNode = null;
     this.attrs = {};
-    this.style = new Proxy({}, { set: (o, k, v) => { o[k] = v; doc.styleWrites.push([this, k]); return true; } });
+    this.style = new Proxy({ setProperty(k, v) { this[k] = v; } }, { set: (o, k, v) => { o[k] = v; doc.styleWrites.push([this, k]); return true; } });
     this.listeners = {};
     this.dataset = {};
     this.disabled = false;

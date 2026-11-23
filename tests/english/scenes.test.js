@@ -6,6 +6,7 @@ const assert = require('node:assert/strict');
 const { boot, findAll, walk } = require('./fakedom');
 
 const JS = ['lesson.js', 'strings.js', 'engine.js', 'scenes.js'];
+const VIEWS = { cut: '108 0 580 330', carrier: '112 12 604 358', join: '12 24 590 340', bacteria: '44 30 700 344', plate: '12 14 760 372', sequence: '20 6 760 392' };
 const COUNTS = { cut: 4, carrier: 4, join: 4, bacteria: 3, plate: 5, sequence: 5 };
 
 test('every scene draws in every state, animated or not', () => {
@@ -17,7 +18,7 @@ test('every scene draws in every state, animated or not', () => {
         ENG.drawScene(svg, id, n, animate);
         const count = findAll(svg, () => true).length;
         assert.ok(count > 5, `${id} n=${n} animate=${animate} drew ${count}`);
-        assert.equal(svg.getAttribute('viewBox'), '0 0 800 400');
+        assert.equal(svg.getAttribute('viewBox'), VIEWS[id], 'one viewBox for every state of ' + id);
         // redrawing clears the previous picture
         ENG.drawScene(svg, id, n, animate);
         assert.equal(findAll(svg, (e) => e.localName === 'g' && /^scene-/.test(e.className)).length, 1);

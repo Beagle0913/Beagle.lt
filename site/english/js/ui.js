@@ -149,6 +149,8 @@
     app.append(stage);
     const n = st.solved ? st.step + 1 : st.step;
     const drawn = ENG.drawScene(svg, sc.id, n, !!opts.animate && !reduced());
+    const vb = (svg.getAttribute('viewBox') || '').split(' ').map(Number);
+    if (vb.length === 4 && vb[3] > 0) stage.style.setProperty('--ar', String(Math.round(vb[2] / vb[3] * 100) / 100));
 
     // the sentence with its blank
     const sen = el('p', 'sentence');
@@ -221,7 +223,8 @@
         fb.append(el('span', 'term', st.last), doc.createTextNode(': ' + (e ? e.def : '') + ' ' + S.tryAgain));
       }
     }
-    app.append(fb);
+    const foot = el('div', 'foot');
+    foot.append(fb);
 
     // back / next: always available, so a step can be skipped
     const nav = el('div', 'nav');
@@ -234,7 +237,8 @@
     next.type = 'button';
     next.addEventListener('click', goNext);
     nav.append(back, next);
-    app.append(nav);
+    foot.append(nav);
+    app.append(foot);
 
     if (opts.focusNext) focusSoon(next);
     else if (opts.focusChoice) focusSoon(firstOpen);
