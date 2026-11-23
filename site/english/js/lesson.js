@@ -11,7 +11,7 @@
     sections: { '8.3': 'Cutting and joining DNA', '8.4': 'Molecular cloning', '8.7': 'DNA sequencing' },
     scenes: [
       {
-        id: 'cut', title: { lt: 'Kirpimas', en: 'Cut' },
+        id: 'cut', title: 'Cut',
         steps: [
           c("We need an enzyme that recognises a short DNA sequence and cuts it there: a ___.", "restriction endonuclease", ["DNA ligase", "phosphatase", "DNA polymerase"]),
           c("The short sequence it recognises, GAATTC, is called its ___.", "restriction site", ["primer", "insert", "multiple cloning site"]),
@@ -20,7 +20,7 @@
         ]
       },
       {
-        id: 'carrier', title: { lt: 'Nešiklis', en: 'Choose a carrier' },
+        id: 'carrier', title: 'Choose a carrier',
         steps: [
           c("To copy our gene we need a carrier DNA molecule that replicates on its own inside the host cell: a ___.", "vector", ["insert", "primer", "colony"]),
           c("Our vector, pUC18, is a small circular DNA molecule outside the bacterial chromosome: a ___.", "plasmid", ["clone", "palindrome", "electropherogram"]),
@@ -29,7 +29,7 @@
         ]
       },
       {
-        id: 'join', title: { lt: 'Jungimas', en: 'Join' },
+        id: 'join', title: 'Join',
         steps: [
           c("The cut vector could simply close on itself. To prevent this, we remove its 5'-phosphates with ___.", "phosphatase", ["DNA ligase", "restriction endonuclease", "X-gal"]),
           c("The matching sticky ends of vector and insert pair up by hydrogen bonds. This is called ___.", "annealing", ["ligation", "transformation", "electroporation"]),
@@ -38,7 +38,7 @@
         ]
       },
       {
-        id: 'bacteria', title: { lt: 'Į bakterijas', en: 'Into bacteria' },
+        id: 'bacteria', title: 'Into bacteria',
         steps: [
           c("E. coli cells treated with a calcium salt solution have leaky membranes and can take up DNA. They are ___.", "competent cells", ["clones", "colonies", "vectors"]),
           c("Introducing the plasmid into the bacterial cells is called ___.", "transformation", ["ligation", "annealing", "blue-white screening"]),
@@ -46,7 +46,7 @@
         ]
       },
       {
-        id: 'plate', title: { lt: 'Auginimas ir atranka', en: 'Grow and pick' },
+        id: 'plate', title: 'Grow and pick',
         steps: [
           c("The agar contains ampicillin. Only cells carrying pUC18 survive, because its ampicillin resistance gene is a ___.", "selectable marker", ["multiple cloning site", "restriction site", "primer"]),
           c("A single cell divides again and again into a visible spot on the agar: a ___.", "colony", ["plasmid", "insert", "vector"]),
@@ -56,7 +56,7 @@
         ]
       },
       {
-        id: 'sequence', title: { lt: 'Sekos skaitymas', en: 'Read the sequence' },
+        id: 'sequence', title: 'Read the sequence',
         steps: [
           c("Sanger sequencing starts from a short piece of DNA that provides the 3'-OH for DNA polymerase: a ___.", "primer", ["insert", "ddNTP", "plasmid"]),
           c("The reaction also contains nucleotides that lack the 3'-OH, so the chain stops when one is added: ___.", "ddNTPs", ["dNTPs", "primers", "phosphatase"]),

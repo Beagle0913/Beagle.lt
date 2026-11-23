@@ -58,20 +58,18 @@ test('content is verbatim from the spec', () => {
   assert.equal(entry('ddNTPs').def, "dideoxynucleotides; they lack the 3'-OH, so the chain stops when one is added (chain terminators).");
 });
 
-test('scene titles exist in lt and en', () => {
-  for (const s of L.scenes) assert.ok(s.title.lt && s.title.en, s.id);
-  assert.equal(L.scenes[0].title.lt, 'Kirpimas');
-  assert.equal(L.scenes[5].title.en, 'Read the sequence');
+test('scene titles are plain English strings', () => {
+  for (const s of L.scenes) assert.equal(typeof s.title, 'string', s.id);
+  assert.equal(L.scenes[0].title, 'Cut');
+  assert.equal(L.scenes[5].title, 'Read the sequence');
 });
 
-test('ui strings have the same keys and placeholders in lt and en, all non-empty', () => {
-  const { lt, en } = ENG.STR;
-  assert.deepEqual(Object.keys(lt).sort(), Object.keys(en).sort());
-  for (const k of Object.keys(lt)) {
-    assert.ok(typeof lt[k] === 'string' && lt[k].trim() && typeof en[k] === 'string' && en[k].trim(), k);
-    assert.deepEqual((lt[k].match(/\{\w+\}/g) || []).sort(), (en[k].match(/\{\w+\}/g) || []).sort(), 'placeholders of ' + k);
-  }
-  assert.equal(ENG.fmt('Scena {n}/{m}', { n: 2, m: 6 }), 'Scena 2/6');
+test('ui strings are one English table with no lt key, all non-empty', () => {
+  assert.equal(ENG.STR.lt, undefined);
+  assert.equal(ENG.STR.en, undefined);
+  for (const [k, v] of Object.entries(ENG.STR)) assert.ok(typeof v === 'string' && v.trim(), k);
+  assert.equal(ENG.STR.start, 'Start');
+  assert.equal(ENG.fmt('Scene {n}/{m}', { n: 2, m: 6 }), 'Scene 2/6');
 });
 
 test('the tap step carries its two feedback lines and the sections are named', () => {

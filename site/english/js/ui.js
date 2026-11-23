@@ -3,14 +3,12 @@
 (function (ENG) {
   'use strict';
   const doc = document;
-  const LKEY = 'beagle-lang';
   const app = doc.getElementById('app');
   const L = ENG.lesson;
   const fmt = ENG.fmt;
 
-  let lang = 'lt';
-  try { if (localStorage.getItem(LKEY) === 'en') lang = 'en'; } catch (e) { /* storage unavailable: Lithuanian */ }
-  let S = ENG.STR[lang];
+  const S = ENG.STR;
+  doc.documentElement.lang = 'en';
 
   let game = null;
   let view = 'start';     // 'start' | 'scene' | 'end' | 'words'
@@ -23,25 +21,6 @@
   };
   const focusSoon = (node) => { if (node && node.focus) { try { node.focus({ preventScroll: true }); } catch (e) { node.focus(); } } };
   const total = () => game ? game.steps.length : 25;
-
-  /* ---------- header: language ---------- */
-  function applyLang() {
-    S = ENG.STR[lang];
-    doc.documentElement.lang = lang;
-    doc.title = S.title;
-    const brand = doc.getElementById('brand');
-    if (brand) brand.textContent = S.brand;
-    const langs = doc.getElementById('langs');
-    if (langs) langs.setAttribute('aria-label', S.langLabel);
-    doc.querySelectorAll('#langs button').forEach((b) => b.setAttribute('aria-pressed', b.dataset.lang === lang ? 'true' : 'false'));
-  }
-  doc.querySelectorAll('#langs button').forEach((b) => b.addEventListener('click', () => {
-    if (b.dataset.lang === lang) return;
-    lang = b.dataset.lang === 'en' ? 'en' : 'lt';
-    try { localStorage.setItem(LKEY, lang); } catch (e) { /* ignore */ }
-    applyLang();
-    render({ keepFocus: true });
-  }));
 
   /* ---------- screens ---------- */
   function renderStart() {
@@ -129,7 +108,7 @@
 
     // heading: scene name, number, step dots
     const head = el('div', 'scenehead');
-    head.append(el('span', 'num', fmt(S.sceneOf, { n: st.scene + 1, m: L.scenes.length })), el('span', 'name', sc.title[lang]));
+    head.append(el('span', 'num', fmt(S.sceneOf, { n: st.scene + 1, m: L.scenes.length })), el('span', 'name', sc.title));
     const dots = el('div', 'dots');
     dots.setAttribute('role', 'img');
     dots.setAttribute('aria-label', fmt(S.stepOf, { n: st.step + 1, m: sc.steps.length }));
@@ -144,7 +123,7 @@
     const stage = el('div', 'stage');
     const svg = doc.createElementNS('http://www.w3.org/2000/svg', 'svg');
     svg.setAttribute('role', 'img');
-    svg.setAttribute('aria-label', fmt(S.sceneAria, { name: sc.title[lang] }));
+    svg.setAttribute('aria-label', fmt(S.sceneAria, { name: sc.title }));
     stage.append(svg);
     app.append(stage);
     const n = st.solved ? st.step + 1 : st.step;
@@ -280,7 +259,7 @@
   doc.addEventListener('keydown', (ev) => {
     if (ev.ctrlKey || ev.altKey || ev.metaKey) return;
     const t = ev.target;
-    if (t && t.closest && t.closest('#langs, #sitebar')) return;
+    if (t && t.closest && t.closest('#sitebar')) return;
     const tag = t && t.tagName ? t.tagName.toLowerCase() : '';
     if (tag === 'input' || tag === 'textarea' || tag === 'select') return;
     const onControl = tag === 'button' || tag === 'a' || (t && t.getAttribute && t.getAttribute('role') === 'button');
@@ -318,6 +297,5 @@
     }
   }
 
-  applyLang();
   render();
 })(globalThis.ENG = globalThis.ENG || {});

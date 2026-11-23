@@ -15,7 +15,7 @@ site/                       everything served at beagle.lt, and nothing else
     index.html  trainer.css  js/…  README.md
   organic/                  the organic chemistry trainer
     index.html  trainer.css  js/…  units/…  README.md
-  english/                  the English trainer ("Clone a gene" vocabulary lesson)
+  english/                  the English trainer ("Clone a gene" vocabulary lesson; English only)
     index.html  trainer.css  js/…  README.md
 tests/
   organic/                  the organic trainer's tests (engine, units, content checks)

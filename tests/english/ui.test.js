@@ -13,7 +13,7 @@ const filled = (app) => findAll(app, (e) => e.classList.contains('blank') && e.c
 
 function start(opts) {
   const t = boot(JS, opts);
-  btn(t.app, 'Pradėti').click();
+  btn(t.app, 'Start').click();
   return t;
 }
 const stepDef = (t, i) => {
@@ -22,15 +22,15 @@ const stepDef = (t, i) => {
   return null;
 };
 
-test('starts in Lithuanian with Start and Word list, then plays the first scene', () => {
+test('starts in English with Start and Word list, then plays the first scene', () => {
   const t = boot(JS);
-  assert.equal(t.doc.documentElement.lang, 'lt');
-  assert.ok(btn(t.app, 'Pradėti') && btn(t.app, 'Žodžių sąrašas'));
-  btn(t.app, 'Pradėti').click();
+  assert.equal(t.doc.documentElement.lang, 'en');
+  assert.ok(btn(t.app, 'Start') && btn(t.app, 'Word list'));
+  btn(t.app, 'Start').click();
   assert.equal(choices(t.app).length, 4);
   assert.deepEqual(choices(t.app).map((b) => b.children[0].textContent), ['1', '2', '3', '4']);
-  assert.ok(t.app.textContent.includes('Kirpimas'));
-  assert.ok(t.app.textContent.includes('Scena 1/6'));
+  assert.ok(t.app.textContent.includes('Cut'));
+  assert.ok(t.app.textContent.includes('Scene 1/6'));
 });
 
 test('wrong word: stays marked, shows its definition, cannot be picked again; right word fills the blank', () => {
@@ -66,30 +66,26 @@ test('all 25 steps can be played; the end screen shows the first-try score and t
       assert.ok(b, 'answer button for step ' + (i + 1));
       b.click();
     }
-    btn(t.app, i === 24 ? 'Baigti →' : 'Toliau →').click();
+    btn(t.app, i === 24 ? 'Finish →' : 'Next →').click();
   }
-  assert.ok(t.app.textContent.includes('Jūs suklonavote ir nuskaitėte geną!'));
-  assert.ok(t.app.textContent.includes('Iš pirmo karto teisingai: 24 / 25'));
+  assert.ok(t.app.textContent.includes('You cloned and sequenced the gene!'));
+  assert.ok(t.app.textContent.includes('Right on the first try: 24 / 25'));
   assert.ok(t.app.textContent.includes('8.7 DNA sequencing'));
   assert.ok(t.app.textContent.includes("palindrome: a sequence that reads the same 5'→3' on both strands, e.g. GAATTC."));
-  btn(t.app, 'Žaisti iš naujo').click();
-  assert.ok(t.app.textContent.includes('Scena 1/6'));
+  btn(t.app, 'Play again').click();
+  assert.ok(t.app.textContent.includes('Scene 1/6'));
 });
 
-test('back to a solved step shows the filled blank and no live buttons; language switch keeps the step', () => {
+test('back to a solved step shows the filled blank and no live buttons', () => {
   const t = start();
   choices(t.app).find((b) => word(b) === 'restriction endonuclease').click();
-  btn(t.app, 'Toliau →').click();
+  btn(t.app, 'Next →').click();
   assert.equal(filled(t.app).length, 0);
-  btn(t.app, '← Atgal').click();
+  btn(t.app, '← Back').click();
   assert.equal(filled(t.app).length, 1);
   assert.ok(choices(t.app).every((b) => b.disabled));
-  const en = t.doc.querySelectorAll('#langs button').find((b) => b.dataset.lang === 'en');
-  en.click();
   assert.equal(t.doc.documentElement.lang, 'en');
-  assert.equal(t.store['beagle-lang'], 'en');
-  assert.ok(t.app.textContent.includes('Scene 1/6'));
-  assert.ok(t.app.textContent.includes('Cut'));
+  assert.equal(Object.keys(t.store).length, 0, 'nothing stored');
   assert.equal(filled(t.app).length, 1);
 });
 
@@ -109,11 +105,11 @@ test('keyboard: 1-4 pick, arrows and Enter move', () => {
 
 test('the word list opens from the start screen and returns', () => {
   const t = boot(JS);
-  btn(t.app, 'Žodžių sąrašas').click();
+  btn(t.app, 'Word list').click();
   assert.ok(t.app.textContent.includes('8.3 Cutting and joining DNA'));
   assert.ok(t.app.textContent.includes('X-gal: a colourless compound that β-galactosidase cleaves into a blue product.'));
-  btn(t.app, '← Atgal').click();
-  assert.ok(btn(t.app, 'Pradėti'));
+  btn(t.app, '← Back').click();
+  assert.ok(btn(t.app, 'Start'));
 });
 
 test('with reduced motion no picture is animated', () => {

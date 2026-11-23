@@ -1,6 +1,6 @@
 # English trainer
 
-A vocabulary lesson in English for molecular biology students, with the interface in Lithuanian (default) and English. Plain HTML, CSS and JavaScript; no build step, no dependencies. The site language is kept in the browser under `beagle-lang`; nothing else is stored.
+A vocabulary lesson in English for molecular biology students, with the whole interface in English only (no Lithuanian). Plain HTML, CSS and JavaScript; no build step, no dependencies. The trainer stores nothing in the browser and does not use the site language setting.
 
 ## What it covers now
 
@@ -13,11 +13,11 @@ Keys for the presenter: `1`-`4` pick a word, `→` or `Enter` next, `←` back.
 ```
 index.html        the page
 trainer.css       styles, picture colours and animations
-js/lesson.js      the lesson: scenes, steps, word list (the content, English in both languages)
-js/strings.js     interface texts, Lithuanian and English
+js/lesson.js      the lesson: scenes, steps, word list (the content)
+js/strings.js     interface texts (English)
 js/engine.js      game state, answer checking, score (no DOM)
 js/scenes.js      the SVG pictures, one per scene, drawn for any state
-js/ui.js          screens, keyboard, language
+js/ui.js          screens, keyboard
 ```
 
 ## Tests

@@ -98,22 +98,20 @@ function makeDocument() {
     }
   };
   doc.documentElement = new FakeEl('html', doc);
-  doc.documentElement.lang = 'lt';
+  doc.documentElement.lang = 'en';
   doc.body = new FakeEl('body', doc);
   return doc;
 }
 
-// Build a page like index.html (header with language buttons, #app), run the given site/english/js files.
+// Build a page like index.html (sitebar, brand, #app), run the given site/english/js files.
 function boot(files, opts) {
   opts = opts || {};
   const doc = makeDocument();
   const mk = (tag, id) => { const e = doc.createElement(tag); if (id) { e.setAttribute('id', id); doc.ids[id] = e; } return e; };
   const sitebar = mk('div', 'sitebar');
   const brand = mk('p', 'brand');
-  const langs = mk('div', 'langs');
-  for (const l of ['lt', 'en']) { const b = doc.createElement('button'); b.setAttribute('data-lang', l); langs.appendChild(b); }
   const app = mk('main', 'app');
-  doc.body.append(sitebar, brand, langs, app);
+  doc.body.append(sitebar, brand, app);
   const store = {};
   const ctx = vm.createContext({
     console, document: doc,
