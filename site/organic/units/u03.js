@@ -90,14 +90,14 @@
             src: 'L3 p2'
           },
           {
-            rule: t('Indukcijos efektas yra kovalentinio $σ$ ryšio poliarizacija: ryšio elektronų pora pasislenka link atomo, kurio elektrinis neigiamumas didesnis. Poliarizacija persiduoda grandine, bet greitai silpnėja: stipriausiai ji jaučiama dviem artimiausiems atomams ir beveik išnyksta po 3–4 ryšių. Rodyklė braižoma išilgai ryšio, smaigaliu į elektronus patraukiantį atomą.',
-              'The inductive effect is the polarisation of a covalent $σ$ bond: the bonding pair shifts towards the atom of higher electronegativity. The polarisation is passed along the chain but fades quickly: it is strongest at the two nearest atoms and almost gone after 3–4 bonds. The arrow is drawn along the bond, its head pointing to the atom that attracts the electrons.'),
+            rule: t('Indukcijos efektas yra kovalentinio $σ$ ryšio poliarizacija: ryšio elektronų pora pasislenka link atomo, kurio elektrinis neigiamumas didesnis. Poliarizacija persiduoda grandine, bet greitai silpnėja: stipriausiai ji jaučiama dviem artimiausiems atomams ir beveik išnyksta po 2–3 ryšių. Rodyklė braižoma išilgai ryšio, smaigaliu į elektronus patraukiantį atomą.',
+              'The inductive effect is the polarisation of a covalent $σ$ bond: the bonding pair shifts towards the atom of higher electronegativity. The polarisation is passed along the chain but fades quickly: it is strongest at the two nearest atoms and almost gone after 2–3 bonds. The arrow is drawn along the bond, its head pointing to the atom that attracts the electrons.'),
             src: 'L3 p3'
           },
           {
             mol: { smi: 'ClCCCC', opts: { deltas: { 0: '-', 1: '+', 2: '+', 3: '+' }, rotate: 0 } },
-            caption: t('1-chlorbutanas: chloras patraukia $σ$ ryšio elektronus, anglis C-1 gauna didžiausią dalinį teigiamą krūvį, C-2 mažesnį, C-3 dar mažesnį: $δ1+ > δ2+ > δ3+$.',
-              '1-chlorobutane: chlorine pulls the $σ$ electrons, carbon C-1 gets the largest partial positive charge, C-2 less, C-3 less still: $δ1+ > δ2+ > δ3+$.'),
+            caption: t('1-chlorbutanas: chloras patraukia $σ$ ryšio elektronus, anglis C-1 gauna didžiausią dalinį teigiamą krūvį, C-2 mažesnį, C-3 dar mažesnį: $δ^1+^ > δ^2+^ > δ^3+^$.',
+              '1-chlorobutane: chlorine pulls the $σ$ electrons, carbon C-1 gets the largest partial positive charge, C-2 less, C-3 less still: $δ^1+^ > δ^2+^ > δ^3+^$.'),
             src: 'L3 p3'
           },
           { h: t('Efekto ženklas: +I ir −I', 'The sign of the effect: +I and −I') },
@@ -136,7 +136,7 @@
               steps: [
                 [{ p: t('Chloro elektrinis neigiamumas didesnis už anglies, todėl $C−Cl$ ryšio elektronai slenka link chloro: tai −I efektas.', 'Chlorine is more electronegative than carbon, so the $C−Cl$ bonding electrons shift towards chlorine: this is a −I effect.') }],
                 [{ p: t('Atomas Nr. 1 yra tiesiogiai sujungtas su chloru ir netenka daugiausia elektronų tankio: ant jo atsiranda didžiausias $δ+$.', 'Carbon no. 1 is bonded directly to chlorine and loses the most electron density: it gets the largest $δ+$.') }],
-                [{ p: t('Per $C1−C2$ ir $C2−C3$ ryšius poliarizacija persiduoda, bet silpnėja: $δ1+ > δ2+ > δ3+$.', 'Polarisation passes on through the $C1−C2$ and $C2−C3$ bonds but weakens: $δ1+ > δ2+ > δ3+$.') },
+                [{ p: t('Per $C1−C2$ ir $C2−C3$ ryšius poliarizacija persiduoda, bet silpnėja: $δ^1+^ > δ^2+^ > δ^3+^$.', 'Polarisation passes on through the $C1−C2$ and $C2−C3$ bonds but weakens: $δ^1+^ > δ^2+^ > δ^3+^$.') },
                   { mol: { smi: 'ClCCC', opts: { deltas: { 0: '-', 1: '+', 2: '+' } } } }]
               ]
             },
@@ -191,10 +191,16 @@
                 [t('$π,π$-konjugacija', '$π,π$ conjugation'), { smi: 'C=CC#N', name: t('propennitrilas', 'prop-2-enenitrile') }],
                 [t('$p,π$-konjugacija', '$p,π$ conjugation'), { smi: 'C=COC', name: t('metoksietenas', 'methoxyethene'), opts: { lonePairs: [2] } }],
                 [t('$p,π$-konjugacija', '$p,π$ conjugation'), { smi: 'CC(N)=O', name: t('etanamidas', 'ethanamide'), opts: { lonePairs: [2] } }],
-                [t('$p,π$-konjugacija', '$p,π$ conjugation'), { smi: 'C=CCl', name: t('chloretenas', 'chloroethene'), opts: { lonePairs: [2] } }]
+                [t('$p,π$-konjugacija', '$p,π$ conjugation'), { smi: 'C=CCl', name: t('chloretenas', 'chloroethene'), opts: { lonePairs: [2] } }],
+                [t('$p,π$-konjugacija', '$p,π$ conjugation'), { smi: 'CC(=O)OC', name: t('metiletanoatas', 'methyl ethanoate'), opts: { lonePairs: [3] } }]
               ]
             },
             src: 'L3 p8'
+          },
+          {
+            p: t('Karboksilo grupės ir esterio $O$ atomo laisvoji pora persidengia su $C=O$ $π$ ryšiu lygiai taip pat kaip amide ($N$ atomas, L3 p9): sistemą sudaro trys atomai $O=C−O$. Todėl akrilo rūgšties $CH2=CH−COOH$ sistemoje yra 5 atomai: 4 $π,π$ atomai ir hidroksilo deguonis.',
+              'The lone pair of the $O$ atom of a carboxyl group or ester overlaps with the $C=O$ $π$ bond exactly as the $N$ of an amide (L3 p9): three atoms $O=C−O$ form the system. So the system of acrylic acid $CH2=CH−COOH$ has 5 atoms: 4 $π,π$ atoms plus the hydroxyl oxygen.'),
+            src: 'L3 p9; T p113'
           },
           {
             p: t('Alilo dalelėse prie $π$ ryšio prisijungusio $sp2$ atomo $p$ orbitalė gali būti tuščia (katijonas), turėti vieną elektroną (radikalas) arba elektronų porą (anijonas); visais trim atvejais gaunama trijų atomų $p,π$-sistema.',
@@ -310,7 +316,7 @@
           {
             pitfall: t('Mezomerijos efektas atsiranda tik tada, kai pakaito atomas tiesiogiai sujungtas su $π$ sistema. Anilino $−NH2$ turi +M, bet benzilamino $−NH2$ nuo žiedo atskirtas $sp3$ grupe $CH2$, todėl veikia tik −I. Halogenas turi ir −I, ir +M, bet −I stipresnis, todėl jis akceptorius.',
               'The mesomeric effect appears only when the substituent atom is attached directly to the $π$ system. The $−NH2$ of aniline has +M, but in benzylamine it is separated from the ring by an $sp3$ group $CH2$, so only −I acts. A halogen has both −I and +M, but −I is stronger, so it is an acceptor.'),
-            src: 'L3 p16'
+            src: 'L3 p10, p14'
           },
           {
             example: {
@@ -378,8 +384,8 @@
             src: 'L3 p19'
           },
           {
-            p: t('Gyvuose organizmuose labai svarbi katalizė fermentais. Fermentai – tai baltymų prigimties biokatalizatoriai; jei juos laikome reagentais, tai medžiagos, kurias jie veikia, yra substratai. Fermentai reakciją gali pagreitinti net $10^15$ kartų.',
-              'Enzymatic catalysis is especially important in living organisms. Enzymes are protein biocatalysts; treated as reagents, the substances they act on are substrates. Enzymes can speed up a reaction by as much as $10^15$ times.'),
+            p: t('Gyvuose organizmuose labai svarbi katalizė fermentais. Fermentai – tai baltymų prigimties biokatalizatoriai; jei juos laikome reagentais, tai medžiagos, kurias jie veikia, yra substratai. Fermentai reakciją gali pagreitinti net $10^15^$ kartų.',
+              'Enzymatic catalysis is especially important in living organisms. Enzymes are protein biocatalysts; treated as reagents, the substances they act on are substrates. Enzymes can speed up a reaction by as much as $10^15^$ times.'),
             src: 'T p30'
           },
           { practice: 'u03.energy' }
@@ -427,8 +433,8 @@
           },
           { h: t('Radikalai, karbokatijonai ir karbanijonai', 'Radicals, carbocations and carbanions') },
           {
-            p: t('Skylant ryšiui susidaro trys tipinės organinės tarpinės dalelės. Radikalas turi nesuporuotą elektroną, karbokatijonas – tuščią $p$ orbitalę (elektronų sekstetą, teigiamas krūvis), karbanijonas – laisvąją elektronų porą (neigiamas krūvis).',
-              'Bond cleavage produces three typical organic intermediates. A radical has an unpaired electron, a carbocation has an empty $p$ orbital (an electron sextet, positive charge) and a carbanion has a lone pair (negative charge).'),
+            p: t('Skylant ryšiui susidaro trys tipinės organinės tarpinės dalelės. Radikalas turi nesuporuotą elektroną, karbokatijonas – tuščią $p$ orbitalę (elektronų sekstetą, teigiamas krūvis), karbanijonas (anijonas) – laisvąją elektronų porą (neigiamas krūvis).',
+              'Bond cleavage produces three typical organic intermediates. A radical has an unpaired electron, a carbocation has an empty $p$ orbital (an electron sextet, positive charge) and a carbanion (anion) has a lone pair (negative charge).'),
             src: 'L3 p21'
           },
           {
@@ -439,9 +445,14 @@
             ]
           },
           {
-            rule: t('Karbokatijonų ir radikalų stabilumas didėja šia tvarka: metilo < pirminis < antrinis < tretinis < alilo < benzilo. Alkilo grupės elektronų tankį perduoda centrui (+I efektas, hiperkonjugacija), o alilo ir benzilo dalelėse krūvis ar nesuporuotas elektronas delokalizuojasi konjuguotoje sistemoje. Karbanijonams alkilo grupės veikia priešingai (jos didina elektronų tankį ir destabilizuoja), o alilo ir benzilo karbanijonai stabilizuojami delokalizacija.',
-              'The stability of carbocations and radicals grows in the order methyl < primary < secondary < tertiary < allyl < benzyl. Alkyl groups pass electron density to the centre (+I effect, hyperconjugation), and in allyl and benzyl particles the charge or unpaired electron is delocalised over a conjugated system. For carbanions alkyl groups act the other way (they add electron density and destabilise), while allyl and benzyl carbanions are stabilised by delocalisation.'),
+            rule: t('Karbokatijonų ir radikalų stabilumas didėja šia tvarka: metilo < pirminis < antrinis < tretinis < alilo < benzilo. Alkilo grupės elektronų tankį perduoda centrui (+I efektas, hiperkonjugacija), o alilo ir benzilo dalelėse krūvis ar nesuporuotas elektronas delokalizuojasi konjuguotoje sistemoje.',
+              'The stability of carbocations and radicals grows in the order methyl < primary < secondary < tertiary < allyl < benzyl. Alkyl groups pass electron density to the centre (+I effect, hyperconjugation), and in allyl and benzyl particles the charge or unpaired electron is delocalised over a conjugated system.'),
             src: 'L7 p9'
+          },
+          {
+            p: t('Už paskaitų ribų: karbanijonams (anijonams) alkilo grupės veikia priešingai (jos didina elektronų tankį ir destabilizuoja), todėl stabilumas mažėja tokia tvarka: metilo > pirminis > antrinis > tretinis, o alilo ir benzilo karbanijonai stabilizuojami delokalizacija.',
+              'Beyond the lectures: for carbanions (anions) alkyl groups act the other way (they add electron density and destabilise), so the stability falls in the order methyl > primary > secondary > tertiary, while allyl and benzyl carbanions are stabilised by delocalisation.'),
+            src: 'Klein'
           },
           {
             mol: [
@@ -461,8 +472,8 @@
             src: 'L3 p31'
           },
           {
-            pitfall: t('Pusinė (kabliuko pavidalo) rodyklė rodo vieną elektroną ir yra tik radikalinėms reakcijoms; heterolizinėms reakcijoms visada braižoma pilna rodyklė. Taip pat nesupainiokite karbokatijono ir radikalo: karbokatijonas neturi nei vieno elektrono toje orbitalėje, o radikalas turi vieną.',
-              'A half-headed arrow shows one electron and is used only for radical reactions; for heterolytic reactions always draw a full-headed arrow. Also do not confuse a carbocation with a radical: a carbocation has no electron in that orbital, a radical has one.'),
+            pitfall: t('Pusinė (kabliuko pavidalo) rodyklė rodo vieną elektroną ir yra tik radikalinėms reakcijoms; heterolizinėms reakcijoms visada braižoma pilna rodyklė. Taip pat nesupainiokite karbokatijono ir radikalo: karbokatijonas neturi nei vieno elektrono toje orbitalėje, o radikalas turi vieną. Nors $SN2$ stadijoje ryšiai skyla ir susidaro vienu metu (T p67), pagal L3 p34 $SN$ reakcijos priskiriamos heterolizinėms.',
+              'A half-headed arrow shows one electron and is used only for radical reactions; for heterolytic reactions always draw a full-headed arrow. Also do not confuse a carbocation with a radical: a carbocation has no electron in that orbital, a radical has one. Although in the $SN2$ stage bonds break and form at the same time (T p67), L3 p34 classes $SN$ reactions as heterolytic.'),
             src: 'L3 p21'
           },
           {
@@ -503,8 +514,8 @@
             src: 'L3 p23'
           },
           {
-            rule: t('Elektrofilas – teigiamai įkrauta dalelė arba molekulės fragmentas su tuščia orbitale (ar daliniu teigiamu krūviu), galintis priimti nukleofilo elektronų porą. Tai katijonai ($NO2+$, $H+$, $Cl+$, $Br+$, $RC+=O$, $R3C+$) ir neutralios polinės molekulės, turinčios $δ+$ atomų ($SO3$, $BF3$, $AlCl3$, $FeBr3$, $R3C−X$). Nukleofilas – reagentas su laisvąja elektronų pora: anijonas ($HO-$, $RO-$, $HS-$, $RS-$, $NH2-$, $H-$, $RCOO-$, $Hal-$) arba neutrali molekulė ($H2O$, $NH3$, $NR3$, $ROR$, $ROH$). Nukleofilas puola tuos molekulės taškus, kuriuose elektronų tankis yra mažiausias ($δ+$).',
-              'An electrophile is a positively charged particle or molecular fragment with an empty orbital (or a partial positive charge) that can accept the electron pair of a nucleophile. These are cations ($NO2+$, $H+$, $Cl+$, $Br+$, $RC+=O$, $R3C+$) and neutral polar molecules that contain $δ+$ atoms ($SO3$, $BF3$, $AlCl3$, $FeBr3$, $R3C−X$). A nucleophile is a reagent with a lone pair: an anion ($HO-$, $RO-$, $HS-$, $RS-$, $NH2-$, $H-$, $RCOO-$, $Hal-$) or a neutral molecule ($H2O$, $NH3$, $NR3$, $ROR$, $ROH$). A nucleophile attacks the spots of the molecule where the electron density is lowest ($δ+$).'),
+            rule: t('Elektrofilas – teigiamai įkrauta dalelė arba molekulės fragmentas su tuščia orbitale (ar daliniu teigiamu krūviu), galintis priimti nukleofilo elektronų porą. Tai katijonai ($NO2+$, $H+$, $Cl+$, $Br+$, $RC^+^=O$, $R3C+$) ir neutralios polinės molekulės, turinčios $δ+$ atomų ($SO3$, $BF3$, $AlCl3$, $FeBr3$, $R3C−X$). Nukleofilas – reagentas su laisvąja elektronų pora: anijonas ($HO-$, $RO-$, $HS-$, $RS-$, $NH2-$, $H-$, $RCOO-$, $Hal-$) arba neutrali molekulė ($H2O$, $NH3$, $NR3$, $ROR$, $ROH$). Nukleofilas puola tuos molekulės taškus, kuriuose elektronų tankis yra mažiausias ($δ+$).',
+              'An electrophile is a positively charged particle or molecular fragment with an empty orbital (or a partial positive charge) that can accept the electron pair of a nucleophile. These are cations ($NO2+$, $H+$, $Cl+$, $Br+$, $RC^+^=O$, $R3C+$) and neutral polar molecules that contain $δ+$ atoms ($SO3$, $BF3$, $AlCl3$, $FeBr3$, $R3C−X$). A nucleophile is a reagent with a lone pair: an anion ($HO-$, $RO-$, $HS-$, $RS-$, $NH2-$, $H-$, $RCOO-$, $Hal-$) or a neutral molecule ($H2O$, $NH3$, $NR3$, $ROR$, $ROH$). A nucleophile attacks the spots of the molecule where the electron density is lowest ($δ+$).'),
             src: 'L3 p23'
           },
           {
@@ -548,7 +559,7 @@
               t('Erdviniai trukdžiai nukleofiliškumą mažina: tret-butoksido anijonas yra labai stipri bazė, bet silpnas nukleofilas, nes didelės grupės trukdo prieiti prie anglies, o mažas protonas pasiekiamas lengvai.', 'Steric hindrance lowers nucleophilicity: the tert-butoxide anion is a very strong base but a weak nucleophile, because the bulky groups block the approach to carbon, while the small proton is reached easily.')
             ],
             ordered: true,
-            src: 'L3 p26'
+            src: 'L3 p26-29'
           },
           {
             pitfall: t('Nukleofiliškumas ir bazingumas kinta ne visada vienodai. Kriterijus, tinkantis atomams vienoje eilutėje, žemyn grupe duoda priešingą rezultatą, o erdviniai trukdžiai eilę visiškai pakeičia.',
@@ -602,7 +613,7 @@
           },
           {
             scheme: { items: [{ smi: 'CCO' }, { arrow: '⇌', above: f('H+') }, { smi: 'C=C' }, { plus: true }, { smi: 'O' }] },
-            caption: t('Eliminavimas: etanolis skyla į etreną ir vandenį.', 'Elimination: ethanol splits into ethene and water.'),
+            caption: t('Eliminavimas: etanolis skyla į eteną ir vandenį.', 'Elimination: ethanol splits into ethene and water.'),
             src: 'L3 p33'
           },
           {
@@ -757,7 +768,7 @@
               steps: [
                 [{ p: t('Amoniakas turi azoto laisvąją porą: tai nukleofilas. Vandenilio chlorido protonas yra elektrofilas ($δ+$).', 'Ammonia has a nitrogen lone pair: it is the nucleophile. The proton of hydrogen chloride is the electrophile ($δ+$).') }],
                 [{ p: t('Pirmoji rodyklė: nuo azoto laisvosios poros prie $H$.', 'First arrow: from the nitrogen lone pair to $H$.') }],
-                [{ p: t('Vandenilis jau turi dvi elektronų poros (dublet), todėl kita pora turi pasitraukti: antroji rodyklė nuo $H−Cl$ ryšio prie chloro.', 'Hydrogen already has its two electrons (a duet), so another pair must leave: the second arrow goes from the $H−Cl$ bond to chlorine.') },
+                [{ p: t('Vandenilis jau turi du elektronus (dubletą), todėl kita pora turi pasitraukti: antroji rodyklė nuo $H−Cl$ ryšio prie chloro.', 'Hydrogen already has its two electrons (a duet), so another pair must leave: the second arrow goes from the $H−Cl$ bond to chlorine.') },
                   {
                     mech: [{
                       scheme: { items: [{ smi: 'N', opts: { lonePairs: true } }, { plus: true }, { smi: 'Cl', opts: { allH: true } }, { arrow: '→' }, { smi: '[NH4+]' }, { plus: true }, { smi: '[Cl-]' }] },
@@ -916,7 +927,7 @@
           const whyKind = {
             hal: t('Halogenas elektrinis neigiamesnis už anglį, todėl patraukia $σ$ ryšio elektronus.', 'A halogen is more electronegative than carbon, so it pulls the $σ$ bonding electrons.'),
             het: t('Deguonis, azotas ir siera su anglimi sujungti poliniu ryšiu, o jų elektrinis neigiamumas didesnis už anglies, todėl elektronai slenka link heteroatomo.', 'Oxygen, nitrogen and sulfur are bonded to carbon by a polar bond, and their electronegativity is higher than that of carbon, so the electrons shift towards the heteroatom.'),
-            multi: t('Grupės atomų (N, O, F) elektrinis neigiamumas didesnis už anglies, be to, jie sujungti daugialypiais ryšiais, todėl grupė traukia elektronus iš grandinės.', 'The atoms of the group (N, O, F) are more electronegative than carbon and are joined by multiple bonds, so the group pulls electrons out of the chain.'),
+            multi: t('Grupės atomai elektringesni už anglį, todėl grupė traukia elektronus.', 'The atoms of the group are more electronegative than carbon, so the group pulls electrons.'),
             cation: t('Grupė turi teigiamą krūvį, todėl stipriai traukia elektronus iš grandinės.', 'The group carries a positive charge, so it pulls electrons strongly out of the chain.'),
             anion: t('Anijonas turi pilną neigiamą krūvį ir dalį jo perduoda grandinei, todėl didina elektronų tankį.', 'An anion has a full negative charge and passes part of it to the chain, so it raises the electron density.')
           }[x.k];
@@ -1030,20 +1041,20 @@
                 kind: 'order',
                 options: [{ text: t('anglis Nr. 1', 'carbon no. 1') }, { text: t('anglis Nr. 2', 'carbon no. 2') }, { text: t('anglis Nr. 3', 'carbon no. 3') }, { text: t('anglis Nr. 4', 'carbon no. 4') }],
                 hint: t('Pagalvokite, kuris atomas yra arčiausiai chloro ir kaip poliarizacija silpnėja grandine.', 'Think about which atom is nearest to chlorine and how polarisation fades along the chain.'),
-                solution: t('Poliarizacija silpnėja su kiekvienu ryšiu: $δ1+ > δ2+ > δ3+ > δ4+$.', 'The polarisation weakens with each bond: $δ1+ > δ2+ > δ3+ > δ4+$.')
+                solution: t('Poliarizacija silpnėja su kiekvienu ryšiu: $δ^1+^ > δ^2+^ > δ^3+^ > δ^4+^$.', 'The polarisation weakens with each bond: $δ^1+^ > δ^2+^ > δ^3+^ > δ^4+^$.')
               },
               {
                 prompt: t('Per kiek ryšių indukcijos efektas praktiškai išnyksta?', 'After about how many bonds has the inductive effect practically died out?'),
                 kind: 'choice',
                 options: [
                   { text: t('jau po pirmojo ryšio', 'already after the first bond') },
-                  { text: t('maždaug po 3–4 ryšių', 'after about 3–4 bonds') },
+                  { text: t('maždaug po 2–3 ryšių', 'after about 2–3 bonds') },
                   { text: t('maždaug po 10 ryšių', 'after about 10 bonds') },
                   { text: t('jis nesilpnėja', 'it does not weaken') }
                 ],
                 answer: 1,
                 hint: t('$σ$ ryšys sunkiai poliarizuojamas: efektas greitai gęsta.', 'A $σ$ bond is hardly polarisable: the effect fades quickly.'),
-                solution: t('$σ$ ryšys sunkiai poliarizuojamas, todėl efektą stipriausiai jaučia dvi artimiausios anglys, o po 3–4 ryšių jis beveik nebejuntamas.', 'Because a $σ$ bond is hardly polarisable, the effect is strongest at the two nearest carbons and has almost vanished after 3–4 bonds.')
+                solution: t('$σ$ ryšys sunkiai poliarizuojamas, todėl efektą stipriausiai jaučia dvi artimiausios anglys, o po 2–3 ryšių jis beveik nebejuntamas.', 'Because a $σ$ bond is hardly polarisable, the effect is strongest at the two nearest carbons and has almost vanished after 2–3 bonds.')
               }
             ],
             why: t('Indukcijos efektas silpnėja didėjant atstumui nuo pakaito, todėl jį reikia vertinti tik artimiausioms dviem trims anglims.', 'The inductive effect weakens with distance from the substituent, so it has to be considered only for the nearest two or three carbons.'),
@@ -1553,7 +1564,7 @@
             // rings and aromatic compounds
             'c1ccccc1', 'Cc1ccccc1', 'C=Cc1ccccc1', 'Nc1ccccc1', 'Oc1ccccc1', 'O=Cc1ccccc1', 'N#Cc1ccccc1', 'OC(=O)c1ccccc1', 'COc1ccccc1', 'Clc1ccccc1',
             'C=CC=Cc1ccccc1', 'c1ccc2ccccc2c1', 'c1ccc(cc1)c1ccccc1', 'CC(=O)c1ccccc1', 'CCc1ccccc1',
-            'C1=CC=CCC1', 'C1=CC=CC1', 'C=C1C=CCCC1', 'O=C1C=CCCC1', 'O=C1C=CC(=O)C=C1', 'C1=CC=CC=CC1',
+            'C1=CC=CCC1', 'C1=CC=CC1', 'C=C1C=CCCC1', 'O=C1C=CCCC1', 'O=C1C=CC(=O)C=C1', 'C1=CC=CC=CC1', 'COC(=O)C1=CCCCC1', 'C=C(C)C1C=CCCC1',
             // isolated double bonds beside a conjugated part, and no conjugation at all
             'C=CC=CCC=C', 'CC(=O)C=CCC=C', 'C=CC=CCC=CC=C', 'C=CCC=C', 'C=C=C', 'CC=CCC=CC', 'C=CCCC=C', 'C1=CCC=CC1', 'C=CCC(C)=O', 'O=CCC=O', 'C=CCO'
           ];
@@ -1573,7 +1584,7 @@
             hint: t('Konjuguotoji sistema – $π$ ryšiai ar $π$ ryšiai ir laisvosios poros, atskirti vienu viengubuoju ryšiu. Ar kas nors juos atskiria daugiau?', 'A conjugated system is made of $π$ bonds, or $π$ bonds and lone pairs, separated by one single bond. Does anything separate them further?'),
             solution: systems.length === 0
               ? t('Tarp $π$ ryšių yra $sp3$ atomas ar jie yra kumuliuoti, todėl $π$ ryšių orbitalės viena su kita nepersidengia: konjuguotosios sistemos nėra.', 'An $sp3$ atom lies between the $π$ bonds or they are cumulated, so the $π$ orbitals do not overlap with each other: there is no conjugated system.')
-              : t('Konjuguotųjų sistemų skaičius: ' + systems.length + '. Izoliuotas $π$ ryšys, atskirtas $sp3$ atomu, į sistemą neįeina.', 'Number of conjugated systems: ' + systems.length + '. An isolated $π$ bond separated by an $sp3$ atom is not part of a system.')
+              : t('Konjuguotųjų sistemų skaičius: ' + systems.length + '. Visi šie $π$ ryšiai ar laisvosios poros yra atskirti ne daugiau kaip vienu viengubuoju ryšiu, todėl sudaro ' + (systems.length > 1 ? 'sistemas' : 'sistemą') + '.', 'Number of conjugated systems: ' + systems.length + '. These pi bonds and lone pairs are separated by no more than one single bond, so they form the system' + (systems.length > 1 ? 's' : '') + '.')
           }];
           if (systems.length) {
             steps.push({
@@ -1603,7 +1614,7 @@
                 ? t('Visi sistemos atomai priklauso $π$ ryšiams, todėl tai $π,π$-konjugacija.', 'All atoms of the system belong to $π$ bonds, so it is $π,π$ conjugation.')
                 : kind === 1
                   ? t('Sistemoje yra atomas su laisvąja pora, krūviu ar nesuporuotu elektronu (Nr. ' + lab(donors) + ') ir tik vienas $π$ ryšys: tai $p,π$-konjugacija.', 'The system has an atom with a lone pair, a charge or an unpaired electron (no. ' + lab(donors) + ') and only one $π$ bond: this is $p,π$ conjugation.')
-                  : t('Sistemoje yra keli $π$ ryšiai ($π,π$) ir atomas su laisvąja pora (Nr. ' + lab(donors) + '), kuris persidengia su jais ($p,π$): abi rūšys kartu.', 'The system has several $π$ bonds ($π,π$) and an atom with a lone pair (no. ' + lab(donors) + ') that overlaps with them ($p,π$): both kinds together.')
+                  : t('Sistemoje yra keli $π$ ryšiai ($π,π$) ir atomas su laisvąja pora, krūviu ar nesuporuotu elektronu (Nr. ' + lab(donors) + '), kuris persidengia su jais ($p,π$): abi rūšys kartu.', 'The system has several $π$ bonds ($π,π$) and an atom with a lone pair, charge or unpaired electron (no. ' + lab(donors) + ') that overlaps with them ($p,π$): both kinds together.')
             });
           }
           return {
@@ -1637,7 +1648,7 @@
                 prompt: t('Kiek atomų sudaro didžiausią konjuguotąją sistemą?', 'How many atoms form the largest conjugated system?'),
                 kind: 'number', answer: { value: 8, tol: 0 },
                 hint: t('Skaičiuokite $C=C$ atomus ir dvi prie jų prisijungusias karboksilo grupes (anglis ir abu deguonys kiekvienoje).', 'Count the $C=C$ atoms and the two carboxyl groups attached to them (the carbon and both oxygens of each).'),
-                solution: t('Du $C=C$ atomai ir dvi karboksilo grupės po tris atomus: $2 + 3 + 3 = 8$.', 'Two $C=C$ atoms and two carboxyl groups of three atoms each: $2 + 3 + 3 = 8$.')
+                solution: t('Du $C=C$ atomai ir dvi karboksilo grupės po tris atomus: $2 + 3 + 3 = 8$. Jei skaičiuotume tik $C=C$ ir $C=O$ atomus, gautume 6; kursas hidroksilo deguonį skaičiuoja kaip amido azotą (L3 p9).', 'Two $C=C$ atoms and two carboxyl groups of three atoms each: $2 + 3 + 3 = 8$. Counting only the $C=C$ and $C=O$ atoms would give 6; the course counts the hydroxyl oxygen like the nitrogen of an amide (L3 p9).')
               }
             ],
             why: t('Konjuguotoji sistema apima visus atomus su persidengiančiomis $p$ orbitalėmis, įskaitant karbonilo ir hidroksilo deguonis. $sp3$ anglis ją nutraukia ir sukuria atskirą trijų atomų sistemą.', 'A conjugated system includes every atom with overlapping $p$ orbitals, including the carbonyl and hydroxyl oxygens. An $sp3$ carbon breaks it and leaves a separate three-atom system.'),
@@ -2149,6 +2160,12 @@
                 answer: [0, 1],
                 hint: t('Katalizatorius reakciją pagreitina, bet nekeičia pradinės ir galutinės būsenos.', 'A catalyst accelerates the reaction but leaves the initial and final states unchanged.'),
                 solution: t('Tikrieji teiginiai: $Ea$ mažėja ir reakcija greitėja. Kiti trys neteisingi: katalizatorius nekeičia produkto, energijų ar pusiausvyros.', 'The true statements: $Ea$ falls and the reaction speeds up. The other three are wrong: a catalyst changes neither the product, the energies nor the equilibrium.')
+              },
+              {
+                prompt: t('Katalizatorius sumažina $Ea$ nuo 85 iki 55 kJ/mol, o produktai yra 20 kJ/mol žemiau už pradines medžiagas. Kiek kJ/mol pasikeičia energijų skirtumas tarp pradinių medžiagų ir produktų?', 'A catalyst lowers $Ea$ from 85 to 55 kJ/mol, and the products lie 20 kJ/mol below the starting materials. By how many kJ/mol does the energy difference between starting materials and products change?'),
+                kind: 'number', answer: { value: 0, tol: 0 },
+                hint: t('Katalizatorius keičia kalno aukštį, bet ne pradinį ir galinį lygį.', 'A catalyst changes the height of the hill, not the initial and final levels.'),
+                solution: t('Energijų skirtumas lieka 20 kJ/mol, todėl pokytis lygus 0: katalizatorius sumažina tik $Ea$ (85 − 55 = 30 kJ/mol).', 'The energy difference stays 20 kJ/mol, so the change is 0: the catalyst lowers only $Ea$ (85 − 55 = 30 kJ/mol).')
               }
             ],
             why: t('Katalizatorius yra tik greičio reguliatorius: pusiausvyra priklauso nuo pradinio ir galutinio energijos lygio.', 'A catalyst is only a rate regulator: the equilibrium depends on the initial and final energy levels.'),
@@ -2185,7 +2202,7 @@
               {
                 prompt: t('Nuo ko priklauso intermediato stabilumas ir susidarymo tikimybė?', 'What do the stability and the probability of formation of an intermediate depend on?'),
                 kind: 'choice',
-                options: [{ text: t('Nuo krūvio ar laisvosios poros delokalizacijos galimybės', 'On the possibility of delocalising the charge or lone pair') }, { text: t('Nuo molekulės masės', 'On the mass of the molecule') }, { text: t('Nuo tirpiklio spalvos', 'On the colour of the solvent') }],
+                options: [{ text: t('Nuo krūvio ar laisvosios poros delokalizacijos galimybės', 'On the possibility of delocalising the charge or lone pair') }, { text: t('Tik nuo to, kiek vandenilio atomų prijungta prie centro: kuo daugiau, tuo stabilesnė dalelė', 'Only on how many hydrogen atoms are bonded to the centre: the more, the more stable the particle') }, { text: t('Nuo katalizatoriaus, kuris pastumia pusiausvyrą į produktų pusę', 'On the catalyst, which shifts the equilibrium towards the products') }],
                 answer: 0,
                 hint: t('Prisiminkite, kodėl benzilo katijonas stabilesnis už metilo.', 'Recall why the benzyl cation is more stable than methyl.'),
                 solution: t('Kuo labiau krūvis ar laisvoji pora delokalizuota, tuo stabilesnė tarpinė dalelė ir tuo didesnė jos susidarymo tikimybė.', 'The more the charge or lone pair is delocalised, the more stable the intermediate and the more likely its formation.')
@@ -2279,7 +2296,7 @@
         mirrors: [],
         gen(rng, ctx) {
           const sk = ctx.pick(SKEL);
-          const kind = ctx.pick(['cation', 'radical', 'anion']);
+          const kind = ctx.pick(['cation', 'cation', 'radical', 'radical', 'anion']);
           const sp = species(sk, kind);
           const sub = precursor(sk, kind === 'anion' ? null : 'Br');
           const KIND = {
@@ -2316,10 +2333,10 @@
                 solution: t('Centras yra anglis Nr. ' + (sp.centre + 1) + '.', 'The centre is carbon no. ' + (sp.centre + 1) + '.')
               },
               {
-                prompt: t('Kokio tipo yra šis anglies centras?', 'What type of carbon centre is this?'),
+                prompt: t('Kuris tipas lemia šio centro stabilumą? (jei šalia yra $C=C$ ar benzeno žiedas, pasirinkite alilo ar benzilo)', 'Which type decides the stability of this centre? (if a $C=C$ or benzene ring is next to it, choose allylic or benzylic)'),
                 kind: 'choice', options: clsOpts, answer: sk.cls,
                 hint: t('Suskaičiuokite, kiek anglies atomų prijungta prie centro, ir ar šalia yra $C=C$ arba benzeno žiedas.', 'Count how many carbon atoms are attached to the centre, and whether a $C=C$ or a benzene ring is next to it.'),
-                solution: t('Tai ' + clsLT + ' centras.' + (sk.cls === 4 ? ' Jis šalia $C=C$, todėl krūvis ar nesuporuotas elektronas delokalizuojasi.' : sk.cls === 5 ? ' Jis šalia benzeno žiedo, todėl krūvis ar nesuporuotas elektronas delokalizuojasi.' : sk.cls === 1 && /c1ccccc1C\{c\}/.test(sk.t) ? ' Tarp centro ir žiedo yra $CH2$, todėl tai ne benzilo centras.' : ''), 'It is a ' + clsEN + ' centre.' + (sk.cls === 4 ? ' It is next to a $C=C$, so the charge or unpaired electron is delocalised.' : sk.cls === 5 ? ' It is next to a benzene ring, so the charge or unpaired electron is delocalised.' : sk.cls === 1 && /c1ccccc1C\{c\}/.test(sk.t) ? ' A $CH2$ lies between the centre and the ring, so this is not a benzylic centre.' : ''))
+                solution: t('Tai ' + clsLT + ' centras.' + (sk.cls === 4 ? ' Jis šalia $C=C$, todėl krūvis ar nesuporuotas elektronas delokalizuojasi.' : sk.cls === 5 ? ' Jis šalia benzeno žiedo, todėl krūvis ar nesuporuotas elektronas delokalizuojasi.' : sk.cls === 1 && /c1ccccc1C\{c\}/.test(sk.t) ? ' Tarp centro ir žiedo yra $CH2$, todėl tai ne benzilo centras.' : ''), 'It is ' + (/^[aeiou]/.test(clsEN) ? 'an ' : 'a ') + clsEN + ' centre.' + (sk.cls === 4 ? ' It is next to a $C=C$, so the charge or unpaired electron is delocalised.' : sk.cls === 5 ? ' It is next to a benzene ring, so the charge or unpaired electron is delocalised.' : sk.cls === 1 && /c1ccccc1C\{c\}/.test(sk.t) ? ' A $CH2$ lies between the centre and the ring, so this is not a benzylic centre.' : ''))
               },
               {
                 prompt: t('Kokiu reagentu ši dalelė gali būti reakcijoje?', 'What kind of reagent can this particle be in a reaction?'),
@@ -2345,7 +2362,7 @@
         title: t('Karbokatijonų, radikalų ir karbanijonų stabilumas', 'Stability of carbocations, radicals and carbanions'),
         mirrors: [],
         gen(rng, ctx) {
-          const kind = ctx.pick(['cation', 'radical', 'anion']);
+          const kind = ctx.pick(['cation', 'cation', 'radical', 'radical', 'anion']);
           const cls = ctx.shuffle([0, 1, 2, 3, 4, 5]).slice(0, 3);
           // course order for cations and radicals: benzyl > allyl > tertiary > secondary > primary > methyl (L7 p9, L6 p16);
           // carbanions: delocalised ones first, then methyl > primary > secondary > tertiary (alkyl groups destabilise)
@@ -2526,7 +2543,7 @@
           },
           {
             id: 'u03.cleave.6',
-            q: [{ p: t('Trys procesai parašyti reakcijų lygtimis.', 'Three processes are written as equations.') }],
+            q: [{ p: t('Keturi procesai parašyti reakcijų lygtimis.', 'Four processes are written as equations.') }],
             steps: [
               {
                 prompt: t('Suporuokite kiekvieną procesą su jo klase.', 'Pair each process with its class.'),
@@ -2535,16 +2552,17 @@
                   left: [
                     { scheme: { items: [{ smi: 'ClCl' }, { arrow: '→', above: f('hν') }, { smi: '[Cl]' }, { plus: true }, { smi: '[Cl]' }] } },
                     { scheme: { items: [{ smi: '[OH-]' }, { plus: true }, { smi: 'CI' }, { arrow: '→' }, { smi: 'CO' }, { plus: true }, { smi: '[I-]' }] } },
-                    { scheme: { items: [{ smi: 'C=CC=C' }, { plus: true }, { smi: 'C=C' }, { arrow: '→', above: f('t°') }, { smi: 'C1=CCCCC1' }] } }
+                    { scheme: { items: [{ smi: 'CC' }, { arrow: '→', above: f('t°') }, { smi: '[CH3]' }, { plus: true }, { smi: '[CH3]' }] } },
+                    { scheme: { items: [{ smi: 'C=C' }, { plus: true }, { smi: 'Br' }, { arrow: '→' }, { smi: 'CCBr' }] } }
                   ],
-                  right: [{ text: t('homolizinė', 'homolytic') }, { text: t('heterolizinė (joninė)', 'heterolytic (ionic)') }, { text: t('sinchroninė', 'synchronous') }],
-                  pairs: [0, 1, 2]
+                  right: [{ text: t('homolizinė', 'homolytic') }, { text: t('heterolizinė (joninė)', 'heterolytic (ionic)') }],
+                  pairs: [0, 1, 0, 1]
                 },
-                hint: t('Ieškokite, kur reagentai yra radikalai, kur nukleofilas ir polinis ryšys, o kur nėra nei vieno iš jų ir ciklas susidaro vienoje stadijoje.', 'Look for where the reagents are radicals, where there is a nucleophile and a polar bond, and where there is neither and a ring forms in a single stage.'),
-                solution: t('Pirmuoju atveju susidaro radikalai (homolizė). Antruoju elektronų pora iš $HO-$ pereina prie anglies, o $C−I$ elektronai pereina jodui: tai heterolizinė (joninė) reakcija. Trečiuoju visi ryšiai susidaro ir nutrūksta vienu metu ciklinėje pereinamojoje būsenoje, be jonų ir radikalų: sinchroninė.', 'In the first case radicals form (homolysis). In the second an electron pair moves from $HO-$ to carbon and the $C−I$ electrons move to iodine: this is a heterolytic (ionic) reaction. In the third all bonds form and break at the same time in a cyclic transition state, with no ions or radicals: synchronous.')
+                hint: t('Ieškokite, kur reagentai yra radikalai, kur nukleofilas ir polinis ryšys, o kur ryšys skyla veikiant šviesai ar aukštai temperatūrai be jokio polinio reagento.', 'Look for where the reagents are radicals, where there is a nucleophile or a polar reagent, and where the bond splits by light or heat with no polar reagent.'),
+                solution: t('Pirmuoju atveju susidaro radikalai (homolizė). Antruoju elektronų pora iš $HO-$ pereina prie anglies, o $C−I$ elektronai pereina jodui: tai heterolizinė (joninė) reakcija. Trečiuoju aukšta temperatūra nepoliarų $C−C$ ryšį suskaido simetriškai į du metilo radikalus (homolizė). Ketvirtuoju polinė molekulė $HBr$ prisijungia prie $π$ ryšio per jonus: tai heterolizinė reakcija.', 'In the first case radicals form (homolysis). In the second an electron pair moves from $HO-$ to carbon and the $C−I$ electrons move to iodine: this is a heterolytic (ionic) reaction. In the third, heat splits the nonpolar $C−C$ bond symmetrically into two methyl radicals (homolysis). In the fourth the polar molecule $HBr$ adds to the $π$ bond through ions: a heterolytic reaction.')
               }
             ],
-            why: t('Klasę nusako tai, kaip persitvarko elektronai: po vieną (radikalai), poromis į vieną atomą (jonai) arba visi vienu metu be tarpinių dalelių.', 'The class is set by how the electrons rearrange: one each (radicals), as a pair to one atom (ions) or all at the same time without intermediates.'),
+            why: t('Klasę nusako tai, kaip persitvarko elektronai: po vieną (radikalai) arba poromis į vieną atomą (jonai).', 'The class is set by how the electrons rearrange: one each (radicals) or as a pair to one atom (ions).'),
             src: 'L3 p21'
           },
           {
@@ -2664,7 +2682,9 @@
           }
           const isE = rng() < 0.5;
           const x = ctx.pick(isE ? E : N);
-          const others = ctx.shuffle((isE ? N : E).slice()).slice(0, 1).concat(ctx.shuffle((isE ? E : N).filter((y) => y !== x)).slice(0, 2));
+          // electrophilic distractors are cations or empty-orbital species only: neutral polar electrophiles still have lone pairs and can react with a cation
+          const EC = ['O=[N+]=O', 'C[C+]=O', '[H+]', '[Br+]', '[Cl+]', 'C[C+](C)C', 'FB(F)F'].map((smi) => E.find((y) => y.smi === smi));
+          const others = ctx.shuffle((isE ? N : E).slice()).slice(0, 1).concat(ctx.shuffle((isE ? EC : N).filter((y) => y !== x)).slice(0, 2));
           const mol = (extra) => ({ smi: x.smi, opts: Object.assign({ numbers: 'all' }, extra || {}) });
           const lab = x.atoms.map((i) => i + 1).join(' ir Nr. ');
           const labEN = x.atoms.map((i) => i + 1).join(' and no. ');
@@ -2690,7 +2710,7 @@
               answer: 0,
               hint: isE ? t('Elektrofilui reikia partnerio, kuris duoda elektronų porą.', 'An electrophile needs a partner that gives an electron pair.') : t('Nukleofilui reikia partnerio, kuris priima elektronų porą.', 'A nucleophile needs a partner that accepts an electron pair.'),
               solution: isE
-                ? t('Elektrofilas reaguoja su nukleofilu, kuris atiduoda elektronų porą. Dvi elektrofilinės dalelės viena kitai poros nepasiūlo.', 'An electrophile reacts with a nucleophile, which gives the electron pair. Two electrophilic particles offer each other no pair.')
+                ? t('Elektrofilas reaguoja su nukleofilu, kuris atiduoda elektronų porą. Du elektrofilai neturi, kas atiduotų porą.', 'An electrophile reacts with a nucleophile, which gives the electron pair. Two such electrophiles have no pair to give each other.')
                 : t('Nukleofilas reaguoja su elektrofilu, kuris poros reikalauja. Dvi nukleofilinės dalelės viena kitą stumia, nes abi turi poros perteklių.', 'A nucleophile reacts with an electrophile, which needs a pair. Two nucleophilic particles repel each other because both have a surplus of pairs.')
             }
           ];
@@ -2889,15 +2909,15 @@
           };
           const CHARGE = {
             reason: t('Anijonas turi pilną neigiamą krūvį ir laisvąją porą atiduoda lengviau nei neutrali molekulė.', 'An anion has a full negative charge and gives up its lone pair more readily than a neutral molecule.'),
-            wrongs: [t('Neutrali molekulė turi daugiau vandenilio atomų, todėl nukleofiliškesnė.', 'The neutral molecule has more hydrogen atoms, so it is more nucleophilic.'), t('Anijonas yra mažesnis, todėl stipriau laiko elektronų porą.', 'The anion is smaller, so it holds the electron pair more tightly.'), t('Krūvis nukleofiliškumui įtakos neturi.', 'Charge has no influence on nucleophilicity.')]
+            wrongs: [t('Neutrali molekulė stabilesnė, todėl laisvąją porą atiduoda lengviau.', 'The neutral molecule is more stable, so it gives up its lone pair more readily.'), t('Anijonas yra mažesnis, todėl stipriau laiko elektronų porą.', 'The anion is smaller, so it holds the electron pair more tightly.'), t('Krūvis nukleofiliškumui įtakos neturi.', 'Charge has no influence on nucleophilicity.')]
           };
           const GROUP = {
-            reason: t('Žemyn grupe atomas didesnis ir lengviau poliarizuojasi, todėl jo laisvoji pora prieinamesnė: nukleofiliškumas auga, nors bazingumas silpnėja.', 'Going down a group the atom is larger and more polarisable, so it gives up its lone pair more readily: nucleophilicity grows although basicity falls.'),
+            reason: t('Protiniuose tirpikliuose (vandenyje, alkoholiuose) žemyn grupe atomas didesnis ir lengviau poliarizuojasi, todėl jo laisvoji pora prieinamesnė: nukleofiliškumas auga, nors bazingumas silpnėja.', 'In protic solvents (water, alcohols), going down a group the atom is larger and more polarisable, so it gives up its lone pair more readily: nucleophilicity grows although basicity falls.'),
             wrongs: [t('Žemyn grupe elektrinis neigiamumas didėja, todėl didėja ir nukleofiliškumas.', 'Going down a group electronegativity grows, so nucleophilicity grows too.'), t('Stipresnė bazė visada yra ir stipresnis nukleofilas.', 'The stronger base is always the stronger nucleophile.'), t('Nukleofiliškumas grupėje nekinta.', 'Nucleophilicity does not change within a group.')]
           };
           const SUBST = {
             reason: t('Elektronų donorai nukleofiliškumą didina, o krūvio delokalizacija ir akceptoriniai pakaitai jį mažina: išsklaidyta pora atiduodama sunkiau.', 'Electron donors raise nucleophilicity, while charge delocalisation and acceptor substituents lower it: a spread-out pair is given up less readily.'),
-            wrongs: [t('Kuo daugiau atomų molekulėje, tuo nukleofiliškesnė dalelė.', 'The more atoms the molecule has, the more nucleophilic the particle.'), t('Delokalizuotas krūvis padaro nukleofilą stipresnį.', 'A delocalised charge makes a nucleophile stronger.'), t('Visos šios dalelės turi vieną deguonį, todėl yra vienodos.', 'All these particles have one oxygen, so they are equal.')]
+            wrongs: [t('Pakaitas, traukiantis elektronus, didina nukleofiliškumą.', 'A substituent that withdraws electrons raises nucleophilicity.'), t('Delokalizuotas krūvis padaro nukleofilą stipresnį.', 'A delocalised charge makes a nucleophile stronger.'), t('Visos šios dalelės turi vieną deguonį, todėl yra vienodos.', 'All these particles have one oxygen, so they are equal.')]
           };
           const AMINE = {
             reason: t('Azoto elektrinis neigiamumas mažesnis už deguonies, todėl azotas laisvąją porą atiduoda lengviau; aminai yra stipriausi neutralūs nukleofilai.', 'The electronegativity of nitrogen is lower than that of oxygen, so nitrogen gives up its lone pair more readily; amines are the strongest neutral nucleophiles.'),
@@ -3067,7 +3087,7 @@
                 kind: 'order',
                 options: [{ mol: { smi: '[I-]' } }, { mol: { smi: '[Br-]' } }, { mol: { smi: '[Cl-]' } }, { mol: { smi: '[F-]' } }],
                 hint: t('Nukleofiliškumas grupėje žemyn kinta priešingai nei bazingumas.', 'Nucleophilicity changes down a group in the opposite way to basicity.'),
-                solution: t('$I- > Br- > Cl- > F-$: didesni atomai lengviau poliarizuojasi ir laisvąją porą atiduoda lengviau.', '$I- > Br- > Cl- > F-$: larger atoms are more polarisable and give up their lone pair more readily.')
+                solution: t('$I- > Br- > Cl- > F-$ protiniuose tirpikliuose (vandenyje, alkoholiuose): didesni atomai lengviau poliarizuojasi ir laisvąją porą atiduoda lengviau. Aprotiniuose tirpikliuose eilė pasikeičia.', '$I- > Br- > Cl- > F-$ in protic solvents (water, alcohols): larger atoms are more polarisable and give up their lone pair more readily. In aprotic solvents the order reverses.')
               }
             ],
             why: t('Žemyn vienoje grupėje nukleofiliškumas auga, nors bazingumas silpnėja.', 'Within a group, going down, nucleophilicity grows although basicity falls.'),
@@ -3330,7 +3350,7 @@
                 options: [{ text: f('SN2') }, { text: f('SN1') }, { text: f('AE') }, { text: f('SR') }],
                 answer: 0,
                 hint: t('Nukleofilas atakuoja anglį, o halogenas išeina vienu metu.', 'The nucleophile attacks carbon while the halogen leaves at the same time.'),
-                solution: t('Nukleofilas pakeičia halogeną pirminėje anglyje vienoje stadijoje: SN2.', 'The nucleophile replaces the halogen on a primary carbon in one stage: SN2.')
+                solution: t('Nukleofilas pakeičia halogeną metilo anglyje vienoje stadijoje: SN2.', 'The nucleophile replaces the halogen on a methyl carbon in one stage: SN2.')
               }
             ],
             why: t('Karbanijonas yra nukleofilas: jo laisvoji pora sudaro $C−C$ ryšį. Šitaip statomas anglies skeletas.', 'A carbanion is a nucleophile: its lone pair forms a $C−C$ bond. This is how a carbon skeleton is built.'),
@@ -3618,7 +3638,7 @@
                 options: [{ text: f('SN2') }, { text: f('AE') }, { text: f('E2') }, { text: f('SR') }],
                 answer: 0,
                 hint: t('Nukleofilas pakeičia halogeną vienoje stadijoje.', 'A nucleophile replaces the halogen in one stage.'),
-                solution: t('Nukleofilinis pakeitimas pirminėje anglyje vyksta SN2 mechanizmu.', 'Nucleophilic substitution at a primary carbon goes by the SN2 mechanism.')
+                solution: t('Nukleofilinis pakeitimas metilo anglyje vyksta SN2 mechanizmu.', 'Nucleophilic substitution at a methyl carbon goes by the SN2 mechanism.')
               }
             ],
             why: t('Neutralus aminas dėl laisvosios poros yra nukleofilas: jis pakeičia halogeną ir tampa amonio druska.', 'A neutral amine is a nucleophile thanks to its lone pair: it replaces the halogen and becomes an ammonium salt.'),
