@@ -143,8 +143,9 @@ test('exam labels: spans come from the ready units and the missing ones are list
   assert.equal(mt2.span, '6–16');
   assert.equal(mt2.missing, '');
   assert.equal(mt2.partial, false);
-  assert.equal(O.examInfo('mt1').span, '');
-  assert.equal(O.examAvailable('mt1'), false);
+  assert.equal(O.examInfo('mt1').span, '1–5');
+  assert.equal(O.examInfo('exam').span, '1–16');
+  assert.equal(O.examAvailable('mt1'), true);
   assert.equal(O.examAvailable('mt2'), true);
-  assert.equal(O.examAvailable('exam'), false, 'whole course is hidden while no Part I unit is ready');
+  assert.equal(O.examAvailable('exam'), true, 'whole course is offered once Part I is ready');
 });

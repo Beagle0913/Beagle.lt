@@ -7,11 +7,11 @@
   const lab = (n, lt, en, ready) => ({ id: 'l' + n, n: 'L' + n, part: 3, file: 'units/l' + n + '.js', title: T(lt, en), exams: [], sources: ['LW' + n], ready: ready === true });
 
   ORG.UNITS = [
-    row(1, 1, 'Formulės, klasifikavimas ir nomenklatūra', 'Formulas, classification and nomenclature', MT1, ['L1', 'S1']),
-    row(2, 1, 'Atomo sandara ir cheminis ryšys', 'Atomic structure and chemical bonding', MT1, ['L2', 'S2']),
-    row(3, 1, 'Atomų tarpusavio sąveika; reakcijos ir reagentai', 'Interactions between atoms; reactions and reagents', MT1, ['L3', 'S2']),
-    row(4, 1, 'Rūgštys ir bazės', 'Acids and bases', MT1, ['L4', 'S2']),
-    row(5, 1, 'Izomerija', 'Isomerism', MT1, ['L5', 'S3']),
+    row(1, 1, 'Formulės, klasifikavimas ir nomenklatūra', 'Formulas, classification and nomenclature', MT1, ['L1', 'S1'], true),
+    row(2, 1, 'Atomo sandara ir cheminis ryšys', 'Atomic structure and chemical bonding', MT1, ['L2', 'S2'], true),
+    row(3, 1, 'Atomų tarpusavio sąveika; reakcijos ir reagentai', 'Interactions between atoms; reactions and reagents', MT1, ['L3', 'S2'], true),
+    row(4, 1, 'Rūgštys ir bazės', 'Acids and bases', MT1, ['L4', 'S2'], true),
+    row(5, 1, 'Izomerija', 'Isomerism', MT1, ['L5', 'S3'], true),
     row(6, 2, 'Alkanai ir SR reakcijos', 'Alkanes and SR reactions', MT2, ['L6', 'S4'], true),
     row(7, 2, 'Alkenai ir AE reakcijos', 'Alkenes and AE reactions', MT2, ['L7', 'S4'], true),
     row(8, 2, 'Dienai, alkinai ir mažieji ciklai', 'Dienes, alkynes and small rings', MT2, ['L8', 'S4'], true),
@@ -23,12 +23,12 @@
     row(14, 2, 'Karboksirūgštys ir jų dariniai', 'Carboxylic acids and their derivatives', MT2, ['S6', 'CD'], true),
     row(15, 2, 'Aminai', 'Amines', MT2, ['S7', 'CD'], true),
     row(16, 2, 'Azoto heterocikliniai junginiai', 'Nitrogen heterocycles', MT2, ['S7', 'CD'], true),
-    lab(1, 'Kristalinimas ir lydymosi temperatūra', 'Crystallisation and melting point'),
-    lab(2, 'Distiliavimas ir lūžio rodiklis', 'Distillation and refractive index'),
-    lab(3, 'Kofeino išskyrimas, ekstrakcija, plonasluoksnė chromatografija', 'Isolating caffeine, extraction, thin-layer chromatography'),
-    lab(4, 'Acetilsalicilo rūgšties (aspirino) sintezė', 'Synthesis of acetylsalicylic acid (aspirin)'),
-    lab(5, 'Maleino rūgšties izomerizacija', 'Isomerisation of maleic acid'),
-    lab(6, 'Funkcinių grupių reakcijos', 'Reactions of functional groups')
+    lab(1, 'Kristalinimas ir lydymosi temperatūra', 'Crystallisation and melting point', true),
+    lab(2, 'Distiliavimas ir lūžio rodiklis', 'Distillation and refractive index', true),
+    lab(3, 'Kofeino išskyrimas, ekstrakcija, plonasluoksnė chromatografija', 'Isolating caffeine, extraction, thin-layer chromatography', true),
+    lab(4, 'Acetilsalicilo rūgšties (aspirino) sintezė', 'Synthesis of acetylsalicylic acid (aspirin)', true),
+    lab(5, 'Maleino rūgšties izomerizacija', 'Isomerisation of maleic acid', true),
+    lab(6, 'Funkcinių grupių reakcijos', 'Reactions of functional groups', true)
   ];
 
   // The trainer is released in stages: only units marked ready are shown anywhere (a content task flips its own unit to true).

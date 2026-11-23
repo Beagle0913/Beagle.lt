@@ -319,23 +319,24 @@ test('validateProblem and a generator that returns a broken problem', () => {
 });
 
 test('only ready units are listed', () => {
-  const READY = ['u06', 'u07', 'u08', 'u09', 'u10', 'u11', 'u12', 'u13', 'u14', 'u15', 'u16'];
-  assert.deepEqual(plain(ORG.UNITS.filter(u => u.ready === true).map(u => u.id)), READY, 'release 1: Part II units');
-  assert.deepEqual(plain(ORG.readyUnits().map(u => u.id)), READY);
-  assert.deepEqual(plain(ORG.readyParts().map(p => p.part)), [2]);
-  assert.deepEqual(plain(ORG.examUnits('mt2').map(u => u.id)), READY);
+  const READY = ['u01', 'u02', 'u03', 'u04', 'u05', 'u06', 'u07', 'u08', 'u09', 'u10', 'u11', 'u12', 'u13', 'u14', 'u15', 'u16'];
+  const ALL = READY.concat(['l1', 'l2', 'l3', 'l4', 'l5', 'l6']);
+  assert.deepEqual(plain(ORG.UNITS.filter(u => u.ready === true).map(u => u.id)), ALL, 'all 22 units');
+  assert.deepEqual(plain(ORG.readyUnits().map(u => u.id)), ALL);
+  assert.deepEqual(plain(ORG.readyParts().map(p => p.part)), [1, 2, 3]);
+  assert.deepEqual(plain(ORG.examUnits('mt2').map(u => u.id)), READY.slice(5));
+  assert.deepEqual(plain(ORG.examUnits('mt1').map(u => u.id)), READY.slice(0, 5));
   assert.deepEqual(plain(ORG.examUnits('exam').map(u => u.id)), READY);
-  assert.equal(ORG.examUnits('mt1').length, 0);
   assert.equal(ORG.readyUnit('u07').id, 'u07');
-  assert.equal(ORG.readyUnit('u01'), null);
-  assert.equal(ORG.readyUnit('u05'), null);
+  assert.equal(ORG.readyUnit('u01').id, 'u01');
+  assert.equal(ORG.readyUnit('l6').id, 'l6');
   const set = (id, v) => { ORG.UNITS.find(u => u.id === id).ready = v; };
   try {
-    set('u01', true); set('l2', true);
-    assert.deepEqual(plain(ORG.readyParts().map(p => p.part)), [1, 2, 3]);
-    assert.deepEqual(plain(ORG.examUnits('mt1').map(u => u.id)), ['u01']);
-    assert.equal(ORG.readyUnit('u01').id, 'u01');
-  } finally { set('u01', false); set('l2', false); }
+    set('u01', false); set('l2', false);
+    assert.deepEqual(plain(ORG.examUnits('mt1').map(u => u.id)), ['u02', 'u03', 'u04', 'u05']);
+    assert.equal(ORG.readyUnit('u01'), null);
+    assert.equal(ORG.readyUnit('l2'), null);
+  } finally { set('u01', true); set('l2', true); }
 });
 
 test('normName: primes are part of the name', () => {

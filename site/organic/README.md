@@ -4,7 +4,7 @@ Practice for the VU GMC Organic Chemistry course, in Lithuanian (default) and En
 
 ## What it covers now
 
-Release 1 (Part II, units 6 to 13): alkanes and SR reactions; alkenes and AE reactions; dienes, alkynes and small rings; arenes and SEAr reactions; haloalkanes (SN1, SN2, E1, E2); alcohols; polyhydric alcohols, phenols, thiols and ethers; aldehydes and ketones. Each unit has notes, worked examples, generated practice problems with step-by-step checking, and mechanism and scheme drawings. Units not yet written are not listed.
+The whole course: units 1 to 16 (nomenclature, bonding, acids and bases, isomerism, hydrocarbons, haloalkanes, alcohols, phenols, ethers, carbonyl compounds, carboxylic acids, amines, heterocycles) and lab works 1 to 6. Each unit has notes, worked examples, generated practice problems with step-by-step checking, and mechanism and scheme drawings.
 
 ## Layout
 
