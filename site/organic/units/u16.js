@@ -874,7 +874,8 @@
           const ES = [
             { frag: '[N+](=O)[O-]', reagent: 'CH3COONO2', lt: 'nitrinimas', en: 'nitration', plt: 'nitro', pen: 'nitro' },
             { frag: 'S(=O)(=O)O', reagent: 'SO3, C5H5N', lt: 'sulfoninimas', en: 'sulfonation', plt: 'sulfo', pen: 'sulfo' },
-            { frag: 'C(C)=O', reagent: '(CH3CO)2O', lt: 'acilinimas', en: 'acylation', plt: 'acetil', pen: 'acetyl' }
+            { frag: 'C(C)=O', reagent: '(CH3CO)2O', lt: 'acilinimas', en: 'acylation', plt: 'acetil', pen: 'acetyl' },
+            { frag: 'Br', reagent: 'NBS', lt: 'brominimas', en: 'bromination', plt: 'bromo', pen: 'bromo' }
           ];
           let h, s, e;
           // Ac2O acylates only pyrrole-type rings; SO3-pyridine sulfonation is not used for thiophene (T p142) or for pyrrole (it goes to C-3, an exception)
