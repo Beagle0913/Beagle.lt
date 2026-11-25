@@ -508,8 +508,8 @@
     const sites = [];
     for (let c = 0; c < g.n(); c++) if (sp3C(g, c) && g.A[c].h > 0) sites.push(c);
     if (!sites.length) return none(T('Nėra sp3 C–H ryšio.', 'There is no sp3 C-H bond.'));
-    if (smallRingBonds(g).length) {
-      return none(T('Trijų ir keturių narių žiedai reaguoja kaip nesotieji junginiai: halogenas atveria žiedą (ciklopropanas su Br2 duoda 1,3-dibrompropaną), todėl įprastas radikalinis pakeitimas nenumatomas.', 'Three- and four-membered rings behave like unsaturated compounds: the halogen opens the ring (cyclopropane with Br2 gives 1,3-dibromopropane), so ordinary radical substitution is not predicted.'));
+    if (smallRingBonds(g).some((b) => b[2] === 3)) {
+      return none(T('Ciklopropano žiedas reaguoja kaip nesotieji junginiai: halogenas atveria žiedą (ciklopropanas su Br2 duoda 1,3-dibrompropaną), todėl įprastas radikalinis pakeitimas nenumatomas. Ciklobutanas ir didesni žiedai reaguoja kaip alkanai.', 'The cyclopropane ring behaves like an unsaturated compound: the halogen opens the ring (cyclopropane with Br2 gives 1,3-dibromopropane), so ordinary radical substitution is not predicted. Cyclobutane and larger rings react like alkanes.'));
     }
     const best = Math.max.apply(null, sites.map((c) => cls(g, c, true))); // radicals: benzyl = allyl (L6 p16)
     const out = new Out();
@@ -948,7 +948,7 @@
       else {
         const minC = Math.min.apply(null, allowed.map(conflicts));
         major = allowed.filter((ip) => conflicts(ip) === minC);
-        const bulkyE = E === 'C(C)(C)C' || (E === 'SO3H' && subs.some((d) => d.amine)); // tert-butyl groups and the sulfonation of amines go para; acylation gives o and p (L9 p35)
+        const bulkyE = E === 'C(C)(C)C' || E === 'C(C)=O' || (E === 'SO3H' && subs.some((d) => d.amine)); // tert-butyl groups, acylation (bulky acylium-AlCl3) and the sulfonation of amines go para
         const hindered = (ip) => {
           const nb = [(ip + 1) % 6, (ip + 5) % 6].map((k) => subs.find((d) => d.iq === k)).filter(Boolean);
           return nb.length === 2 || ((bulkyE || nb.some((d) => d.bulky)) && nb.length >= 1);
@@ -972,8 +972,7 @@
         : T('Žiede nėra laisvos C–H padėties.', 'The ring has no free C-H position.'));
     }
     if (E === 'NO2' && rings.some((r) => r.some((i) => g.A[i].h === 0 && g.nbr(i).some((j) => g.el(j) === 'N' && g.A[j].charge === 0 && g.A[j].h >= 1 && !g.nbr(j).some((k) => dbl(g, k, 'O') >= 0))))) {
-      out.note(T('ArNH2 ir ArNHR nitrinami kaip o-/p- orientantai; praktiškai aminas pirma apsaugomas (acetanilidas), nes HNO3 jį oksiduoja.', 'ArNH2 and ArNHR are nitrated as o/p directors; in practice the amine is protected first (as the acetanilide) because HNO3 oxidises it.'));
-      return out.result();
+      return none(T('Laisvas ArNH2 ar ArNHR nitrinamoje rūgščių mišinyje protonuojamas (NH3+ yra m- orientantas) ir oksiduojamas: gaunamas sudėtingas mišinys. Aminas pirma apsaugomas (acetanilidas).', 'A free ArNH2 or ArNHR is protonated in nitrating acid (NH3+ is a meta director) and oxidised, so a mixture forms. Protect the amine as the acetanilide first.'));
     }
     return out.note(T('Orientantai: NH2, OH, OR, alkilas ir halogenai nukreipia į o- ir p-, NO2, CN, SO3H, C=O ir NR3+ – į m- padėtį; lemia stipresnis donoras.', 'Directing effects: NH2, OH, OR, alkyl and halogens direct o/p; NO2, CN, SO3H, C=O and NR3+ direct meta; the stronger donor decides.')).result();
   });
@@ -1006,6 +1005,11 @@
       let noH = 0;
       let unsupported = false;
       if (!g.A.some((x) => x.ar)) return none(T('Molekulėje nėra aromatinio žiedo.', 'The molecule has no aromatic ring.'));
+      // a free OH or amino group on the ring: the hot oxidant attacks the electron-rich ring first (quinones, tar)
+      const ringDonor = g.A.some((x, i) => ar(g, i) && g.nbr(i).some((j) => (g.el(j) === 'O' && !ar(g, j) && (g.A[j].h === 1 || g.A[j].charge === -1)) || (g.el(j) === 'N' && !ar(g, j) && g.A[j].charge === 0 && g.A[j].h >= 1 && !g.nbr(j).some((k) => isC(g, k) && (dbl(g, k, 'O') >= 0 || dbl(g, k, 'N') >= 0)))));
+      if (ringDonor) {
+        return none(T('Fenoliai ir aromatiniai aminai su KMnO4 / K2Cr2O7 oksiduojami žiede (chinonai, dervos), o ne šoninėje grandinėje; OH ar NH2 pirma apsaugomi.', 'Phenols and aromatic amines are oxidised in the ring (quinones, tar) by hot KMnO4 / K2Cr2O7, not in the side chain; the OH or NH2 group has to be protected first.'));
+      }
       // a carbon x that has been cut loose from the chain: CO2, acid, ketone
       const oxFrag = (x) => {
         g.nbr(x).slice().forEach((j) => { // OH, halogen or O of the fragment are lost with the oxidation
@@ -1103,13 +1107,21 @@
   // Generators avoid such substrates: the rules here do not rearrange.
   // ------------------------------------------------------------------
 
-  function shiftGains(gc, a) {
+  function shiftGains(gc, a, from) {
     const old = cation(gc, a);
     for (const w of gc.nbr(a)) {
-      if (!sp3C(gc, w) || ar(gc, w)) continue;
+      if (w === from || !sp3C(gc, w) || ar(gc, w)) continue;
       const nC = cNbrs(gc, w).length;
       if (gc.A[w].h > 0 && cation(gc, w) > old) return true; // hydride shift
       if (gc.A[w].h === 0 && conjKind(gc, w) * 10 + Math.min(nC - 1, 3) > old) return true; // alkyl shift
+    }
+    // two hydride shifts in a row: a first shift to an equally stable cation, then a second one that gains
+    // (4-methylpentan-2-yl: secondary, secondary, tertiary)
+    if (from === undefined) {
+      for (const w of gc.nbr(a)) {
+        if (!sp3C(gc, w) || ar(gc, w) || gc.A[w].h < 1 || cation(gc, w) !== old) continue;
+        if (shiftGains(gc, w, a)) return true;
+      }
     }
     return false;
   }
@@ -1217,12 +1229,13 @@
 
   const LG = { I: 3, Br: 2, Cl: 1, F: 0 };
   const NU_SN1 = { OH: 1, OC: 1, OCC: 1 }; // solvolysis: water, methanol, ethanol
+  const NU_WEAKB = { I: 1, SH: 1, SC: 1 }; // good nucleophiles that are weak bases: a tertiary halide gives SN1, not E2
 
   function snRule(mode) {
     return (rs, o) => {
       const nu = o.nu;
       if (NU_ALL.indexOf(nu) < 0) throw new Error('react: ' + mode + ' needs nu from ' + NU_ALL.join(' '));
-      if (mode === 'sn1' && !NU_SN1[nu]) {
+      if (mode === 'sn1' && !NU_SN1[nu] && !NU_WEAKB[nu]) {
         return none(T('SN1 vyksta su silpnu nukleofilu (vanduo, metanolis, etanolis, solvolizė); su stipriu ar baziniu nukleofilu vyksta SN2 arba eliminavimas.', 'SN1 needs a weak nucleophile (water, methanol, ethanol: solvolysis); with a strong or basic nucleophile SN2 or elimination takes place.'));
       }
       const g = rs[0];
@@ -1232,6 +1245,7 @@
       const bestLG = Math.max.apply(null, hs.map((h) => LG[g.el(h.x)]));
       let eMajor = false;
       let neo = 0;
+      let tertWeak = 0;
       hs.forEach((h) => {
         const k = cNbrs(g, h.c).length;
         const conj = isConj(g, h.c);
@@ -1245,6 +1259,8 @@
             out.add(substitute(g, h.c, h.x, nu), false);
             addElim(out, g, h.c, h.x, !lg);
             if (lg) eMajor = true;
+          } else if (NU_WEAKB[nu] && !conj) {
+            tertWeak++; // SN2 is impossible and the weak base does not eliminate: SN1
           } else {
             addElim(out, g, h.c, h.x, !lg);
             if (lg) eMajor = true;
@@ -1256,6 +1272,7 @@
         }
       });
       if (!out.list.length) {
+        if (tertWeak) return none(T('Tretinis halogenalkanas SN2 būdu nereaguoja, o I⁻, HS⁻ ir RS⁻ yra silpnos bazės ir eliminavimo nesukelia: vyksta SN1 (poliniame tirpiklyje).', 'A tertiary halide does not react by SN2, and I⁻, HS⁻ and RS⁻ are weak bases that do not eliminate: the reaction is SN1 (in a polar solvent).'));
         if (neo) return none(T('Neopentilo tipo halogenalkanai SN2 būdu praktiškai nereaguoja (β-anglis be H, didelė erdvinė kliūtis), o SN1 per pirminį katijoną nevyksta.', 'Neopentyl-type halides practically do not react by SN2 (a quaternary β-carbon blocks the backside) and SN1 through a primary cation does not occur.'));
         return none(T('SN1 vyksta per stabilų karbokatijoną (tretinį, alilo ar benzilo); šis halogenalkanas reaguoja SN2 būdu.', 'SN1 needs a stable carbocation (tertiary, allylic or benzylic); this halide reacts by SN2.'));
       }
@@ -1277,6 +1294,9 @@
     else if (o.base === 'heat-acid') sites = as;
     else sites = hs.length ? hs : as;
     if (!sites.length) return none(T('Nėra halogeno ar OH grupės prie sp3 anglies.', 'There is no halogen or OH group on an sp3 carbon.'));
+    if (sites === as && as.some((x, i) => as.some((y, j) => j > i && g.ord(x[0], y[0]) === 1))) {
+      return none(T('Vicinalinių diolių rūgštinė dehidratacija duoda enolius (tautomerizuojasi į karbonilinius junginius) arba pinakolinį pertvarkymą; tai čia nenagrinėjama.', 'Acid treatment of a vicinal diol gives enols (which tautomerise to carbonyl compounds) or the pinacol rearrangement; this is not covered here.'));
+    }
     const out = new Out();
     sites.forEach((s) => addElim(out, g, s[0], s[1], false));
     if (!out.list.length) return none(T('Nėra β-vandenilio.', 'There is no β-hydrogen.'));
@@ -1675,15 +1695,17 @@
     if (!hs.length) return none(T('Arilhalogenidai ir vinilhalogenidai SN2 nereaguoja.', 'Aryl and vinyl halides do not react by SN2.'));
     const k = cNbrs(rs[1], hs[0].c).length;
     const out = new Out();
-    if (k >= 3) {
-      addElim(out, rs[1], hs[0].c, hs[0].x, false);
-      return out.note(T('Tretinis halogenalkanas tik eliminuojasi.', 'A tertiary halide only eliminates.')).result();
-    }
     let g = rs[0];
     for (let i = 0; i < th.length; i++) {
       const site = thiolS(g)[0];
       if (!site) break;
       g = alkylateAt(g, site.s, rs[1], hs[0]);
+    }
+    if (k >= 3) {
+      // SN2 is impossible; the thiolate is a weak base, so the tertiary halide reacts by SN1 (a little E1 alkene)
+      out.add(g, true);
+      addElim(out, rs[1], hs[0].c, hs[0].x, true);
+      return out.mech('SN1').note(T('Tretinis halogenalkanas su tioliatu (silpna baze) reaguoja SN1 būdu: vyrauja sulfidas, šiek tiek alkeno (E1).', 'A tertiary halide with a thiolate (a weak base) reacts by SN1: the sulfide predominates, with a little alkene (E1).')).result();
     }
     return out.add(g, true).note(T('Tioliatas yra puikus nukleofilas ir silpna bazė: SN2 duoda sulfidą.', 'A thiolate is an excellent nucleophile and a weak base: SN2 gives the sulfide.')).result();
   });
@@ -1852,6 +1874,13 @@
         const ag0 = new Graph();
         ag0.add('Ag', 0, 0);
         return new Out().add(co2, true).add(ag0, false, true).note(T('Skruzdžių rūgštis, turinti aldehido grupę, taip pat redukuoja Tolenso reagentą (oksiduojasi iki CO2); išsiskiria sidabras.', 'Formic acid, which also contains an aldehyde group, reduces Tollens\' reagent too (it is oxidised to CO2); silver is deposited.')).result();
+      }
+      // alpha-hydroxy ketones (hydroxyacetone, fructose) tautomerise through an enediol and reduce Tollens' reagent
+      const ahk = carbonyls(g, ['ketone']).filter((k) => g.nbr(k.c).some((j) => isC(g, j) && g.A[j].h > 0 && g.nbr(j).some((o2) => g.el(o2) === 'O' && g.ord(j, o2) === 1 && g.A[o2].h === 1)));
+      if (!ks.length && ahk.length) {
+        const ag1 = new Graph();
+        ag1.add('Ag', 0, 0);
+        return new Out().add(ag1, true, true).note(T('α-Hidroksiketonai (pvz., fruktozė) per enodiolį redukuoja Tolenso reagentą: sidabro veidrodis (teigiamas mėginys); ketonas oksiduojamas sudėtingai.', 'α-Hydroxy ketones (e.g. fructose) reduce Tollens\' reagent through an enediol: a silver mirror forms (positive test); the ketone is oxidised to a mixture of products.')).result();
       }
       if (!ks.length) {
         return none(carbonyls(g, ['ketone']).length

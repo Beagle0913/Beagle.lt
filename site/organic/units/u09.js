@@ -9,13 +9,14 @@
   // Ring substituents. frag = SMILES written from the ring atom outward; f = formula for the text;
   // kind: 'don' (donor with a lone pair), 'alk' (alkyl), 'hal' (halogen), 'acc' (meta director);
   // lvl = reactivity toward E+ (4 strong activator ... 1 benzene ... 0 halogen ... -1 moderate and -2 strong deactivator, L9 p28);
-  // st = strength as an o/p director when two groups compete (the stronger donor decides, L9 p34).
+  // st = strength as an o/p director when two groups compete (the stronger donor decides, L9 p34);
+  // OR and NHCOR are in one row of the course table (moderately activating), so they have the same st and a pair of them is never asked.
   const SUB = {
     NH2:  { frag: 'N', f: 'NH2', kind: 'don', lvl: 4, st: 4, lt: 'anilinas', en: 'aniline' },
     OH:   { frag: 'O', f: 'OH', kind: 'don', lvl: 4, st: 4, lt: 'fenolis', en: 'phenol' },
     NMe2: { frag: 'N(C)C', f: 'N(CH3)2', kind: 'don', lvl: 4, st: 4, lt: 'N,N-dimetilanilinas', en: 'N,N-dimethylaniline' },
     OMe:  { frag: 'OC', f: 'OCH3', kind: 'don', lvl: 3, st: 3, lt: 'metoksibenzenas', en: 'methoxybenzene' },
-    NHAc: { frag: 'NC(C)=O', f: 'NHCOCH3', kind: 'don', lvl: 3, st: 2, lt: 'N-feniletanamidas', en: 'N-phenylethanamide (acetanilide)' },
+    NHAc: { frag: 'NC(C)=O', f: 'NHCOCH3', kind: 'don', lvl: 3, st: 3, lt: 'N-feniletanamidas', en: 'N-phenylethanamide (acetanilide)' },
     NEt2: { frag: 'N(CC)CC', f: 'N(C2H5)2', kind: 'don', lvl: 4, st: 4, lt: 'N,N-dietilanilinas', en: 'N,N-diethylaniline' },
     NMeEt: { frag: 'N(C)CC', f: 'N(CH3)C2H5', kind: 'don', lvl: 4, st: 4, lt: 'N-etil-N-metilanilinas', en: 'N-ethyl-N-methylaniline' },
     Me:   { frag: 'C', f: 'CH3', kind: 'alk', lvl: 2, st: 1, lt: 'toluenas', en: 'toluene' },
@@ -112,7 +113,10 @@
     hal: t('turi laisvųjų elektronų porų, bet jo −I efektas stipresnis už +M: žiedas deaktyvuojamas, tačiau orientantas lieka o-/p-',
       'has lone pairs, but its −I effect is stronger than its +M effect: it deactivates the ring, yet it is still an o/p director'),
     acc: t('traukia elektronus (−I, −M): žiedas deaktyvuojamas, m-orientantas',
-      'withdraws electrons (−I, −M): it deactivates the ring and is a meta director')
+      'withdraws electrons (−I, −M): it deactivates the ring and is a meta director'),
+    // CF3, CCl3: no lone pair and no π bond, so no −M effect
+    cx: t('traukia elektronus tik indukciniu efektu (−I; neturi laisvųjų elektronų porų ar π ryšio): žiedas deaktyvuojamas, m-orientantas',
+      'withdraws electrons by the −I effect only (no lone pair, no π bond): it deactivates the ring and is a meta director')
   };
 
   /* ---------- exports for the end of the file are inline: the unit object below ---------- */
@@ -417,8 +421,8 @@
           caption: t('Pirminis katijonas persigrupuoja į stabilesnį tretinį, todėl susidaro $tret$-butilbenzenas.', 'The primary cation rearranges to the more stable tertiary one, so tert-butylbenzene forms.'), src: 'L9 p16'
         },
         {
-          scheme: { items: [{ smi: 'Cc1ccccc1' }, { arrow: '→', above: f('CH3COCl, AlCl3') }, { smi: 'CC(=O)c1ccccc1C' }, { plus: true }, { smi: 'CC(=O)c1ccc(C)cc1' }] },
-          caption: t('Toluenas acilinamas į o- ir p- padėtis (toliau žr. kreipiamąjį pakaitų poveikį).', 'Toluene is acylated at the o and p positions (see the directing effects below).'), src: 'L9 p35'
+          scheme: { items: [{ smi: 'Cc1ccccc1' }, { arrow: '→', above: f('CH3COCl, AlCl3') }, { smi: 'CC(=O)c1ccc(C)cc1' }] },
+          caption: t('Toluenas acilinamas daugiausia p- padėtyje: didelis acilio–$AlCl3$ kompleksas vengia o- padėties, todėl o- ketono susidaro tik nedaug (paskaitoje nupiešti abu).', 'Toluene is acylated mainly at the p position: the bulky acylium–$AlCl3$ electrophile avoids the o position, so the o ketone forms only in small amounts (the lecture draws both).'), src: 'L9 p35'
         },
         {
           rule: t('Friedelio ir Craftso reakcijos: alkilinimas ($RCl$, $AlCl3$) ir acilinimas ($RCOCl$, $AlCl3$, paskui $H2O$). Jos nevyksta, kai žiede yra m-orientantas (vidutiniškai ar stipriai deaktyvuojantis pakaitas: $C=O$, $COOH$, $CN$, $SO3H$, $NO2$, $CX3$) arba aminogrupė; alkilinant galimas polialkilinimas ir persigrupavimas.',
@@ -814,7 +818,8 @@
     { text: t('m-orientantas, deaktyvuoja žiedą', 'meta director, deactivates the ring') },
     { text: t('m-orientantas, aktyvuoja žiedą', 'meta director, activates the ring') }
   ];
-  const kindWhy = (zk) => t('Grupė $' + SUB[zk].f + '$ ' + KIND_WHY[SUB[zk].kind].lt + '.', 'The group $' + SUB[zk].f + '$ ' + KIND_WHY[SUB[zk].kind].en + '.');
+  const whyKind = (zk) => (zk === 'CF3' || zk === 'CCl3' ? 'cx' : SUB[zk].kind);
+  const kindWhy = (zk) => t('Grupė $' + SUB[zk].f + '$ ' + KIND_WHY[whyKind(zk)].lt + '.', 'The group $' + SUB[zk].f + '$ ' + KIND_WHY[whyKind(zk)].en + '.');
   const posWord = { o: t('orto', 'ortho'), m: t('meta', 'meta'), p: t('para', 'para') };
   // ring distance 1 = ortho, 2 = meta, 3 = para
   const relPos = (i, j) => { const d = Math.abs(i - j); return ['', 'o', 'm', 'p'][Math.min(d, 6 - d)]; };
@@ -925,6 +930,8 @@
     if (ELE[ek].fc) opts.push(NONE_OPT);
     return { opts, rightIdx, majors };
   }
+  // acylation of an o/p-directing ring: the bulky acylium–AlCl3 electrophile goes para (toluene about 97 % para)
+  const ACYL_PARA = t('Didelis acilo katijono ir $AlCl3$ kompleksas vengia užstotų o- padėčių, todėl susidaro beveik vien p- ketonas (o- izomero tik pėdsakai).', 'The bulky acylium–$AlCl3$ electrophile avoids the crowded ortho positions, so almost only the p ketone forms (the o isomer only in traces).');
   const whyClass = {
     don: t('Elektronų donoras stabilizuoja arenio joną, kai $E+$ atakuoja o- ar p- padėtį, todėl žiedas aktyvesnis už benzeną ir susidaro o- ir p- produktai.', 'An electron donor stabilises the arenium ion when $E+$ attacks the o or p position, so the ring is more reactive than benzene and o and p products form.'),
     alk: t('Alkilgrupė silpnai stabilizuoja arenio joną o-/p- atakos atveju (+I, hiperkonjugacija), todėl žiedas šiek tiek aktyvesnis ir susidaro o- ir p- produktai.', 'An alkyl group weakly stabilises the arenium ion in o/p attack (+I, hyperconjugation), so the ring is slightly more reactive and o and p products form.'),
@@ -948,13 +955,14 @@
         const tie = majors.length === 2;
         // the course rule must agree with the engine: ED/halogen -> o/p, EA -> m
         const op = isOP(zk);
-        if (op && !(tie || zk === 'tBu')) continue;
+        if (op && !(tie || zk === 'tBu' || ek === 'C(C)=O')) continue; // tBu and acylation (bulky electrophile): para only
         if (!op && tie) continue;
         pick = { zk, ek, subs, a, tie, smi: a.smi };
       }
       if (!pick) throw new Error('u09.sear: no usable substrate');
       const { zk, ek, subs } = pick;
       const sub = SUB[zk];
+      const bulkyAcyl = ek === 'C(C)=O' && isOP(zk);
       const steps = [{
         prompt: t('Kokio tipo pakaitas yra žiede?', 'What kind of substituent is on the ring?'),
         kind: 'choice', options: CLASS_OPTS, answer: kindName(sub.kind),
@@ -990,7 +998,7 @@
         hint: ELE[ek].fc
           ? t('Visų junginių formulė ta pati, skiriasi tik naujos grupės vieta. Pirmiausia nuspręskite, ar tokį žiedą apskritai galima keisti.', 'All the compounds have the same formula; only the position of the new group differs. First decide whether such a ring can react at all.')
           : t('Visų junginių formulė ta pati, skiriasi tik naujos grupės vieta. Kur ją kreipia pakaitas?', 'All the compounds have the same formula; only the position of the new group differs. Where does the substituent send it?'),
-        solution: [{ p: zk === 'tBu' ? t('Didelė $C(CH3)3$ grupė užstoja gretimas orto padėtis, todėl susidaro beveik vien p- izomeras.', 'The bulky $C(CH3)3$ group blocks the neighbouring ortho positions, so almost only the p isomer forms.') : t('Pagrindinis produktas pagal SEAr ir pakaito orientaciją:', 'The main product by SEAr and the orientation of the substituent:') }, prodScheme(pick.smi, reag, majors.map((m) => m.smi))]
+        solution: [{ p: zk === 'tBu' ? t('Didelė $C(CH3)3$ grupė užstoja gretimas orto padėtis, todėl susidaro beveik vien p- izomeras.', 'The bulky $C(CH3)3$ group blocks the neighbouring ortho positions, so almost only the p isomer forms.') : bulkyAcyl ? ACYL_PARA : t('Pagrindinis produktas pagal SEAr ir pakaito orientaciją:', 'The main product by SEAr and the orientation of the substituent:') }, prodScheme(pick.smi, reag, majors.map((m) => m.smi))]
       });
       // a name step for the para product (o/p) or the only product
       const target = tie ? (a.products.find((p) => p.major && p.pos.some((x) => relPos(0, x) === 'p')) || majors[0]) : majors[0];
@@ -1006,7 +1014,7 @@
       return {
         q: [head],
         steps,
-        why: zk === 'tBu' ? t('Didelė $C(CH3)3$ grupė užstoja gretimas orto padėtis, todėl susidaro beveik vien p- izomeras. Reakcija: ' + ELE[ek].lt + ', mechanizmas SEAr.', 'The bulky $C(CH3)3$ group blocks the neighbouring ortho positions, so almost only the p isomer forms. The reaction is ' + ELE[ek].en + ', mechanism SEAr.') : t(whyClass[sub.kind].lt + ' Reakcija: ' + ELE[ek].lt + ', mechanizmas SEAr.', whyClass[sub.kind].en + ' The reaction is ' + ELE[ek].en + ', mechanism SEAr.'),
+        why: zk === 'tBu' ? t('Didelė $C(CH3)3$ grupė užstoja gretimas orto padėtis, todėl susidaro beveik vien p- izomeras. Reakcija: ' + ELE[ek].lt + ', mechanizmas SEAr.', 'The bulky $C(CH3)3$ group blocks the neighbouring ortho positions, so almost only the p isomer forms. The reaction is ' + ELE[ek].en + ', mechanism SEAr.') : bulkyAcyl ? t(ACYL_PARA.lt + ' Reakcija: ' + ELE[ek].lt + ', mechanizmas SEAr.', ACYL_PARA.en + ' The reaction is ' + ELE[ek].en + ', mechanism SEAr.') : t(whyClass[sub.kind].lt + ' Reakcija: ' + ELE[ek].lt + ', mechanizmas SEAr.', whyClass[sub.kind].en + ' The reaction is ' + ELE[ek].en + ', mechanism SEAr.'),
         src: 'L9 p24–28'
       };
     }
@@ -1089,7 +1097,9 @@
             : t('$KMnO4$ karštyje oksiduoja šoninę alkilgrandinę.', 'Hot $KMnO4$ oxidises an alkyl side chain.'))
       }];
       if (none) {
-        const why1 = t('Nėra benzilinio vandenilio: benzilo anglis turi tris C atomus, todėl nesusidaro benzilinis radikalas, o pirminių $CH3$ vandenilių bromas šviesoje beveik nepakeičia.', 'There is no benzylic hydrogen: the benzylic carbon carries three carbons, so no benzylic radical forms, and bromine in light hardly replaces the primary $CH3$ hydrogens.');
+        const why1 = rk === 'OX'
+          ? t('Nėra benzilinio vandenilio: benzilo anglis turi tris C atomus, todėl karštas $KMnO4$ jos neoksiduoja iki $COOH$ grupės (šoninė grandinė ir žiedas lieka nepakeisti).', 'There is no benzylic hydrogen: the carbon bonded to the ring carries three carbons, so hot $KMnO4$ cannot oxidise it to a $COOH$ group (the side chain and the ring stay unchanged).')
+          : t('Nėra benzilinio vandenilio: benzilo anglis turi tris C atomus, todėl nesusidaro benzilinis radikalas, o pirminių $CH3$ vandenilių bromas šviesoje beveik nepakeičia.', 'There is no benzylic hydrogen: the benzylic carbon carries three carbons, so no benzylic radical forms, and bromine in light hardly replaces the primary $CH3$ hydrogens.');
         steps[0].solution = why1;
         steps.push({
           prompt: t('Kodėl šoninė grandinė nereaguoja?', 'Why does the side chain not react?'),
@@ -1887,12 +1897,12 @@
         id: 'u09.fc.5',
         q: [{ p: t('Toluenas acilinamas $CH3COCl$ ir $AlCl3$ (paskui $H2O$).', 'Toluene is acylated with $CH3COCl$ and $AlCl3$ (then $H2O$).') }, sch([mm('Cc1ccccc1', { name: t('toluenas', 'toluene') }), { arrow: '→', above: f('1. CH3COCl, AlCl3'), below: f('2. H2O') }])],
         steps: [
-          { prompt: t('Pažymėkite pagrindinius produktus.', 'Pick the main products.'), kind: 'multi', options: [ml('Cc1ccccc1C(C)=O'), ml('Cc1ccc(cc1)C(C)=O'), ml('Cc1cccc(c1)C(C)=O'), ml('CC(=O)Cc1ccccc1')], answer: [0, 1],
-            hint: t('Ką kreipia metilgrupė? Ir ar acilas gali prisijungti prie metilo?', 'What does a methyl group direct? And can the acyl group bond to the methyl?'),
-            solution: t('Metilas – o-/p-orientantas, todėl acetilgrupė patenka į o- ir p- padėtis. Fenilacetonas (acilgrupė ant metilo) reikalautų pakeisti metilo vandenilį.', 'Methyl is an o/p director, so the acetyl group goes to the o and p positions. The product with the acyl group on the methyl group would need a methyl hydrogen replaced.') }
+          { prompt: t('Koks yra pagrindinis produktas?', 'What is the main product?'), kind: 'choice', options: [ml('Cc1ccccc1C(C)=O'), ml('Cc1ccc(cc1)C(C)=O'), ml('Cc1cccc(c1)C(C)=O'), ml('CC(=O)Cc1ccccc1')], answer: 1,
+            hint: t('Ką kreipia metilgrupė? Ar didelis acilio kompleksas lengvai patenka greta metilo? Ir ar acilas gali prisijungti prie metilo?', 'What does a methyl group direct? Can the bulky acylium complex easily enter next to the methyl group? And can the acyl group bond to the methyl?'),
+            solution: t('Metilas – o-/p-orientantas, bet didelis acilio–$AlCl3$ kompleksas vengia užstotos o- padėties, todėl pagrindinis produktas yra $p$-metilacetofenonas (apie 97 %). Fenilacetonas (acilgrupė ant metilo) reikalautų pakeisti metilo vandenilį.', 'Methyl is an o/p director, but the bulky acylium–$AlCl3$ electrophile avoids the crowded o position, so the main product is 4-methylacetophenone (about 97 %). The product with the acyl group on the methyl group would need a methyl hydrogen replaced.') }
         ],
-        why: t('Acilinimas yra SEAr: acilio jonas atakuoja žiedą pagal pakaito orientaciją.', 'Acylation is SEAr: the acylium ion attacks the ring according to the directing effect.'),
-        src: 'L9 p35', claims: [{ react: ['sear', ['Cc1ccccc1'], { E: 'C(C)=O' }, 'Cc1ccc(cc1)C(C)=O'] }, { react: ['sear', ['Cc1ccccc1'], { E: 'C(C)=O' }, 'Cc1ccccc1C(C)=O'] }]
+        why: t('Acilinimas yra SEAr: acilio jonas atakuoja žiedą pagal pakaito orientaciją, daugiausia p- padėtyje.', 'Acylation is SEAr: the acylium ion attacks the ring according to the directing effect, mainly at the p position.'),
+        src: 'L9 p35', claims: [{ react: ['sear', ['Cc1ccccc1'], { E: 'C(C)=O' }, 'Cc1ccc(cc1)C(C)=O'] }]
       },
       {
         id: 'u09.fc.6',
@@ -1917,9 +1927,9 @@
       {
         id: 'u09.fc.8',
         q: [{ p: t('Metoksibenzenas acilinamas $CH3COCl$ ir $AlCl3$.', 'Methoxybenzene is acylated with $CH3COCl$ and $AlCl3$.') }, sch([mm('COc1ccccc1', { name: t('metoksibenzenas', 'methoxybenzene') }), { arrow: '→', above: f('CH3COCl, AlCl3') }])],
-        steps: [{ prompt: t('Pažymėkite pagrindinius produktus.', 'Pick the main products.'), kind: 'multi', options: [ml('COc1ccccc1C(C)=O'), ml('COc1ccc(cc1)C(C)=O'), ml('COc1cccc(c1)C(C)=O')], answer: [0, 1],
-          hint: t('Ką kreipia $OCH3$?', 'What does $OCH3$ direct?'), solution: t('$OCH3$ – o-/p-orientantas (+M).', '$OCH3$ is an o/p director (+M).') }],
-        why: t('Stiprūs donorai aktyvuoja žiedą, todėl acilinimas vyksta lengvai ir į o-/p- padėtis.', 'Strong donors activate the ring, so acylation goes easily and to the o/p positions.'),
+        steps: [{ prompt: t('Koks yra pagrindinis produktas?', 'What is the main product?'), kind: 'choice', options: [ml('COc1ccccc1C(C)=O'), ml('COc1ccc(cc1)C(C)=O'), ml('COc1cccc(c1)C(C)=O')], answer: 1,
+          hint: t('Ką kreipia $OCH3$? Ar didelis acilio kompleksas lengvai patenka greta pakaito?', 'What does $OCH3$ direct? Can the bulky acylium complex easily enter next to the substituent?'), solution: t('$OCH3$ – o-/p-orientantas (+M), bet didelis acilio–$AlCl3$ kompleksas vengia o- padėties: pagrindinis produktas yra p- ketonas.', '$OCH3$ is an o/p director (+M), but the bulky acylium–$AlCl3$ electrophile avoids the o position: the main product is the p ketone.') }],
+        why: t('Donorai aktyvuoja žiedą, todėl acilinimas vyksta lengvai ir į p- padėtį (o- padėtis užstota).', 'Donors activate the ring, so acylation goes easily and to the p position (the o position is crowded).'),
         src: 'S4.18, L9 p25', claims: [{ react: ['sear', ['COc1ccccc1'], { E: 'C(C)=O' }, 'COc1ccc(cc1)C(C)=O'] }]
       },
       {

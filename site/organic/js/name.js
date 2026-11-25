@@ -1266,9 +1266,22 @@
     }
     A.en.push(mainEn.replace(/(chloro|bromo|iodo|fluoro)carbonyl/, '$1formyl'));
     if (irLt.T === 'acylhalide') A.lt.push(mainLt.replace('etanoil', 'acetil').replace('benzenkarbonil', 'benzoil'));
-    [mainEn].concat(A.en.slice()).forEach((x) => {
-      if (/sulfanyl/.test(x)) A.en.push(x.replace(/\(([a-z]+)sulfanyl\)/g, '$1thio').replace(/sulfanyl/g, 'mercapto'));
-    });
+    // mercapto / alkylthio alternatives: rename the prefix in the IR and render again, so the
+    // prefixes are put in alphabetical order under the new names (3-mercapto-3-methyl...)
+    if (/sulfanyl/.test(mainEn)) {
+      let changed = false;
+      const rn = (S) => {
+        const en = S.en.replace(/([a-z]+)sulfanyl/g, '$1thio').replace(/sulfanyl/g, 'mercapto');
+        if (en === S.en) return S;
+        changed = true;
+        return Object.assign({}, S, { en });
+      };
+      const irMer = Object.assign({}, irEn, { prefix: irEn.prefix.map((it) => Object.assign({}, it, { S: rn(it.S) })) });
+      if (changed) {
+        [['old', 'lt'], ['new', 'lt'], ['old', 'explicit'], ['new', 'explicit'], ['new', 'iupac'], ['old', 'iupac']]
+          .forEach((m) => A.en.push(render(irMer, 'en', m[0], m[1])));
+      }
+    }
     [mainLt, mainEn].forEach((x, i) => {
       const r = i === 0 ? x.replace(/acetiloksi/g, 'acetoksi') : x.replace(/\(acetyloxy\)/g, 'acetoxy');
       (i === 0 ? A.lt : A.en).push(r);
