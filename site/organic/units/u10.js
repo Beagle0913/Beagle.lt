@@ -659,8 +659,8 @@
         blocks: [
           { h: t('Stabilizuoti karbokatijonai', 'Stabilised carbocations') },
           {
-            p: t('Jei halogenas prijungtas prie anglies šalia $C=C$ (alilo) ar benzeno žiedo (benzilo), jonizacija lengva: katijono krūvis delokalizuojasi konjugacijos būdu. Pagal kurso katijonų stabilumo eilę (L7 p9): benzilkatijonas > alilkatijonas > tretinis > antrinis > pirminis > metilkatijonas. Ši eilė lygina katijonus: nepakeistų pirminių benzilo ir alilo halogenidų tikrieji SN1 greičiai ne visada didesni už tretinių.',
-              'If the halogen sits on a carbon next to a $C=C$ (allylic) or a benzene ring (benzylic), ionisation is easy: the charge of the cation is delocalised by conjugation. By the course’s order of cation stability (L7 p9): benzylic > allylic > tertiary > secondary > primary > methyl. This order compares cations; for unsubstituted primary benzyl and allyl halides the real SN1 rates are not always above those of tertiary ones.'),
+            p: t('Jei halogenas prijungtas prie anglies šalia $C=C$ (alilo) ar benzeno žiedo (benzilo), jonizacija lengva: katijono krūvis delokalizuojasi konjugacijos būdu. Pagal kurso katijonų stabilumo eilę (L7 p9): benzilkatijonas > alilkatijonas > tretinis > antrinis > pirminis > metilkatijonas. Ši eilė rodo, kaip stipriai rezonansas stabilizuoja katijoną, tačiau matavimai ją patikslina: paprasčiausias benzilo katijonas yra tarp antrinio ir tretinio, o paprasčiausias alilo katijonas maždaug toks pat stabilus kaip antrinis. Tretinis alilinis ar benzilinis katijonas stabilesnis už paprastą tretinį, o alilinis ar benzilinis katijonas stabilesnis už tos pačios klasės paprastą alkilo katijoną.',
+              'If the halogen sits on a carbon next to a $C=C$ (allylic) or a benzene ring (benzylic), ionisation is easy: the charge of the cation is delocalised by conjugation. By the course’s order of cation stability (L7 p9): benzylic > allylic > tertiary > secondary > primary > methyl. The order shows how strongly resonance stabilises a cation, but measured data refine it: the parent benzyl cation lies between a secondary and a tertiary cation, and the parent allyl cation is about as stable as a secondary one. A tertiary allylic or benzylic cation is more stable than a plain tertiary one, and an allylic or benzylic cation is more stable than a plain alkyl cation of the same class.'),
             src: 'L7 p9, S5.11'
           },
           {
@@ -786,7 +786,7 @@
         list: [
           t('Nueinančioji grupė: RI > RBr > RCl > RF (silpniausia bazė išeina geriausiai).', 'Leaving group: RI > RBr > RCl > RF (the weakest base leaves best).'),
           t('Nukleofilas: alkoksidas > hidroksidas >> karboksilatas > alkoholis > vanduo; anijonas stipresnis už konjuguotąją rūgštį.', 'Nucleophile: alkoxide > hydroxide >> carboxylate > alcohol > water; an anion is stronger than its conjugate acid.'),
-          t('Katijono stabilumas pagal kurso eilę (L7 p9): benzilkatijonas > alilkatijonas > tretinis > antrinis > pirminis > metilkatijonas.', 'Cation stability by the course’s order (L7 p9): benzylic > allylic > tertiary > secondary > primary > methyl.'),
+          t('Katijono stabilumas pagal kurso eilę (L7 p9): benzilkatijonas > alilkatijonas > tretinis > antrinis > pirminis > metilkatijonas. Ši eilė rodo, kaip stipriai rezonansas stabilizuoja katijoną, tačiau matavimai ją patikslina: paprasčiausias benzilo katijonas yra tarp antrinio ir tretinio, o paprasčiausias alilo katijonas maždaug toks pat stabilus kaip antrinis. Tretinis alilinis ar benzilinis katijonas stabilesnis už paprastą tretinį, o alilinis ar benzilinis katijonas stabilesnis už tos pačios klasės paprastą alkilo katijoną.', 'Cation stability by the course’s order (L7 p9): benzylic > allylic > tertiary > secondary > primary > methyl. The order shows how strongly resonance stabilises a cation, but measured data refine it: the parent benzyl cation lies between a secondary and a tertiary cation, and the parent allyl cation is about as stable as a secondary one. A tertiary allylic or benzylic cation is more stable than a plain tertiary one, and an allylic or benzylic cation is more stable than a plain alkyl cation of the same class.'),
           t('Pirminiai: SN2 (ir E2). Tretiniai: su stipria baze E2, kitaip SN1 ir E1. Antriniai: su stipria baze daugiausia E2, su silpnai baziniu nukleofilu aprotoniniame tirpiklyje SN2.', 'Primary: SN2 (and E2). Tertiary: E2 with a strong base, otherwise SN1 and E1. Secondary: mostly E2 with a strong base, SN2 with a weakly basic nucleophile in an aprotic solvent.'),
           t('Zaicevo taisyklė: dominuoja alkenas, kurio prie $C=C$ daugiau alkilgrupių.', 'Zaitsev’s rule: the alkene with more alkyl groups on the $C=C$ predominates.'),
           t('Vinilo ir arilo halogenidai SN1 ir SN2 būdu nereaguoja; alilo ir benzilo halogenidai SN1 reaguoja lengvai.', 'Vinyl and aryl halides do not react by SN1 or SN2; allylic and benzylic halides undergo SN1 readily.'),
@@ -1177,7 +1177,7 @@
                 prompt: t('Kuri mechanizmo stadija lėta ir kodėl?', 'Which stage of the mechanism is slow, and why?'),
                 kind: 'choice',
                 options: [
-                  tx('I stadija – C–Cl ryšio skilimas: jis sudaro nestabilų karbokatijoną, todėl lėtas, o nukleofilo puolimas vyksta greitai.', 'Stage I, the C–Cl bond breaking: it forms an unstable carbocation, so it is slow, while the attack of the nucleophile is fast.'),
+                  tx('I stadija – C–Cl ryšio skilimas: jis sudaro karbokatijoną – didelės energijos tarpinę dalelę (reikia atskirti jonus), todėl lėtas, o nukleofilo puolimas vyksta greitai.', 'Stage I, the C–Cl bond breaking: it forms a carbocation, a high-energy intermediate (the ions must be separated), so it is slow, while the attack of the nucleophile is fast.'),
                   tx('II stadija – $HS-$ puolimas: dideli nukleofilai artėja lėtai.', 'Stage II, the attack of $HS-$: large nucleophiles approach slowly.'),
                   tx('Abi stadijos vienodai greitos, nes reakcija vienstadijė.', 'Both stages are equally fast because the reaction is a one-stage process.'),
                   tx('I stadija – $HS-$ atplėšia protoną, todėl reakcija lėta.', 'Stage I, $HS-$ removing a proton, so the reaction is slow.')
@@ -1692,23 +1692,23 @@
           },
           {
             id: 'u10.rank.5',
-            q: [{ p: t('Šie halogenidai jonizuojasi SN1 reakcijose.', 'These halides ionise in SN1 reactions.') }, { mol: [{ smi: 'BrCc1ccccc1' }, { smi: 'C=CCBr' }, { smi: 'CC(C)(C)Br' }, { smi: 'CC(C)Br' }, { smi: 'CCBr' }] }],
+            q: [{ p: t('Šie halogenidai jonizuojasi SN1 reakcijose.', 'These halides ionise in SN1 reactions.') }, { mol: [{ smi: 'CC(C)(Br)c1ccccc1' }, { smi: 'CC(C)(C)Br' }, { smi: 'CC(C)Br' }, { smi: 'CCBr' }] }],
             steps: [
               {
                 prompt: t('Sudėkite halogenidus pagal SN1 reaktingumą: nuo didžiausio iki mažiausio.', 'Put the halides in order of SN1 reactivity: from the highest to the lowest.'),
-                kind: 'order', options: [tx('benzilo bromidas', 'benzyl bromide'), tx('alilo bromidas', 'allyl bromide'), tx('tretinis bromidas', 'tertiary bromide'), tx('antrinis bromidas', 'secondary bromide'), tx('pirminis bromidas', 'primary bromide')],
+                kind: 'order', options: [tx('2-brom-2-fenilpropanas (kumilo bromidas)', '2-bromo-2-phenylpropane (cumyl bromide)'), tx('2-brom-2-metilpropanas (tretinis)', '2-bromo-2-methylpropane (tertiary)'), tx('2-brompropanas (antrinis)', '2-bromopropane (secondary)'), tx('brometanas (pirminis)', 'bromoethane (primary)')],
                 hint: t('Pasinaudokite katijonų stabilumo eile.', 'Use the order of cation stability.'),
-                solution: t('Benzilo > alilo > tretinis > antrinis > pirminis: pirmieji du katijonai stabilizuoti rezonansu.', 'Benzylic > allylic > tertiary > secondary > primary: the first two cations are stabilised by resonance.')
+                solution: t('Kumilo > tretinis > antrinis > pirminis: kumilo katijonas tretinis ir dar stabilizuotas rezonansu su benzeno žiedu, o alkilo katijonų eilė – tretinis > antrinis > pirminis.', 'Cumyl > tertiary > secondary > primary: the cumyl cation is tertiary and also stabilised by resonance with the benzene ring, and the alkyl series is tertiary > secondary > primary.')
               },
-              cho(t('Kodėl benzilo katijonas stabilesnis už tretinį alkilkatijoną?', 'Why is the benzyl cation more stable than a tertiary alkyl cation?'), [
+              cho(t('Kodėl kumilo katijonas stabilesnis už tret-butilo katijoną?', 'Why is the cumyl cation more stable than the tert-butyl cation?'), [
                 tx('Teigiamas krūvis delokalizuojasi per benzeno žiedą rezonansu.', 'The positive charge is delocalised over the benzene ring by resonance.'),
-                tx('Benzeno žiedas yra didesnis už tris alkilgrupes.', 'A benzene ring is larger than three alkyl groups.'),
+                tx('Benzeno žiedas yra didesnis už metilo grupę.', 'A benzene ring is larger than a methyl group.'),
                 tx('Benzeno žiedas traukia elektronus ir mažina krūvį.', 'The benzene ring withdraws electrons and reduces the charge.'),
-                tx('Benzilo katijonas nestabilus.', 'The benzyl cation is not stable.')
+                tx('Kumilo katijonas nėra stabilesnis už tret-butilo katijoną.', 'The cumyl cation is not more stable than the tert-butyl cation.')
               ], 0, t('Kiek rezonansinių formulių galima parašyti?', 'How many resonance structures can be written?'),
                 t('Krūvis pasiskirsto orto ir para padėtyse, todėl katijonas ypač stabilus.', 'The charge is spread to the ortho and para positions, so the cation is especially stable.'))
             ],
-            why: t('Rezonansas stabilizuoja katijoną stipriau nei hiperkonjugacija. Pagal kurso katijonų stabilumo eilę (L7 p9) benzilo ir alilo halogenidai jonizuojasi lengviau net už tretinius, nors jie gali būti pirminiai.', 'Resonance stabilises a cation more than hyperconjugation does. By the course’s order of cation stability (L7 p9), benzylic and allylic halides ionise more easily even than tertiary ones, although they may be primary.'),
+            why: t('Rezonansas stabilizuoja katijoną stipriau nei hiperkonjugacija. Todėl tretinis benzilinis halogenidas (kumilo) jonizuojasi lengviau už paprastą tretinį, o alkilo halogenidų eilė – tretinis > antrinis > pirminis.', 'Resonance stabilises a cation more than hyperconjugation does. So a tertiary benzylic halide (cumyl) ionises more easily than a plain tertiary one, and the alkyl halides follow tertiary > secondary > primary.'),
             src: 'L7 p9, S5.11'
           },
           {
@@ -2004,7 +2004,7 @@
               ], 0, t('Nueinančioji grupė abiem ta pati; kuo skiriasi katijonai?', 'The leaving group is the same in both; how do the cations differ?'),
                 t('Chloridas tas pats; skiriasi susidarančio katijono stabilumas.', 'The chloride is the same; what differs is the stability of the cation.'))
             ],
-            why: t('Benzilkatijonas stabilesnis už pirminius, antrinius ir net tretinius alkilkatijonus (kurso eilė, L7 p9), nes krūvis delokalizuotas per aromatinį žiedą. Todėl benzilo halogenidai lengvai reaguoja SN1, nors yra pirminiai.', 'The benzyl cation is more stable than primary, secondary and even tertiary alkyl cations (the course order, L7 p9) because its charge is delocalised over the aromatic ring. Benzylic halides therefore undergo SN1 readily even though they are primary.'),
+            why: t('Benzilkatijonas stabilesnis už paprastą pirminį alkilkatijoną (kurso eilė, L7 p9), nes krūvis delokalizuotas per aromatinį žiedą. Todėl benzilo halogenidai lengvai reaguoja SN1, nors yra pirminiai.', 'The benzyl cation is more stable than a plain primary alkyl cation (the course order, L7 p9) because its charge is delocalised over the aromatic ring. Benzylic halides therefore undergo SN1 readily even though they are primary.'),
             src: 'L7 p9, S5.11',
             claims: [{ react: ['sn1', ['ClCc1ccccc1'], { nu: 'OCC' }, 'CCOCc1ccccc1'] }]
           },
@@ -2090,14 +2090,14 @@
           {
             id: 'u10.allyl.7',
             q: [{ p: t('Šie halogenidai pagal klasę nėra tretiniai, bet kai kurie jonizuojasi greitai.', 'None of these halides is tertiary by class, but some ionise quickly.') },
-              { mol: [{ smi: 'BrCc1ccccc1', caption: t('a', 'a') }, { smi: 'CC(C)Br', caption: t('b', 'b') }, { smi: 'C=CC(C)Br', caption: t('c', 'c') }, { smi: 'CCCBr', caption: t('d', 'd') }] }],
+              { mol: [{ smi: 'CC(Br)c1ccccc1', caption: t('a', 'a') }, { smi: 'CC(C)Br', caption: t('b', 'b') }, { smi: 'C=CC(C)Br', caption: t('c', 'c') }, { smi: 'CCCBr', caption: t('d', 'd') }] }],
             steps: [{
               prompt: t('Pažymėkite junginius, kurie SN1 reakcijoje jonizuojasi lengviausiai.', 'Pick the compounds that ionise most readily in an SN1 reaction.'),
               kind: 'multi', options: [tx('a', 'a'), tx('b', 'b'), tx('c', 'c'), tx('d', 'd')], answer: [0, 2],
               hint: t('Kuriuos katijonus stabilizuoja rezonansas?', 'Which cations are stabilised by resonance?'),
-              solution: t('a duoda benzilo, c – alilo katijoną: rezonansas stabilizuoja stipriau už alkilgrupes. b duotų antrinį, d – pirminį alkilo katijoną.', 'a gives a benzylic and c an allylic cation: resonance stabilises more than alkyl groups do. b would give a secondary and d a primary alkyl cation.')
+              solution: t('a duoda antrinį benzilo, c – antrinį alilo katijoną: rezonansas stabilizuoja stipriau už alkilgrupes. b duotų paprastą antrinį, d – pirminį alkilo katijoną.', 'a gives a secondary benzylic and c a secondary allylic cation: resonance stabilises more than alkyl groups do. b would give a plain secondary and d a primary alkyl cation.')
             }],
-            why: t('Pagal kurso katijonų stabilumo eilę (L7 p9) benzilkatijonas > alilkatijonas > tretinis > antrinis > pirminis > metilkatijonas, benzilo ir alilo halogenidai jonizuojasi lengviausiai.', 'By the course’s order of cation stability (L7 p9), benzylic > allylic > tertiary > secondary > primary > methyl, benzylic and allylic halides ionise most readily.'),
+            why: t('Pagal kurso katijonų stabilumo eilę (L7 p9) benzilkatijonas > alilkatijonas > tretinis > antrinis > pirminis > metilkatijonas, o alilinis ar benzilinis katijonas stabilesnis už tos pačios klasės paprastą alkilo katijoną, todėl antriniai benzilo ir alilo halogenidai jonizuojasi lengviausiai.', 'By the course’s order of cation stability (L7 p9), benzylic > allylic > tertiary > secondary > primary > methyl, and an allylic or benzylic cation is more stable than a plain alkyl cation of the same class, so the secondary benzylic and allylic halides ionise most readily.'),
             src: 'L7 p9, S5.11'
           },
           {

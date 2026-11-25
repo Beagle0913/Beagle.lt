@@ -350,7 +350,7 @@ function checkUnit(unit, opts) {
     for (const lang of ['lt', 'en']) {
       const s = T[lang];
       if (/<[A-Za-z]/.test(s)) R.err(loc, lang + ' text has "<" followed by a letter (markup is not HTML): "' + snip(s) + '"', tag);
-      if (/\bundefined\b|\bNaN\b|\[object /.test(s)) R.err(loc, lang + ' text contains undefined / NaN / [object]: "' + snip(s) + '"', tag);
+      if (/\bundefined\b|\bNaN\b|\bnull\b|\[object /.test(s)) R.err(loc, lang + ' text contains undefined / NaN / null / [object]: "' + snip(s) + '"', tag);
     }
     for (const lang of ['lt', 'en']) {
       const s = T[lang];

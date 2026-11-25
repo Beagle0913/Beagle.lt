@@ -306,8 +306,7 @@
             t('Išdėstykite baigiamuosius darbus.', 'Arrange the closing tasks.'),
             [t('išdžiovinti kristalus džiovinimo spintoje', 'dry the crystals in the drying cabinet'),
               t('pasverti sausus kristalus', 'weigh the dry crystals'),
-              t('apskaičiuoti išeigą', 'calculate the yield'),
-              t('nustatyti lydymosi temperatūrą', 'determine the melting point'),
+              t('apskaičiuoti išeigą ir nustatyti lydymosi temperatūrą (bet kuria tvarka)', 'calculate the yield and determine the melting point (in either order)'),
               t('aparatūrą išplauti ir grąžinti į vietą', 'wash the apparatus and put it back')],
             t('Kodėl svėrimas negali būti prieš džiovinimą?', 'Why can the weighing not come before the drying?'),
             t('Drėgni kristalai sveria daugiau ir lydosi žemiau, todėl pirma džiovinama. Svoris reikalingas išeigai, o lydymosi temperatūra parodo, ar produktas švarus. Plovimas paliekamas pabaigai.', 'Wet crystals weigh more and melt lower, so they are dried first. The mass is needed for the yield, and the melting point shows whether the product is clean. Washing is left to the end.'),
@@ -703,7 +702,7 @@
               t('Mėginys drėgnas: lydymosi temperatūra pernelyg aukšta.', 'The sample is damp: the melting point is too high.')];
             why1 = t('Siauras intervalas (apie 1 °C) arti 122 °C yra gryno junginio požymis.', 'A narrow range (about 1 °C) near 122 °C is a sign of a pure compound.');
           } else if (kind === 'impure') {
-            lo = ctx.int(1100, 1180) / 10; hi = lo + ctx.int(30, 80) / 10;
+            lo = ctx.int(1100, 1180) / 10; hi = lo + ctx.int(30, Math.min(80, 1215 - lo * 10)) / 10; // an impure range ends below the pure value (122 °C)
             q = t('Išdžiovinta benzenkarboksirūgštis lydosi nuo ' + num(lo, 1, 'lt') + ' iki ' + num(hi, 1, 'lt') + ' °C. Literatūrinė vertė yra apie 122 °C.',
               'Dried benzoic acid melts from ' + num(lo, 1, 'en') + ' to ' + num(hi, 1, 'en') + ' °C. The literature value is about 122 °C.');
             prompt = t('Ką galima teigti apie grynumą?', 'What can be said about purity?');

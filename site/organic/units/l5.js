@@ -82,8 +82,8 @@
         blocks: [
           { h: t('Įranga', 'Apparatus') },
           {
-            p: t('Reikia mažos stiklinėlės ir Erlenmejerio kolbos, elektrinės viryklės su magnetine maišykle, grįžtamojo kondensatoriaus ant kolbos, filtravimo įrangos (stiklinio piltuvėlio ir mėgintuvėlio su atšaka), stiklinio kamštelio kristalams nuspausti, ledo vonios, džiovinimo krosnelės (80 °C) ir spiritinio termometro lydymosi temperatūrai nustatyti.',
-              'You need a small beaker and an Erlenmeyer flask, an electric hot plate with a magnetic stirrer, a reflux condenser for the flask, filtration equipment (a glass funnel and a flask with a side arm), a glass stopper for pressing crystals, an ice bath, a drying oven (80 °C) and a spirit thermometer for the melting point.'),
+            p: t('Reikia mažos stiklinėlės ir Erlenmejerio kolbos, elektrinės viryklės su magnetine maišykle, grįžtamojo kondensatoriaus ant kolbos, filtravimo įrangos (stiklinio piltuvėlio ir Bunzeno kolbos su atšaka), stiklinio kamštelio kristalams nuspausti, ledo vonios, džiovinimo krosnelės (80 °C) ir spiritinio termometro lydymosi temperatūrai nustatyti.',
+              'You need a small beaker and an Erlenmeyer flask, an electric hot plate with a magnetic stirrer, a reflux condenser for the flask, filtration equipment (a glass funnel and a filter flask with a side arm), a glass stopper for pressing crystals, an ice bath, a drying oven (80 °C) and a spirit thermometer for the melting point.'),
             src: 'LW5 p1'
           },
           { h: t('Eiga ir kiekvieno žingsnio paskirtis', 'Procedure and the purpose of each step') },
@@ -111,8 +111,8 @@
         blocks: [
           { h: t('Kodėl fumaro rūgštis iškrenta', 'Why fumaric acid precipitates') },
           {
-            p: t('Fumaro rūgštis simetriška ir joje susidaro tarpmolekuliniai vandenilio ryšiai, todėl kristalai tvirti (lyd. t. 299–300 °C, sublimuojasi), o tirpumas vandenyje mažas. Maleino rūgšties $COOH$ grupės arti viena kitos, jos sudaro vidumolekulinį vandenilio ryšį, o molekulė poliška, todėl rūgštis gerai tirpsta (lyd. t. 140–142 °C). Fumaro rūgščiai išsikristalinus, pusiausvyra pasislenka jos link.',
-              'Fumaric acid is symmetrical and forms intermolecular hydrogen bonds, so its crystals are strong (m.p. 299–300 °C, it sublimes) and its solubility in water is low. In maleic acid the $COOH$ groups are close together and can form an intramolecular hydrogen bond, and the molecule is polar, so the acid dissolves well (m.p. 140–142 °C). When fumaric acid crystallises, the equilibrium is pulled towards it.'),
+            p: t('Fumaro rūgštis simetriška ir joje susidaro tarpmolekuliniai vandenilio ryšiai, todėl kristalai tvirti (lyd. t. 299–300 °C, sublimuojasi), o tirpumas vandenyje mažas. Maleino rūgšties $COOH$ grupės arti viena kitos, jos sudaro vidumolekulinį vandenilio ryšį, o molekulė poliška, todėl rūgštis gerai tirpsta (lyd. t. 140–142 °C pagal darbo aprašą; žinynuose apie 135 °C). Fumaro rūgščiai išsikristalinus, pusiausvyra pasislenka jos link.',
+              'Fumaric acid is symmetrical and forms intermolecular hydrogen bonds, so its crystals are strong (m.p. 299–300 °C, it sublimes) and its solubility in water is low. In maleic acid the $COOH$ groups are close together and can form an intramolecular hydrogen bond, and the molecule is polar, so the acid dissolves well (m.p. 140–142 °C according to the lab sheet; handbooks give about 135 °C). When fumaric acid crystallises, the equilibrium is pulled towards it.'),
             src: 'LW5 p2'
           },
           {
@@ -120,7 +120,7 @@
               head: [t('Savybė', 'Property'), nMal, nFum],
               rows: [
                 [t('konfigūracija', 'configuration'), t('Z (cis)', 'Z (cis)'), t('E (trans)', 'E (trans)')],
-                [t('lydymosi temperatūra', 'melting point'), t('140–142 °C', '140–142 °C'), t('299–300 °C (sublimuojasi)', '299–300 °C (sublimes)')],
+                [t('lydymosi temperatūra', 'melting point'), t('140–142 °C', '140–142 °C'), t('299–300 °C (sublimuojasi anksčiau, nei lydosi, nuo apie 200 °C)', '299–300 °C (sublimes before it melts, from about 200 °C)')],
                 [t('tirpumas vandenyje', 'solubility in water'), t('labai geras', 'very good'), t('menkas, šaltame vandenyje dar mažesnis', 'poor, even lower in cold water')],
                 [t('poliškumas', 'polarity'), t('poliška molekulė', 'polar molecule'), t('dipolių momentai susinaikina', 'dipoles cancel')]
               ]
@@ -174,7 +174,7 @@
           t('Anhidridas + $H2O$ → maleino rūgštis (Z); ji $HCl$ ir šilumos veikiama izomerizuojasi į fumaro rūgštį (E).', 'Anhydride + $H2O$ → maleic acid (Z); with $HCl$ and heat it isomerises to fumaric acid (E).'),
           t('Mechanizmas: $H+$ prisijungia prie $C=C$, sukimasis aplink $C-C$, $H+$ atskyla.', 'Mechanism: $H+$ adds to $C=C$, rotation about $C-C$, $H+$ is lost.'),
           t('Fumaro rūgštis iškrenta, nes menkai tirpsta; maleino rūgšties vandeniu neplaunama.', 'Fumaric acid precipitates because it is poorly soluble; maleic acid is not washed with water.'),
-          t('Lydymosi temperatūros: maleino 140–142 °C, fumaro 299–300 °C (sublimuojasi).', 'Melting points: maleic 140–142 °C, fumaric 299–300 °C (sublimes).'),
+          t('Lydymosi temperatūros: maleino 140–142 °C, fumaro 299–300 °C (sublimuojasi anksčiau, nei lydosi, nuo apie 200 °C).', 'Melting points: maleic 140–142 °C (handbooks about 135 °C), fumaric 299–300 °C (sublimes before it melts, from about 200 °C).'),
           t('Išeiga = gauta masė / teorinė masė · 100 %; $M$(anhidrido) 98,06, $M$(rūgščių) 116,07 g/mol.', 'Yield = mass obtained / theoretical mass · 100 %; $M$(anhydride) 98.06, $M$(acids) 116.07 g/mol.')
         ]
       }
@@ -456,7 +456,7 @@
             steps: [ch(t('Kokia temperatūra rodo grynus kristalus?', 'Which melting range suggests pure crystals?'), [
               ['140–142 °C, siaura riba', '140–142 °C, a narrow range'],
               ['115–130 °C, plati riba', '115–130 °C, a wide range'],
-              ['apie 300 °C su sublimacija', 'about 300 °C with sublimation'],
+              ['sublimuojasi anksčiau, nei išsilydo', 'it sublimes before it melts'],
               ['jau 50 °C', 'already 50 °C']
             ], 0, t('Grynos medžiagos lydosi siauroje riboje.', 'Pure substances melt over a narrow range.'),
               t('Maleino rūgšties lyd. t. yra 140–142 °C, o priemaišos ją sumažina ir praplečia ribą.', 'The m.p. of maleic acid is 140–142 °C; impurities lower it and widen the range.'))],
@@ -467,7 +467,7 @@
             id: 'l5.observe.5',
             q: Q('Išdžiovintas $HCl$ izomerizacijos produktas kaitinamas lydymosi aparate.', 'The dried product of the $HCl$ isomerisation is heated in a melting point apparatus.'),
             steps: [ch(t('Kas vyksta, jei tai fumaro rūgštis?', 'What happens if it is fumaric acid?'), [
-              ['prie 140 °C nesilydo, apie 300 °C sublimuojasi', 'it does not melt at 140 °C and sublimes around 300 °C'],
+              ['prie 140 °C nesilydo, sublimuojasi anksčiau, nei išsilydo (nuo apie 200 °C)', 'it does not melt at 140 °C; it sublimes before it melts (from about 200 °C)'],
               ['prie 140 °C išsilydo', 'it melts at 140 °C'],
               ['jis nuspalvinamas rudai', 'it turns brown'],
               ['jis tirpsta nuo kaitinimo', 'it dissolves on heating']
@@ -525,7 +525,7 @@
         bank: [
           {
             id: 'l5.prove.1',
-            q: Q('Produktas nesilydo iki 250 °C, o apie 300 °C sublimuojasi.', 'The product does not melt up to 250 °C and sublimes around 300 °C.'),
+            q: Q('Produktas nesilydo iki 250 °C, o kaitinamas sublimuojasi (nuo apie 200 °C).', 'The product does not melt up to 250 °C; on heating it sublimes (from about 200 °C).'),
             steps: [ch(t('Ką tai įrodo?', 'What does this prove?'), [
               ['kad tai fumaro, o ne maleino rūgštis', 'that it is fumaric, not maleic acid'],
               ['kad tai anhidridas', 'that it is the anhydride'],
@@ -637,7 +637,7 @@
         bank: [
           { id: 'l5.apparatus.1', desc: ['ilgas stiklinis vamzdis su apvalkalu, kuriuo teka vanduo; dedamas ant kolbos kaklelio, kad garai nesprūstų', 'a long glass tube with a jacket through which water flows; fitted to the neck of the flask so vapours cannot escape'], right: ['grįžtamasis kondensatorius', 'reflux condenser'], other: [['atskirtuvas', 'separatory funnel'], ['Büchnerio piltuvėlis', 'Büchner funnel'], ['pipetė', 'pipette']], why: ['Garai kondensuojasi ir grįžta atgal.', 'Vapours condense and run back.'] },
           { id: 'l5.apparatus.2', desc: ['kūgio formos kolba su siauru kakleliu, kurią galima kaitinti ant viryklės', 'a conical flask with a narrow neck that can be heated on a hot plate'], right: ['Erlenmejerio kolba', 'Erlenmeyer flask'], other: [['matavimo cilindras', 'measuring cylinder'], ['stiklinė lazdelė', 'glass rod'], ['kristalizatorius', 'crystalliser dish']], why: ['Siauras kaklelis mažina garavimą.', 'The narrow neck reduces evaporation.'] },
-          { id: 'l5.apparatus.3', desc: ['storasienis stiklinis indas su šonine atšaka, prijungiamas prie vakuumo; ant jo dedamas piltuvėlis', 'a thick-walled glass vessel with a side arm connected to the vacuum, with a funnel on top'], right: ['mėgintuvėlis su atšaka filtravimui', 'filter flask with a side arm'], other: [['Erlenmejerio kolba su kamščiu', 'plain flask with stopper'], ['dulkių surinkėjas', 'dust collector'], ['dujų plovimo indas', 'gas wash bottle']], why: ['Vakuumas pagreitina filtravimą.', 'Vacuum speeds up the filtration.'] },
+          { id: 'l5.apparatus.3', desc: ['storasienis stiklinis indas su šonine atšaka, prijungiamas prie vakuumo; ant jo dedamas piltuvėlis', 'a thick-walled glass vessel with a side arm connected to the vacuum, with a funnel on top'], right: ['Bunzeno kolba (kolba su atšaka filtravimui)', 'filter flask with a side arm'], other: [['Erlenmejerio kolba su kamščiu', 'plain flask with stopper'], ['dulkių surinkėjas', 'dust collector'], ['dujų plovimo indas', 'gas wash bottle']], why: ['Vakuumas pagreitina filtravimą.', 'Vacuum speeds up the filtration.'] },
           { id: 'l5.apparatus.4', desc: ['platus seklus stiklinis indas, į kurį pilamas vanduo su ledu, kad jame būtų atšaldomi kristalai ar kolba', 'a wide shallow dish filled with water and ice'], right: ['kristalizatorius (ledo vonia)', 'crystalliser dish (ice bath)'], other: [['džiovinimo krosnelė', 'drying oven'], ['grįžtamasis kondensatorius', 'reflux condenser'], ['magnetinė maišyklė', 'magnetic stirrer']], why: ['Plokščias indas gerai perduoda šilumą.', 'A flat vessel exchanges heat well.'] },
           { id: 'l5.apparatus.5', desc: ['maža teflonu padengta „tabletė“ ar lazdelė, kuri sukasi tirpale, kai po indu yra besisukantis magnetas', 'a small Teflon-coated "pill" or rod that spins in the liquid when a rotating magnet is below the vessel'], right: ['teflono maišikliukas', 'Teflon stirring bar'], other: [['laikiklis', 'clamp'], ['kamštelis', 'stopper'], ['termometras', 'thermometer']], why: ['Magnetas suka maišikliuką.', 'The magnet spins the bar.'] },
           { id: 'l5.apparatus.6', desc: ['stiklinis strypas su plokščiu pagrindu, kuriuo kristalai nuspaudžiami filtre', 'a glass rod with a flat base used to press crystals on the filter'], right: ['stiklinis kamštelis kristalams nuspausti', 'glass stopper for pressing crystals'], other: [['stiklinė lazdelė su šluotele', 'brush on a glass rod'], ['pipetė su guma', 'rubber-bulb pipette'], ['piltuvėlio kamštis', 'funnel stopper']], why: ['Nuspaudžiama, kad skystis būtų išspaustas.', 'Pressing squeezes the liquid out.'] },
@@ -728,8 +728,8 @@
 
           if (variant === 'mp') {
             const pure = ctx.pick([true, false]);
-            const lo = pure ? ctx.int(139, 140) : ctx.int(120, 134);
-            const width = pure ? ctx.int(1, 2) : ctx.int(5, 10);
+            const lo = pure ? ctx.int(139, 140) : ctx.int(120, 125);
+            const width = pure ? ctx.int(1, 2) : ctx.int(5, Math.min(10, 130 - lo)); // an impure range is clearly low and wide: it ends at 130 °C or below
             const hi = lo + width;
             return {
               q: [{ p: t('Pirmųjų kristalų lydymosi riba išmatuota ' + lo + '–' + hi + ' °C. Literatūrinė maleino rūgšties lydymosi riba yra 140–142 °C.', 'The melting range of the first crystals was measured as ' + lo + '–' + hi + ' °C. The literature range for maleic acid is 140–142 °C.') }],
@@ -752,7 +752,7 @@
           }
 
           const front = ctx.int(40, 70);
-          const s1 = ctx.int(8, 30), s2 = s1 + ctx.int(5, 15);
+          const s1 = ctx.int(8, 30), s2 = s1 + ctx.int(5, Math.min(15, front - 5 - s1)); // every spot stays below the front: 0 < Rf < 1
           return {
             q: [{ p: t('Ploname sluoksnyje atlikta chromatograma: tirpiklio frontas nueina ' + front + ' mm, pirmoji dėmė ' + s1 + ' mm, antroji ' + s2 + ' mm nuo starto linijos.', 'On a thin-layer chromatogram the solvent front moved ' + front + ' mm; the first spot is at ' + s1 + ' mm and the second at ' + s2 + ' mm from the start line.') }],
             steps: [

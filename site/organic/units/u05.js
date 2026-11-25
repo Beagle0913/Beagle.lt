@@ -464,7 +464,7 @@
               [f('$I$, $Br$, $Cl$'), t('pirmasis atomas halogenas', 'first atom is a halogen'), t('aukščiausias', 'highest')],
               [f('$OCH3$, $OH$'), t('pirmasis atomas deguonis', 'first atom is oxygen'), t('labai aukštas', 'very high')],
               [f('$NH2$'), t('pirmasis atomas azotas', 'first atom is nitrogen'), t('aukštas', 'high')],
-              [f('$COOH$'), f('$(O,O,O)$'), t('anglies grupės: aukščiausia', 'carbon groups: highest')],
+              [f('$COOH$'), f('$(O,O,O)$'), t('aukščiausia iš lentelės anglies grupių', 'highest of the carbon groups in this table')],
               [f('$CHO$'), f('$(O,O,H)$'), t('žemesnė už $COOH$', 'below $COOH$')],
               [f('$CH2OH$'), f('$(O,H,H)$'), t('žemesnė už $CHO$', 'below $CHO$')],
               [f('$C≡N$'), f('$(N,N,N)$'), t('žemesnė už $CH2OH$', 'below $CH2OH$')],
@@ -1101,7 +1101,7 @@
                   'Chiral molecules have neither a plane nor a centre of symmetry. Molecules without chiral centres, or with a plane of symmetry, are achiral.')
             },
             {
-              prompt: t('Pirmojoje (viršuje kairėje) chiralinėje molekulėje bakstelėkite chiralinius centrus.', 'In the first chiral molecule in the list (reading left to right), tap the chiral centres.'),
+              prompt: t('Pirmojoje sąraše (skaitant iš kairės į dešinę) chiralinėje molekulėje bakstelėkite chiralinius centrus.', 'In the first chiral molecule in the list (reading left to right), tap the chiral centres.'),
               kind: 'atoms', mol: { smi: first }, answer: cs,
               hint: t('Kuriuose anglies atomuose yra keturios skirtingos grupės?', 'Which carbons carry four different groups?'),
               solution: t('Chiralinių centrų: ' + cs.length + '. Tai sp³ anglys su keturiais skirtingais pakaitais.', 'Chiral centres: ' + cs.length + '. They are sp³ carbons with four different substituents.')

@@ -549,9 +549,9 @@ test('fix 2: ring amines in acid', () => {
   same(R('sear', ['Nc1ccccc1'], { E: 'SO3H' }), ['Nc1ccc(cc1)S(=O)(=O)O']);
   const dma = R('sear', ['CN(C)c1ccccc1'], { E: 'NO2' });
   same(dma, ['CN(C)c1cccc([N+](=O)[O-])c1']);
+  // a free ArNH2 is protonated and oxidised in nitrating acid: no reaction, protect it as the acetanilide
   const an = R('sear', ['Nc1ccccc1'], { E: 'NO2' });
-  assert.deepStrictEqual(majorsOf(an), ['Nc1ccc(cc1)[N+](=O)[O-]', 'Nc1ccccc1[N+](=O)[O-]'].map(canon).sort());
-  assert.ok(an.note && /acetanilide/.test(an.note.en));
+  assert.ok(an.none && an.note && /acetanilide/.test(an.note.en) && /acetanilid/.test(an.note.lt));
 });
 
 test('fix 3: acylation goes to the amine N, not to O', () => {
@@ -585,15 +585,17 @@ test('fix 5: a halogen on the cation carbon', () => {
 test('fix 6, 7, 21: neopentyl, SN1 nucleophiles, leaving group order', () => {
   const neo = R('sn2', ['CC(C)(C)CBr'], { nu: 'OH' });
   assert.ok(neo.none && neo.note);
-  ['CN', 'SH', 'NH3', 'C#CC', 'I', 'SC'].forEach((nu) => assert.ok(R('sn1', ['CC(C)(C)Br'], { nu }).none, nu));
-  ['OH', 'OC', 'OCC'].forEach((nu) => assert.ok(!R('sn1', ['CC(C)(C)Br'], { nu }).none, nu));
+  ['CN', 'NH3', 'C#CC'].forEach((nu) => assert.ok(R('sn1', ['CC(C)(C)Br'], { nu }).none, nu));
+  // I-, HS-, RS- are weak bases: a tertiary halide gives the substitution product by SN1 (and SN2 gives nothing)
+  ['OH', 'OC', 'OCC', 'SH', 'I', 'SC'].forEach((nu) => assert.ok(!R('sn1', ['CC(C)(C)Br'], { nu }).none, nu));
+  ['SH', 'I', 'SC'].forEach((nu) => assert.ok(R('sn2', ['CC(C)(C)Br'], { nu }).none, nu));
   expectProducts(R('sn2', ['ClCCBr'], { nu: 'I' }), ['ClCCI', 'ICCBr'], ['ClCCI']);
 });
 
 test('fix 8, 9: SEAr with several rings, acylation para', () => {
   assert.ok(R('sear', ['c1ccc(cc1)c1ccccc1'], { E: 'NO2' }).none);
-  same(R('sear', ['Cc1ccccc1'], { E: 'C(C)=O' }), ['CC(=O)c1ccc(C)cc1', 'CC(=O)c1ccccc1C']);
-  same(R('sear', ['COc1ccccc1'], { E: 'C(C)=O' }), ['COc1ccc(cc1)C(C)=O', 'COc1ccccc1C(C)=O']);
+  same(R('sear', ['Cc1ccccc1'], { E: 'C(C)=O' }), ['CC(=O)c1ccc(C)cc1']);
+  same(R('sear', ['COc1ccccc1'], { E: 'C(C)=O' }), ['COc1ccc(cc1)C(C)=O']);
 });
 
 test('fix 10, 11, 12: HBr cleavage, nitrile to amide, para-only nitrosation', () => {
@@ -660,7 +662,7 @@ test('fix 19, 20, 22: Lithuanian notes, metal option, Claisen with one alpha-H',
 
 test('fix r2.1: a crowded position between two substituents is never major', () => {
   same(R('sear', ['Cc1cccc(C)c1'], { E: 'C(C)=O' }), ['CC(=O)c1ccc(C)cc1C']);
-  same(R('sear', ['COc1cccc(C)c1'], { E: 'C(C)=O' }), ['COc1ccc(C(C)=O)c(C)c1', 'COc1ccc(C)cc1C(C)=O'.replace('COc1ccc(C)cc1C(C)=O', 'COc1cc(C)ccc1C(C)=O')]);
+  same(R('sear', ['COc1cccc(C)c1'], { E: 'C(C)=O' }), ['COc1ccc(C(C)=O)c(C)c1']); // para to OCH3 only (bulky acylium)
   same(R('sear', ['Nc1cccc(C)c1'], { E: 'SO3H' }), ['Nc1ccc(S(=O)(=O)O)c(C)c1']);
   same(R('sear', ['Cc1cccc(C)c1'], { E: 'C(C)(C)C' }), ['Cc1ccc(C(C)(C)C)c(C)c1']);
 });
@@ -740,10 +742,11 @@ test('fix r2.2b: every product of every rule parses (fuzz)', () => {
 
 // ---------------------------------------------------------------- fix round 3
 
-test('fix r3: acylation gives o and p, williamson all needs anions, side.ox keeps no C2/C3 acids', () => {
-  expectProducts(R('sear', ['CCc1ccccc1'], { E: 'C(C)=O' }), ['CCc1ccccc1C(C)=O', 'CCc1cccc(C(C)=O)c1', 'CCc1ccc(C(C)=O)cc1'], ['CCc1ccccc1C(C)=O', 'CCc1ccc(C(C)=O)cc1']);
-  assert.strictEqual(majorsOf(R('sear', ['Cc1ccccc1'], { E: 'C(C)=O' })).length, 2);
-  assert.strictEqual(majorsOf(R('sear', ['COc1ccccc1'], { E: 'C(C)=O' })).length, 2);
+test('fix r3: acylation gives para (ortho minor), williamson all needs anions, side.ox keeps no C2/C3 acids', () => {
+  expectProducts(R('sear', ['CCc1ccccc1'], { E: 'C(C)=O' }), ['CCc1ccccc1C(C)=O', 'CCc1cccc(C(C)=O)c1', 'CCc1ccc(C(C)=O)cc1'], ['CCc1ccc(C(C)=O)cc1']);
+  assert.strictEqual(majorsOf(R('sear', ['Cc1ccccc1'], { E: 'C(C)=O' })).length, 1);
+  assert.strictEqual(majorsOf(R('sear', ['COc1ccccc1'], { E: 'C(C)=O' })).length, 1);
+  assert.strictEqual(majorsOf(R('sear', ['Cc1ccccc1'], { E: 'NO2' })).length, 2); // nitration still o and p
   same(R('sear', ['Cc1cccc(C)c1'], { E: 'C(C)=O' }), ['CC(=O)c1ccc(C)cc1C']);
   same(R('sear', ['Cc1ccccc1'], { E: 'C(C)(C)C' }), ['Cc1ccc(C(C)(C)C)cc1']);
   const w = R('williamson', ['CC(O)CC(C)S', 'CCBr'], { all: true });
@@ -775,8 +778,9 @@ test('every rule with a mechanism symbol returns mech on a sample input', () => 
   });
 });
 
-test('small rings: no radical substitution, cyclopropane opens with X2 and HX', () => {
-  ['C1CC1', 'CC1CC1', 'C1CCC1'].forEach((smi) => assert.ok(R('sr.halogenate', [smi], { X: 'Br' }).none, smi));
+test('small rings: cyclopropane has no radical substitution and opens with X2 and HX; cyclobutane is an alkane', () => {
+  ['C1CC1', 'CC1CC1'].forEach((smi) => assert.ok(R('sr.halogenate', [smi], { X: 'Br' }).none, smi));
+  ['C1CCC1', 'CC1CCC1'].forEach((smi) => assert.ok(!R('sr.halogenate', [smi], { X: 'Br' }).none, smi));
   assert.ok(/ring/.test(R('sr.halogenate', ['CC1CC1'], { X: 'Br' }).note.en) && R('sr.halogenate', ['CC1CC1'], { X: 'Br' }).note.lt);
   assert.ok(!R('sr.halogenate', ['C1CCCCC1'], { X: 'Br' }).none);
   only(R('ae.x2', ['C1CC1'], { X: 'Br' }), 'BrCCCBr');

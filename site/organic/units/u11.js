@@ -339,8 +339,8 @@
       blocks: [
         { h: t('Reagentai ir mechanizmai', 'Reagents and mechanisms') },
         {
-          p: t('Visų klasių alkoholiai su $HI$, $HBr$ ar $HCl$, taip pat su $PBr3$, $PBr5$, $PCl5$ ir $SOCl2$ virsta halogenalkanais, nes $OH$ pakeičiama halogenu. Pats $OH−$ yra bloga nueinančioji grupė, todėl rūgštis ją pirma protonizuoja: $OH2+$ išeina kaip vanduo.',
-            'Primary, secondary and tertiary alcohols react with hydrogen halides ($HI$, $HBr$, $HCl$) and with other reagents ($PBr3$, $PBr5$, $PCl5$, $SOCl2$): the $OH$ is replaced by a halogen. $OH−$ itself is a poor leaving group, so the acid protonates it first and $OH2+$ leaves as water.'),
+          p: t('Visų klasių alkoholiai su $HI$, $HBr$ ar $HCl$, taip pat su $PBr3$, $PBr5$, $PCl5$ ir $SOCl2$ virsta halogenalkanais, nes $OH$ pakeičiama halogenu. Pats $OH−$ yra bloga nueinančioji grupė. Su halogenvandeniliais rūgštis ją pirma protonizuoja: $OH2+$ išeina kaip vanduo; su $PBr3$ ir $SOCl2$ $OH$ pirma paverčiama gera nueinančiąja grupe, o halogenidas ją išstumia SN2 būdu (šie reagentai tinka pirminiams ir antriniams alkoholiams).',
+            'Primary, secondary and tertiary alcohols react with hydrogen halides ($HI$, $HBr$, $HCl$) and with other reagents ($PBr3$, $PBr5$, $PCl5$, $SOCl2$): the $OH$ is replaced by a halogen. $OH−$ itself is a poor leaving group. With the hydrogen halides the acid protonates it first and $OH2+$ leaves as water; with $PBr3$ and $SOCl2$ the $OH$ is first turned into a good leaving group and the halide then displaces it by SN2 (these reagents suit primary and secondary alcohols).'),
           src: 'L11 p8'
         },
         {
@@ -365,8 +365,8 @@
           src: 'Klein'
         },
         {
-          rule: t('Pirminiai alkoholiai reaguoja pagal SN2 (viena stadija: nukleofilas atakuoja iš galinės pusės), antriniai ir tretiniai – pagal SN1 (karbokatijono stadija). Rezultatas visada halogenalkanas su tuo pačiu skeletu.',
-            'Primary alcohols react by SN2 (one step, the nucleophile attacks from the back); secondary and tertiary alcohols react by SN1 (through a carbocation). The result is always a haloalkane with the same skeleton.'),
+          rule: t('Su $HX$ pirminiai alkoholiai reaguoja pagal SN2 (viena stadija: nukleofilas atakuoja iš galinės pusės), antriniai ir tretiniai – pagal SN1 (karbokatijono stadija). Su $PBr3$ ir $SOCl2$ pirminiai ir antriniai alkoholiai reaguoja SN2 būdu (be karbokatijono, be persigrupavimo, su konfigūracijos apsivertimu). Rezultatas dažniausiai halogenalkanas su tuo pačiu skeletu, bet SN1 atveju karbokatijonas gali persigrupuoti (pvz., 3-metilbutan-2-olis + $HBr$ → 2-brom-2-metilbutanas).',
+            'With $HX$, primary alcohols react by SN2 (one step, the nucleophile attacks from the back); secondary and tertiary alcohols react by SN1 (through a carbocation). With $PBr3$ and $SOCl2$, primary and secondary alcohols react by SN2 (no carbocation, no rearrangement, inversion of configuration). The result is usually a haloalkane with the same skeleton, but in SN1 the carbocation can rearrange (e.g. 3-methylbutan-2-ol + $HBr$ → 2-bromo-2-methylbutane).'),
           src: 'L11 p8, p9, p10'
         },
         { h: t('SN2: pirminiai alkoholiai', 'SN2: primary alcohols') },
@@ -501,8 +501,8 @@
         },
         { scheme: { items: [{ smi: 'CC[OH+]CC' }, { arrow: '→', above: f('$−H+$') }, { smi: 'CCOCC' }] }, caption: t('Susidaręs oksonio jonas netenka protono ir duoda dietilo eterį.', 'The oxonium ion loses a proton and gives diethyl ether.') },
         {
-          p: t('Gyvuose organizmuose dehidratacijos reakcijas katalizuoja fermentai: fumarazė malatą (obuolių rūgšties anijoną) paverčia fumaratu citrinų rūgšties cikle. Kartais dehidratacija vyksta E1cb būdu: bazė pirmiausia atplėšia protoną nuo anglies šalia karbonilo, o iš gauto anijono išeina hidroksigrupė. Taip veikia ir aldolinė kondensacija.',
-            'In living organisms enzymes catalyse dehydration: fumarase turns malate into fumarate in the citric acid cycle. Dehydration sometimes follows the E1cb route: a base first removes a proton from the carbon next to a carbonyl, and the hydroxide then leaves the resulting anion. Aldol condensation works in the same way.'),
+          p: t('Gyvuose organizmuose dehidratacijos reakcijas katalizuoja fermentai: fumarazė katalizuoja malato ir fumarato virsmą (malatas ⇌ fumaratas + $H2O$); citrinų rūgšties cikle ji veikia kaip hidratacija, o atvirkštinė reakcija yra dehidratacija. Kartais dehidratacija vyksta E1cb būdu: bazė pirmiausia atplėšia protoną nuo anglies šalia karbonilo, o iš gauto anijono išeina hidroksigrupė. Taip veikia ir aldolinė kondensacija.',
+            'In living organisms enzymes catalyse dehydration: fumarase interconverts malate and fumarate (malate ⇌ fumarate + $H2O$); in the citric acid cycle it runs as a hydration, and the reverse reaction is a dehydration. Dehydration sometimes follows the E1cb route: a base first removes a proton from the carbon next to a carbonyl, and the hydroxide then leaves the resulting anion. Aldol condensation works in the same way.'),
           src: 'L11 p14, p15'
         },
         { scheme: { items: [{ smi: 'CC(O)CC=O' }, { arrow: '→', above: t('bazė', 'base') }, { smi: 'CC=CC=O' }, { plus: true }, { smi: 'O' }], maxWidth: 560 }, caption: t('E1cb: bazė atplėšia $α$ protoną, po to išeina $OH−$; susidaro konjuguotas aldehidas.', 'E1cb: a base removes the $α$ proton, then $OH−$ leaves; a conjugated aldehyde forms.'), src: 'L11 p15' },
@@ -645,8 +645,8 @@
           src: 'L11 p24'
         },
         {
-          p: t('Chromo rūgštis ($H2CrO4$) susidaro iš $CrO3$ ar $Na2Cr2O7$ vandenyje. Spalvos pasikeitimas rodo reakciją: oranžinis $Cr(VI)$ virsta žaliu $Cr(III)$, violetinis permanganatas išblunka ir iškrenta rudas $MnO2$ (6 laboratorinis darbas).',
-            'Chromic acid ($H2CrO4$) forms from $CrO3$ or $Na2Cr2O7$ in water. The colour change shows the reaction: orange $Cr(VI)$ becomes green $Cr(III)$, and violet permanganate fades with brown $MnO2$ precipitating (lab 6).'),
+          p: t('Chromo rūgštis ($H2CrO4$) susidaro iš $CrO3$ ar $Na2Cr2O7$ vandenyje. Spalvos pasikeitimas rodo reakciją: oranžinis $Cr(VI)$ virsta žaliu $Cr(III)$, rūgščioje terpėje violetinis permanganatas tampa beveik bespalvis ($Mn^2+^$), o neutralioje terpėje vietoj to iškrenta rudas $MnO2$ (6 laboratorinis darbas).',
+            'Chromic acid ($H2CrO4$) forms from $CrO3$ or $Na2Cr2O7$ in water. The colour change shows the reaction: orange $Cr(VI)$ becomes green $Cr(III)$, and in acid violet permanganate becomes almost colourless ($Mn^2+^$), while in a neutral solution brown $MnO2$ precipitates instead (lab 6).'),
           src: 'L11 p22; LW6 p2'
         },
         { h: t('Biologinė oksidacija', 'Biological oxidation') },
@@ -792,7 +792,8 @@
         head: [t('Reagentas', 'Reagent'), t('Produktas', 'Product'), t('Pastaba', 'Note')],
         rows: [
           [t('$Na$, $K$, $NaH$', '$Na$, $K$, $NaH$'), t('alkoksidas + $H2$', 'alkoxide + $H2$'), t('rūgštinės savybės; su $NaOH$ nereaguoja', 'acidic behaviour; no reaction with $NaOH$')],
-          [t('$HX$, $PBr3$, $SOCl2$', '$HX$, $PBr3$, $SOCl2$'), t('halogenalkanas', 'haloalkane'), t('pirminis SN2, antriniai ir tretiniai SN1', 'primary SN2, secondary and tertiary SN1')],
+          [t('$HX$', '$HX$'), t('halogenalkanas', 'haloalkane'), t('pirminis SN2, antriniai ir tretiniai SN1', 'primary SN2, secondary and tertiary SN1')],
+          [t('$PBr3$, $SOCl2$', '$PBr3$, $SOCl2$'), t('halogenalkanas', 'haloalkane'), t('pirminiai ir antriniai, SN2 (be karbokatijono, be persigrupavimo); tretiniams netinka', 'primary and secondary, SN2 (no carbocation, no rearrangement); not used for tertiary')],
           [t('$H2SO4$, 140 °C', '$H2SO4$, 140 °C'), t('eteris (pirminis alkoholis)', 'ether (primary alcohol)'), t('SN2', 'SN2')],
           [t('$H2SO4$, kaitinimas', '$H2SO4$, heat'), t('alkenas (antrinis, tretinis)', 'alkene (secondary, tertiary)'), t('E1; Zaicevo taisyklė', 'E1; Zaitsev’s rule')],
           [t('1. $Na$ 2. $RX$', '1. $Na$ 2. $RX$'), t('eteris', 'ether'), t('Viljamsono sintezė, SN2; $RX$ pirminis', 'Williamson synthesis, SN2; $RX$ primary')],
@@ -1545,7 +1546,10 @@
           cr: { lab: 'Na2Cr2O7, H3O+', run: () => { const r = react.run('alc.ox', [alc], { reagent: 'chromic' }); return r.none ? null : firstMajor(r); }, kind: 'ox' },
           ester: { lab: 'CH3COOH, H+', run: () => firstMajor(react.run('acid.ester', ['CC(=O)O', alc], {})), kind: 'ester' }
         };
-        const key = ctx.pick(s.k === 3 ? ['hbr', 'na', 'h2so4', 'cr'] : ['hbr', 'na', 'h2so4', 'cr', 'ester']);
+        // an alcohol whose dehydration gives two equally good alkenes (3-hexanol, 1-ethylcyclopentanol) cannot be asked with H2SO4: Zaitsev cannot decide
+        const dehydMajors = majorsOf(react.run('elim', [alc], { base: 'heat-acid' }));
+        const keyPool = (s.k === 3 ? ['hbr', 'na', 'h2so4', 'cr'] : ['hbr', 'na', 'h2so4', 'cr', 'ester']).filter(k => k !== 'h2so4' || dehydMajors.length === 1);
+        const key = ctx.pick(keyPool);
         const prods = {};
         Object.keys(R).forEach(k => { prods[k] = R[k].run(); });
         const prod = prods[key];
@@ -1562,7 +1566,7 @@
         const sameMap = {
           hbr: posBr.concat([prods.h2so4]),
           na: [alkoxideOnly, firstMajor(react.run('williamson', [alkoxideOnly, 'CI'], {}))],
-          h2so4: alkeneAll.filter(x => x !== prod).concat(posAlc.map(a => dehydProducts(ctx, a)[0])),
+          h2so4: alkeneAll.concat(posAlc.map(a => dehydProducts(ctx, a)[0])).filter(x => x && !dehydMajors.some(m => canon(ctx, m) === canon(ctx, x))),
           cr: posAlc.map(a => oxOfRule(react, a, 'chromic')),
           ester: posAlc.map(a => firstMajor(react.run('acid.ester', ['CC(=O)O', a], {})))
         };

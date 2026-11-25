@@ -311,11 +311,17 @@
     const n = cl.length;
     const big = cl.slice().sort((x, y) => y.sites.length - x.sites.length)[0];
     const chiral = cl.filter(c => stereo.isChiral(c.prod));
+    const arom = /c/.test(smi);
     const steps = [{
       prompt: t('Kiek skirtingų (konstitucijos izomerų) monochlorintų produktų gali susidaryti?', 'How many constitutionally different monochloro products can form?'),
       kind: 'number', answer: { value: n, tol: 0 }, mol: { smi },
-      hint: t('Sugrupuokite vandenilius pagal simetriją: kiekviena ekvivalentinių vandenilių grupė duoda vieną produktą.', 'Group the hydrogens by symmetry: each group of equivalent hydrogens gives one product.'),
-      solution: [{ p: n === 1 ? t('Yra viena ekvivalentinių vandenilių grupė, todėl susidaro vienas izomeras:', 'There is one group of equivalent hydrogens, so one isomer forms:')
+      hint: arom
+        ? t('Radikalinėmis sąlygomis ($Cl2$, $hν$) pakeičiami tik šoninės grandinės ($sp3$) vandeniliai, žiedo vandeniliai nekeičiami. Sugrupuokite šoninės grandinės vandenilius pagal simetriją: kiekviena ekvivalentinių vandenilių grupė duoda vieną produktą.', 'Under radical conditions ($Cl2$, $hν$) only the side-chain ($sp3$) hydrogens are replaced, the ring hydrogens are not. Group the side-chain hydrogens by symmetry: each group of equivalent hydrogens gives one product.')
+        : t('Sugrupuokite vandenilius pagal simetriją: kiekviena ekvivalentinių vandenilių grupė duoda vieną produktą.', 'Group the hydrogens by symmetry: each group of equivalent hydrogens gives one product.'),
+      solution: [{ p: arom
+        ? (n === 1 ? t('Yra viena ekvivalentinių šoninės grandinės vandenilių grupė (žiedo vandeniliai radikalinėmis sąlygomis nekeičiami), todėl susidaro vienas izomeras:', 'There is one group of equivalent side-chain hydrogens (the ring hydrogens are not replaced under radical conditions), so one isomer forms:')
+          : t('Yra ' + n + ' ekvivalentinių šoninės grandinės vandenilių grupės (žiedo vandeniliai radikalinėmis sąlygomis nekeičiami), todėl susidaro ' + n + ' izomerai:', 'There are ' + n + ' groups of equivalent side-chain hydrogens (the ring hydrogens are not replaced under radical conditions), so ' + n + ' isomers form:'))
+        : n === 1 ? t('Yra viena ekvivalentinių vandenilių grupė, todėl susidaro vienas izomeras:', 'There is one group of equivalent hydrogens, so one isomer forms:')
         : t('Yra ' + n + ' ekvivalentinių vandenilių grupės, todėl susidaro ' + n + ' izomerai:', 'There are ' + n + ' groups of equivalent hydrogens, so ' + n + ' isomers form:') },
         { mol: cl.map(c => ({ smi: c.prod })) }]
     }];
@@ -341,8 +347,8 @@
       q: [{ p: t('Angliavandenilis monochlorinamas radikaliniu būdu.', 'A hydrocarbon undergoes radical monochlorination.') },
         { scheme: { items: [sp(smi), hv('Cl')] } }],
       steps,
-      why: t('Produktų skaičių lemia ekvivalentinių vandenilių grupių skaičius: chloras beveik nesirenka, todėl kiekviena grupė duoda savo izomerą. Chiralinį centrą turi produktas, kuriame yra anglies atomas su keturiais skirtingais pakaitais.',
-        'The number of products is set by the number of groups of equivalent hydrogens: chlorine hardly chooses, so every group gives its own isomer. A product is chiral when it has a carbon with four different groups.'),
+      why: t('Produktų skaičių lemia ekvivalentinių vandenilių grupių skaičius (alkilbenzenuose – šoninės grandinės, nes radikalinėmis sąlygomis žiedo vandeniliai nekeičiami): chloras beveik nesirenka, todėl kiekviena grupė duoda savo izomerą. Chiralinį centrą turi produktas, kuriame yra anglies atomas su keturiais skirtingais pakaitais.',
+        'The number of products is set by the number of groups of equivalent hydrogens (in alkylbenzenes, side-chain ones, since the ring hydrogens are not replaced under radical conditions): chlorine hardly chooses, so every group gives its own isomer. A product is chiral when it has a carbon with four different groups.'),
       src: 'S4.1'
     };
   }
@@ -881,8 +887,8 @@
       title: t('Chloras ir bromas: neselektyvus ir selektyvus', 'Chlorine and bromine: unselective and selective'),
       blocks: [
         {
-          rule: t('Bromas yra mažiau aktyvus, bet labai selektyvus: jis pakeičia tą vandenilį, kurį atplėšus susidaro stabiliausias radikalas (dažniausiai tretinio ar benziltipo atomo). Chloras aktyvesnis ir beveik neselektyvus: pirminius, antrinius ir tretinius vandenilius jis pakeičia beveik vienodu greičiu, todėl susidaro visų galimų izomerų mišinys.',
-            'Bromine is less reactive but very selective: it replaces the hydrogen whose removal gives the most stable radical (most often on a tertiary or benzylic carbon). Chlorine is more reactive and almost unselective: it replaces primary, secondary and tertiary hydrogens at nearly equal rates, so a mixture of all possible isomers forms.'),
+          rule: t('Bromas yra mažiau aktyvus, bet labai selektyvus: jis pakeičia tą vandenilį, kurį atplėšus susidaro stabiliausias radikalas (dažniausiai tretinio ar benziltipo atomo). Chloras aktyvesnis ir daug mažiau selektyvus: vienam vandeniliui tenkantys pirminio, antrinio ir tretinio greičiai santykiauja maždaug kaip 1 : 4 : 5 (bromo – maždaug 1 : 80 : 1600), todėl susidaro visų galimų izomerų mišinys.',
+            'Bromine is less reactive but very selective: it replaces the hydrogen whose removal gives the most stable radical (most often on a tertiary or benzylic carbon). Chlorine is more reactive and much less selective: per hydrogen, the primary : secondary : tertiary rates are about 1 : 4 : 5 (bromine about 1 : 80 : 1600), so a mixture of all possible isomers forms.'),
           src: 'L6 p12, p15; T p53'
         },
         {
@@ -936,8 +942,8 @@
           src: 'L6 p15; Klein'
         },
         {
-          pitfall: t('Chloras pirminius, antrinius ir tretinius vandenilius keičia beveik vienodu greičiu, todėl gaunami mišiniai; vis dėlto tretinis vandenilis keičiamas šiek tiek greičiau, o produktų santykis priklauso ir nuo vandenilių skaičiaus. Žemoje temperatūroje chloras truputį selektyvesnis nei aukštoje.',
-            'Chlorine replaces primary, secondary and tertiary hydrogens at nearly equal rates, so mixtures form; a tertiary hydrogen is still replaced slightly faster, and the product ratio also depends on the number of hydrogens. At low temperature chlorine is somewhat more selective than at high temperature.'),
+          pitfall: t('Chloras pirminius, antrinius ir tretinius vandenilius keičia panašiais greičiais (maždaug 1 : 4 : 5), todėl gaunami mišiniai; vis dėlto tretinis vandenilis keičiamas tik apie penkis kartus greičiau už pirminį, o produktų santykis priklauso ir nuo vandenilių skaičiaus. Žemoje temperatūroje chloras truputį selektyvesnis nei aukštoje.',
+            'Chlorine replaces primary, secondary and tertiary hydrogens at similar rates (about 1 : 4 : 5), so mixtures form; a tertiary hydrogen is still replaced only about five times faster than a primary one, and the product ratio also depends on the number of hydrogens. At low temperature chlorine is somewhat more selective than at high temperature.'),
           src: 'L6 p12; T p53'
         },
         {
@@ -1374,11 +1380,11 @@
         options: [
           { text: fm('2 CH4 + 3 O2 → 2 CO + 4 H2O') },
           { text: fm('CH4 + 2 O2 → CO2 + 2 H2O') },
-          { text: fm('CH4 + O2 → CO + H2 + H2O') }
+          { text: fm('CH4 + O2 → CO + 2 H2O') }
         ],
         answer: 0,
         hint: t('Anglis turi virsti $CO$, o visas vandenilis – vandeniu.', 'Carbon must become $CO$ and all hydrogen must become water.'),
-        solution: t('Lygtis su $2 CH4 + 3 O2$ subalansuota ir vandenilis tampa vandeniu, santykis $CH4 : O2 = 2 : 3$. Lygtis su $CO2$ – visiškas degimas, lygtis su $H2$ vandenilį palieka laisvą, o kurso lygtyse vandenilis virsta vandeniu.', 'The equation with $2 CH4 + 3 O2$ is balanced, with all hydrogen going to water, and the ratio $CH4 : O2$ is $2 : 3$. The one giving $CO2$ is complete combustion, the one giving $H2$ leaves free hydrogen, while in the course equations hydrogen goes to water.')
+        solution: t('Lygtis su $2 CH4 + 3 O2$ subalansuota ir vandenilis tampa vandeniu, santykis $CH4 : O2 = 2 : 3$. Lygtis su $CO2$ – visiškas degimas, lygtis $CH4 + O2 → CO + 2 H2O$ nesubalansuota (kairėje 2 deguonies atomai, dešinėje 3).', 'The equation with $2 CH4 + 3 O2$ is balanced, with all hydrogen going to water, and the ratio $CH4 : O2$ is $2 : 3$. The one giving $CO2$ is complete combustion, the equation $CH4 + O2 → CO + 2 H2O$ is not balanced (2 oxygen atoms on the left, 3 on the right).')
       }],
       why: t('Nepilnoje oksidacijoje deguonies mažiau: $2 : 3$ vietoj $1 : 2$, o anglis virsta $CO$.', 'In incomplete oxidation there is less oxygen: $2 : 3$ instead of $1 : 2$, and carbon becomes $CO$.'),
       src: 'L6 p18'
@@ -1632,7 +1638,7 @@
         prompt: t('Kaip kinta selektyvumas aukštesnėje temperatūroje?', 'How does the selectivity change at the higher temperature?'),
         kind: 'choice',
         options: [
-          { text: t('Mažėja: pirminiai, antriniai ir tretiniai vandeniliai keičiami beveik vienodu greičiu.', 'It falls: primary, secondary and tertiary hydrogens are replaced at almost the same rate.') },
+          { text: t('Mažėja: pirminių, antrinių ir tretinių vandenilių keitimosi greičiai priartėja vienas prie kito.', 'It falls: the rates of replacing primary, secondary and tertiary hydrogens move closer together.') },
           { text: t('Didėja: vyrauja tretinis produktas.', 'It rises: the tertiary product predominates.') },
           { text: t('Nesikeičia, nes selektyvumą lemia tik halogeno rūšis.', 'It does not change, because only the halogen sets selectivity.') },
           { text: t('Chloras ima keisti tik pirminius vandenilius.', 'Chlorine starts to replace only primary hydrogens.') }

@@ -116,7 +116,7 @@
               rows: [
                 [t('−I', '−I'), t('halogeno atomai ($−F$, $−Cl$, $−Br$ ir $−I$); $−OH$ ir $−OR$; aminogrupės ($−NH2$, $−NHR$, $−NR2$); $−NO2$, $−CN$, $−CF3$, $−SO3H$; rūgšties grupės ($−COOH$, $−COOR$, $−CONH2$); karbonilo grupės ($−CHO$, $>C=O$); $−NH3+$ ir $−NR3+$', 'halogen atoms ($−F$, $−Cl$, $−Br$ and $−I$); $−OH$ and $−OR$; amino groups ($−NH2$, $−NHR$, $−NR2$); $−NO2$, $−CN$, $−CF3$, $−SO3H$; acid groups ($−COOH$, $−COOR$, $−CONH2$); carbonyl groups ($−CHO$, $>C=O$); $−NH3+$ and $−NR3+$'),
                   t('Kuo didesnis ryšį su anglimi sudarančio atomo elektrinis neigiamumas, tuo stipresnis −I.', 'The more electronegative the atom bonded to carbon, the stronger the −I effect.')],
-                [t('+I', '+I'), t('alkilai $−CH3$, $−CH2CH3$, $−CH(CH3)2$, $−C(CH3)3$ (kai jie prisijungę prie $sp2$ ar $sp$ anglies); anijonai $−O-$, $−COO-$, $−S-$; metalų, kurių elektrinis neigiamumas mažas, atomai ($Li$, $Mg$, $Si$)', 'alkyl groups $−CH3$, $−CH2CH3$, $−CH(CH3)2$, $−C(CH3)3$ (when they are bonded to an $sp2$ or $sp$ carbon); anions $−O-$, $−COO-$, $−S-$; atoms of metals whose electronegativity is low ($Li$, $Mg$, $Si$)'),
+                [t('+I', '+I'), t('alkilai $−CH3$, $−CH2CH3$, $−CH(CH3)2$, $−C(CH3)3$ (kai jie prisijungę prie $sp2$ ar $sp$ anglies); anijonai $−O-$, $−COO-$, $−S-$; mažo elektrinio neigiamumo atomai: metalai ($Li$, $Mg$) ir silicis ($Si$)', 'alkyl groups $−CH3$, $−CH2CH3$, $−CH(CH3)2$, $−C(CH3)3$ (when they are bonded to an $sp2$ or $sp$ carbon); anions $−O-$, $−COO-$, $−S-$; atoms of low electronegativity: metals ($Li$, $Mg$) and silicon ($Si$)'),
                   t('Alkilų +I stiprėja didėjant C atomų skaičiui ir šakotumui: $−C(CH3)3 > −CH(CH3)2 > −CH2CH3 > −CH3$.', 'The +I of alkyl groups grows with the number of carbons and with branching: $−C(CH3)3 > −CH(CH3)2 > −CH2CH3 > −CH3$.')]
               ]
             },
@@ -364,7 +364,7 @@
             table: {
               head: [t('Sąvoka', 'Term'), t('Reikšmė', 'Meaning')],
               rows: [
-                [t('Aktyvacijos energija $Ea$', 'Activation energy $Ea$'), t('Energija, kurios reikia, kad susidūrimas būtų efektyvus ir sistema pasiektų tarpinį būvį, iš kurio savaime susidaro produktai.', 'The energy needed for a collision to be effective and for the system to reach the intermediate state from which products form by themselves.')],
+                [t('Aktyvacijos energija $Ea$', 'Activation energy $Ea$'), t('Energija, kurios reikia, kad susidūrimas būtų efektyvus ir sistema pasiektų pereinamąją būseną, iš kurios savaime susidaro produktai.', 'The energy needed for a collision to be effective and for the system to reach the transition state, from which products form by themselves.')],
                 [t('Tarpinis būvis (pereinamoji būsena)', 'Transition state'), t('Energijos kreivės viršūnė: nestabili sandara, kurioje ryšiai vienu metu skyla ir formuojasi. Jos išskirti negalima.', 'The top of the energy curve: an unstable arrangement in which bonds are breaking and forming at the same time. It cannot be isolated.')],
                 [t('Tarpinė dalelė (intermediatas)', 'Intermediate'), t('Nestabili dalelė energijos kreivės duobėje tarp dviejų stadijų (karbokatijonas, radikalas, karbanijonas). Jos stabilumas didėja, kai krūvis ar laisvoji pora labiau delokalizuoti.', 'An unstable particle in an energy valley between two stages (carbocation, radical, carbanion). Its stability grows as the charge or lone pair is more delocalised.')],
                 [t('Kinetinė kontrolė', 'Kinetic control'), t('Švelnios sąlygos: daugiausia susidaro greičiausiai susidarantis izomeras.', 'Mild conditions: mostly the isomer that forms fastest.')],
@@ -445,9 +445,14 @@
             ]
           },
           {
-            rule: t('Karbokatijonų ir radikalų stabilumas didėja šia tvarka: metilo < pirminis < antrinis < tretinis < alilo < benzilo. Alkilo grupės elektronų tankį perduoda centrui (+I efektas, hiperkonjugacija), o alilo ir benzilo dalelėse krūvis ar nesuporuotas elektronas delokalizuojasi konjuguotoje sistemoje.',
-              'The stability of carbocations and radicals grows in the order methyl < primary < secondary < tertiary < allyl < benzyl. Alkyl groups pass electron density to the centre (+I effect, hyperconjugation), and in allyl and benzyl particles the charge or unpaired electron is delocalised over a conjugated system.'),
+            rule: t('Pagal kursą karbokatijonų ir radikalų stabilumas didėja šia tvarka: metilo < pirminis < antrinis < tretinis < alilo < benzilo. Alkilo grupės elektronų tankį perduoda centrui (+I efektas, hiperkonjugacija), o alilo ir benzilo dalelėse krūvis ar nesuporuotas elektronas delokalizuojasi konjuguotoje sistemoje.',
+              'In the course, the stability of carbocations and radicals grows in the order methyl < primary < secondary < tertiary < allyl < benzyl. Alkyl groups pass electron density to the centre (+I effect, hyperconjugation), and in allyl and benzyl particles the charge or unpaired electron is delocalised over a conjugated system.'),
             src: 'L7 p9'
+          },
+          {
+            p: t('Ši eilė rodo, kaip stipriai rezonansas stabilizuoja katijoną, tačiau matavimai ją patikslina: paprasčiausias benzilo katijonas yra tarp antrinio ir tretinio, o paprasčiausias alilo katijonas maždaug toks pat stabilus kaip antrinis. Tretinis alilinis ar benzilinis katijonas stabilesnis už paprastą tretinį, o alilinis ar benzilinis katijonas stabilesnis už tos pačios klasės paprastą alkilo katijoną.',
+              'The order shows how strongly resonance stabilises a cation, but measured data refine it: the parent benzyl cation lies between a secondary and a tertiary cation, and the parent allyl cation is about as stable as a secondary one. A tertiary allylic or benzylic cation is more stable than a plain tertiary one, and an allylic or benzylic cation is more stable than a plain alkyl cation of the same class.'),
+            src: 'Klein'
           },
           {
             p: t('Už paskaitų ribų: karbanijonams (anijonams) alkilo grupės veikia priešingai (jos didina elektronų tankį ir destabilizuoja), todėl stabilumas mažėja tokia tvarka: metilo > pirminis > antrinis > tretinis, o alilo ir benzilo karbanijonai stabilizuojami delokalizacija.',
@@ -463,7 +468,7 @@
               { smi: 'C=C[CH2+]', caption: t('alilo', 'allyl') },
               { smi: '[CH2+]c1ccccc1', caption: t('benzilo', 'benzyl') }
             ],
-            caption: t('Karbokatijonų stabilumas didėja iš kairės į dešinę.', 'Carbocation stability grows from left to right.'),
+            caption: t('Karbokatijonų stabilumas pagal kursą didėja iš kairės į dešinę.', 'Carbocation stability in the course order grows from left to right.'),
             src: 'L7 p9'
           },
           {
@@ -874,7 +879,7 @@
       {
         list: [
           t('Heterolizė: abu elektronai pas vieną atomą (jonai, pilna rodyklė). Homolizė: po vieną elektroną (radikalai, pusinė rodyklė). Sinchroninė: be jonų ir radikalų.', 'Heterolysis: both electrons go to one atom (ions, full-headed arrow). Homolysis: one electron each (radicals, half-headed arrow). Synchronous: no ions and no radicals.'),
-          t('Karbokatijonų ir radikalų stabilumas: benzilo > alilo > tretinis > antrinis > pirminis > metilo.', 'Stability of carbocations and radicals: benzyl > allyl > tertiary > secondary > primary > methyl.'),
+          t('Karbokatijonų ir radikalų stabilumas pagal kursą: benzilo > alilo > tretinis > antrinis > pirminis > metilo. Matavimai šią eilę patikslina: paprasčiausi benzilo ir alilo katijonai yra panašūs į antrinį ar tretinį, bet alilinis ar benzilinis centras stabilesnis už tos pačios klasės paprastą alkilo centrą.', 'Stability of carbocations and radicals in the course order: benzyl > allyl > tertiary > secondary > primary > methyl. Measured data refine it: the parent benzyl and allyl cations are comparable to a secondary or tertiary one, but an allylic or benzylic centre is more stable than a plain alkyl centre of the same class.'),
           t('Nukleofilas turi laisvąją porą (duoda ją), elektrofilas turi tuščią orbitalę ar $δ+$ (priima porą).', 'A nucleophile has a lone pair (gives it); an electrophile has an empty orbital or a $δ+$ (accepts a pair).'),
           t('Nukleofiliškumas: anijonas > neutrali molekulė; periode mažėja iš kairės į dešinę ($CH3- > NH2- > HO- > F-$); grupėje žemyn didėja ($HS- > HO-$); donoriniai pakaitai jį didina; erdviniai trukdžiai mažina.', 'Nucleophilicity: anion > neutral molecule; falls from left to right in a period ($CH3- > NH2- > HO- > F-$); grows down a group ($HS- > HO-$); donor substituents raise it; steric hindrance lowers it.')
         ],
@@ -1281,7 +1286,7 @@
             options: [{ text: t('Elektronų donoras (ED): didina elektronų tankį', 'Electron donor (ED): raises the electron density') }, { text: t('Elektronų akceptorius (EA): mažina elektronų tankį', 'Electron acceptor (EA): lowers the electron density') }],
             answer: net === 'ED' ? 0 : 1,
             hint: t('Sudėkite indukcijos ir mezomerijos efektų poveikį; jei mezomerijos efekto nėra, lieka tik indukcijos efektas.', 'Add up the effects of induction and mesomerism; if there is no mesomeric effect, only the inductive effect remains.'),
-            solution: t(net === 'ED' ? 'Bendras rezultatas didina elektronų tankį, todėl pakaitas yra donoras.' : 'Bendras rezultatas mažina elektronų tankį, todėl pakaitas yra akceptorius.' + (s.k === 'hal' ? ' Halogeno −I stipresnis už +M.' : ''), net === 'ED' ? 'The overall result raises the electron density, so the substituent is a donor.' : 'The overall result lowers the electron density, so the substituent is an acceptor.' + (s.k === 'hal' ? ' For a halogen −I is stronger than +M.' : ''))
+            solution: t(net === 'ED' ? 'Bendras rezultatas didina elektronų tankį, todėl pakaitas yra donoras.' : 'Bendras rezultatas mažina elektronų tankį, todėl pakaitas yra akceptorius.' + (s.k === 'hal' && hasM ? ' Halogeno −I stipresnis už +M.' : ''), net === 'ED' ? 'The overall result raises the electron density, so the substituent is a donor.' : 'The overall result lowers the electron density, so the substituent is an acceptor.' + (s.k === 'hal' && hasM ? ' For a halogen −I is stronger than +M.' : ''))
           }];
           if (hasM) {
             const donor = s.M > 0;
@@ -1774,7 +1779,7 @@
                 solution: t('Atomai Nr. 2 (C), 3 (O), 4, 5 (grandinės $C=C$), 6 ir 7 (žiedo $C=C$).', 'Atoms no. 2 (C), 3 (O), 4, 5 (the chain $C=C$), 6 and 7 (the ring $C=C$).')
               }
             ],
-            why: t('Ilgesnė konjuguotoji sistema tęsiasi per visą kryžminį dvigubųjų ryšių ir karbonilo grandinį; kiekvienas $sp3$ atomas ją nutrauktų.', 'A longer conjugated system runs along the whole chain of alternating double bonds and the carbonyl; any $sp3$ atom would break it.'),
+            why: t('Ilgesnė konjuguotoji sistema tęsiasi per visą besikaitaliojančių dvigubųjų ryšių ir karbonilo grandinę; kiekvienas $sp3$ atomas ją nutrauktų.', 'A longer conjugated system runs along the whole chain of alternating double bonds and the carbonyl; any $sp3$ atom would break it.'),
             src: 'S2.11'
           },
           {
@@ -1974,7 +1979,7 @@
                 solution: t('Tuščia $p$ orbitalė persidengia su žiedo $π$ sistema, todėl krūvis pasiskirsto keturiuose atomuose. −I efektas katijoną tik destabilizuotų.', 'The empty $p$ orbital overlaps with the $π$ system of the ring, so the charge is spread over four atoms. A −I effect would only destabilise the cation.')
               }
             ],
-            why: t('Delokalizacija per konjuguotą sistemą stabilizuoja katijoną ir paaiškina, kodėl benzilo katijonas yra stabiliausias iš šioje temoje nagrinėjamų karbokatijonų.', 'Delocalisation over a conjugated system stabilises the cation and explains why the benzyl cation is the most stable of the carbocations in this unit.'),
+            why: t('Delokalizacija per konjuguotą sistemą stabilizuoja katijoną ir paaiškina, kodėl benzilo katijonas stabilesnis už metilo ir pirminį alkilo katijoną.', 'Delocalisation over a conjugated system stabilises the cation and explains why the benzyl cation is more stable than the methyl and primary alkyl cations.'),
             src: 'L3 p9'
           },
           {
@@ -2363,16 +2368,29 @@
         mirrors: [],
         gen(rng, ctx) {
           const kind = ctx.pick(['cation', 'cation', 'radical', 'radical', 'anion']);
-          const cls = ctx.shuffle([0, 1, 2, 3, 4, 5]).slice(0, 3);
-          // course order for cations and radicals: benzyl > allyl > tertiary > secondary > primary > methyl (L7 p9, L6 p16);
+          // the degree of a centre (0 methyl, 1 primary, 2 secondary, 3 tertiary) is 3 minus its hydrogens, also for allylic and benzylic centres
+          const deg = (sk) => 3 - sk.h;
+          // cations and radicals: an allylic or benzylic centre is only compared with a plain alkyl centre of the same or a lower degree
+          // (never a parent allyl or benzyl against a secondary or tertiary alkyl one), and benzylic with allylic only at the same degree
+          const pairOk = (a, b) => (a.cls < 4 && b.cls < 4 ? true : a.cls >= 4 && b.cls >= 4 ? deg(a) === deg(b) : a.cls >= 4 ? deg(b) <= deg(a) : deg(a) <= deg(b));
+          let cls, picks;
+          for (let tries = 0; tries < 500; tries++) {
+            cls = ctx.shuffle([0, 1, 2, 3, 4, 5]).slice(0, 3);
+            picks = cls.map((c) => ctx.pick(SKEL.filter((s) => s.cls === c)));
+            if (kind === 'anion' || (pairOk(picks[0], picks[1]) && pairOk(picks[0], picks[2]) && pairOk(picks[1], picks[2]))) break;
+          }
+          // course order for cations and radicals: benzyl > allyl > tertiary > secondary > primary > methyl (L7 p9, L6 p16), used here only for the comparisons above;
           // carbanions: delocalised ones first, then methyl > primary > secondary > tertiary (alkyl groups destabilise)
-          const score = (c) => (kind === 'anion' ? { 5: 5, 4: 4, 0: 3, 1: 2, 2: 1, 3: 0 }[c] : c);
-          cls.sort((a, b) => score(b) - score(a));
-          const picks = cls.map((c) => ctx.pick(SKEL.filter((s) => s.cls === c)));
+          const score = (sk) => (kind === 'anion' ? { 5: 5, 4: 4, 0: 3, 1: 2, 2: 1, 3: 0 }[sk.cls] : sk.cls < 4 ? 2 * deg(sk) : 2 * deg(sk) + sk.cls - 3);
+          const idx = [0, 1, 2].sort((a, b) => score(picks[b]) - score(picks[a]));
+          cls = idx.map((i) => cls[i]);
+          picks = idx.map((i) => picks[i]);
           const mols = picks.map((sk) => species(sk, kind).smi);
           const KN = { cation: t('karbokatijonų', 'carbocations'), radical: t('radikalų', 'radicals'), anion: t('karbanijonų', 'carbanions') }[kind];
           const hasConj = cls.some((c) => c >= 4);
-          const names = cls.map((c) => CLASS_NAMES[c]);
+          const DEG = [{ lt: 'metilo', en: 'methyl' }, { lt: 'pirminis', en: 'primary' }, { lt: 'antrinis', en: 'secondary' }, { lt: 'tretinis', en: 'tertiary' }];
+          // an allylic or benzylic centre is named with its degree in cations and radicals: "tertiary benzylic"
+          const names = picks.map((sk) => (kind !== 'anion' && sk.cls >= 4 ? { lt: DEG[deg(sk)].lt + ' ' + CLASS_NAMES[sk.cls].lt, en: DEG[deg(sk)].en + ' ' + CLASS_NAMES[sk.cls].en } : CLASS_NAMES[sk.cls]));
           const orderLT = names.map((n) => n.lt).join(' > ');
           const orderEN = names.map((n) => n.en).join(' > ');
 
@@ -2413,7 +2431,7 @@
             ],
             why: kind === 'anion'
               ? t('Karbanijono stabilumą didina krūvio delokalizacija, o alkilų +I jį mažina. Todėl alkilų eilė atvirkštinė, nei karbokatijonų.', 'The stability of a carbanion is raised by delocalisation of the charge and lowered by the +I of alkyl groups. That is why the order for alkyl groups is the reverse of that for carbocations.')
-              : t('Karbokatijonų ir radikalų stabilumas didėja: metilo < pirminis < antrinis < tretinis < alilo < benzilo. Stabilesnė tarpinė dalelė susidaro lengviau, todėl šioje eilėje paaiškinama reakcijų kryptis.', 'The stability of carbocations and radicals grows: methyl < primary < secondary < tertiary < allylic < benzylic. A more stable intermediate forms more readily, so this order explains the direction of reactions.'),
+              : t('Karbokatijonų ir radikalų stabilumas didėja didėjant alkilo grupių skaičiui, o alilinis ar benzilinis centras stabilesnis už tos pačios klasės paprastą alkilo centrą (pagal kurso eilę: metilo < pirminis < antrinis < tretinis < alilo < benzilo). Stabilesnė tarpinė dalelė susidaro lengviau, todėl šia eile paaiškinama reakcijų kryptis.', 'The stability of carbocations and radicals grows with the number of alkyl groups, and an allylic or benzylic centre is more stable than a plain alkyl centre of the same class (in the course order: methyl < primary < secondary < tertiary < allylic < benzylic). A more stable intermediate forms more readily, so this order explains the direction of reactions.'),
             src: kind === 'anion' ? 'Klein' : 'L7 p9'
           };
         }
@@ -2684,7 +2702,16 @@
           const x = ctx.pick(isE ? E : N);
           // electrophilic distractors are cations or empty-orbital species only: neutral polar electrophiles still have lone pairs and can react with a cation
           const EC = ['O=[N+]=O', 'C[C+]=O', '[H+]', '[Br+]', '[Cl+]', 'C[C+](C)C', 'FB(F)F'].map((smi) => E.find((y) => y.smi === smi));
-          const others = ctx.shuffle((isE ? N : E).slice()).slice(0, 1).concat(ctx.shuffle((isE ? EC : N).filter((y) => y !== x)).slice(0, 2));
+          // a wrong option must be a partner that really cannot react: no proton transfer (a strong-base anion or an amine with a particle that has an O-H, N-H or S-H),
+          // and no carbonyl compound with a cation or a Lewis acid (H+, BF3 ...)
+          const PROTIC = ['CO', 'O', 'CN', 'N', 'CS', '[OH-]', '[SH-]'];
+          const BASE = ['[OH-]', 'C[O-]', '[NH2-]', '[CH3-]', '[H-]', '[SH-]', '[C-]#N', 'CN', 'N', 'CN(C)C'];
+          const CARBONYL = ['C=O', 'CC=O', 'CC(C)=O', 'CC(=O)Cl'];
+          const noReact = (a, b) => !((PROTIC.includes(a.smi) && BASE.includes(b.smi)) || (PROTIC.includes(b.smi) && BASE.includes(a.smi)));
+          const wrongPool = isE
+            ? (CARBONYL.includes(x.smi) ? ['CBr', 'CI'].concat(CARBONYL).map((smi) => E.find((y) => y.smi === smi)) : EC)
+            : N.filter((y) => noReact(x, y));
+          const others = ctx.shuffle((isE ? N : E).slice()).slice(0, 1).concat(ctx.shuffle(wrongPool.filter((y) => y !== x)).slice(0, 2));
           const mol = (extra) => ({ smi: x.smi, opts: Object.assign({ numbers: 'all' }, extra || {}) });
           const lab = x.atoms.map((i) => i + 1).join(' ir Nr. ');
           const labEN = x.atoms.map((i) => i + 1).join(' and no. ');
@@ -2710,8 +2737,8 @@
               answer: 0,
               hint: isE ? t('Elektrofilui reikia partnerio, kuris duoda elektronų porą.', 'An electrophile needs a partner that gives an electron pair.') : t('Nukleofilui reikia partnerio, kuris priima elektronų porą.', 'A nucleophile needs a partner that accepts an electron pair.'),
               solution: isE
-                ? t('Elektrofilas reaguoja su nukleofilu, kuris atiduoda elektronų porą. Du elektrofilai neturi, kas atiduotų porą.', 'An electrophile reacts with a nucleophile, which gives the electron pair. Two such electrophiles have no pair to give each other.')
-                : t('Nukleofilas reaguoja su elektrofilu, kuris poros reikalauja. Dvi nukleofilinės dalelės viena kitą stumia, nes abi turi poros perteklių.', 'A nucleophile reacts with an electrophile, which needs a pair. Two nucleophilic particles repel each other because both have a surplus of pairs.')
+                ? t('Elektrofilas reaguoja su nukleofilu, kuris atiduoda elektronų porą. Du elektrofilai nereaguoja: nė viena dalelė negali atiduoti elektronų poros.', 'An electrophile reacts with a nucleophile, which gives the electron pair. Two such electrophiles do not react: neither particle can donate an electron pair.')
+                : t('Nukleofilas reaguoja su elektrofilu, kuris poros reikalauja. Dvi nukleofilinės dalelės nereaguoja: nė viena negali priimti elektronų poros.', 'A nucleophile reacts with an electrophile, which needs a pair. Two nucleophilic particles do not react: neither particle can accept an electron pair.')
             }
           ];
           return {
@@ -3208,7 +3235,7 @@
             t('Produktas yra pradinio junginio izomeras: formulė nekinta, persitvarko ryšiai ir atomai.', 'The product is an isomer of the starting compound: the formula does not change, bonds and atoms are reorganised.')
           ];
           const SYMTXT = {
-            SN2: t('Pirminis halogenalkanas su stipriu nukleofilu: nukleofilas atakuoja anglį, o halogenas išeina vienu metu.', 'A primary haloalkane with a strong nucleophile: the nucleophile attacks carbon while the halogen leaves at the same time.'),
+            SN2: t('Metilo ar pirminis halogenalkanas su stipriu nukleofilu: nukleofilas atakuoja anglį, o halogenas išeina vienu metu.', 'A methyl or primary haloalkane with a strong nucleophile: the nucleophile attacks carbon while the halogen leaves at the same time.'),
             SN1: t('Tretinis halogenalkanas silpname nukleofile (vandenyje, alkoholyje): pirma susidaro karbokatijonas, po to jį atakuoja nukleofilas.', 'A tertiary haloalkane in a weak nucleophile (water, alcohol): a carbocation forms first and the nucleophile then attacks it.'),
             SR: t('Alkanas su halogenu šviesoje ar kaitinant: radikalinis pakeitimas.', 'An alkane with a halogen under light or heat: radical substitution.'),
             SEAr: t('Arenas su elektrofilu ir katalizatoriumi: elektrofilas pakeičia vandenilį žiede.', 'An arene with an electrophile and a catalyst: the electrophile replaces a hydrogen on the ring.'),
@@ -3935,7 +3962,7 @@
                 prompt: t('Kuo yra ši reakcija?', 'What is this reaction?'),
                 kind: 'choice', options: [{ text: t('Oksidacija', 'Oxidation') }, { text: t('Redukcija', 'Reduction') }, { text: t('Nei oksidacija, nei redukcija', 'Neither oxidation nor reduction') }], answer: 2,
                 hint: t('Palyginkite abi sumas.', 'Compare the two sums.'),
-                solution: t('Viena anglis oksidavosi (−2 → 0), kita redukavosi (0 → −3), bendra suma nepasikeitė.', 'One carbon was oxidised, the other reduced, the total did not change.')
+                solution: t('Viena anglis (centrinė) oksidavosi (0 → +1), kita ($CH2$) redukavosi (−2 → −3), bendra suma nepasikeitė.', 'One carbon (the central one) was oxidised (0 → +1), the other (the $CH2$) was reduced (−2 → −3), and the total did not change.')
               }
             ],
             why: t('Vandens prijungimas yra ne redoksas: viena anglis atiduoda elektronų tankį, kita jį priima.', 'Addition of water is not a redox reaction: one carbon gives up electron density and the other takes it up.'),

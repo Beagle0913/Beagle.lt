@@ -25,14 +25,14 @@
     anhydride: { lt: 'anhidridas', en: 'anhydride', sym: '–(CO)2O', rank: 4 },
     ester: { lt: 'esteris', en: 'ester', sym: '–COOR', rank: 5 },
     acylhalide: { lt: 'rūgšties halogenanhidridas', en: 'acyl halide', sym: '–COX', rank: 6 },
-    amide: { lt: 'amidas', en: 'amide', sym: '–CONH2', rank: 7 },
+    amide: { lt: 'amidas', en: 'amide', sym: '–CONH2, –CONHR, –CONR2', rank: 7 },
     nitrile: { lt: 'nitrilas', en: 'nitrile', sym: '–C≡N', rank: 8 },
     aldehyde: { lt: 'aldehidas', en: 'aldehyde', sym: '–CHO', rank: 9 },
     ketone: { lt: 'ketonas', en: 'ketone', sym: 'C=O', rank: 10 },
     alcohol: { lt: 'alkoholis', en: 'alcohol', sym: '–OH', rank: 11 },
     phenol: { lt: 'fenolis', en: 'phenol', sym: 'Ar–OH', rank: 12 },
     thiol: { lt: 'tiolis', en: 'thiol', sym: '–SH', rank: 13 },
-    amine: { lt: 'aminas', en: 'amine', sym: '–NH2', rank: 14 },
+    amine: { lt: 'aminas', en: 'amine', sym: '–NH2, –NHR, –NR2', rank: 14 },
     alkene: { lt: 'alkenas', en: 'alkene', sym: 'C=C', rank: 15 },
     alkyne: { lt: 'alkinas', en: 'alkyne', sym: 'C≡C', rank: 16 },
     halide: { lt: 'halogenidas', en: 'halide', sym: '–Hal', rank: 30 },
@@ -436,7 +436,8 @@
           table: {
             head: [t('Radikalas', 'Radical'), t('Sandara', 'Structure'), t('Iš kurio atomo', 'From which carbon')],
             rows: [
-              [t('metilas, etilas', 'methyl, ethyl'), f('$CH3–$, $CH3CH2–$'), t('pirminis', 'primary')],
+              [t('metilas', 'methyl'), f('$CH3–$'), t('iš metano (metilo anglis)', 'from methane (a methyl carbon)')],
+              [t('etilas', 'ethyl'), f('$CH3CH2–$'), t('pirminis (iš etano)', 'primary (of ethane)')],
               [t('propilas, butilas', 'propyl, butyl'), f('$CH3CH2CH2–$, $CH3CH2CH2CH2–$'), t('pirminis galinis', 'terminal primary')],
               [t('izopropilas', 'isopropyl'), f('$(CH3)2CH–$'), t('antrinis (propano)', 'secondary (of propane)')],
               [t('antr-butilas', 'sec-butyl'), f('$CH3CH2CH(CH3)–$'), t('antrinis (butano)', 'secondary (of butane)')],
@@ -910,7 +911,7 @@
           t('Deguonis sudaro du ryšius: arba du vienkartinius, arba vieną dvigubąjį.', 'Oxygen forms two bonds: either two single bonds or one double bond.'),
           t('$CH3CH2OH2$: deguonis susijungęs su $C$ ir dviem $H$, tai trys ryšiai. Hidroksilo grupė rašoma $–OH$.', '$CH3CH2OH2$: oxygen is bonded to $C$ and two $H$, three bonds. The hydroxyl group is written $–OH$.')),
         valProblem(4, ['CH3CHCl2', 'CH3CCl2CH3', 'ClCH2CH2Cl', 'CH3CHCl2CH3'], 3,
-          t('Halogenas sudaro vieną ryšį, todėl jis niekada netampa „tiltu“ tarp dviejų atomų.', 'A halogen forms one bond, so it is never a bridge between two atoms.'),
+          t('Neutraliose molekulėse halogenas sudaro vieną ryšį, todėl jis netampa „tiltu“ tarp dviejų atomų.', 'In neutral molecules a halogen forms one bond, so it is never a bridge between two atoms.'),
           t('Viduriniame $CH3CHCl2CH3$ atome būtų penki ryšiai: du su $CH3$, vienas su $H$ ir du su $Cl$. Du chlorai ir du metilai tuo pačiu atomu galimi tik be vandenilio: $CH3CCl2CH3$.', 'The middle atom of $CH3CHCl2CH3$ would have five bonds: two to $CH3$, one to $H$ and two to $Cl$. Two chlorines and two methyls on one carbon are possible only without hydrogen: $CH3CCl2CH3$.')),
         valProblem(5, ['CH3CH2CHO', 'CH3COCH3', 'CH3CH2COOH', 'CH3CH2COH'], 3,
           t('Karbonilo anglis turi dvigubąjį ryšį su deguonimi ir dar du vienkartinius.', 'A carbonyl carbon has a double bond to oxygen and two more single bonds.'),
@@ -920,7 +921,7 @@
           t('$C≡CH2$ galinis anglies atomas turėtų tris ryšius trigubajame ir dar du su $H$: penki. Teisingai: $CH3C≡CH$.', 'In $C≡CH2$ the end carbon would have three bonds in the triple bond and two to $H$: five. Correct: $CH3C≡CH$.')),
         valProblem(7, ['CH3SH', 'CH3SCH3', 'CH3SSCH3', 'CH3CH2SH2'], 3,
           t('Siera organiniuose junginiuose, kaip ir deguonis, dažniausiai sudaro du ryšius (turi ir valentingumus 4 bei 6).', 'Sulfur in organic compounds, like oxygen, usually forms two bonds (it also has valences 4 and 6).'),
-          t('$CH3CH2SH2$: siera turėtų tris ryšius, o nelyginio skaičiaus ryšių siera neturi. Tiolio grupė rašoma $–SH$.', '$CH3CH2SH2$: sulfur would have three bonds, and sulfur never has an odd number. The thiol group is written $–SH$.')),
+          t('$CH3CH2SH2$: siera turėtų tris ryšius, o neutraliuose junginiuose siera nelyginio skaičiaus ryšių neturi. Tiolio grupė rašoma $–SH$.', '$CH3CH2SH2$: sulfur would have three bonds, and in neutral compounds sulfur does not have an odd number of bonds. The thiol group is written $–SH$.')),
         valProblem(8, ['CH3CONH2', 'CH3CONHCH3', 'CH3CON(CH3)2', 'CH3CONH3'], 3,
           t('Amidų azotas, kaip ir aminų, turi tris ryšius.', 'The nitrogen of an amide, like that of an amine, has three bonds.'),
           t('$CH3CONH3$: azotas turėtų ryšį su $C$ ir trimis $H$: keturis. Pirminio amido grupė yra $–CONH2$.', '$CH3CONH3$: nitrogen would bond to $C$ and three $H$: four bonds. The primary amide group is $–CONH2$.')),
@@ -969,7 +970,7 @@
           const r = ctx.int(0, 3);
           const ro = r === 1 ? { condensed: true } : r === 2 ? { allH: true } : {};
           let smi = null;
-          for (let i = 0; i < 40 && !smi; i++) { const c = ctx.pick(small); if (r === 0 || clean(ctx, c, ro)) smi = c; }
+          for (let i = 0; i < 40 && !smi; i++) { const c = ctx.pick(r === 1 ? small.filter((s) => draw.condensed(chem.parse(s)) !== null) : small); if (r === 0 || clean(ctx, c, ro)) smi = c; }
           if (!smi) throw new Error('u01.formulas: no clean drawing');
           const q = r === 0 ? { p: t('Junginys užrašytas formule $' + formulaOf(ctx, smi) + '$.', 'A compound is written with the formula $' + formulaOf(ctx, smi) + '$.') }
             : { mol: { smi, opts: ro } };
@@ -989,7 +990,8 @@
         }
         let g, target, others, opts0;
         for (let tries = 0; tries < 30; tries++) {
-          g = ctx.pick(ISO.filter((x) => x.length >= 3));
+          // only compounds that have a condensed formula (draw.condensed gives null for rings)
+          g = ctx.pick(ISO.map((x) => x.filter((s) => draw.condensed(chem.parse(s)) !== null)).filter((x) => x.length >= 3));
           target = ctx.pick(g);
           others = ctx.shuffle(g.filter((s) => s !== target)).slice(0, 3);
           opts0 = [cond(target)].concat(others.map(cond));
@@ -1143,9 +1145,9 @@
           },
           {
             prompt: t('Koks yra anglies karkaso sotumas?', 'What is the saturation of the carbon skeleton?'),
-            kind: 'choice', options: [tx('sotusis (tik vienkartiniai ryšiai)', 'saturated (single bonds only)'), tx('nesotusis, bet nearomatinis ($C=C$ ar $C≡C$)', 'unsaturated but not aromatic ($C=C$ or $C≡C$)'), tx('aromatinis (konjuguota $π$ sistema žiede)', 'aromatic (a conjugated $π$ system in the ring)')], answer: e[2],
-            hint: t('Ieškokite dvigubųjų ar trigubųjų ryšių. Jei jie sudaro šešių narių ciklą su šešiais $π$ elektronais, tai jau aromatinė sistema.', 'Look for double or triple bonds. If they form a ring with six $π$ electrons, that is an aromatic system.'),
-            solution: [t('Visi ryšiai vienkartiniai: sotusis junginys.', 'All bonds are single: a saturated compound.'), t('Yra $C=C$ ar $C≡C$, bet nėra aromatinės sistemos: nesotusis junginys.', 'There is a $C=C$ or $C≡C$ but no aromatic system: an unsaturated compound.'), t('Žiedas aromatinis: konjuguota $π$ sistema.', 'The ring is aromatic: a conjugated $π$ system.')][e[2]]
+            kind: 'choice', options: [tx('sotusis (tik vienkartiniai ryšiai)', 'saturated (single bonds only)'), tx('nesotusis, bet nearomatinis ($C=C$ ar $C≡C$)', 'unsaturated but not aromatic ($C=C$ or $C≡C$)'), tx('aromatinis (plokščias uždaras konjuguotas žiedas, turintis 4n+2 $π$ elektronų)', 'aromatic (a planar closed ring of conjugation with 4n+2 $π$ electrons)')], answer: e[2],
+            hint: t('Ieškokite dvigubųjų ar trigubųjų ryšių. Jei žiedas plokščias, visiškai konjuguotas (kiekvienas žiedo atomas turi $p$ orbitalę) ir turi 4n+2 $π$ elektronų (pvz., 6), tai aromatinė sistema; heteroatomo (O, S ar NH) laisvoji pora taip pat skaičiuojama.', 'Look for double or triple bonds. If the ring is planar, fully conjugated (every ring atom has a $p$ orbital) and has 4n+2 $π$ electrons (for example 6), it is aromatic; the lone pair of a heteroatom (O, S or NH) can count.'),
+            solution: [t('Visi ryšiai vienkartiniai: sotusis junginys.', 'All bonds are single: a saturated compound.'), t('Yra $C=C$ ar $C≡C$, bet nėra aromatinės sistemos: nesotusis junginys.', 'There is a $C=C$ or $C≡C$ but no aromatic system: an unsaturated compound.'), t('Žiedas aromatinis: plokščias, visiškai konjuguotas ir turi 4n+2 $π$ elektronų.', 'The ring is aromatic: planar, fully conjugated, with 4n+2 $π$ electrons.')][e[2]]
           }
         ];
         if (e[3]) steps.push(classStep(e[3], t('Kuriai klasei junginys priklauso pagal funkcinę grupę?', 'Which class does the compound belong to by its functional group?')));
