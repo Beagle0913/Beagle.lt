@@ -364,8 +364,8 @@
             src: 'L12 p10; T p76'
           },
           {
-            pitfall: t('Brominimui bromo vandeniu FeBr₃ nereikia, o rezultatas yra trigubas pakeitimas, ne monobromidas. Jei $p$ padėtis užimta, bromas užima abi o- padėtis. Jei žiede yra stiprus akceptorius ($NO2$), žiedas aktyvuotas mažiau: su $Br2$/$FeBr3$ bromas įvedamas į padėtį orto OH atžvilgiu, ir susidaro monobromidas.',
-              'Bromination with bromine water needs no FeBr₃, and the result is triple substitution, not a monobromide. If the para position is taken, bromine takes both ortho positions. If the ring carries a strong acceptor ($NO2$), it is less activated: $Br2$/$FeBr3$ puts one bromine ortho to OH and a monobromide forms.'),
+            pitfall: t('Brominimui bromo vandeniu FeBr₃ nereikia, o rezultatas yra trigubas pakeitimas, ne monobromidas. Jei $p$ padėtis užimta, bromas užima abi o- padėtis. Bromų skaičių lemia reagento kiekis, o ne žiedo aktyvumas: su vienu ekvivalentu $Br2$ ($FeBr3$) vienas bromas patenka į padėtį orto OH atžvilgiu, o su pertekliumi brominamos abi laisvos orto padėtys (net ir 4-nitrofenolyje, nes žiedas lieka pakankamai aktyvus).',
+              'Bromination with bromine water needs no FeBr₃, and the result is triple substitution, not a monobromide. If the para position is taken, bromine takes both ortho positions. The number of bromines is set by the amount of reagent, not by the activity of the ring: with one equivalent of $Br2$ ($FeBr3$) one bromine enters ortho to OH, and with excess both free ortho positions are brominated (even in 4-nitrophenol, because the ring stays active enough).'),
             src: 'L12 p17'
           },
           {
@@ -726,7 +726,7 @@
             [t('Etanolis', 'Ethanol'), f('H2SO4, 140 °C; 180 °C'), t('dietileteris (SN2); etenas', 'diethyl ether (SN2); ethene')],
             [t('Eteris', 'Ether'), t('HI, HBr (1 ekv.)', 'HI, HBr (1 equiv.)'), t('RX + R′OH; SN1 (tretinis, alilo, benzilo) arba SN2 (mažiau užstotas C)', 'RX + R′OH; SN1 (tertiary, allylic, benzylic) or SN2 (less hindered C)')],
             [t('Eteris', 'Ether'), t('HX perteklius', 'excess HX'), t('du halogenalkanai + $H2O$; ArOR duoda ArOH', 'two haloalkanes + $H2O$; ArOR gives ArOH')],
-            [t('Epoksidas', 'Epoxide'), t('nukleofilas', 'nucleophile'), t('žiedas atsiveria, Nu prie mažiau užstoto C', 'ring opens, Nu on the less hindered C')]
+            [t('Epoksidas', 'Epoxide'), t('nukleofilas', 'nucleophile'), t('žiedas atsiveria; stiprus nukleofilas (bazinė ar neutrali terpė) jungiasi prie mažiau užstoto C', 'ring opens; with a strong nucleophile (basic or neutral conditions) Nu goes to the less hindered C')]
           ]
         }
       },
@@ -1028,8 +1028,8 @@
             const pr = ctx.pick(pairs);
             const R = REASON[pr.k];
             const reasonOpts = [{ text: R.right }].concat(R.wrong.map((w) => ({ text: w })));
-            const lt = chosen.map((c, i) => names[i].lt + ' (' + fmt(c.pka, 'lt') + ')').join(' > ');
-            const en = chosen.map((c, i) => names[i].en + ' (' + fmt(c.pka, 'en') + ')').join(' > ');
+            const lt = chosen.map((c, i) => names[i].lt + ' (pKa ' + fmt(c.pka, 'lt') + ')').join(' > ');
+            const en = chosen.map((c, i) => names[i].en + ' (pKa ' + fmt(c.pka, 'en') + ')').join(' > ');
             // order options must be written in the right order: strongest acid first
             const ordered = chosen.map((c, i) => ({ text: names[i] }));
             return {
@@ -1042,7 +1042,7 @@
                   prompt: t('Išdėstykite junginius nuo stipriausios iki silpniausios rūgšties.', 'Put the compounds in order from the strongest to the weakest acid.'),
                   kind: 'order', options: ordered,
                   hint: t('Palyginkite anijonus, kurie lieka praradus protoną: kuo jis stabilesnis, tuo rūgštis stipresnė.', 'Compare the anions left after the proton is lost: the more stable it is, the stronger the acid.'),
-                  solution: t('pKa: ' + lt, 'pKa: ' + en)
+                  solution: t('Rūgštingumas: ' + lt, 'Acidity: ' + en)
                 },
                 {
                   prompt: t('Kodėl šioje eilėje ' + names[pr.i].lt + ' yra stipresnė rūgštis už ' + names[pr.j].lt + '?', 'Why is ' + names[pr.i].en + ' a stronger acid than ' + names[pr.j].en + ' in this order?'),
@@ -1268,13 +1268,16 @@
                     prompt: t('Bakstelėkite žiedo anglis, prie kurių prisijungs bromas.', 'Tap the ring carbons that bromine bonds to.'),
                     kind: 'atoms', mol: { smi: sub, opts: { numbers: 'all' } }, answer: free,
                     hint: t('Kurios žiedo padėtys OH grupės atžvilgiu aktyvuotos ir dar laisvos?', 'Which ring positions are activated by the OH group and still free?'),
-                    solution: t('Aktyvuotos laisvos o- ir p- padėtys: Nr. ' + nums + '. Visos jos brominamos, nes žiedas labai aktyvuotas.', 'The activated free ortho and para positions are no. ' + nums + '. All of them are brominated, because the ring is strongly activated.')
+                    solution: free.length === 1 ? t('Vienintelė aktyvuota laisva o- ar p- padėtis: Nr. ' + nums + '. Bromas patenka į ją.', 'The only activated free ortho or para position is no. ' + nums + '. Bromine enters it.')
+                      : t('Aktyvuotos laisvos o- ir p- padėtys: Nr. ' + nums + '. Visos jos brominamos, nes žiedas labai aktyvuotas.', 'The activated free ortho and para positions are no. ' + nums + '. All of them are brominated, because the ring is strongly activated.')
                   },
                   {
                     prompt: t('Koks yra produktas?', 'What is the product?'),
                     kind: 'choice', options: opts, answer: 0,
-                    hint: t('Ar po pirmojo pakeitimo žiedas lieka aktyvus?', 'Does the ring stay activated after the first substitution?'),
-                    solution: t('Susidaro polibromfenolis, kurį lengva atpažinti: iškrinta baltos nuosėdos. Reakcija nesustoja ties monobromidu, nes ir po pirmojo pakeitimo žiedas lieka pakankamai aktyvus.', 'A polybromophenol forms, which is easy to recognise: a white precipitate falls. The reaction does not stop at the monobromide, because the ring stays active enough after the first substitution.')
+                    hint: free.length === 1 ? t('Kuriose padėtyse OH grupė aktyvuoja žiedą ir kurios iš jų dar laisvos?', 'Which positions does the OH group activate, and which of them are still free?')
+                      : t('Ar po pirmojo pakeitimo žiedas lieka aktyvus?', 'Does the ring stay activated after the first substitution?'),
+                    solution: free.length === 1 ? t('Bromas patenka į vienintelę laisvą aktyvuotą (o- ar p-) padėtį; kitos padėtys užimtos arba yra meta OH atžvilgiu, todėl susidaro monobromidas.', 'Bromine enters the only free activated (ortho or para) position; the other positions are taken or meta to OH, so a monobromide forms.')
+                      : t('Susidaro polibromfenolis, kurį lengva atpažinti: iškrinta baltos nuosėdos. Reakcija nesustoja ties monobromidu, nes ir po pirmojo pakeitimo žiedas lieka pakankamai aktyvus.', 'A polybromophenol forms, which is easy to recognise: a white precipitate falls. The reaction does not stop at the monobromide, because the ring stays active enough after the first substitution.')
                   }
                 ],
                 why: t('OH grupė stipriai aktyvuoja žiedą (+M) ir nukreipia elektrofilą į o- ir p- padėtis, todėl bromo vanduo be katalizatoriaus pakeičia visus tuos vandenilius. Dėl to fenolis atpažįstamas pagal baltas nuosėdas.', 'The OH group strongly activates the ring (+M) and directs the electrophile to the ortho and para positions, so bromine water replaces all of those hydrogens without a catalyst. This is why a phenol is identified by a white precipitate.'),
@@ -1287,7 +1290,7 @@
           for (let tries = 0; tries < 80; tries++) {
             const E = ctx.pick(['Br', 'Cl', 'NO2']);
             const sub = ctx.pick(E === 'NO2' ? ALL.concat(NITRO) : NITRO);
-            const label = { Br: f('Br2, FeBr3'), Cl: f('Cl2, FeCl3'), NO2: t('praskiesta HNO3', 'dilute HNO3') }[E];
+            const label = { Br: t('1 ekv. Br2, FeBr3', '1 equiv. Br2, FeBr3'), Cl: t('1 ekv. Cl2, FeCl3', '1 equiv. Cl2, FeCl3'), NO2: t('praskiesta HNO3', 'dilute HNO3') }[E];
             const el = E === 'NO2' ? 'N' : E;
             const res = react.run('sear', [sub], { E });
             const prods = (res.products || []).filter((p) => !p.by);
@@ -1445,7 +1448,7 @@
           const ETHERS = [
             { e: 'COC1CCCCC1' }, { e: 'COC(C)C' }, { e: 'CCCOC' }, { e: 'CCOc1ccccc1', wh: 'Ic1ccccc1', wa: 'CC[O-]' },
             { e: 'CCOC(C)(C)C', wh: 'CC(C)(C)I', wa: 'CC[O-]' }, { e: 'CCOC1CCCC1' }, { e: 'COc1ccccc1', wh: 'Ic1ccccc1', wa: 'C[O-]' },
-            { e: 'CCOc1ccc(cc1)[N+](=O)[O-]', wh: 'Ic1ccc(cc1)[N+](=O)[O-]', wa: 'CC[O-]' }, { e: 'COC(C)CC' }, { e: 'CCC(CC)OC' },
+            { e: 'COC(C)CC' }, { e: 'CCC(CC)OC' },
             { e: 'COCc1ccccc1' }, { e: 'CCOCC(C)C' }, { e: 'CCCOc1ccccc1', wh: 'Ic1ccccc1', wa: 'CCC[O-]' }, { e: 'COC(C)(C)C', wh: 'CC(C)(C)I', wa: 'C[O-]' },
             { e: 'CCOC1CCCCC1' }, { e: 'COc1ccc(C)cc1', wh: 'Ic1ccc(C)cc1', wa: 'C[O-]' }, { e: 'CCCCOCC' }, { e: 'COC(C)C(C)C' }, { e: 'CCC(C)OCC' }
           ];
@@ -1509,7 +1512,9 @@
                 {
                   prompt: tie ? t('Kodėl tinka abi kombinacijos?', 'Why do both combinations work?') : t('Kodėl kita kombinacija netinka?', 'Why does the other combination fail?'),
                   kind: 'choice', options: reasonOpts, answer: 0,
-                  hint: t('Alkoksidas yra ne tik nukleofilas, bet ir stipri bazė.', 'An alkoxide is not only a nucleophile but also a strong base.'),
+                  hint: tie ? t('Kokia turi būti anglis, kad prie jos vyktų SN2? Ar abiejų halogenalkanų anglys tokios?', 'What kind of carbon does SN2 need? Is that true of the carbon in both halides?')
+                    : kind === 'aryl' ? t('Ar nukleofilas gali prieiti prie $sp2$ žiedo anglies iš nugaros?', 'Can a nucleophile reach an $sp2$ ring carbon from the back?')
+                      : t('Alkoksidas yra ne tik nukleofilas, bet ir stipri bazė.', 'An alkoxide is not only a nucleophile but also a strong base.'),
                   solution: tie ? reasonOpts[0].text : REASON[kind]
                 },
                 {
@@ -2006,8 +2011,8 @@
               steps: [
                 {
                   prompt: t('Kuris atomas yra nukleofilas?', 'Which atom is the nucleophile?'), kind: 'choice',
-                  options: [{ text: t('Fenoliato deguonis, susidaręs NaOH atplėšus protoną.', 'The phenoxide oxygen formed when NaOH removes the proton.') }, { text: t('Žiedo anglis, nes žiedas turi π elektronų.', 'A ring carbon, because the ring has π electrons.') }, { text: t('Chloro atomas chlorace.', 'The chlorine atom of the chloroacetic acid.') }, { text: t('Karbonilo deguonis.', 'The carbonyl oxygen.') }], answer: 0,
-                  hint: t('Šarmas pirmiausia deprotonuoja rūgščiausią grupę. Kuri tai?', 'The alkali first deprotonates the most acidic group. Which is it?'),
+                  options: [{ text: t('Fenoliato deguonis, susidaręs NaOH atplėšus protoną.', 'The phenoxide oxygen formed when NaOH removes the proton.') }, { text: t('Žiedo anglis, nes žiedas turi π elektronų.', 'A ring carbon, because the ring has π electrons.') }, { text: t('Chloracto rūgšties chloro atomas.', 'The chlorine atom of the chloroacetic acid.') }, { text: t('Karbonilo deguonis.', 'The carbonyl oxygen.') }], answer: 0,
+                  hint: t('Kuris deguonis, praradęs protoną, tampa nukleofiliniu anijonu, galinčiu atakuoti $CH2-Cl$ anglį?', 'Which oxygen becomes a nucleophilic anion, once it has lost its proton, that can attack the $CH2-Cl$ carbon?'),
                   solution: t('Rūgštinė $COOH$ grupė taip pat deprotonuojama, bet nukleofilu tampa fenoliato deguonis: jis atakuoja elektrofilinį $CH2$ anglį.', 'The $COOH$ group is deprotonated too, but the phenoxide oxygen becomes the nucleophile: it attacks the electrophilic $CH2$ carbon.')
                 },
                 {
