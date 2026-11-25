@@ -88,7 +88,7 @@
       { id: 'hotacid', l: t('$KMnO4$, $H3O+$, $t°$', '$KMnO4$, $H3O+$, $t°$'), o: () => harshProducts(ctx, smi),
         w: t('$C=C$ ryšys nutrūko, gautos rūgštys ir (ar) ketonai: karštas rūgštus $KMnO4$.', 'The $C=C$ bond was cleaved to acids and (or) ketones: hot acidic $KMnO4$.') },
       { id: 'hotalk', l: t('$KMnO4$, $OH-$, $t°$', '$KMnO4$, $OH-$, $t°$'), o: () => harshProducts(ctx, smi).map(toCarboxylate),
-        w: t('$C=C$ ryšys nutrūko, o rūgštys yra druskų pavidalu (galinė $=CH2$ šarmingoje terpėje baigiasi karbonatu): karštas šarminis $KMnO4$.', 'The $C=C$ bond was cleaved and the acids are present as salts (a terminal $=CH2$ ends as carbonate in alkali): hot alkaline $KMnO4$.') }
+        w: t('$C=C$ ryšys nutrūko, o rūgštys yra druskų pavidalu (galinė $=CH2$ šarmingoje terpėje baigiasi karbonatu; schemoje parodytas $CO2$, kuris išsiskiria parūgštinus): karštas šarminis $KMnO4$.', 'The $C=C$ bond was cleaved and the acids are present as salts (a terminal $=CH2$ ends as carbonate in alkali; the scheme shows $CO2$, which is released on acidification): hot alkaline $KMnO4$.') }
     ];
   }
   // two reagents that differ only in the form of the acid, or in H/Br direction, are offered together on purpose; hot acid and hot alkali never
@@ -369,7 +369,7 @@
             '3-Hexene can form only one secondary cation, so it gives only 3-bromohexane. 2-Hexene forms two secondary cations, so it gives a mixture of 2- and 3-bromohexane. Counting hydrogens is not enough here: compare the cations.'),
           src: 'L7 p12'
         },
-        { scheme: { items: [{ smi: 'CCC=CCC' }, { plus: true }, { smi: 'Br' }, { arrow: '→' }, { smi: 'CCC(Br)CC' }] }, src: 'L7 p12' },
+        { scheme: { items: [{ smi: 'CCC=CCC' }, { plus: true }, { smi: 'Br' }, { arrow: '→' }, { smi: 'CCC(Br)CCC' }] }, src: 'L7 p12', claims: [{ formula: ['CCC(Br)CCC', 'C6H13Br'] }, { react: ['ae.hx', ['CCC=CCC'], { X: 'Br' }, 'CCC(Br)CCC'] }] },
         {
           scheme: { items: [{ smi: 'CC=CCCC' }, { plus: true }, { smi: 'Br' }, { arrow: '→' }, { smi: 'CC(Br)CCCC' }, { plus: true }, { smi: 'CCC(Br)CCC' }], maxWidth: 520 },
           caption: t('Abu produktai susidaro panašiu kiekiu.', 'Both products form in comparable amounts.'), src: 'L7 p12'
@@ -625,8 +625,8 @@
         },
         { h: t('Oksidacinis skilimas', 'Oxidative cleavage') },
         {
-          p: t('Rūgščioje terpėje skilimas vyksta ir šaltyje, ir kaitinant, o šarminėje bei neutralioje – tik kaitinant (šarminėje gaunamos rūgščių druskos, o galinė $=CH2$ grupė baigiasi karbonatu, nes bazė pasisavina $CO2$). Kiekvienas dvigubojo ryšio atomas virsta karbonilo anglimi, o jos tipas priklauso nuo pakaitų.',
-            'In acid the cleavage takes place both cold and hot; in alkaline or neutral medium only when heated (in alkali the acids form as salts, and a terminal $=CH2$ ends as carbonate because the base takes up the $CO2$). Each double-bond carbon becomes a carbonyl carbon whose type depends on its substituents.'),
+          p: t('Rūgščioje terpėje skilimas vyksta ir šaltyje, ir kaitinant, o šarminėje bei neutralioje – tik kaitinant (šarminėje gaunamos rūgščių druskos, o galinė $=CH2$ grupė baigiasi karbonatu, nes bazė pasisavina $CO2$; schemose rašome $CO2$, jis išsiskiria parūgštinus). Kiekvienas dvigubojo ryšio atomas virsta karbonilo anglimi, o jos tipas priklauso nuo pakaitų.',
+            'In acid the cleavage takes place both cold and hot; in alkaline or neutral medium only when heated (in alkali the acids form as salts, and a terminal $=CH2$ ends as carbonate because the base takes up the $CO2$; the schemes write $CO2$, which is released on acidification). Each double-bond carbon becomes a carbonyl carbon whose type depends on its substituents.'),
           src: 'L7 p24'
         },
         {
@@ -674,8 +674,8 @@
         { scheme: { items: [{ smi: 'CCC(C)=CCC=C' }, { arrow: '→', above: f('KMnO4, H3O+'), below: f('t°') }, { smi: 'CCC(C)=O' }, { plus: true }, { smi: 'OC(=O)CC(O)=O' }, { plus: true }, { smi: 'O=C=O' }], maxWidth: 640 }, src: 'L7 p25' },
         { h: t('Nuo produktų atgal prie alkeno', 'From the products back to the alkene') },
         {
-          p: t('Atvirkštinis uždavinys sprendžiamas taip: raskite visus C=O anglies atomus produktuose. Tai buvę dvigubojo ryšio atomai. Sujunkite du iš jų dvigubuoju ryšiu (ketono ir rūgšties anglis, arba abi vieno produkto anglis, jei alkenas buvo žiedinis) ir gausite alkeną. Jei gautas tik vienas produktas, alkenas simetrinis: sujunkite dvi jo molekules.',
-            'Work backwards like this: find every C=O carbon in the products. These were the double-bond carbons. Join two of them with a double bond (a ketone carbon with an acid carbon, or both carbons of one product if the alkene was cyclic) and you have the alkene. If there is only one product, the alkene is symmetrical: join two molecules of it.'),
+          p: t('Atvirkštinis uždavinys sprendžiamas taip: raskite visus C=O anglies atomus produktuose. Tai buvę dvigubojo ryšio atomai. Sujunkite du iš jų dvigubuoju ryšiu (ketono ir rūgšties anglis, arba abi vieno produkto anglis, jei alkenas buvo žiedinis) ir gausite alkeną. Jei gautas tik vienas produktas, alkenas simetrinis (sujunkite dvi jo molekules) arba žiedinis (žiedas atsiveria į vieną produktą: sujunkite dvi jo C=O anglis).',
+            'Work backwards like this: find every C=O carbon in the products. These were the double-bond carbons. Join two of them with a double bond (a ketone carbon with an acid carbon, or both carbons of one product if the alkene was cyclic) and you have the alkene. If there is only one product, the alkene is symmetrical (join two molecules of it) or cyclic (the ring opens to one product: join its two C=O carbons).'),
           src: 'L7 p28'
         },
         {
@@ -769,9 +769,9 @@
       list: [
         t('Karbokatijonų stabilumas: benzilkatijonas > alilkatijonas > tretinis > antrinis > pirminis > metilkatijonas.', 'Carbocation stability: benzyl > allyl > tertiary > secondary > primary > methyl.'),
         t('AE: lėtoji stadija – katijono susidarymas, greitoji – nukleofilo prisijungimas.', 'AE: the slow stage forms the cation, the fast stage adds the nucleophile.'),
-        t('Elektronų akceptorinis pakaitas prie C=C: protonizuojamas heteroatomas, nukleofilas jungiasi prie tolimesnio (β) atomo.', 'An electron-withdrawing group on the C=C: the heteroatom is protonated and the nucleophile bonds to the far (β) carbon.'),
+        t('Elektronų akceptorinis pakaitas prie C=C: karbonilo ar nitrilo grupės heteroatomas protonizuojamas; esant $CF3$, $H+$ jungiasi prie anglies šalia grupės. Abiem atvejais nukleofilas jungiasi prie tolimesnės (β) anglies.', 'An electron-withdrawing group on the C=C: with a carbonyl or nitrile group its heteroatom is protonated; with $CF3$, $H+$ adds to the carbon next to the group. In both cases the nucleophile bonds to the far (β) carbon.'),
         t('Atpažinimas: bromo vanduo ir $KMnO4$ praranda spalvą; $KMnO4$ palieka rudą $MnO2$.', 'Test: bromine water and $KMnO4$ lose their colour; $KMnO4$ leaves brown $MnO2$.'),
-        t('Atgal nuo skilimo produktų: sujunkite C=O anglis dvigubuoju ryšiu; vienas produktas – simetrinis alkenas.', 'Back from cleavage products: join the C=O carbons with a double bond; a single product means a symmetrical alkene.')
+        t('Atgal nuo skilimo produktų: sujunkite C=O anglis dvigubuoju ryšiu; vienas produktas – simetrinis alkenas (sujunkite dvi jo molekules) arba žiedinis (sujunkite dvi jo C=O anglis).', 'Back from cleavage products: join the C=O carbons with a double bond; a single product means a symmetrical alkene (join two molecules of it) or a cyclic one (join its two C=O carbons).')
       ]
     }
   ];
@@ -1088,7 +1088,7 @@
           prompt: t('Koks yra pagrindinis produktas?', 'What is the main product?'),
           kind: 'choice', options, answer: 0,
           hint: t('Prijungiama viena vandens molekulė ($H$ ir $OH$).', 'One water molecule adds ($H$ and $OH$).'),
-          solution: [{ p: t('$H$ patenka prie atomo su daugiau vandenilių, $OH$ – prie kitos anglies.', '$H$ goes to the carbon with more hydrogens, $OH$ to the other carbon.') }, { mol: { smi: p.major } }]
+          solution: [{ p: t('$H$ patenka prie anglies, kuri palieka stabilesnį karbokatijoną (kai vandenilių skaičius skiriasi – paprastai prie atomo su daugiau vandenilių), $OH$ jungiasi prie katijono anglies.', '$H$ goes to the carbon that leaves the more stable carbocation (when the hydrogen counts differ, this is usually the carbon with more hydrogens); $OH$ bonds to the cation carbon.') }, { mol: { smi: p.major } }]
         });
         const ns = nameStep(ctx, p.major, t('Pavadinkite alkoholį.', 'Name the alcohol.'));
         if (ns) steps.push(ns);
@@ -1309,7 +1309,7 @@
             prompt: t('Kokie yra produktai?', 'What are the products?'),
             kind: 'choice', options, answer: 0,
             hint: cleave ? t('Kiekvienas dvigubojo ryšio atomas virsta karbonilo anglimi: ketonu, rūgštimi (druska) ar $CO2$.', 'Each double-bond carbon becomes a carbonyl carbon: a ketone, an acid (a salt) or $CO2$.') : t('Prie kiekvieno $C=C$ atomo prisijungia po vieną $OH$.', 'One $OH$ bonds to each $C=C$ carbon.'),
-            solution: [{ p: cleave ? t('=CR₂ virsta ketonu, =CH–R rūgštimi' + (medium === 'acid' ? '' : ' (šarminėje ar neutralioje terpėje – jos druska)') + ', =CH₂ – $CO2$.', '=CR₂ becomes a ketone, =CH–R an acid' + (medium === 'acid' ? '' : ' (its salt in neutral or alkaline medium)') + ', =CH₂ becomes $CO2$.') : t('Abu atomai gauna po $OH$.', 'Both carbons receive an $OH$.') }, setOption(right)]
+            solution: [{ p: cleave ? t('=CR₂ virsta ketonu, =CH–R rūgštimi' + (medium === 'acid' ? '' : ' (šarminėje ar neutralioje terpėje – jos druska)') + ', =CH₂ – $CO2$' + (medium === 'acid' || !acids.includes('O=C=O') ? '' : ' (bazinėje terpėje – karbonatas, parūgštinus – $CO2$)') + '.', '=CR₂ becomes a ketone, =CH–R an acid' + (medium === 'acid' ? '' : ' (its salt in neutral or alkaline medium)') + ', =CH₂ becomes $CO2$' + (medium === 'acid' || !acids.includes('O=C=O') ? '' : ' (as carbonate in base, $CO2$ after acidification)') + '.') : t('Abu atomai gauna po $OH$.', 'Both carbons receive an $OH$.') }, setOption(right)]
           }
         ];
         if (!cleave) {
@@ -1370,6 +1370,15 @@
         const poolOther = ctx.shuffle(POOL.slice()).filter(s => s !== smi && setKey(ctx, harshProducts(ctx, s)) !== rightKey);
         const options = optionList(ctx, smi, poolSame.concat(iso, poolOther), 4);
         if (options.length < 3) throw new Error('u07.back: too few options');
+        const kinds = [];
+        const nAcid = shownProds.filter(x => /C\(O\)=O|OC\(=O\)/.test(x)).length;
+        const nCo2 = shownProds.filter(x => x === 'O=C=O').length;
+        const nKet = shownProds.filter(x => x !== 'O=C=O' && !/C\(O\)=O|OC\(=O\)/.test(x)).length;
+        if (nKet) kinds.push([nKet > 1 ? 'ketonų' : 'ketono', nKet > 1 ? 'ketones' : 'the ketone']);
+        if (nAcid) kinds.push([nAcid > 1 ? 'rūgščių' : 'rūgšties', nAcid > 1 ? 'acids' : 'the acid']);
+        if (nCo2) kinds.push(['$CO2$', '$CO2$']);
+        const fragLt = kinds.length ? ': ' + kinds.map(k => k[0]).join(' ir ') + ' atomus' : '';
+        const fragEn = kinds.length ? ': those of ' + kinds.map(k => k[1]).join(' and ') : '';
         const steps = [
           {
             prompt: t('Bakstelėkite anglies atomus, kurie buvo dvigubojo ryšio atomai.', 'Tap the carbons that were the double-bond carbons.'),
@@ -1380,7 +1389,7 @@
           {
             prompt: t('Kuris alkenas buvo oksiduotas?', 'Which alkene was oxidised?'),
             kind: 'choice', options, answer: 0,
-            hint: symmetric ? t('Gauta viena medžiaga: sujunkite dvi jos molekules dvigubuoju ryšiu.', 'Only one compound formed: join two molecules of it with a double bond.') : inRing ? t('Gautas vienas produktas su dviem $C=O$ grupėmis: sujunkite jų anglis grandinės viduje.', 'A single product with two $C=O$ groups: join their carbons inside the chain.') : t('Sujunkite dvi $C=O$ anglis dvigubuoju ryšiu: ketono ir rūgšties atomus.', 'Join two $C=O$ carbons with a double bond: those of the ketone and the acid.'),
+            hint: symmetric ? t('Gauta viena medžiaga: sujunkite dvi jos molekules dvigubuoju ryšiu.', 'Only one compound formed: join two molecules of it with a double bond.') : inRing ? t('Gautas vienas produktas su dviem $C=O$ grupėmis: sujunkite jų anglis grandinės viduje.', 'A single product with two $C=O$ groups: join their carbons inside the chain.') : t('Sujunkite dvi $C=O$ anglis iš skirtingų produktų dvigubuoju ryšiu' + fragLt + '.', 'Join two $C=O$ carbons from the different products with a double bond' + fragEn + '.'),
             solution: [{ p: t('Atkūrus $C=C$ ten, kur buvo $C=O$, gaunamas alkenas. Izomerai su kitoje vietoje esančiu $C=C$ duotų kitus produktus.', 'Restoring the $C=C$ where the $C=O$ groups are gives the alkene. Isomers with the $C=C$ elsewhere would give other products.') }, { mol: { smi } }]
           }
         ];
@@ -1454,7 +1463,7 @@
               prompt: t('Koks yra pagrindinis produktas?', 'What is the main product?'),
               kind: 'choice', options, answer: 0,
               hint: perox ? t('Kuris radikalas stabilesnis: gautas prisijungus $Br•$ prie vieno ar kito atomo?', 'Which radical is more stable: the one from $Br•$ adding to one carbon or to the other?') : t('Palyginkite galimus karbokatijonus.', 'Compare the possible carbocations.'),
-              solution: [{ p: perox ? t('$Br•$ jungiasi taip, kad susidarytų stabilesnis radikalas (benzilinis > tretinis > antrinis > pirminis), todėl $Br$ atsiduria ant kito atomo nei be peroksidų (prieš Markovnikovo taisyklę).', '$Br•$ bonds so that the more stable radical forms; $Br$ ends up on the carbon with more hydrogens (against Markovnikov’s rule).') : t('Halogenas jungiasi prie stabilesnio katijono anglies (Markovnikovo taisyklė).', 'The halogen bonds to the carbon of the more stable cation (Markovnikov’s rule).') }, { mol: { smi: right } }]
+              solution: [{ p: perox ? t('$Br•$ jungiasi taip, kad susidarytų stabilesnis radikalas (benzilinis > tretinis > antrinis > pirminis), todėl $Br$ atsiduria ant kito atomo nei be peroksidų (prieš Markovnikovo taisyklę).', '$Br•$ bonds so that the more stable radical forms (benzylic > tertiary > secondary > primary), so $Br$ ends up on the other carbon than without peroxides (against Markovnikov’s rule).') : t('Halogenas jungiasi prie stabilesnio katijono anglies (Markovnikovo taisyklė).', 'The halogen bonds to the carbon of the more stable cation (Markovnikov’s rule).') }, { mol: { smi: right } }]
             }
           ],
           why: t('Be peroksidų HBr jungiasi per karbokatijoną (AE) pagal Markovnikovo taisyklę. Su peroksidais sudaromi $Br•$ radikalai: jie jungiasi pirmi, ir kryptį lemia radikalo, o ne katijono stabilumas, todėl produktas yra priešingas. Tai galioja tik $HBr$.',
@@ -1887,7 +1896,7 @@
           solution: t('Prisijungia viena HBr molekulė; abu žiedo atomai vienodi, todėl gaunamas vienintelis produktas bromcikloheksanas.', 'One HBr molecule adds; both ring carbons are alike, so the only product is bromocyclohexane.')
         }
       ],
-      why: t('Jei oksidavimas duoda vieną dirūgštį, alkenas žiedinis ir $C=C$ yra žiedo viduje. Prijungimas žiedo neatveria.', 'If oxidation gives a single diacid, the alkene is cyclic and the $C=C$ is inside the ring. Hydrogenation does not open the ring.'),
+      why: t('Jei oksidavimas duoda vieną dirūgštį, alkenas žiedinis ir $C=C$ yra žiedo viduje. Hidrinimas žiedo neatveria.', 'If oxidation gives a single diacid, the alkene is cyclic and the $C=C$ is inside the ring. Hydrogenation does not open the ring.'),
       src: 'L7 p28, S4.14',
       claims: [{ react: ['ae.hx', ['C1=CCCCC1'], { X: 'Br' }, 'BrC1CCCCC1'] }, { formula: ['C1=CCCCC1', 'C6H10'] }, { react: ['ox.kmno4.harsh', ['C1=CCCCC1'], null, 'OC(=O)CCCCC(O)=O'] }]
     },

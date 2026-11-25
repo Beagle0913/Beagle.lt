@@ -327,8 +327,8 @@
         q: [{ p: t('Konjuguotasis dienas reaguoja su vienu ekvivalentu vandenilio halogenido.', 'A conjugated diene reacts with one equivalent of a hydrogen halide.') },
           { scheme: { items: [{ smi: e.smi }, { plus: true }, { smi: X }, { arrow: '→' }] } }],
         steps,
-        why: t('Pirmojoje stadijoje protonas prijungiamas prie konjuguotosios sistemos galo, nes taip susidaro stabilus aliltipo katijonas, kurio krūvis pasidalija per du atomus (rezonansinės formulės). Antrojoje stadijoje halogenido jonas gali prisijungti prie bet kurio iš jų, todėl gaunami du produktai: 1,2- ir 1,4-aduktas. Protonas renkasi galą, po kurio lieka stabilesnis (labiau pakeistas) aliltipo katijonas.',
-          'In the first stage the proton adds to an end of the conjugated system, because that gives a stable allylic cation whose charge is shared by two atoms (resonance structures). In the second stage the halide ion can bond to either of them, so two products form: the 1,2 and the 1,4 adduct. The proton picks the end that leaves the more stable (more substituted) allylic cation.'),
+        why: t('Pirmojoje stadijoje protonas prijungiamas prie konjuguotosios sistemos galo, nes taip susidaro stabilus aliltipo katijonas, kurio krūvis pasidalija per du atomus (rezonansinės formulės). Antrojoje stadijoje halogenido jonas gali prisijungti prie bet kurio iš jų, ' + (two ? 'todėl gaunami du produktai: 1,2- ir 1,4-aduktas.' : 'bet čia katijonas simetriškas, todėl 1,2- ir 1,4-aduktas yra tas pats junginys ir gaunamas vienas produktas.') + ' Protonas renkasi galą, po kurio lieka stabilesnis (labiau pakeistas) aliltipo katijonas.',
+          'In the first stage the proton adds to an end of the conjugated system, because that gives a stable allylic cation whose charge is shared by two atoms (resonance structures). In the second stage the halide ion can bond to either of them, ' + (two ? 'so two products form: the 1,2 and the 1,4 adduct.' : 'but here the cation is symmetric, so the 1,2 and the 1,4 adduct are the same compound and a single product forms.') + ' The proton picks the end that leaves the more stable (more substituted) allylic cation.'),
         src: 'L8 p6'
       };
     }
@@ -337,8 +337,8 @@
   // ---------- u08.name: alkynes, hybridisation and names ----------
   // written in IUPAC numbering order, so that the drawn labels equal the locants
   const YN_NAME = ['C#CC', 'C#CCC', 'C#CCCC', 'C#CC(C)C', 'C#CCC(C)C', 'C#CCCCC', 'C#CC(C)(C)C', 'C#CC(C)CC', 'C#CCCCCC', 'C#CCC(C)CC', 'C#CC(C)CCC', 'C#CCC(C)(C)C', 'C#CC(CC)CC', 'C#CCCCCCC', 'C#CC(C)C(C)C', 'C#CC(C)(C)CC', 'C#CC(C)CC(C)C',
-    'CC#CC', 'CC#CCC', 'CC#CCCC', 'CCC#CCCC', 'CC#CC(C)C', 'CC#CCC(C)C', 'CC#CC(C)(C)C', 'CC#CCCCC', 'CC#CC(C)CC', 'CCC#CCC', 'CC(C)C#CC(C)C', 'CC(C)C#CCC', 'CCC#CCC(C)C',
-    'C#CCCl', 'C#CC(C)Cl', 'ClCC#CC', 'C#CC(C)(C)Cl', 'OCC#C', 'OCC#CC', 'CC(O)C#C', 'CC(O)C#CC'];
+    'CC#CC', 'CC#CCC', 'CC#CCCC', 'CCC#CCCC', 'CC#CC(C)C', 'CC#CCC(C)C', 'CC#CC(C)(C)C', 'CC#CCCCC', 'CC#CC(C)CC', 'CCC#CCC', 'CC(C#CC(C)C)C', 'CC(C#CCC)C', 'CCC#CCC(C)C',
+    'C#CCCl', 'C#CC(C)Cl', 'C(C#CC)Cl', 'C#CC(C)(C)Cl', 'C(C#C)O', 'C(C#CC)O', 'CC(C#C)O', 'CC(C#CC)O'];
   const T_NAME = {
     id: 'u08.name',
     title: t('Alkinų sandara ir pavadinimai', 'Structure and names of alkynes'),
@@ -806,8 +806,8 @@
       blocks: [
         { h: t('Kaip išsidėsto du dvigubieji ryšiai?', 'Where do the two double bonds sit?') },
         {
-          p: t('Dienai yra angliavandeniliai su dviem dvigubaisiais ryšiais (jų yra, pvz., imbiero aliejuje – zingiberenas). Jų savybes lemia ir tai, kaip ryšiai išsidėstę vienas kito atžvilgiu.',
-            'Dienes are hydrocarbons with two double bonds (zingiberene in ginger oil is one). Their properties depend on where the bonds sit relative to each other.'),
+          p: t('Dienai yra angliavandeniliai su dviem dvigubaisiais ryšiais (pvz., imbiero aliejaus zingiberenas turi konjuguotąjį dieno fragmentą). Jų savybes lemia ir tai, kaip ryšiai išsidėstę vienas kito atžvilgiu.',
+            'Dienes are hydrocarbons with two double bonds (zingiberene in ginger oil, for example, contains a conjugated diene unit). Their properties depend on where the bonds sit relative to each other.'),
           src: 'L8 p2'
         },
         {
@@ -955,8 +955,8 @@
           src: 'L8 p7'
         },
         {
-          rule: t('Alilkatijonas stabilesnis už alkilo katijoną su lokalizuotu krūviu, nes krūvis pasidalija per du atomus. Katijonų stabilumas: benzilkatijonas > alilkatijonas > tretinis > antrinis > pirminis > metilkatijonas.',
-            'An allyl cation is more stable than an alkyl cation with a localised charge, because the charge is shared by two carbons. Cation stability: benzyl > allyl > tertiary > secondary > primary > methyl.'),
+          rule: t('Rezonansas stabilizuoja alilkatijoną, nes krūvis pasidalija per du atomus. Pagal kurso eilę katijonų stabilumas: benzilkatijonas > alilkatijonas > tretinis > antrinis > pirminis > metilkatijonas. Ši eilė rodo, kaip stipriai rezonansas stabilizuoja katijoną, tačiau matavimai ją patikslina: paprasčiausias benzilo katijonas yra tarp antrinio ir tretinio, o paprasčiausias alilo katijonas maždaug toks pat stabilus kaip antrinis. Tretinis alilinis ar benzilinis katijonas stabilesnis už paprastą tretinį, o alilinis ar benzilinis katijonas stabilesnis už tos pačios klasės paprastą alkilo katijoną.',
+            'Resonance stabilises an allyl cation, because the charge is shared by two carbons. Cation stability in the course’s order: benzyl > allyl > tertiary > secondary > primary > methyl. The order shows how strongly resonance stabilises a cation, but measured data refine it: the parent benzyl cation lies between a secondary and a tertiary cation, and the parent allyl cation is about as stable as a secondary one. A tertiary allylic or benzylic cation is more stable than a plain tertiary one, and an allylic or benzylic cation is more stable than a plain alkyl cation of the same class.'),
           src: 'L8 p7; L7 p9'
         },
         {
@@ -1049,12 +1049,12 @@
         },
         {
           scheme: { items: [{ smi: 'CCC#C', name: t('1-butinas', 'but-1-yne') }, { arrow: '→', above: t('1 ekv. $Br2$', '1 equiv. $Br2$') },
-            { smi: 'CCC(Br)=CBr', name: t('1,2-dibrom-1-butenas', '1,2-dibromobut-1-ene') }], maxWidth: 680 },
+            { smi: 'CC/C(Br)=C\\Br', name: t('(E)-1,2-dibrom-1-butenas', '(E)-1,2-dibromobut-1-ene') }], maxWidth: 680 },
           caption: t('Bromas jungiasi iš priešingų pusių (anti), todėl gaunamas E izomeras.', 'Bromine adds from opposite sides (anti), so the E isomer forms.'),
           src: 'L8 p18'
         },
         {
-          scheme: { items: [{ smi: 'CCC(Br)=CBr', name: t('1,2-dibrom-1-butenas', '1,2-dibromobut-1-ene') }, { arrow: '→', above: t('dar 1 ekv. $Br2$', 'another 1 equiv. $Br2$') },
+          scheme: { items: [{ smi: 'CC/C(Br)=C\\Br', name: t('(E)-1,2-dibrom-1-butenas', '(E)-1,2-dibromobut-1-ene') }, { arrow: '→', above: t('dar 1 ekv. $Br2$', 'another 1 equiv. $Br2$') },
             { smi: 'CCC(Br)(Br)C(Br)Br', name: t('1,1,2,2-tetrabrombutanas', '1,1,2,2-tetrabromobutane') }], maxWidth: 680 },
           caption: t('Halogenas prisijungia prie abiejų atomų (vicinalinis produktas).', 'The halogen goes onto both carbons (a vicinal product).'),
           src: 'L8 p18'
@@ -1114,7 +1114,7 @@
                 { mol: { smi: 'CC(C)C(C)(Cl)Cl', name: t('2,2-dichlor-3-metilbutanas', '2,2-dichloro-3-methylbutane') } }]
             ]
           },
-          claims: [{ react: ['yne.hx', ['C#CC(C)C'], { X: 'Cl', eq: 1 }, 'CC(C)C(Cl)=C'] }, { react: ['yne.hx', ['C#CC(C)C'], { X: 'Cl', eq: 2 }, 'CC(C)C(C)(Cl)Cl'] },
+          claims: [{ ez: ['CC/C(Br)=C\\Br', 2, 4, 'E'] }, { react: ['yne.hx', ['C#CC(C)C'], { X: 'Cl', eq: 1 }, 'CC(C)C(Cl)=C'] }, { react: ['yne.hx', ['C#CC(C)C'], { X: 'Cl', eq: 2 }, 'CC(C)C(C)(Cl)Cl'] },
             { name: ['CC(C)C(Cl)=C', t('2-chlor-3-metil-1-butenas', '2-chloro-3-methylbut-1-ene')] }, { name: ['CC(C)C(C)(Cl)Cl', t('2,2-dichlor-3-metilbutanas', '2,2-dichloro-3-methylbutane')] }]
         },
         { practice: 'u08.yneadd' }
@@ -1560,16 +1560,16 @@
       },
       {
         id: 'u08.dmech.9',
-        q: [{ p: t('Palyginkite karbokatijonų stabilumą.', 'Compare the stability of the carbocations.') }, row([['C=C[CH2+]', t('alilkatijonas', 'allyl cation')], ['C[C+](C)C', t('tretinis katijonas', 'tertiary cation')], ['C[CH+]C', t('antrinis katijonas', 'secondary cation')], ['C[CH2+]', t('pirminis katijonas', 'primary cation')]])],
+        q: [{ p: t('Palyginkite karbokatijonų stabilumą.', 'Compare the stability of the carbocations.') }, row([['C=C[C+](C)C', t('tretinis alilkatijonas', 'tertiary allyl cation')], ['C[C+](C)C', t('tretinis katijonas', 'tertiary cation')], ['C[CH+]C', t('antrinis katijonas', 'secondary cation')], ['C[CH2+]', t('pirminis katijonas', 'primary cation')]])],
         steps: [{
           prompt: t('Išdėstykite nuo stabiliausio.', 'Order from the most stable.'),
           kind: 'order',
-          options: [{ text: t('alilkatijonas', 'allyl cation') }, { text: t('tretinis', 'tertiary') }, { text: t('antrinis', 'secondary') }, { text: t('pirminis', 'primary') }],
-          hint: t('Kuris katijonas krūvį gali pasidalyti per konjugaciją, o kuriuos stabilizuoja tik alkilo grupės?', 'Which cation can share its charge by conjugation, and which are stabilised by alkyl groups only?'),
-          solution: t('alilkatijonas > tretinis > antrinis > pirminis: alilkatijoną stabilizuoja rezonansas, alkilo katijonus – hiperkonjugacija ir +I efektas.', 'allyl > tertiary > secondary > primary: the allyl cation is stabilised by resonance, alkyl cations by hyperconjugation and the +I effect.')
+          options: [{ text: t('tretinis alilkatijonas', 'tertiary allyl cation') }, { text: t('tretinis alkilkatijonas', 'tertiary alkyl cation') }, { text: t('antrinis', 'secondary') }, { text: t('pirminis', 'primary') }],
+          hint: t('Kuris katijonas krūvį gali pasidalyti per konjugaciją, o kuriuos stabilizuoja tik alkilo grupės? Tarp alkilo katijonų: kuo daugiau alkilo grupių prie krūvį turinčio atomo, tuo stabiliau.', 'Which cation can share its charge by conjugation, and which are stabilised by alkyl groups only? Among alkyl cations, the more alkyl groups on the charged carbon, the more stable.'),
+          solution: t('tretinis alilkatijonas > tretinis alkilkatijonas > antrinis > pirminis: tretinį alilkatijoną stabilizuoja ir rezonansas, ir trys alkilo grupės, o alkilo katijonus – tik hiperkonjugacija ir +I efektas.', 'tertiary allyl > tertiary alkyl > secondary > primary: the tertiary allyl cation is stabilised by both resonance and three alkyl groups, alkyl cations only by hyperconjugation and the +I effect.')
         }],
-        why: t('Alilkatijono krūvį dalija du atomai (rezonansas), o alkilo katijonus stabilizuoja tik hiperkonjugacija ir +I efektas, kurie veikia silpniau. Todėl eilė yra alilkatijonas > tretinis > antrinis > pirminis.', 'The charge of an allyl cation is shared by two carbons (resonance), whereas alkyl cations are stabilised only by hyperconjugation and the +I effect, which act more weakly. Hence the order allyl > tertiary > secondary > primary.'), src: 'L8 p7; L7 p9',
-        claims: [{ formula: ['C=C[CH2+]', 'C3H5+'] }, { formula: ['C[C+](C)C', 'C4H9+'] }, { formula: ['C[CH+]C', 'C3H7+'] }, { formula: ['C[CH2+]', 'C2H5+'] }]
+        why: t('Alilkatijono krūvį dalija du atomai (rezonansas), o alkilo katijonus stabilizuoja tik hiperkonjugacija ir +I efektas, kurie veikia silpniau. Todėl tretinis alilkatijonas stabilesnis už paprastą tretinį, o alkilo katijonų eilė yra tretinis > antrinis > pirminis.', 'The charge of an allyl cation is shared by two carbons (resonance), whereas alkyl cations are stabilised only by hyperconjugation and the +I effect, which act more weakly. Hence a tertiary allyl cation is more stable than a plain tertiary one, and the alkyl series is tertiary > secondary > primary.'), src: 'L8 p7; L7 p9',
+        claims: [{ formula: ['C=C[C+](C)C', 'C5H9+'] }, { formula: ['C[C+](C)C', 'C4H9+'] }, { formula: ['C[CH+]C', 'C3H7+'] }, { formula: ['C[CH2+]', 'C2H5+'] }]
       }
     ]
   };
@@ -1753,10 +1753,10 @@
       {
         id: 'u08.chain.5',
         q: [{ p: t('2-butinas reaguoja su bromu (1 ekv., A), po to su dar vienu ekvivalentu (B).', 'But-2-yne reacts with bromine (1 equiv., A), then with another equivalent (B).') }, { mol: { smi: 'CC#CC', name: t('2-butinas', 'but-2-yne') } }],
-        steps: [molChoice(t('Kas yra A?', 'What is A?'), 'CC(Br)=C(C)Br', ['CC(Br)(Br)CC', 'CC(Br)C(C)Br', 'CC=C(C)Br'], t('Halogenas jungiasi prie abiejų atomų, lieka dvigubasis ryšys.', 'The halogen goes onto both carbons and a double bond remains.'), t('Halogenas jungiasi prie abiejų atomų, o likęs π ryšys išlieka: 2,3-dibrom-2-butenas.', 'The halogen goes onto both carbons and one π bond remains: 2,3-dibromobut-2-ene.')),
-        molChoice(t('Kas yra B?', 'What is B?'), 'CC(Br)(Br)C(C)(Br)Br', ['CC(Br)C(C)Br', 'CC(Br)=C(C)Br', 'CC(Br)(Br)CC'], t('Antrasis $Br2$ prisijungia prie likusio dvigubojo ryšio.', 'The second $Br2$ adds to the remaining double bond.'), t('Antrasis $Br2$ sunaudoja likusį π ryšį, ir kiekvienas atomas gauna po du bromus: 2,2,3,3-tetrabrombutanas.', 'The second $Br2$ uses up the remaining π bond and each carbon gets two bromines: 2,2,3,3-tetrabromobutane.'))],
+        steps: [molChoice(t('Kas yra A?', 'What is A?'), 'C/C(Br)=C(\\Br)C', ['CC(Br)(Br)CC', 'CC(Br)C(C)Br', 'CC=C(C)Br'], t('Halogenas jungiasi prie abiejų atomų, lieka dvigubasis ryšys.', 'The halogen goes onto both carbons and a double bond remains.'), t('Halogenas jungiasi prie abiejų atomų, o likęs π ryšys išlieka. Prijungimas anti, todėl gaunamas E izomeras: (E)-2,3-dibrom-2-butenas.', 'The halogen goes onto both carbons and one π bond remains. The addition is anti, so the E isomer forms: (E)-2,3-dibromobut-2-ene.')),
+        molChoice(t('Kas yra B?', 'What is B?'), 'CC(Br)(Br)C(C)(Br)Br', ['CC(Br)C(C)Br', 'C/C(Br)=C(\\Br)C', 'CC(Br)(Br)CC'], t('Antrasis $Br2$ prisijungia prie likusio dvigubojo ryšio.', 'The second $Br2$ adds to the remaining double bond.'), t('Antrasis $Br2$ sunaudoja likusį π ryšį, ir kiekvienas atomas gauna po du bromus: 2,2,3,3-tetrabrombutanas.', 'The second $Br2$ uses up the remaining π bond and each carbon gets two bromines: 2,2,3,3-tetrabromobutane.'))],
         why: t('Alkinas turi du π ryšius, todėl halogeną prijungia du kartus. Kiekviena $Br2$ molekulė jungiasi prie abiejų buvusių trigubojo ryšio atomų, todėl po dviejų ekvivalentų kiekvienas jų turi po du bromo atomus.', 'An alkyne has two π bonds, so it adds halogen twice. Each $Br2$ goes onto both former triple-bond carbons, so after two equivalents each of them carries two bromines.'), src: 'L8 p18',
-        claims: [{ react: ['yne.x2', ['CC#CC'], { X: 'Br', eq: 1 }, 'CC(Br)=C(C)Br'] }, { react: ['yne.x2', ['CC#CC'], { X: 'Br', eq: 2 }, 'CC(Br)(Br)C(C)(Br)Br'] }, { name: ['CC(Br)(Br)C(C)(Br)Br', t('2,2,3,3-tetrabrombutanas', '2,2,3,3-tetrabromobutane')] }]
+        claims: [{ react: ['yne.x2', ['CC#CC'], { X: 'Br', eq: 1 }, 'C/C(Br)=C(\\Br)C'] }, { react: ['yne.x2', ['CC#CC'], { X: 'Br', eq: 2 }, 'CC(Br)(Br)C(C)(Br)Br'] }, { ez: ['C/C(Br)=C(\\Br)C', 1, 3, 'E'] }, { name: ['CC(Br)(Br)C(C)(Br)Br', t('2,2,3,3-tetrabrombutanas', '2,2,3,3-tetrabromobutane')] }]
       },
       {
         id: 'u08.chain.6',

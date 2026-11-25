@@ -39,7 +39,7 @@
           caption: t('Pirminis, antrinis, tretinis aminas ir ketvirtinė amonio druska.', 'A primary, a secondary and a tertiary amine, and a quaternary ammonium salt.')
         },
         {
-          pitfall: t('Klasę lemia azoto kaimynų skaičius, o ne anglies atomo klasė. Tret-butilaminas yra pirminis aminas, nors su azotu sujungta anglis yra tretinė.',
+          pitfall: t('Klasę lemia prie azoto prijungtų anglies atomų skaičius, o ne anglies atomo klasė. Tret-butilaminas yra pirminis aminas, nors su azotu sujungta anglis yra tretinė.',
             'The class is set by the number of carbons on nitrogen, not by the class of the carbon. tert-Butylamine is a primary amine even though the carbon on nitrogen is tertiary.')
         },
         { mol: { smi: 'CC(C)(C)N', name: t('2-metil-2-propanaminas', '2-methylpropan-2-amine') } },
@@ -141,14 +141,14 @@
           table: {
             head: [t('Bazė', 'Base'), t('Pavadinimas', 'Name'), t('pKaH (konjuguotosios rūgšties)', 'pKaH (conjugate acid)')],
             rows: [
-              [{ smi: 'CCN(CC)CC', name: t('N,N-dietiletanaminas', 'N,N-diethylethanamine') }, t('N,N-dietiletanaminas', 'N,N-diethylethanamine'), f('10,75')],
-              [{ smi: 'CN', name: t('metanaminas', 'methanamine') }, t('metanaminas', 'methanamine'), f('10,6')],
-              [{ smi: 'N', name: t('amoniakas', 'ammonia') }, t('amoniakas', 'ammonia'), f('9,25')],
-              [{ smi: 'c1ccncc1', name: t('piridinas', 'pyridine') }, t('piridinas', 'pyridine'), f('5,2')],
-              [{ smi: 'Cc1ccc(N)cc1', name: t('4-metilbenzenaminas', '4-methylaniline') }, t('4-metilbenzenaminas', '4-methylaniline'), f('5,1')],
-              [{ smi: 'Nc1ccccc1', name: t('benzenaminas', 'aniline') }, t('benzenaminas', 'aniline'), f('4,6')],
-              [{ smi: 'Nc1ccc([N+](=O)[O-])cc1', name: t('4-nitrobenzenaminas', '4-nitroaniline') }, t('4-nitrobenzenaminas', '4-nitroaniline'), f('1,0')],
-              [{ smi: 'CC(N)=O', name: t('etanamidas', 'ethanamide') }, t('etanamidas', 'ethanamide'), f('−0,5 (apie)')]
+              [{ smi: 'CCN(CC)CC', name: t('N,N-dietiletanaminas', 'N,N-diethylethanamine') }, t('N,N-dietiletanaminas', 'N,N-diethylethanamine'), t('10,75', '10.75')],
+              [{ smi: 'CN', name: t('metanaminas', 'methanamine') }, t('metanaminas', 'methanamine'), t('10,6', '10.6')],
+              [{ smi: 'N', name: t('amoniakas', 'ammonia') }, t('amoniakas', 'ammonia'), t('9,25', '9.25')],
+              [{ smi: 'c1ccncc1', name: t('piridinas', 'pyridine') }, t('piridinas', 'pyridine'), t('5,2', '5.2')],
+              [{ smi: 'Cc1ccc(N)cc1', name: t('4-metilbenzenaminas', '4-methylaniline') }, t('4-metilbenzenaminas', '4-methylaniline'), t('5,1', '5.1')],
+              [{ smi: 'Nc1ccccc1', name: t('benzenaminas', 'aniline') }, t('benzenaminas', 'aniline'), t('4,6', '4.6')],
+              [{ smi: 'Nc1ccc([N+](=O)[O-])cc1', name: t('4-nitrobenzenaminas', '4-nitroaniline') }, t('4-nitrobenzenaminas', '4-nitroaniline'), t('1,0', '1.0')],
+              [{ smi: 'CC(N)=O', name: t('etanamidas', 'ethanamide') }, t('etanamidas', 'ethanamide'), t('apie −0,5', 'about −0.5')]
             ]
           },
           caption: t('Apytikslės pKaH vertės: kuo didesnė, tuo stipresnė bazė.', 'Approximate pKaH values: the larger, the stronger the base.'),
@@ -384,8 +384,13 @@
           src: 'T p100'
         },
         {
-          scheme: { items: [{ smi: 'CNC' }, { arrow: '→', above: f('NaNO2, HCl') }, { smi: 'CN(C)N=O' }, { plus: true }, { smi: 'CNc1ccccc1' }, { arrow: '→', above: f('NaNO2, HCl') }, { smi: 'CN(N=O)c1ccccc1' }] },
-          caption: t('Dimetilaminas ir N-metilanilinas virsta N-nitrozoaminais.', 'Dimethylamine and N-methylaniline give N-nitrosamines.'),
+          scheme: { items: [{ smi: 'CNC' }, { arrow: '→', above: f('NaNO2, HCl') }, { smi: 'CN(C)N=O' }] },
+          caption: t('Dimetilaminas virsta N-nitrozoaminu.', 'Dimethylamine gives an N-nitrosamine.'),
+          src: 'T p100'
+        },
+        {
+          scheme: { items: [{ smi: 'CNc1ccccc1' }, { arrow: '→', above: f('NaNO2, HCl') }, { smi: 'CN(N=O)c1ccccc1' }] },
+          caption: t('N-metilanilinas virsta N-nitrozoaminu.', 'N-methylaniline gives an N-nitrosamine.'),
           src: 'T p100'
         },
         {
@@ -524,7 +529,7 @@
         },
         {
           scheme: { items: [{ smi: 'Nc1ccccc1' }, { plus: true }, { smi: 'BrBr' }, { arrow: '→', above: f('H2O') }, { smi: 'Nc1c(Br)cc(Br)cc1Br' }] },
-          caption: t('Anilinas bromuojasi be katalizatoriaus iki 2,4,6-tribromanilino: vienos bromo molekulės neužtenka.', 'Aniline brominates without a catalyst all the way to 2,4,6-tribromoaniline: one equivalent of bromine does not stop at one substitution.')
+          caption: t('Anilinas bromuojasi be katalizatoriaus iki 2,4,6-tribromanilino: net su vienu bromo ekvivalentu reakcija nesustoja ties monopakeitimu.', 'Aniline brominates without a catalyst all the way to 2,4,6-tribromoaniline: one equivalent of bromine does not stop at one substitution.')
         },
         {
           scheme: { items: [{ smi: 'Nc1ccccc1' }, { plus: true }, { smi: 'OS(=O)(=O)O' }, { arrow: '→' }, { smi: 'Nc1ccc(cc1)S(=O)(=O)O', name: t('4-aminobenzensulfonrūgštis', '4-aminobenzene-1-sulfonic acid') }, { plus: true }, { smi: 'O' }] },
@@ -1037,7 +1042,7 @@
         kind: 'choice', options: salt2.opts, answer: 0,
         hint: t('Nukleofilas pakeičia halogenidą; ar produktas turi $N-H$, kurį galima prarasti?', 'The nucleophile replaces the halide; does the product carry an $N-H$ that could be lost?'),
         solution: /\[N\+\]\(/.test(salt2.opts[0].mol.smi)
-          ? t('Azotas sujungia ryšį su alkilo grupe. Tretinis aminas neturi $N-H$, todėl susidaro ketvirtinė amonio druska; šarmas jos neišlaisvina, nes laisvos poros nebelieka.', 'Nitrogen forms a bond to the alkyl group. A tertiary amine has no $N-H$, so a quaternary ammonium salt forms; alkali cannot free an amine from it, because there is no lone pair left.')
+          ? t('Azotas sujungia ryšį su alkilo grupe. Tretinis aminas neturi $N-H$, todėl susidaro ketvirtinė amonio druska; šarmas jos neišlaisvina, nes katijonas neturi $N-H$ protono, kurį galėtų atplėšti šarmas.', 'Nitrogen forms a bond to the alkyl group. A tertiary amine has no $N-H$, so a quaternary ammonium salt forms; alkali cannot free an amine from it, because the cation has no $N-H$ proton for the base to remove.')
           : t('Azotas sujungia ryšį su alkilo grupe ir susidaro alkilinta amonio druska ($R3NH+$ arba $R2NH2+$); šarmas vėliau gali išlaisvinti laisvą aminą.', 'Nitrogen bonds to the alkyl group to form an alkylated ammonium salt ($R3NH+$ or $R2NH2+$); alkali can free the amine afterwards.')
       }
     ],
@@ -1631,18 +1636,18 @@
   });
 
   /* ---------- u15.drug: most basic nitrogen in a drug (bank, S7.2) ---------- */
-  const drugProblem = (n, smi, nm, ans, whyNot, why, extraClaims) => ({
+  const drugProblem = (n, smi, nm, ans, whyNot, why, extraClaims, own) => ({
     id: 'u15.drug.' + n,
-    q: [{ p: t('Šiame vaistiniame junginyje yra keli azoto atomai. Raskite bazingiausią ir paaiškinkite.', 'This drug contains several nitrogen atoms. Find the most basic one and explain.') }, { mol: { smi, caption: nm } }],
+    q: [{ p: (own && own.q) || t('Šiame vaistiniame junginyje yra keli azoto atomai. Raskite bazingiausią ir paaiškinkite.', 'This drug contains several nitrogen atoms. Find the most basic one and explain.') }, { mol: { smi, caption: nm } }],
     steps: [
       {
-        prompt: t('Bakstelėkite bazingiausią azoto atomą.', 'Tap the most basic nitrogen atom.'),
+        prompt: (own && own.p1) || t('Bakstelėkite bazingiausią azoto atomą.', 'Tap the most basic nitrogen atom.'),
         kind: 'atoms', mol: { smi }, answer: [ans],
         hint: t('Kiekvienam azotui paklauskite: ar jo pora konjuguota su $C=O$, su žiedu, ar priklauso aromatiniam sekstetui?', 'For each nitrogen ask: is its pair conjugated with $C=O$, with a ring, or part of an aromatic sextet?'),
         solution: whyNot.pick
       },
       {
-        prompt: t('Kodėl kiti azoto atomai mažiau bazingi?', 'Why are the other nitrogen atoms less basic?'),
+        prompt: (own && own.p2) || t('Kodėl kiti azoto atomai mažiau bazingi?', 'Why are the other nitrogen atoms less basic?'),
         kind: 'choice', options: whyNot.opts, answer: 0,
         hint: t('Palyginkite azoto aplinką: amidas, aromatinis aminas, piridino tipo azotas, $sp3$ aminas.', 'Compare the environment of nitrogen: an amide, an aromatic amine, a pyridine-type nitrogen, an $sp3$ amine.'),
         solution: whyNot.sol
@@ -1686,7 +1691,11 @@
         { pick: t('Molekulėje yra vienintelis azotas: antrinis alifatinis aminas. Jis yra protonuojamas.', 'The molecule has a single nitrogen: a secondary aliphatic amine. It is the one that is protonated.'),
           opts: [{ text: t('Azotas nėra konjuguotas su benzeno žiedu, nes jį skiria $sp3$ anglies atomai, todėl elgiasi kaip alifatinis aminas.', 'The nitrogen is not conjugated with the benzene ring because $sp3$ carbons separate them, so it behaves as an aliphatic amine.') }, { text: t('Azotas nėra bazinis, nes molekulėje yra aromatinis žiedas.', 'The nitrogen is not basic because the molecule contains an aromatic ring.') }, { text: t('Azotas nebazinis, nes šalia yra $OH$ grupė.', 'The nitrogen is not basic because an $OH$ group is nearby.') }, { text: t('Bazingas deguonis, o ne azotas.', 'The oxygen is basic, not the nitrogen.') }],
           sol: t('Aromatinis žiedas yra pririštas prie anglies, o ne prie azoto, todėl azoto pora laisva; pKaH apie 9.', 'The aromatic ring is on carbon, not on nitrogen, so the nitrogen pair is free; pKaH about 9.') },
-        t('Aromatinis žiedas molekulėje dar nereiškia aromatinio amino: svarbu, ar azotas prie jo prijungtas tiesiogiai.', 'An aromatic ring in the molecule does not make an aromatic amine: what matters is whether nitrogen is bonded to it directly.')),
+        t('Aromatinis žiedas molekulėje dar nereiškia aromatinio amino: svarbu, ar azotas prie jo prijungtas tiesiogiai.', 'An aromatic ring in the molecule does not make an aromatic amine: what matters is whether nitrogen is bonded to it directly.'),
+        undefined,
+        { q: t('Efedrino molekulėje yra benzeno žiedas ir vienas azoto atomas. Bakstelėkite azotą ir paaiškinkite, kaip jis elgiasi.', 'Ephedrine contains a benzene ring and one nitrogen atom. Tap the nitrogen and explain how it behaves.'),
+          p1: t('Bakstelėkite azoto atomą.', 'Tap the nitrogen atom.'),
+          p2: t('Kodėl šis azotas elgiasi kaip alifatinis, o ne aromatinis aminas?', 'Why does this nitrogen behave as an aliphatic amine rather than an aromatic amine?') }),
       drugProblem(7, 'NCCc1c[nH]c2ccc(O)cc12', t('serotoninas', 'serotonin'), 0,
         { pick: t('Pirminis alifatinis amino azotas yra bazingiausias. Indolo azotas nebazinis.', 'The primary aliphatic amine nitrogen is the most basic. The indole nitrogen is not basic.'),
           opts: [{ text: t('Indolo azoto pora yra aromatinio sekstetas dalis, todėl protonui neprieinama.', 'The indole nitrogen pair is part of the aromatic sextet and is not available to a proton.') }, { text: t('Indolo azotas yra $sp3$ ir turi du $N-H$.', 'The indole nitrogen is $sp3$ and has two $N-H$.') }, { text: t('Indolo azotas bazingesnis, nes yra žiede.', 'The indole nitrogen is more basic because it is in a ring.') }, { text: t('Indolo azotas neturi laisvos poros.', 'The indole nitrogen has no lone pair.') }],
@@ -1895,7 +1904,7 @@
       },
       {
         id: 'u15.scheme.6',
-        q: [{ p: t('Kaip iš anilino gauti $o$-brombenzenkarboksirūgštį? Pirmiausia aptarkite tiesioginį bromavimą.', 'How can $o$-bromobenzoic acid be made from aniline? Start with direct bromination.') }, { scheme: { items: [{ smi: 'Nc1ccccc1' }, { plus: true }, { smi: 'BrBr' }, { arrow: '→', above: f('H2O') }, { smi: 'Nc1c(Br)cc(Br)cc1Br' }] } }],
+        q: [{ p: t('Kaip iš anilino gauti $o$-brombenzenkarboksirūgštį? Pirmiausia aptarkite tiesioginį bromavimą.', 'How can $o$-bromobenzoic acid be made from aniline? First consider direct bromination.') }, { scheme: { items: [{ smi: 'Nc1ccccc1' }, { plus: true }, { smi: 'BrBr' }, { arrow: '→', above: f('H2O') }, { smi: 'Nc1c(Br)cc(Br)cc1Br' }] } }],
         steps: [
           {
             prompt: t('Kodėl anilino negalima tiesiogiai monobromuoti?', 'Why can aniline not be mono-brominated directly?'),
@@ -2172,7 +2181,7 @@
             prompt: t('Kuri cisteino grupė yra rūgščiausia?', 'Which group of cysteine is the most acidic?'),
             kind: 'choice', options: [txt('$COOH$ (pKa apie 2)', '$COOH$ (pKa about 2)'), txt('$SH$', '$SH$'), txt('$NH3+$', '$NH3+$'), txt('$C-H$ prie $α$-anglies', '$C-H$ on the $α$-carbon')], answer: 0,
             hint: t('Rūgštingumą nusako konjuguotosios bazės stabilumas.', 'Acidity is set by the stability of the conjugate base.'),
-            solution: t('Karboksilato krūvis išsklaidytas rezonansu, todėl $COOH$ (pKa apie 2) yra rūgščiausia. $SH$ ir $NH3+$ pKa yra tarp 8 ir 10,5 (knygos lentelėje 8,18 ir 10,28), jų eilė priklauso nuo pH.', 'The carboxylate charge is spread by resonance, so $COOH$ (pKa about 2) is the most acidic. The pKa values of $SH$ and $NH3+$ lie between 8 and 10.5 (8.18 and 10.28 in the textbook table), and their order depends on the pH.')
+            solution: t('Karboksilato krūvis išsklaidytas rezonansu, todėl $COOH$ (pKa apie 2) yra rūgščiausia. $SH$ ir $NH3+$ pKa yra tarp 8 ir 10,5 (knygos lentelėje 8,18 ir 10,28): $SH$ (pKa apie 8,2) yra šiek tiek rūgštesnė už $NH3+$ (apie 10,3), tačiau abi daug silpnesnės rūgštys už $COOH$.', 'The carboxylate charge is spread by resonance, so $COOH$ (pKa about 2) is the most acidic. The pKa values of $SH$ and $NH3+$ lie between 8 and 10.5 (8.18 and 10.28 in the textbook table): $SH$ (pKa about 8.2) is somewhat more acidic than $NH3+$ (about 10.3), but both are much weaker acids than $COOH$.')
           },
           {
             prompt: t('Kodėl tiolis rūgštesnis už alkoholį?', 'Why is a thiol more acidic than an alcohol?'),

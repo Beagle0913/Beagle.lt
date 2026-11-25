@@ -1054,7 +1054,7 @@
                 solution: t('$C=O^+^−H$ stipriau traukia elektronus nei $C=O$, todėl $δ+$ ant anglies didesnis ir silpnam nukleofilui užtenka mažesnės energijos atakuoti.', '$C=O^+^−H$ withdraws electrons more strongly than $C=O$, so the $δ+$ on carbon is larger and a weak nucleophile can attack with less energy.')
               }
             ],
-            why: t('Rūgštinė terpė didina karbonilgrupės aktyvumą. Silpniems nukleofilams (alkoholiams, vandeniui) tai būtina, o stiprūs nukleofilai (hidridas, cianidas) atakuoja ir neutralų karbonilą.', 'An acidic medium raises the reactivity of the carbonyl group. Weak nucleophiles (alcohols, water) need it, while strong ones (hydride, cyanide) also attack the neutral carbonyl.'),
+            why: t('Rūgštinė terpė didina karbonilgrupės aktyvumą. Silpni nukleofilai (alkoholiai, vanduo) su juo reaguoja daug greičiau (hidratas ir pusacetalis susidaro ir be rūgšties, o acetaliui susidaryti rūgšties būtina), o stiprūs nukleofilai (hidridas, cianidas) atakuoja ir neutralų karbonilą.', 'An acidic medium raises the reactivity of the carbonyl group. Weak nucleophiles (alcohols, water) react much faster with it (a hydrate and a hemiacetal also form without acid, but acetal formation requires it), while strong ones (hydride, cyanide) also attack the neutral carbonyl.'),
             src: 'L13 p6, p8'
           },
           {
@@ -1174,7 +1174,7 @@
                 ],
                 answer: 0,
                 hint: t('Hidratą stabilizuoja tai, kas didina $δ+$.', 'The hydrate is favoured by whatever raises $δ+$.'),
-                solution: t('Akceptorinė grupė didina $δ+$. Alkilai ir aromatinis žiedas $δ+$ mažina, todėl jų aldehidų ir ketonų hidratų pusiausvyroje daug nėra.', 'An acceptor group raises $δ+$. Alkyl groups and an aromatic ring lower it, so their aldehydes and ketones hardly form hydrate at equilibrium.')
+                solution: t('Akceptorinė grupė didina $δ+$. Alkilai ir aromatinis žiedas $δ+$ mažina, todėl ketonai ir didesni aldehidai hidrato sudaro mažai, o metanalis ir etanalis daugiausia yra hidrato pavidalo.', 'An acceptor group raises $δ+$. Alkyl groups and an aromatic ring lower it, so ketones and larger aldehydes form little hydrate, while methanal and ethanal are largely hydrated.')
               }
             ],
             why: t('Hidrato dalis tirpale atspindi karbonilo anglies elektrofiliškumą: ji didžiausia aldehiduose su stipriomis akceptorinėmis grupėmis ir mažiausia ketonuose.', 'The share of hydrate in solution reflects the electrophilicity of the carbonyl carbon: it is highest for aldehydes with strong acceptor groups and lowest for ketones.'),
@@ -1244,7 +1244,7 @@
                 solution: t('Teigiamas deguonis stipriau traukia $π$ elektronus, todėl anglies $δ+$ didesnis ir silpnas nukleofilas ją atakuoja lengviau.', 'The positive oxygen pulls the $π$ electrons harder, so the $δ+$ on carbon is larger and a weak nucleophile attacks it more easily.')
               }
             ],
-            why: t('Rūgštyje nukleofilą (vandenį) atakuoti paruošia protonizuotas karbonilas. Tai ta pati dviejų stadijų schema kaip ir hemiacetalio, acetalio bei imino susidarymo.', 'In acid a protonated carbonyl prepares the attack of the nucleophile (water). It is the same pattern as in hemiacetal, acetal and imine formation.'),
+            why: t('Rūgštyje nukleofilą (vandenį) atakuoti paruošia protonizuotas karbonilas. Tai tas pats principas kaip ir hemiacetalio, acetalio bei imino susidarymo.', 'In acid a protonated carbonyl prepares the attack of the nucleophile (water). It is the same pattern as in hemiacetal, acetal and imine formation.'),
             src: 'L13 p13'
           },
           {
@@ -1929,6 +1929,8 @@
           if (!pick) throw new Error('u13.enol: no usable ketone');
           const { smi, maj, min, alpha, ring } = pick;
           const dik = false;
+          /* R = CH3 (1-arylpropan-2-ones): the conjugated enol CH3-C(OH)=CH-Ar has a trisubstituted C=C, the other a 1,1-disubstituted one, so "more substituted" is true there and is not offered as a wrong option */
+          const moreSubst = smi.indexOf('CC(=O)C') === 0;
           const flip = ctx.int(0, 1) === 1;
           return {
             q: [
@@ -1958,7 +1960,7 @@
                   { text: t('Šis enolis turi daugiau $α$ vandenilių.', 'This enol has more $α$ hydrogens.') },
                   { text: t('Kitas enolis sudaro stipresnę rūgštį.', 'The other enol forms a stronger acid.') },
                   { text: t('Šio enolio dvigubasis ryšys labiau pakeistas.', 'This enol has the more substituted double bond.') }
-                ],
+                ].filter((o, i) => i < 3 || !moreSubst),
                 answer: 0,
                 hint: t('Enolinės formos dalį padidina konjugacija ir vandeniliniai ryšiai.', 'The share of the enol form is raised by conjugation and hydrogen bonds.'),
                 solution: dik ? t('Dikarbonilo junginyje enolis dėl konjugacijos ir vandenilinio ryšio gali net vyrauti (2,4-pentandionas: 70–90 %).', 'In a dicarbonyl compound the enol can even dominate through conjugation and a hydrogen bond (pentane-2,4-dione: 70–90 %).') : t('Konjuguota sistema yra stabilesnė, todėl tokio enolio pusiausvyroje daugiau.', 'A conjugated system is more stable, so more of this enol is present at equilibrium.')
@@ -2483,7 +2485,7 @@
               {
                 prompt: t('Kuris aprašymas teisingas?', 'Which description is correct?'), kind: 'choice',
                 options: [
-                  { text: t('Pirmiausia susidaro enoliatas, o jo elektronai išstumia $OH−$ (viena sinchroniška stadija).', 'First the enolate forms, and its electrons push out $OH−$ (one concerted stage).') },
+                  { text: t('Pirmiausia susidaro enoliatas, o jo elektronai išstumia $OH−$ (dvi stadijos, E1cB).', 'First the enolate forms, and its electrons push out $OH−$ (two stages, E1cB).') },
                   { text: t('Pirmiausia atskyla $OH−$ ir susidaro karbokatijonas.', 'First $OH−$ leaves and a carbocation forms.') },
                   { text: t('Hidroksidas atakuoja $β$ anglį ir ją pakeičia.', 'Hydroxide attacks the $β$ carbon and replaces the group.') },
                   { text: t('Bazė atplėšia $β$-protoną.', 'The base removes the $β$ proton.') }

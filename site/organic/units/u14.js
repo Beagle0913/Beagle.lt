@@ -165,7 +165,7 @@
         break;
       }
       case 'anh-w':
-        F = { reag: [anh, 'O'], run: ['acyl.nu', [anh], { nu: 'water' }], tap: anh, leave: 'RCOO', two: true, rights: [acid, acid], wrongSets: [[acid], [acid, 'OC' + X.rs], [acid, 'O=C' + X.rs], ['[O-]C(=O)' + X.rs + '.[Na+]', acid]], skipCheck: true };
+        F = { reag: [anh, 'O'], run: ['acyl.nu', [anh], { nu: 'water' }], tap: anh, leave: 'RCOO', two: true, rights: [acid, acid], wrongSets: [[acid, 'OC' + X.rs], [acid, 'O=C' + X.rs], ['[O-]C(=O)' + X.rs + '.[Na+]', acid]], skipCheck: true };
         F.why = t('Vanduo puola anhidrido karbonilo anglį; išeina karboksilatas, kuris tampa kita rūgšties molekule. Iš vienos anhidrido molekulės gaunamos dvi rūgšties molekulės.', 'Water attacks a carbonyl carbon of the anhydride; a carboxylate leaves and becomes a second acid molecule. One anhydride molecule gives two molecules of the acid.');
         break;
       case 'anh-nh3':
@@ -221,7 +221,7 @@
     const steps = [
       tap(carbons.length > 1 ? t('Bakstelėkite anglies atomus, kuriuos gali pulti nukleofilas.', 'Tap the carbon atoms that a nucleophile can attack.') : t('Bakstelėkite anglies atomą, kurį puola nukleofilas.', 'Tap the carbon atom that the nucleophile attacks.'),
         { smi: F.tap, opts: { numbers: 'all' } }, carbons,
-        t('Ieškokite anglies, kuri sujungta su dviem elektroneigiamais atomais ir todėl yra stipriai δ+.', 'Look for the carbon bonded to two electronegative atoms, which makes it strongly δ+.'),
+        fam === 'nitrile' ? t('Ieškokite $C≡N$ grupės anglies: elektroneigiamas azotas daro ją δ+.', 'Look for the carbon of the $C≡N$ group: the electronegative nitrogen makes it δ+.') : t('Ieškokite anglies, kuri sujungta su dviem elektroneigiamais atomais ir todėl yra stipriai δ+.', 'Look for the carbon bonded to two electronegative atoms, which makes it strongly δ+.'),
         t('Šis karbonilo (ar nitrilo) anglies atomas yra elektrofilas: jį puola nukleofilas ir susidaro tetraedrinis tarpinis junginys (nitrilo atveju – po prijungimo vandens).', 'This carbonyl (or nitrile) carbon is the electrophile: the nucleophile attacks it and a tetrahedral intermediate forms (for a nitrile, after water has added).'))
     ];
     if (F.leave) {
@@ -436,8 +436,8 @@
             src: 'Klein'
           },
           {
-            p: t('−I efektas silpnėja tolstant nuo karboksigrupės: 2-chlorbutano rūgštis (pKa 2,86) stipresnė už 3- (4,05) ir 4-chlorbutano (4,52), o ši artima butano rūgščiai (4,82). α-Hidroksirūgštys – stipriausios iš hidroksirūgščių.',
-              'The −I effect fades with distance from the carboxyl group: 2-chlorobutanoic acid (pKa 2.86) is stronger than the 3- (4.05) and 4-chloro (4.52) acids, which are close to butanoic acid (4.82). α-Hydroxy acids are the strongest of the hydroxy acids.'),
+            p: t('−I efektas silpnėja tolstant nuo karboksigrupės: 2-chlorbutano rūgštis (pKa 2,86) stipresnė už 3- (4,05) ir 4-chlorbutano (4,52); 4-chlorbutano rūgštis jau artima butano rūgščiai (4,82). α-Hidroksirūgštys – stipriausios iš hidroksirūgščių.',
+              'The −I effect fades with distance from the carboxyl group: 2-chlorobutanoic acid (pKa 2.86) is stronger than the 3- (4.05) and 4-chloro (4.52) acids; the 4-chloro acid is already close to butanoic acid (4.82). α-Hydroxy acids are the strongest of the hydroxy acids.'),
             src: 'Klein; T p93'
           },
           {
@@ -669,8 +669,8 @@
         blocks: [
           { h: t('Esterinimas: rūgštis + alkoholis', 'Esterification: acid + alcohol') },
           {
-            p: t('Rūgštis ir alkoholis, esant H+, sudaro esterį ir vandenį. Reakcija grįžtamoji: alkoholio perteklius ar vandens šalinimas pastumia pusiausvyrą į esterį. Žymėtasis $18O$ liko esteryje, todėl nutrūksta rūgšties C–OH, o ne alkoholio C–O ryšys.',
-              'An acid and an alcohol with H+ give an ester and water. The reaction is reversible: an excess of alcohol or removal of water pushes the equilibrium to the ester. Labelled $18O$ stayed in the ester, so the acid C–OH bond breaks, not the C–O bond of the alcohol.'),
+            p: t('Rūgštis ir alkoholis, esant H+, sudaro esterį ir vandenį. Reakcija grįžtamoji: alkoholio perteklius ar vandens šalinimas pastumia pusiausvyrą į esterį. Kai žymėtas alkoholio deguonis ($R–^{18}OH$), $18O$ lieka esteryje, todėl nutrūksta rūgšties C–OH, o ne alkoholio C–O ryšys.',
+              'An acid and an alcohol with H+ give an ester and water. The reaction is reversible: an excess of alcohol or removal of water pushes the equilibrium to the ester. When the alcohol oxygen is labelled ($R–^{18}OH$), the $18O$ stays in the ester, so the acid C–OH bond breaks, not the C–O bond of the alcohol.'),
             src: 'T p89'
           },
           {
@@ -786,7 +786,7 @@
             mech: [
               {
                 scheme: { items: [{ smi: 'C[O-]', opts: { lonePairs: true } }, { plus: true }, { smi: 'CC(=O)OC', opts: { allH: true } }] },
-                arrows: [{ from: { m: 0, lp: 1 }, to: { m: 1, a: 'H0' } }, { from: { m: 1, b: [0, 'H0'] }, to: { m: 1, mid: [0, 1] } }],
+                arrows: [{ from: { m: 0, lp: 1 }, to: { m: 1, a: 'H0' } }, { from: { m: 1, b: [0, 'H0'] }, to: { m: 1, a: 0 } }],
                 note: t('1. Metoksidas atplėšia α-vandenilį: enolatas.', '1. Methoxide removes an α-hydrogen: the enolate.')
               },
               {
@@ -1457,13 +1457,13 @@
                 tx('Pusiau esteryje, pusiau vandenyje.', 'Half in the ester and half in the water.'),
                 tx('Nei esteryje, nei vandenyje: jis išsiskiria kaip dujos.', 'Neither in the ester nor in the water: it leaves as a gas.')
               ], 0,
-              t('Kuri jungtis nutrūksta: rūgšties C–O ar alkoholio O–H?', 'Which bond breaks: the C–O of the acid or the O–H of the alcohol?'),
+              t('Kuri jungtis nutrūksta: rūgšties C–OH ar alkoholio C–O?', 'Which bond breaks: the C–OH bond of the acid or the C–O bond of the alcohol?'),
               t('Vanduo gaunamas iš rūgšties OH ir alkoholio H, todėl alkoholio deguonis lieka esteryje.', 'The water comes from the acid OH and the alcohol H, so the alcohol oxygen stays in the ester.')),
               {
                 prompt: t('Bakstelėkite rūgšties jungtį, kuri nutrūksta.', 'Tap the bond of the acid that breaks.'), kind: 'atoms', bonds: true,
                 mol: { smi: 'OC(=O)c1ccccc1', opts: { numbers: 'all' } }, answer: [[0, 1]],
                 hint: t('Kuri OH grupė išeina kaip vanduo?', 'Which OH group leaves as water?'),
-                solution: t('Nutrūksta karboksigrupės C–OH jungtis (atomai Nr. 1 ir 2): OH atskyla nuo rūgšties, o ne alkoholio O–H deguonis.', 'The C–OH bond of the carboxyl group breaks (atoms no. 1 and 2): the OH leaves from the acid, not the alcohol oxygen.')
+                solution: t('Nutrūksta karboksigrupės C–OH jungtis (atomai Nr. 1 ir 2): OH atskyla nuo rūgšties, o ne alkoholio deguonis.', 'The C–OH bond of the carboxyl group breaks (atoms no. 1 and 2): the OH leaves from the acid, not the alcohol oxygen.')
               }
             ],
             why: t('Žymėtojo deguonies eksperimentas parodė, kad rūgšties C–OH ryšys nutrūksta, o alkoholio deguonis lieka esteryje; tai atitinka nukleofilinio acilpakeitimo mechanizmą.', 'The labelled-oxygen experiment showed that the C–OH bond of the acid breaks and the alcohol oxygen stays in the ester; this fits the mechanism of nucleophilic acyl substitution.'),
@@ -2125,7 +2125,7 @@
             steps: [
               tap(t('Bakstelėkite heteroatomą, kuris acilinamas.', 'Tap the heteroatom that is acylated.'), { smi: 'Nc1ccc(O)cc1', opts: { numbers: 'all' } }, [0],
                 t('Palyginkite N ir O kaip nukleofilus: kuris lengviau dalijasi laisva elektronų pora?', 'Compare N and O as nucleophiles: which shares its lone pair more readily?'),
-                t('Aminogrupės azotas (Nr. 1) yra stipresnis nukleofilas už fenolio deguonį, kurio pora delokalizuota į žiedą.', 'The nitrogen of the amino group (no. 1) is a stronger nucleophile than the phenolic oxygen, whose lone pair is delocalised into the ring.')),
+                t('Aminogrupės azotas (Nr. 1) yra stipresnis nukleofilas už fenolio deguonį: N mažiau elektroneigiamas už O ir lengviau atiduoda laisvą elektronų porą.', 'The nitrogen of the amino group (no. 1) is a stronger nucleophile than the phenolic oxygen: N is less electronegative than O and gives up its lone pair more readily.')),
               cho(t('Kokio tipo darinys susidaro?', 'What type of derivative forms?'), [tx('amidas', 'amide'), tx('esteris', 'ester'), tx('anhidridas', 'anhydride'), tx('rūgšties chloridas', 'acyl chloride')], 0,
                 t('Acilinamas azotas.', 'Nitrogen is acylated.'), t('N prijungia acilą: susidaro amidas.', 'N takes up the acyl group: an amide forms.'))
             ],
