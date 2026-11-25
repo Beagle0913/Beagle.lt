@@ -172,10 +172,21 @@
     const steps = [];
     if (asAcid) {
       if (many) {
-        steps.push(atomsStep(t('Bakstelėkite atomą, kuris atiduoda protoną $H+$ (rūgščiausia vieta).', 'Tap the atom that gives up the proton $H+$ (the most acidic site).'),
-          given, [k],
+        // every atom that gives the same conjugate base is as acidic as atom k (symmetry-equivalent: the two alpha carbons of cyclohexanone, ethyne, the OH groups of H2SO4, the CH3 groups of propane)
+        const eq = [];
+        pa.atoms.forEach((a, j) => {
+          if (j === k) { eq.push(j); return; }
+          if (a.h < 1 || a.aromatic) return;
+          const x = change(ctx, A, j, -1, -1);
+          if (x && canon(ctx, x) === canon(ctx, B)) eq.push(j);
+        });
+        const nums = eq.map((j) => j + 1);
+        steps.push(atomsStep(eq.length > 1 ? t('Bakstelėkite visus atomus, kurie gali atiduoti protoną $H+$ (rūgščiausia vieta).', 'Tap all the atoms that can give up the proton $H+$ (the most acidic site).') : t('Bakstelėkite atomą, kuris atiduoda protoną $H+$ (rūgščiausia vieta).', 'Tap the atom that gives up the proton $H+$ (the most acidic site).'),
+          given, eq,
           t('Prisiminkite eilę SH > OH > NH > CH; greta esanti C=O grupė labai padidina gretimo C–H rūgštingumą.', 'Recall the order SH > OH > NH > CH; a neighbouring C=O group raises the acidity of the C–H next to it a great deal.'),
-          t('Protoną atiduoda atomas Nr. ' + (k + 1) + ': kitų vandenilių rūgštingumas mažesnis.', 'The proton is given up by atom no. ' + (k + 1) + ': the other hydrogens are less acidic.'), ho));
+          eq.length > 1
+            ? t('Protoną atiduoda atomai Nr. ' + nums.join(' ir Nr. ') + ': jie lygiaverčiai, bet kuriam atidavus protoną gaunama ta pati konjuguotoji bazė; kitų vandenilių rūgštingumas mažesnis.', 'The proton is given up by atoms no. ' + nums.join(' and no. ') + ': they are equivalent, and whichever gives up the proton, the same conjugate base results; the other hydrogens are less acidic.')
+            : t('Protoną atiduoda atomas Nr. ' + (k + 1) + ': kitų vandenilių rūgštingumas mažesnis.', 'The proton is given up by atom no. ' + (k + 1) + ': the other hydrogens are less acidic.'), ho));
       }
       steps.push({
         prompt: many ? t('Kokia yra šios rūgšties konjuguotoji bazė (protoną atiduoda rūgščiausia vieta)?', 'What is the conjugate base of this acid (the proton comes from the most acidic site)?') : t('Kokia yra šios rūgšties konjuguotoji bazė?', 'What is the conjugate base of this acid?'), kind: 'choice', options, answer: 0,
@@ -238,7 +249,7 @@
             t('Stipresnė yra rūgštis ' + (stronger === 0 ? 'A' : 'B') + ', todėl jos konjuguotoji bazė silpnesnė; stipresnė bazė yra silpnesniosios rūgšties (' + (stronger === 0 ? 'B' : 'A') + ') konjuguotoji bazė.',
               'Acid ' + (stronger === 0 ? 'A' : 'B') + ' is stronger, so its conjugate base is weaker; the stronger base is the conjugate base of the weaker acid (' + (stronger === 0 ? 'B' : 'A') + ').'))
         ],
-        why: t('Ka rodo, kokia dalis rūgšties disocijuoja, o pKa = −lg Ka: didesnė Ka reiškia mažesnę pKa. Kuo mažesnė pKa, tuo stipresnė rūgštis ir tuo silpnesnė jos konjuguotoji bazė.',
+        why: t('Ka rodo, kaip stipriai rūgštis disocijuoja (tai disociacijos pusiausvyros konstanta: kuo didesnė Ka, tuo stipresnė rūgštis), o pKa = −lg Ka: didesnė Ka reiškia mažesnę pKa. Kuo mažesnė pKa, tuo stipresnė rūgštis ir tuo silpnesnė jos konjuguotoji bazė.',
           'Ka tells how far an acid dissociates, and pKa = −lg Ka: a larger Ka means a smaller pKa. The smaller the pKa, the stronger the acid and the weaker its conjugate base.'),
         src: 'L4 p9, T p33'
       };
@@ -732,9 +743,9 @@
         {
           table: {
             head: [t('Rūgštis', 'Acid'), f('pKa'), t('Rūgštis', 'Acid'), f('pKa')],
-            rows: [[M('C'), nt(40), M('C(Cl)(Cl)Cl'), nt(15.7)]]
+            rows: [[M('C'), t('≈50', '≈50'), M('C(Cl)(Cl)Cl'), nt(15.7)]]
           },
-          caption: t('Chloras (−I) padaro C–H rūgštį daug stipresnę: metanas ir chloroformas. Skaidrės reikšmės apytikslės: tikrasis chloroformo pKa didesnis, tačiau kryptis ($−I$ didina rūgštingumą) ta pati.', 'Chlorine (−I) makes a C–H acid much stronger: methane and chloroform. The slide values are approximate; the real pKa of chloroform is higher, but the trend ($−I$ raises acidity) is the same.'),
+          caption: t('Chloras (−I) padaro C–H rūgštį daug stipresnę: metanas ir chloroformas. Reikšmės apytikslės (metano pKa paprastai nurodomas 48–50), tikrasis chloroformo pKa didesnis, tačiau kryptis ($−I$ didina rūgštingumą) ta pati.', 'Chlorine (−I) makes a C–H acid much stronger: methane and chloroform. The values are approximate (the pKa of methane is usually given as 48–50); the real pKa of chloroform is higher, but the trend ($−I$ raises acidity) is the same.'),
           src: 'L4 p21, T p35'
         },
         {
@@ -779,11 +790,11 @@
       blocks: [
         { h: t('Kas gali būti Brionstedo bazė', 'What can be a Brønsted base') },
         {
-          p: t('Kad prisijungtų protoną, bazei reikia elektronų poros. Tai gali būti $π$ ryšio elektronai arba heteroatomo (daugiausia O, N, S ar halogeno) laisvoji pora. Alkenų, dienų ir arenų baziniai centrai yra $π$ elektronai; jie sudaro labai silpnas bazes, nes protoną jungianti pora nėra laisva, ir susidaro tik trumpalaikiai $π$-kompleksai.',
-            'To form a covalent bond with a proton, a base must have either $π$ electrons or a lone pair (most often on the heteroatoms O, N, S or on halogens). In alkenes, dienes and arenes the basic centre is the $π$ electrons: these are very weak bases because the electron pair that binds the proton is not free; only short-lived $π$ complexes form.'),
+          p: t('Kad prisijungtų protoną, bazei reikia elektronų poros. Tai gali būti $π$ ryšio elektronai arba heteroatomo (daugiausia O, N, S ar halogeno) laisvoji pora. Alkenų, dienų ir arenų baziniai centrai yra $π$ elektronai; jie sudaro labai silpnas bazes, nes protoną jungianti pora nėra laisva: pirmiausia susidaro $π$-kompleksas, o su stipria rūgštimi protonas prisijungia toliau ir susidaro karbokatijonas ($σ$ ryšys), kaip elektrofilinio prisijungimo reakcijose.',
+            'To form a covalent bond with a proton, a base must have either $π$ electrons or a lone pair (most often on the heteroatoms O, N, S or on halogens). In alkenes, dienes and arenes the basic centre is the $π$ electrons: these are very weak bases because the electron pair that binds the proton is not free: first a $π$ complex forms; with a strong acid the proton is taken up further and a carbocation forms (a $σ$ bond), as in electrophilic addition.'),
           src: 'L4 p25, T p35'
         },
-        { scheme: { items: [M('C=C'), PLUS, M('[H+]'), { arrow: '⇌', above: t('π-kompleksas', 'π complex') }, M('C=C.[H+]')] }, caption: t('Etenas ir protonas: $π$-kompleksas, naujas $σ$ ryšys nesusidaro.', 'Ethene and a proton: a $π$ complex, no new $σ$ bond forms.'), src: 'L4 p25' },
+        { scheme: { items: [M('C=C'), PLUS, M('[H+]'), { arrow: '⇌', above: t('π-kompleksas', 'π complex') }, M('C=C.[H+]')] }, caption: t('Etenas ir protonas: $π$-kompleksas, dar be naujo $σ$ ryšio (silpnos rūgštys duoda tik $π$-kompleksus, stiprios – karbokatijoną).', 'Ethene and a proton: a $π$ complex, no new $σ$ bond yet (weak acids give only $π$ complexes, strong acids a carbocation).'), src: 'L4 p25' },
         { scheme: { items: [M('c1ccccc1'), PLUS, M('[H+]'), { arrow: '⇌', above: t('π-kompleksas', 'π complex') }, M('c1ccccc1.[H+]')] }, caption: t('Benzenas elgiasi panašiai.', 'Benzene behaves in a similar way.'), src: 'L4 p25' },
         {
           p: t('Bazės su laisvąja elektronų pora skirstomos pagal bazinio centro atomą: amonio ($:N$), oksonio ($:O$) ir sulfonio ($:S$).',
@@ -948,7 +959,7 @@
           example: {
             q: [{ p: t('Kokį vaidmenį vaidina vanduo reakcijoje su $NH3$ ir kokį reakcijoje su $HCl$?', 'What role does water play in the reaction with $NH3$ and what role in the reaction with $HCl$?') }],
             steps: [
-              [{ p: t('Su amoniaku ($NH4+$ pKa 9,26): vandens pKa 15,7 didesnė, todėl vanduo – rūgštis, atiduodanti protoną amoniakui. Susidaro $NH4+$ ir $OH-$.', 'With ammonia ($NH4+$ pKa 9.26): the pKa of water, 15.7, is larger, so water is the acid and gives a proton to ammonia. $NH4+$ and $OH-$ form.') }],
+              [{ p: t('Su amoniaku ($NH4+$ pKa 9,26): amoniakas daug silpnesnė rūgštis už vandenį (38 ir 15,7) ir daug stipresnė bazė ($NH4+$ 9,26, $H3O+$ −1,74), todėl vanduo – rūgštis, atiduodanti protoną amoniakui. Kadangi vanduo (15,7) silpnesnė rūgštis už $NH4+$ (9,26), pusiausvyra pasislinkusi į kairę: susidaro tik šiek tiek $NH4+$ ir $OH-$.', 'With ammonia ($NH4+$ pKa 9.26): ammonia is a far weaker acid than water (38 vs 15.7) and a far stronger base ($NH4+$ 9.26 vs $H3O+$ −1.74), so water is the acid and gives a proton to ammonia. Because water (15.7) is a weaker acid than $NH4+$ (9.26), the equilibrium lies to the left: only a little $NH4+$ and $OH-$ form.') }],
               [{ p: t('Su $HCl$ (pKa −7): $HCl$ daug stipresnė rūgštis, todėl vanduo – bazė ir prisijungia protoną. Susidaro $H3O+$ ir $Cl-$.', 'With $HCl$ (pKa −7): $HCl$ is a far stronger acid, so water is the base and takes up the proton. $H3O+$ and $Cl-$ form.') }]
             ]
           },
@@ -1583,7 +1594,7 @@
       t('Sieros atomas didesnis ir labiau poliarizuojamas: laisvoji pora išsklaidyta didesniame tūryje ir sunkiau jungia protoną, todėl $:S$ yra silpnesnė bazė už $:O$.', 'The sulfur atom is larger and more polarisable: its lone pair is spread over a larger volume and binds a proton less readily, so $:S$ is a weaker base than $:O$.'),
       [t('Siera mažiau elektroneigiama už deguonį, todėl jos laisvoji pora labiau tinka protonui.', 'Sulfur is less electronegative than oxygen, so its lone pair suits a proton better.'), t('Eteriai bazingesni už alkoholius, nes neturi $O–H$ ryšio.', 'Ethers are more basic than alcohols because they have no $O–H$ bond.'), t('Siera turi daugiau elektronų, todėl protoną sudaro stipresnį ryšį.', 'Sulfur has more electrons, so it forms a stronger bond to the proton.')],
       t('Didėjant atomo matmenims, laisvoji pora labiau išsklaidoma ir bazė silpnėja: $:S$ < $:O$ < $:N$.', 'As atoms get larger the lone pair is spread out more and the base gets weaker: $:S$ < $:O$ < $:N$.'), 'L4 p29, T p36'),
-    baseCentre(3, 'C=CCCN', 4, t('Bute-3-en-1-amine yra ir $π$ ryšys, ir laisvoji azoto pora.', 'But-3-en-1-amine has both a $π$ bond and the lone pair of nitrogen.'),
+    baseCentre(3, 'C=CCCN', 4, t('But-3-en-1-amine yra ir $π$ ryšys, ir laisvoji azoto pora.', 'But-3-en-1-amine has both a $π$ bond and the lone pair of nitrogen.'),
       t('Palyginkite, kuris centras – $π$ elektronai ar laisvoji pora – lengviau prieinamas protonui.', 'Compare which centre, $π$ electrons or the lone pair, is more available to a proton.'), t('Azoto atomas (Nr. 5) yra bazinis centras; $π$ ryšys – labai silpnas.', 'The nitrogen atom (no. 5) is the basic centre; the $π$ bond is a very weak one.'),
       t('Laisvoji azoto pora nedalyvauja jokiame ryšyje ir lengvai sudaro ryšį su protonu, o $π$ ryšio elektronai jau yra ryšyje: $π$ bazės labai silpnos.', 'The lone pair on nitrogen is in no bond and readily bonds to a proton, whereas the $π$ electrons are already in a bond: $π$ bases are very weak.'),
       [t('$π$ elektronai labiau išsikišę, todėl dvigubasis ryšys stipresnė bazė.', 'The $π$ electrons stick out more, so a double bond is the stronger base.'), t('Azotas negali prisijungti protono, nes jau susijęs su trimis atomais.', 'Nitrogen cannot take a proton because it is already linked to three atoms.'), t('Abu centrai vienodai bazingi.', 'Both centres are equally basic.')],
@@ -1782,7 +1793,7 @@
           [t('Brionstedo teorija', 'Brønsted theory'), t('Rūgštis – protonų donoras, bazė – akceptorius. Konjuguotoji pora skiriasi vienu $H+$; stipresnė rūgštis ↔ silpnesnė konjuguotoji bazė.', 'An acid is a proton donor, a base an acceptor. A conjugate pair differs by one $H+$; a stronger acid goes with a weaker conjugate base.')],
           [t('pKa', 'pKa'), t('$pKa = −lg Ka$; mažesnė pKa – stipresnė rūgštis. Ribos: < 1, 1–5, 5–15, > 15. pH ≠ pKa.', '$pKa = −lg Ka$; a smaller pKa means a stronger acid. Limits: < 1, 1–5, 5–15, > 15. pH ≠ pKa.')],
           [t('Anijono stabilumas', 'Stability of the anion'), t('Lemia delokalizacija (rezonansas), atomas (O > N > C; S > O dėl poliarizuojamumo), hibridizacija (sp > sp2 > sp3), pakaitas (−I stiprina, +I silpnina; poveikis mažėja su atstumu), tirpiklis.', 'Decided by delocalisation (resonance), the atom (O > N > C; S > O by polarisability), hybridisation (sp > sp2 > sp3), the substituent (−I strengthens, +I weakens; the effect fades with distance) and the solvent.')],
-          [t('Rūgščių eilė', 'Order of acids'), t('C–H < N–H < O–H < S–H; $RCOOH$ (3–5) > fenolis (9,9) > alkoholis (≈16); $HCOOH$ > $CH3COOH$ > $(CH3)3CCOOH$; $FCH2COOH$ stipriausia iš halogenacto rūgščių.', 'C–H < N–H < O–H < S–H; $RCOOH$ (3–5) > phenol (9.9) > alcohol (≈16); $HCOOH$ > $CH3COOH$ > $(CH3)3CCOOH$; $FCH2COOH$ is the strongest of the haloacetic acids.')],
+          [t('Rūgščių eilė', 'Order of acids'), t('C–H < N–H < O–H < S–H; $RCOOH$ (3–5) > fenolis (9,9) > alkoholis (≈16); $HCOOH$ > $CH3COOH$ > $(CH3)3CCOOH$; $FCH2COOH$ stipriausia iš monohalogenacto rūgščių $XCH2COOH$.', 'C–H < N–H < O–H < S–H; $RCOOH$ (3–5) > phenol (9.9) > alcohol (≈16); $HCOOH$ > $CH3COOH$ > $(CH3)3CCOOH$; $FCH2COOH$ is the strongest of the monohaloacetic acids $XCH2COOH$.')],
           [t('Bazės', 'Bases'), t('Reikia $π$ elektronų arba laisvosios poros. $:N$ > $:O$ > $:S$; $π$ bazės labai silpnos. Matas – konjuguotosios rūgšties pKa (didesnė – stipresnė bazė). Anijonas > neutrali molekulė.', 'A base needs $π$ electrons or a lone pair. $:N$ > $:O$ > $:S$; $π$ bases are very weak. The measure is the pKa of the conjugate acid (larger means a stronger base). An anion is stronger than the neutral molecule.')],
           [t('Aminai ir anilinai', 'Amines and anilines'), t('Donorai didina, akceptoriai mažina bazingumą: $CH3NH2$ (10,62) > $NH3$ (9,26) > anilinas (4,6) > difenilaminas (0,9) > trifenilaminas (< 0); 4-nitro < H < alkilas < alkoksi.', 'Donors raise and acceptors lower basicity: $CH3NH2$ (10.62) > $NH3$ (9.26) > aniline (4.6) > diphenylamine (0.9) > triphenylamine (< 0); 4-nitro < H < alkyl < alkoxy.')],
           [t('Amfoteriniai junginiai', 'Amphoteric compounds'), t('Turi ir rūgštinį, ir baziną centrą (vanduo, alkoholiai, karboksirūgštys, aminorūgštys). Vaidmenį lemia partneris.', 'They have both an acidic and a basic centre (water, alcohols, carboxylic acids, amino acids). The partner decides the role.')],
