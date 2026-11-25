@@ -239,5 +239,5 @@ test('C12: pKa generator WHY (LT) no longer says Ka is the fraction dissociated'
 test('C13: LT name But-3-en-1-amine is spelled right', () => {
   const t = JSON.stringify(U4.unit);
   assert.ok(!t.includes('Bute-3-en-1-amine'));
-  assert.ok(t.includes('But-3-en-1-amine yra'));
+  assert.ok(t.includes('3-Buten-1-amine yra'));
 });
