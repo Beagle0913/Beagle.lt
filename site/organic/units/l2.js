@@ -172,8 +172,8 @@
             src: 'LW2 p3'
           },
           {
-            rule: t('Gryno acetono $n_D^20$ yra apie 1,359; vandens apie 1,333. Vandens priemaiša rodiklį mažina, o rodiklio pokytis rodo, kiek mišinys nutolo nuo gryno junginio.',
-              'Pure acetone has $n_D^20$ of about 1.359, water about 1.333. Water as an impurity lowers the value, and the shift shows how far the mixture is from the pure compound.'),
+            rule: t('Gryno acetono $n_D^20$ yra apie 1,359; vandens apie 1,333. Lūžio rodiklis rodo, ar skystis grynas (jis sutampa su lentelės verte), bet vien pagal jį negalima pasakyti, kiek vandens yra acetone: acetonas su nedideliu vandens kiekiu turi truputį didesnį rodiklį nei grynas acetonas.',
+              'Pure acetone has $n_D^20$ of about 1.359, water about 1.333. The refractive index shows whether a liquid is pure (it matches the table value), but it cannot by itself tell how much water is in acetone: acetone with a little water has a slightly higher index than pure acetone.'),
             src: 'LW2 p3, Klein'
           },
           {
@@ -234,7 +234,7 @@
           t('Termometras ties atšakos apatiniu kraštu; kolba ne daugiau 2/3; virimo akmenukai; vanduo į kondensatorių iš apačios.', 'Thermometer at the lower edge of the side arm; flask at most 2/3 full; boiling chips; condenser water in from below.'),
           t('1–2 lašai per sekundę; pradinė frakcija išmetama; pagrindinė frakcija renkama 55–58 °C; stabdoma, kai temperatūra viršija 58 °C arba kolboje lieka apie 3 ml.', 'One or two drops per second; discard the forerun; collect the main fraction at 55–58 °C; stop when the temperature passes 58 °C or about 3 ml remain.'),
           t('Azeotropas verda pastovioje temperatūroje, bet nėra grynas junginys.', 'An azeotrope boils at constant temperature but is not a pure compound.'),
-          t('$n = sin α / sin β$; $n_D^20$ gryno acetono apie 1,359; vanduo rodiklį mažina.', '$n = sin α / sin β$; $n_D^20$ of pure acetone is about 1.359; water lowers it.')
+          t('$n = sin α / sin β$; $n_D^20$ gryno acetono apie 1,359; sutapimas su lentelės verte rodo grynumą, bet vandens kiekio pagal jį nustatyti negalima.', '$n = sin α / sin β$; $n_D^20$ of pure acetone is about 1.359; a match with the table value shows purity, but the water content cannot be read from it.')
         ]
       }
     ],
@@ -576,7 +576,7 @@
               ['abiejų skysčių atskirų frakcijų, kiekviena grynesnė už 99 %', 'separate fractions of both liquids, each purer than 99 %']
             ], 0, t('Kaip elgiasi azeotropo garai?', 'How does the vapour of an azeotrope behave?'),
               t('Azeotropo garai ir skystis sudėtimi sutampa, todėl frakcine distiliacija toliau nesuskaidoma.', 'The vapour and liquid of an azeotrope have the same composition, so fractional distillation cannot go further.'))],
-            why: t('Absoliutų etanolį gauname tik vandenį susiejus chemiškai, pavyzdžiui, su $CaO$.', 'Absolute ethanol is obtained only by binding the water chemically, for example with $CaO$.'),
+            why: t('Absoliučiam etanoliui gauti reikia kito būdo nei frakcinė distiliacija, pavyzdžiui, vandenį susieti chemiškai su $CaO$ (taip pat naudojama azeotropinė distiliacija su trečiuoju komponentu ir molekuliniai sietai).', 'Absolute ethanol needs another method than fractional distillation, for example binding the water chemically with $CaO$ (azeotropic distillation with a third component and molecular sieves are also used).'),
             src: 'LW2 p4'
           }
         ]
@@ -622,8 +622,8 @@
               ['termometras rodė per mažai', 'the thermometer read too low'],
               ['lūžio rodiklis nepriklauso nuo sudėties', 'the refractive index does not depend on composition']
             ], 0, t('Kuris skystis turi mažesnį rodiklį: acetonas ar vanduo?', 'Which liquid has the lower index, acetone or water?'),
-              t('Vandens $n$ apie 1,333, mažesnis už acetono; vandens priemaiša sumažina mišinio rodiklį.', 'Water has $n$ of about 1.333, lower than acetone; water as an impurity lowers the value of the mixture.'))],
-            why: t('Lūžio rodiklis svertinis pagal sudėtį, todėl kelia klausimą apie priemaišą.', 'The refractive index is weighted by composition, so a shift points to an impurity.'),
+              t('Rodiklis 1,349 aiškiai skiriasi nuo lentelės vertės 1,359, todėl distiliatas nėra grynas acetonas; kita atliekų sudedamoji dalis – vanduo ($n$ apie 1,333, mažesnis už acetono).', 'The value 1.349 clearly differs from the table value 1.359, so the distillate is not pure acetone; the other component of the waste is water ($n$ about 1.333, lower than acetone).'))],
+            why: t('Rodiklis, kuris skiriasi nuo lentelės vertės, rodo priemaišą.', 'A refractive index that differs from the table value points to an impurity.'),
             src: 'LW2 p3, Klein'
           },
           {
@@ -922,20 +922,19 @@
             };
           }
 
-          // nclass: judge the distillate from the refractive index
-          // the index is drawn well inside one answer band (edges 1.338 and 1.356), so that interpolating between water and acetone agrees with the key
-          const cls = ctx.pick([0, 1, 2]);
-          const x = (cls === 0 ? ctx.int(13575, 13600) : cls === 1 ? ctx.int(13470, 13500) : ctx.int(13330, 13350)) / 10000;
+          // nclass: compare the measured index with the table value (1.3588). The index of acetone with a little water rises above the pure value,
+          // so the amount of water cannot be read from it: the only question is 'equal within 0.0005 or not'.
+          const cls = ctx.pick([0, 1]);
+          const x = (cls === 0 ? ctx.int(13583, 13593) : ctx.pick([ctx.int(13400, 13575), ctx.int(13602, 13700)])) / 10000;
           return {
-            q: [{ p: t('Distiliato lūžio rodiklis $n_D^20$ yra ' + lt(x, 4) + '. Gryno acetono – 1,3588, vandens – 1,3330.', 'The refractive index of the distillate $n_D^20$ is ' + fmt(x, 4) + '. For pure acetone it is 1.3588 and for water 1.3330.') }],
+            q: [{ p: t('Distiliato lūžio rodiklis $n_D^20$ yra ' + lt(x, 4) + '. Gryno acetono lentelės vertė – 1,3588.', 'The refractive index of the distillate $n_D^20$ is ' + fmt(x, 4) + '. The table value for pure acetone is 1.3588.') }],
             steps: [ch(t('Ką galima teigti apie distiliatą?', 'What can be said about the distillate?'), [
-              ['beveik gryna acetonas (lūžio rodiklis nuo 1,356)', 'practically pure acetone (index from 1.356)'],
-              ['acetonas su pastebimu vandens kiekiu', 'acetone with a noticeable amount of water'],
-              ['daugiausia vanduo (rodiklis iki 1,338)', 'mostly water (index up to 1.338)']
+              ['sutampa su lentelės verte (skirtumas iki 0,0005): suderinama su grynu acetonu', 'matches the table value (difference up to 0.0005): consistent with pure acetone'],
+              ['skiriasi nuo lentelės vertės daugiau nei 0,0005: acetonas nėra grynas', 'differs from the table value by more than 0.0005: the acetone is not pure']
             ], cls,
-            t('Kuris yra arčiau – 1,3588 ar 1,3330?', 'Which is closer, 1.3588 or 1.3330?'),
-            t('Rodiklis tarp vandens ir acetono reikšmių rodo mišinį; kuo arčiau 1,3588, tuo mažiau vandens.', 'An index between the values of water and acetone points to a mixture; the closer to 1.3588, the less water.'))],
-            why: t('Vanduo mažina lūžio rodiklį, todėl nuokrypis nuo 1,3588 rodo priemaišos kiekį.', 'Water lowers the refractive index, so the deviation from 1.3588 shows how much impurity there is.'),
+            t('Per kiek rodiklis skiriasi nuo 1,3588?', 'By how much does the index differ from 1.3588?'),
+            t('Palyginama su lentelės verte: jei skirtumas ne didesnis nei 0,0005, rodiklis suderinamas su grynu acetonu (bet to dar neįrodo); jei didesnis, skystis nėra grynas. Vandens kiekio pagal rodiklį nustatyti negalima.', 'The value is compared with the table value: if the difference is at most 0.0005 the index is consistent with pure acetone (without proving it); if it is larger the liquid is not pure. The amount of water cannot be read from the index.'))],
+            why: t('Lūžio rodiklis rodo, ar skystis grynas, bet ne kiek jame vandens: acetono ir vandens mišinio rodiklis kinta nelinijiškai.', 'The refractive index shows whether a liquid is pure, not how much water it contains: the index of acetone–water mixtures does not change in a straight line.'),
             src: 'LW2 p3'
           };
         }

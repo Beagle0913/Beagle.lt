@@ -342,11 +342,11 @@
             id: 'l3.order.7',
             q: Q('Reikia apskaičiuoti $R_f$ iš plokštelės.', 'The $R_f$ is to be worked out from the plate.'),
             steps: [ord(t('Išdėstykite skaičiavimo žingsnius.', 'Put the calculation steps in order.'), [
-              ['išmatuoti atstumą nuo starto linijos iki fronto', 'measure the distance from the start line to the front'],
-              ['išmatuoti atstumą nuo starto linijos iki dėmės centro', 'measure the distance from the start line to the centre of the spot'],
+              ['išėmus plokštelę, iškart pažymėti fronto liniją ir apvesti dėmes', 'take the plate out, mark the front at once and outline the spots'],
+              ['išmatuoti atstumus nuo starto linijos iki fronto ir iki dėmės centro', 'measure the distances from the start line to the front and to the centre of the spot'],
               ['dėmės atstumą padalyti iš fronto atstumo', 'divide the spot distance by the front distance']
             ], t('$R_f$ yra santykis.', '$R_f$ is a ratio.'),
-              t('Abu atstumai matuojami nuo starto linijos; dalijama dėmės atstumas iš fronto.', 'Both distances are measured from the start line; the spot distance is divided by the front distance.'))],
+              t('Frontas pažymimas, kol eliuentas nenugaravo; abu atstumai matuojami nuo starto linijos, jų tvarka nesvarbi, todėl jie sujungti į vieną žingsnį; dalijama dėmės atstumas iš fronto.', 'The front is marked before the eluent evaporates; both distances are measured from the start line, in either order, so they are one step; the spot distance is divided by the front distance.'))],
             why: t('$R_f$ nepriklauso nuo plokštelės aukščio, todėl leidžia lyginti junginius.', '$R_f$ does not depend on the plate height, so it allows compounds to be compared.'),
             src: 'LW3 p3'
           },
@@ -527,7 +527,7 @@
             id: 'l3.observe.4',
             q: Q('Į chloroformo ekstraktą dedama bevandenio natrio sulfato.', 'Anhydrous sodium sulfate is added to the chloroform extract.'),
             steps: [ch(t('Kokie požymiai rodo, kad dar yra vandens?', 'Which sign shows that water is still present?'), [
-              ['grūdeliai lipdosi į gumulus ir slysta prie sienelės', 'the grains stick into lumps and cling to the wall'],
+              ['grūdeliai lipdosi į gumulus ir limpa prie sienelės', 'the grains stick into lumps and cling to the wall'],
               ['grūdeliai laisvai kaip smėlis juda', 'the grains move freely like sand'],
               ['ekstraktas pasidaro skaidresnis už chloroformą', 'the extract becomes clearer than chloroform'],
               ['sulfatas visai ištirpsta', 'the sulfate dissolves completely']
@@ -715,7 +715,7 @@
           { id: 'l3.apparatus.5', desc: ['labai plonas stiklinis vamzdelis, į kurį kapiliarine jėga įtraukiamas mėginys, kad jį būtų galima užlašinti ant plokštelės', 'a very thin glass tube that draws up a sample by capillary action so it can be spotted on the plate'], right: ['kapiliaras', 'capillary tube'], other: [['pipetė su guma', 'rubber-bulb pipette'], ['stiklinė lazdelė', 'glass rod'], ['biuretė', 'burette']], why: ['Kapiliaras užlašina labai mažą lašą.', 'The capillary delivers a very small drop.'] },
           { id: 'l3.apparatus.6', desc: ['prietaisas, kuris skleidžia nematomą šviesą ir leidžia matyti dėmes plokštelėje', 'a device that emits invisible light and lets you see the spots on the plate'], right: ['ultravioletinė lempa', 'ultraviolet lamp'], other: [['infraraudonųjų spindulių krosnelė', 'infrared heater'], ['stiklinis termometras', 'glass thermometer'], ['refraktometras', 'refractometer']], why: ['Sorbentas fluorescuoja UV šviesoje, o junginiai gesina fluorescenciją.', 'The sorbent fluoresces under UV light, and compounds quench the fluorescence.'] },
           { id: 'l3.apparatus.7', desc: ['plokščias metalinis įrankis, kuriuo iš kolbos išskrapštoma likusi kieta medžiaga', 'a flat metal tool used to scrape the remaining solid out of a flask'], right: ['metalinė mentelė', 'metal spatula'], other: [['stiklinė lazdelė', 'glass rod'], ['žnyplės', 'tongs'], ['laikiklis', 'clamp']], why: ['Mentelė patogi kietai medžiagai skrapštyti.', 'A spatula is handy for scraping solids.'] },
-          { id: 'l3.apparatus.8', desc: ['kūgio formos kolba su siauru kakleliu, į kurią renkamas ekstraktas', 'a conical flask with a narrow neck into which the extract is collected'], right: ['Erlenmejerio kolba', 'Erlenmeyer flask'], other: [['apvaliadugnė šlifinė kolba', 'round-bottom flask with a ground joint'], ['mėgintuvėlis su atsaka', 'filter flask with a side arm'], ['matavimo kolba', 'volumetric flask']], why: ['Plokščias dugnas stabilus, kakleliui galima uždėti kamštį.', 'The flat bottom is stable and the neck can take a stopper.'] },
+          { id: 'l3.apparatus.8', desc: ['kūgio formos kolba su siauru kakleliu, į kurią renkamas ekstraktas', 'a conical flask with a narrow neck into which the extract is collected'], right: ['Erlenmejerio kolba', 'Erlenmeyer flask'], other: [['apvaliadugnė šlifinė kolba', 'round-bottom flask with a ground joint'], ['Bunzeno kolba (kolba su atšaka)', 'filter flask with a side arm'], ['matavimo kolba', 'volumetric flask']], why: ['Plokščias dugnas stabilus, kakleliui galima uždėti kamštį.', 'The flat bottom is stable and the neck can take a stopper.'] },
           { id: 'l3.apparatus.9', desc: ['platus seklus indas, į kurį pilamas vanduo su ledu, kad jame atvėstų arbatos tirpalas', 'a wide shallow vessel filled with water and ice in which the tea solution is cooled'], right: ['kristalizatorius (ledo vonia)', 'crystalliser dish (ice bath)'], other: [['garų vonia', 'steam bath'], ['džiovinimo krosnelė', 'drying oven'], ['eksikatorius', 'desiccator']], why: ['Plokščias indas gerai perduoda šilumą.', 'A flat vessel exchanges heat well.'] }
         ].map(a => ({
           id: a.id,
@@ -774,14 +774,14 @@
                   hint: t('Gauta masė dalijama iš tikėtinos.', 'Divide the obtained mass by the expected one.'),
                   solution: t('$' + lt(obtained, 3) + ' / ' + lt(expected, 3) + ' · 100 = ' + lt(y, 1) + '$ %.', '$' + fmt(obtained, 3) + ' / ' + fmt(expected, 3) + ' · 100 = ' + fmt(y, 1) + '$ %.') }
               ],
-              why: t('Išeiga lygina tai, ką išskyrėte, su tuo, ką teoriškai galima gauti. Ekstrahuojant dalis visada lieka vandenyje ir sorbente.', 'The yield compares what you isolated with what could theoretically be obtained. In extraction some always stays in the water and on the leaves.'),
+              why: t('Išeiga lygina tai, ką išskyrėte, su tuo, ką teoriškai galima gauti. Ekstrahuojant dalis visada lieka vandenyje ir arbatos lapeliuose.', 'The yield compares what you isolated with what could theoretically be obtained. In extraction some always stays in the water and in the tea leaves.'),
               src: 'LW3 p5'
             };
           }
 
           if (variant === 'rf') {
             const front = ctx.int(45, 80);
-            const s1 = ctx.int(10, 30), s2 = s1 + ctx.int(8, 20);
+            const s1 = ctx.int(10, 30), s2 = s1 + ctx.int(8, Math.min(20, front - 5 - s1)); // every spot stays below the front: 0 < Rf < 1
             return {
               q: [{ p: t('Plokštelėje frontas nuėjo ' + front + ' mm nuo starto linijos, pirmoji dėmė ' + s1 + ' mm, antroji ' + s2 + ' mm.', 'On the plate the front travelled ' + front + ' mm from the start line, the first spot ' + s1 + ' mm and the second ' + s2 + ' mm.') }],
               steps: [
@@ -823,7 +823,7 @@
           if (variant === 'mp') {
             const pure = ctx.pick([true, false]);
             const lo = pure ? ctx.int(235, 236) : ctx.int(212, 228);
-            const width = pure ? ctx.int(1, 2) : ctx.int(6, 12);
+            const width = pure ? ctx.int(1, 2) : ctx.int(6, Math.min(12, 235 - lo)); // an impure range ends below the pure one (236–238)
             const hi = lo + width;
             return {
               q: [{ p: t('Išskirto kofeino lydymosi riba išmatuota ' + lo + '–' + hi + ' °C. Literatūrinė riba apie 236–238 °C.', 'The melting range of the isolated caffeine was measured as ' + lo + '–' + hi + ' °C. The literature range is about 236–238 °C.') }],

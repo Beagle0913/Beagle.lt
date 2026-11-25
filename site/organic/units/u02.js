@@ -458,7 +458,7 @@
           mol: [
             { smi: 'CC', name: t('etanas', 'ethane'), caption: t('C–C: ΔEN = 0, nepolinis', 'C–C: ΔEN = 0, nonpolar') },
             { smi: 'CO', name: t('metanolis', 'methanol'), opts: { deltas: { 0: '+', 1: '-' } }, caption: t('C–O: ΔEN = 1,0, polinis', 'C–O: ΔEN = 1.0, polar') },
-            { smi: 'C#[C-].[Na+]', caption: t('natrio acetilidas: ΔEN didelis, joninis', 'sodium acetylide: ΔEN large, ionic') }
+            { smi: 'C#[C-].[Na+]', caption: t('natrio acetilidas: ΔEN = 3,1 ($sp$ C) − 0,9 = 2,2, joninis', 'sodium acetylide: ΔEN = 3.1 ($sp$ C) − 0.9 = 2.2, ionic') }
           ],
           src: 'L2 p36, p37'
         },
@@ -1078,7 +1078,7 @@
         }
         if (!pick) throw new Error('u02.bondtype: no bond');
         const { smi, kind, i, j, a, b, d } = pick;
-        const sym = a === b ? a + '–' + a : a + (pick.order === 2 ? '=' : pick.order === 3 ? '≡' : '–') + b;
+        const sym = a + (pick.order === 2 ? '=' : pick.order === 3 ? '≡' : '–') + b;
         const enTxt = a === b ? '$' + a + '$ – ' : '$' + a + '$ – ' + dl(EN[a].toFixed(1)) + '; $' + b + '$ – ';
         const enTxtEn = a === b ? '$' + a + '$ – ' : '$' + a + '$ – ' + EN[a].toFixed(1) + '; $' + b + '$ – ';
         const lastLt = dl(EN[b].toFixed(1)), lastEn = EN[b].toFixed(1);

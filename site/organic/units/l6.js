@@ -23,7 +23,7 @@
   const PHTH_ION = '[O-]C(=O)c1ccccc1C(c1ccc([O-])cc1)=C1C=CC(=O)C=C1.[Na+].[Na+]';
   const FLU = 'O=C1OC2(c3ccccc13)c1ccc(O)cc1Oc1cc(O)ccc12';
   const FLU_ION = '[O-]C(=O)c1ccccc1C1=C2C=CC(=O)C=C2Oc2cc([O-])ccc12.[Na+].[Na+]';
-  const CUGLY = 'OCC1CO[Cu]2(O1)OCC(CO)O2';
+  const CUGLY = 'OCC1CO[Cu-2]2([OH+]1)OCC(CO)[OH+]2'; // Cu(C3H7O3)2 = C6H14CuO6: each glycerol binds through one O- (covalent) and one OH (donor)
 
   const U = {
     id: 'l6',
@@ -73,7 +73,7 @@
           {
             scheme: {
               items: [
-                { smi: 'CCO', name: t('etanolis', 'ethanol') }, { arrow: '→', above: f('konc. H2SO4') },
+                { smi: 'CCO', name: t('etanolis', 'ethanol') }, { arrow: '→', above: t('konc. H2SO4', 'conc. H2SO4') },
                 { smi: 'CCOS(=O)(=O)O' }, { arrow: '→', above: f('t°') },
                 { smi: 'C=C', name: t('etenas', 'ethene') }
               ]
@@ -183,13 +183,13 @@
             src: 'LW6 p2'
           },
           {
-            scheme: { items: [{ smi: 'OCC(O)CO', name: t('1,2,3-propantriolis', 'propane-1,2,3-triol') }, { plus: true }, { smi: 'O[Cu]O' }, { arrow: '→' }, { smi: CUGLY }, { plus: true }, { smi: 'O' }] },
+            scheme: { items: [{ smi: 'OCC(O)CO', name: t('1,2,3-propantriolis', 'propane-1,2,3-triol') }, { plus: true }, { smi: 'OCC(O)CO' }, { plus: true }, { smi: 'O[Cu]O' }, { arrow: '→' }, { smi: CUGLY }, { plus: true }, { smi: 'O' }, { plus: true }, { smi: 'O' }] },
             caption: t('Parodytas supaprastintas chelatas: kiekviena glicerolio liekana jungiasi su variu dviem gretimais deguonimis (viena – kovalentiškai, kita – donoriniu ryšiu iš $OH$). Lygtis: $Cu(OH)2 + 2 C3H8O3 → Cu(C3H7O3)2 + 2 H2O$.', 'A simplified chelate: each glycerol residue binds copper through two neighbouring oxygens (one covalent, one donor bond from $OH$). Equation: $Cu(OH)2 + 2 C3H8O3 → Cu(C3H7O3)2 + 2 H2O$.'),
             src: 'LW6 p2'
           },
           {
-            rule: t('Tamsiai mėlyną kompleksą su $Cu(OH)2$ sudaro junginiai, turintys hidroksigrupes prie gretimų anglies atomų: polihidroksiliai alkoholiai, angliavandeniai, hidroksirūgštys ir α-aminorūgštys. Vienahidroksiliai alkoholiai jo nesudaro.',
-              'A deep blue complex with $Cu(OH)2$ is given by compounds with hydroxyl groups on neighbouring carbons: polyhydric alcohols, carbohydrates, hydroxy acids and α-amino acids. Monohydric alcohols do not form it.'),
+            rule: t('Tamsiai mėlyną kompleksą su $Cu(OH)2$ sudaro junginiai, turintys dvi donorines grupes prie gretimų anglies atomų: polihidroksiliai alkoholiai ir angliavandeniai (dvi $OH$ grupės), α-hidroksirūgštys ($OH$ ir $COO-$) bei α-aminorūgštys ($NH2$ ir $COO-$). Vienahidroksiliai alkoholiai jo nesudaro.',
+              'A deep blue complex with $Cu(OH)2$ is given by compounds with two donor groups on neighbouring carbons: polyhydric alcohols and carbohydrates (two $OH$ groups), α-hydroxy acids ($OH$ and $COO-$) and α-amino acids ($NH2$ and $COO-$). Monohydric alcohols do not form it.'),
             src: 'LW6 p2'
           },
           {
@@ -381,7 +381,7 @@
             [t('Etenas + bromo vanduo', 'Ethene + bromine water'), t('geltona spalva išnyksta', 'yellow colour disappears'), t('dvigubasis ryšys (AE)', 'double bond (AE)')],
             [t('Etenas + $KMnO4$', 'Ethene + $KMnO4$'), t('violetinė spalva išnyksta, rudos $MnO2$ nuosėdos', 'violet disappears, brown $MnO2$'), t('dvigubasis ryšys, oksidacija į diolį', 'double bond, oxidation to a diol')],
             [t('Naftalenas + $HNO3$', 'Naphthalene + $HNO3$'), t('geltonas junginys, sunkesnis už vandenį', 'yellow compound denser than water'), t('1-nitronaftalenas (SEAr)', '1-nitronaphthalene (SEAr)')],
-            [t('Etanolis + bevandenis $CuSO4$', 'Ethanol + anhydrous $CuSO4$'), t('baltas junginys pamėlsta', 'white solid turns pale blue'), t('vanduo surištas, etanolis bevandenis', 'water bound, ethanol anhydrous')],
+            [t('Etanolis + bevandenis $CuSO4$', 'Ethanol + anhydrous $CuSO4$'), t('baltas junginys pamėlsta', 'white solid turns pale blue'), t('vanduo surištas: etanolis nusausinamas, bet absoliutus negaunamas', 'water is bound: the ethanol is dried, but not made absolute')],
             [t('Etanolis + $Na$, paskui vanduo + fenolftaleinas', 'Ethanol + $Na$, then water + phenolphthalein'), t('$H2$ dujos; raudonai violetinė spalva', '$H2$ gas; red-violet colour'), t('rūgštus $O-H$; alkoksidas hidrolizuojasi į $NaOH$', 'acidic $O-H$; alkoxide hydrolyses to $NaOH$')],
             [t('Glicerolis + $Cu(OH)2$', 'Glycerol + $Cu(OH)2$'), t('nuosėdos ištirpsta, tamsiai mėlyna', 'precipitate dissolves, deep blue'), t('gretimos $OH$ grupės', 'neighbouring $OH$ groups')],
             [t('Etanolis + $K2Cr2O7$ / $KMnO4$', 'Ethanol + $K2Cr2O7$ / $KMnO4$'), t('oranžinė virsta žalia; violetinė išnyksta', 'orange turns green; violet fades'), t('alkoholis oksiduojamas', 'alcohol is oxidised')],
@@ -440,7 +440,7 @@
               t('Šaltas vanduo pilamas paskutinis: jis ne dalis reakcijos, o būdas produktą išskirti.', 'Cold water comes last: it is not part of the reaction but a way to separate the product.'),
               t('Pirma reagentai ir uždarymas su kondensatoriumi, paskui kaitinimas ir stebėjimas, o išskyrimas vandeniu darbo pabaigoje.', 'Reagents and closing with the condenser come first, then heating and observing, and separation with water at the end.')
             )],
-            why: t('Reakcijos mišinys atskiedžiamas tik pabaigoje: vandens pridėjimas sustabdo nitrinimą ir išskiria nelaisto vandenyje produktą.', 'The reaction mixture is diluted only at the end: adding water stops the nitration and separates the product that is insoluble in water.'),
+            why: t('Reakcijos mišinys atskiedžiamas tik pabaigoje: vandens pridėjimas sustabdo nitrinimą ir išskiria vandenyje netirpų produktą.', 'The reaction mixture is diluted only at the end: adding water stops the nitration and separates the product that is insoluble in water.'),
             src: 'LW6 p1'
           },
           {
@@ -560,7 +560,7 @@
         bank: [
           {
             id: 'l6.why.1',
-            q: [{ p: t('Eteno dujos praleidžiamos pro geltoną bromo vandenį, ir tirpalas pražyla.', 'Ethene is bubbled through yellow bromine water and the solution turns colourless.') }],
+            q: [{ p: t('Eteno dujos praleidžiamos pro geltoną bromo vandenį, ir tirpalas išblunka (tampa bespalvis).', 'Ethene is bubbled through yellow bromine water and the solution turns colourless.') }],
             steps: [ch(
               t('Kodėl bromo vandens spalva išnyksta?', 'Why does the colour of the bromine water disappear?'),
               [
@@ -621,7 +621,7 @@
                 ['Distiliuojant etanolis suyra.', 'Ethanol decomposes on distillation.']
               ], 0,
               t('Kas atsitinka su garų sudėtimi, kai mišinys verda pastovia temperatūra?', 'What happens to the composition of the vapour when the mixture boils at a constant temperature?'),
-              t('Azeotropinio mišinio garai ir skystis turi tą pačią sudėtį (čia 95,5 % etanolio, 78,15 °C), todėl pakartotinė distiliacija jo nebeskiria. Vandenį reikia surišti chemiškai, pavyzdžiui, $CuSO4$.', 'An azeotropic mixture gives vapour and liquid of the same composition (here 95.5 % ethanol, 78.15 °C), so repeated distillation no longer separates it. Water must be bound chemically, for example by $CuSO4$.')
+              t('Azeotropinio mišinio garai ir skystis turi tą pačią sudėtį (čia 95,5 % etanolio, 78,15 °C), todėl pakartotinė distiliacija jo nebeskiria. Vandenį reikia surišti chemiškai, pavyzdžiui, $CaO$.', 'An azeotropic mixture gives vapour and liquid of the same composition (here 95.5 % ethanol, 78.15 °C), so repeated distillation no longer separates it. Water must be bound chemically, for example by $CaO$.')
             )],
             why: t('Frakcinė distiliacija remiasi garų ir skysčio sudėties skirtumu. Azeotropas šį skirtumą panaikina, todėl reikalingas cheminis vandens surišimas.', 'Fractional distillation relies on a difference between vapour and liquid composition. The azeotrope removes that difference, so chemical binding of water is needed.'),
             src: 'LW6 p1'
@@ -1031,7 +1031,7 @@
         bank: [
           {
             id: 'l6.products.1',
-            q: [{ scheme: { items: [{ smi: 'CCO' }, { arrow: '→', above: f('konc. H2SO4, t°') }] } }],
+            q: [{ scheme: { items: [{ smi: 'CCO' }, { arrow: '→', above: t('konc. H2SO4, t°', 'conc. H2SO4, t°') }] } }],
             steps: [
               ch(t('Kuris iš šių junginių yra pagrindinis dujinis produktas?', 'Which compound is the main gaseous product?'),
                 [['etenas', 'ethene'], ['etanalis', 'ethanal'], ['dietileteris', 'diethyl ether'], ['etanas', 'ethane']], 0,
@@ -1183,7 +1183,7 @@
             const obt = Math.round(theo * ctx.int(35, 90)) / 100; // g obtained
             const y = obt / Number(theo.toFixed(2)) * 100;
             return {
-              q: [{ p: t('Izopentilacetatas ($M$ = 130,18 g/mol) gaunamas iš izopentanolio ($M$ = 88,15 g/mol); abiejų reagentų kiekiai lygūs 1 : 1. Naudota ' + lt(m, 1) + ' g izopentanolio (rūgšties pertekliuje), po išskyrimo gauta ' + lt(obt, 2) + ' g esterio.',
+              q: [{ p: t('Izopentilacetatas ($M$ = 130,18 g/mol) gaunamas iš izopentanolio ($M$ = 88,15 g/mol); reagentai reaguoja santykiu 1 : 1. Naudota ' + lt(m, 1) + ' g izopentanolio (rūgšties pertekliuje), po išskyrimo gauta ' + lt(obt, 2) + ' g esterio.',
                 'Isopentyl acetate ($M$ = 130.18 g/mol) is made from isopentanol ($M$ = 88.15 g/mol), 1 : 1. ' + fmt(m, 1) + ' g of isopentanol was used (acid in excess) and ' + fmt(obt, 2) + ' g of ester was obtained after work-up.') }],
               steps: [
                 { prompt: t('Kokia teorinė esterio masė (g)?', 'What is the theoretical mass of ester (g)?'), kind: 'number', answer: { value: theo, tol: 0.03 },
@@ -1259,7 +1259,7 @@
             ]);
             const pure = ctx.int(0, 1) === 0;
             const lo = pure ? comp.mp - ctx.int(0, 1) : comp.mp - ctx.int(6, 14);
-            const hi = lo + (pure ? ctx.int(1, 2) : ctx.int(4, 9));
+            const hi = lo + (pure ? ctx.int(1, 2) : ctx.int(4, Math.min(9, comp.mp - 1 - lo))); // an impure range ends below the pure melting point
             return {
               q: [{ p: t('Perkristalintas junginys ' + comp.lt + ' lydosi ' + lo + '–' + hi + ' °C temperatūroje; literatūrinė lydymosi temperatūra ' + comp.mp + ' °C.',
                 'The recrystallised compound ' + comp.en + ' melts at ' + lo + '–' + hi + ' °C; the literature melting point is ' + comp.mp + ' °C.') }],
@@ -1486,12 +1486,12 @@
                 t('Ką distiliavimas galėtų atskirti, jei sudėtis kinta?', 'What could distillation separate if the composition changes?'),
                 t('Azeotropas elgiasi kaip vienas junginys: garų ir skysčio sudėtis ta pati, todėl distiliacija jo neskiria.', 'An azeotrope behaves like a single compound: vapour and liquid have the same composition, so distillation does not separate it.')),
               ch(t('Kaip gaunamas absoliutus etanolis?', 'How is absolute ethanol obtained?'),
-                [['vandenį chemiškai suriša bevandenis $CuSO4$ (ar $CaO$)', 'water is bound chemically by anhydrous $CuSO4$ (or $CaO$)'],
+                [['vandenį chemiškai suriša $CaO$, o etanolis nudistiliuojamas', 'water is bound chemically by $CaO$ and the ethanol is distilled off'],
                  ['pakartotinai distiliuojant', 'by repeated distillation'],
                  ['pridedant vandens', 'by adding water'],
                  ['užšaldant etanolį', 'by freezing the ethanol']], 0,
                 t('Pagalvokite, kaip vandenį galima paimti iš mišinio cheminiu būdu.', 'You need to remove water from solution, not just change the temperature.'),
-                t('Bevandenis $CuSO4$ suriša vandenį kristalhidratu, o $CaO$ virsta $Ca(OH)2$. Taip vanduo pašalinamas chemiškai.', 'Anhydrous $CuSO4$ binds water as a crystal hydrate, and $CaO$ becomes $Ca(OH)2$. This removes water chemically.'))
+                t('$CaO$ virsta $Ca(OH)2$, taip vanduo pašalinamas chemiškai, o etanolis nudistiliuojamas. Bevandenis $CuSO4$ suriša vandenį kristalhidratu, bet tik nusausina etanolį ir parodo vandenį; absoliutaus etanolio juo negauname.', '$CaO$ becomes $Ca(OH)2$, which removes the water chemically, and the ethanol is then distilled off. Anhydrous $CuSO4$ binds water as a crystal hydrate, but it only dries the ethanol and detects water; it does not give absolute ethanol.'))
             ],
             why: t('Kai fizinis atskyrimas neįmanomas, naudojama cheminė reakcija, kuri paima vieną komponentą.', 'When physical separation is not possible, a chemical reaction that takes up one component is used.'),
             src: 'LW6 p1'
@@ -1535,7 +1535,7 @@
               hint: t('Kiek hidroksigrupių ir ant kokių atomų reikalinga chelatui?', 'How many hydroxyl groups, and on which atoms, are needed for a chelate?'),
               solution: t('Chelatas reikalauja hidroksigrupių prie gretimų anglies atomų. Glicerolis ir 1,2-etandiolis jas turi, etanolis turi tik vieną.', 'A chelate needs hydroxyl groups on neighbouring carbons. Glycerol and ethane-1,2-diol have them, ethanol has only one.')
             }],
-            why: t('Bandymas nėra specifinis glicerolui: jis atpažįsta funkcinę grupę (gretimas $OH$) ir sacharidus bei α-aminorūgštis.', 'The test is not specific to glycerol: it recognises a functional arrangement (neighbouring $OH$), also carbohydrates and α-amino acids.'),
+            why: t('Bandymas nėra specifinis glicerolui: jis atpažįsta funkcinį išsidėstymą (gretimas $OH$ grupes), taip pat angliavandenius; mėlyną kompleksą su variu duoda ir α-aminorūgštys, bet jos jungiasi per $NH2$ ir $COO-$.', 'The test is not specific to glycerol: it recognises a functional arrangement (neighbouring $OH$ groups), also carbohydrates; α-amino acids also give a blue copper complex, but they bind through $NH2$ and $COO-$.'),
             src: 'LW6 p2'
           },
           {

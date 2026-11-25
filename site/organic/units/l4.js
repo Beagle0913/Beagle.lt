@@ -535,7 +535,7 @@
               ['Dėmė reiškia acto rūgštį.', 'The spot means acetic acid.'],
               ['Plokštelė sugadinta.', 'The plate is spoiled.']
             ], t('Kas lemia dėmės kelią plokštelėje?', 'What decides how far a spot travels?'),
-              t('Vienodas $R_f$ rodo panašų junginį, bet vien dėmės nepakanka: patvirtina $FeCl3$ bandymas.', 'The same $R_f$ suggests the same compound, but one spot is not enough: the $FeCl3$ test confirms.')),
+              t('Vienodas $R_f$ leidžia manyti, kad tai tas pats junginys, bet vien dėmės nepakanka: patvirtina $FeCl3$ bandymas.', 'The same $R_f$ suggests the same compound, but one spot is not enough: the $FeCl3$ test confirms.')),
             t('Chromatografija yra papildomas, o ne darbo tekste aprašytas patikrinimas.', 'Chromatography is an additional check, not one described in the lab text.'))
         ]
       },
@@ -622,7 +622,7 @@
             const front = ctx.int(60, 90);
             const a = ctx.int(18, 40);
             const sameSpot = ctx.int(0, 1) === 0;
-            const b = sameSpot ? a + ctx.int(0, 1) : a + ctx.int(14, 26);
+            const b = sameSpot ? a + ctx.int(0, 1) : a + ctx.int(14, Math.min(26, front - 5 - a)); // the spot stays below the front: Rf < 1
             return {
               q: [{ p: t('Plonasluoksnėje plokštelėje tirpiklio frontas nuėjo ' + front + ' mm. Produkto dėmė nuėjo ' + b + ' mm, salicilo rūgšties kontrolės dėmė ' + a + ' mm nuo starto linijos.',
                 'On a thin-layer plate the solvent front moved ' + front + ' mm. The product spot moved ' + b + ' mm and the salicylic acid reference spot ' + a + ' mm from the start line.') }],
@@ -654,7 +654,7 @@
           // melting point
           const pure = ctx.int(0, 1) === 0;
           const lo = pure ? 134 + ctx.int(0, 1) : 135 - ctx.int(6, 15);
-          const hi = lo + (pure ? ctx.int(1, 2) : ctx.int(4, 9));
+          const hi = lo + (pure ? ctx.int(1, 2) : ctx.int(4, Math.min(9, 134 - lo))); // an impure range ends below 135 °C
           return {
             q: [{ p: t('Perkristalintas aspirinas lydosi ' + lo + '–' + hi + ' °C temperatūroje; literatūrinė lydymosi temperatūra apie 135 °C.',
               'Recrystallised aspirin melts at ' + lo + '–' + hi + ' °C; the literature melting point is about 135 °C.') }],
